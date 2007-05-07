@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="All" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Cultures>en-us</Cultures>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <OutputName>psmsi</OutputName>
+    <OutputType>package</OutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>Configuration=Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>Configuration=Release</DefineConstants>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets"/>
+  <ItemGroup>
+    <Compile Include="psmsi.wxs"/>
+    <WixExtension Include="WixUIExtension" />
+  </ItemGroup>
+  <Target Name="All" DependsOnTargets="Build"/>
+</Project>

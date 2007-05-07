@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+Variables below are used often throughout authoring and should be kept
+in sync with the assembly version and description of the appropriate payload.
+-->
+<?define Manufacturer = "Microsoft Corporation"?>
+<?define ProductName = "Windows Installer PowerShell Extensions"?>
+<?define ProductVersion = "1.0.0.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="2A551A80-FB0D-43CD-B3E3-AF046512F1C7"
+		Name="$(var.ProductName)"
+		Language="1033"
+		Version="$(var.ProductVersion)"
+		Manufacturer="$(var.Manufacturer)"
+		UpgradeCode="E8119A6C-7752-46FA-904B-C6019D91D0BF">
+		<Package Id="*"
+			Description="$(var.ProductName)"
+			Comments="This installer database contains the logic and data required to install $(var.ProductName)."
+			Manufacturer="$(var.Manufacturer)"
+      Platforms="Intel" 
+			InstallerVersion="200"
+			Compressed="yes"/>
+		<Media Id="1" Cabinet="psmsi.cab" EmbedCab="yes" />
+		<Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder" Name="Program Files">
+        <Directory Id="APPROOT" Name="$(var.ProductName)">
+          <Directory Id="VersionDir" Name="$(var.ProductVersion)">
+            <Component Id="SnapIn" Guid="59162062-6A78-40C5-BA7D-D1EE9192E26A">
+              <File Id="psmsi"
+						    DiskId="1"
+						    Name="Microsoft.Windows.Installer.PowerShell.dll"
+						    Source="..\bin\$(var.Configuration)\Microsoft.Windows.Installer.PowerShell.dll"
+						    KeyPath="yes" />
+              <File Id="psmsi.Formats"
+                DiskId="1"
+                Name="formats.ps1xml"
+                Source="..\formats.ps1xml" />
+              <File Id="psmsi.Types"
+                DiskId="1"
+                Name="types.ps1xml"
+                Source="..\types.ps1xml" />
+              <RegistryKey
+						    Key="SOFTWARE\Microsoft\PowerShell\1\PowerShellSnapIns\psmsi"
+						    Root="HKLM">
+                <RegistryValue Id="snapin.ApplicationBase"
+							    Name="ApplicationBase"
+							    Type="string"
+							    Value="[$SnapIn]" />
+                <RegistryValue Id="snapin.AssemblyName"
+							    Name="AssemblyName"
+							    Type="string"
+							    Value="Microsoft.Windows.Installer.PowerShell, Version=$(var.ProductVersion), Culture=neutral, PublicKeyToken=7f6198099a4e17ef" />
+                <RegistryValue Id="snapin.Description"
+							    Name="Description"
+							    Type="string"
+							    Value="[ProductName]" />
+                <RegistryValue Id="snapin.DescriptionIndirect"
+							    Name="DescriptionIndirect"
+							    Type="string"
+							    Value="Microsoft.Windows.Installer.Properties.Resources,SnapIn_Description" />
+                <RegistryValue Id="snapin.Formats"
+							    Name="Formats"
+							    Type="multiString"
+							    Value="formats.ps1xml" />
+                <RegistryValue Id="snapin.ModuleName"
+							    Name="ModuleName"
+							    Type="string"
+							    Value="[#psmsi]" />
+                <RegistryValue Id="snapin.PowerShellVersion"
+							    Name="PowerShellVersion"
+							    Type="string"
+							    Value="1.0" />
+                <RegistryValue Id="snapin.Types"
+							    Name="Types"
+							    Type="multiString"
+							    Value="types.ps1xml" />
+                <RegistryValue Id="snapin.Vendor"
+							    Name="Vendor"
+							    Type="string"
+							    Value="[Manufacturer]" />
+                <RegistryValue Id="snapin.VendorIndirect"
+							    Name="VendorIndirect"
+							    Type="string"
+							    Value="Microsoft.Windows.Installer.Properties.Resources,SnapIn_Vendor" />
+                <RegistryValue Id="snapin.Version"
+							    Name="Version"
+							    Type="string"
+							    Value="[ProductVersion]" />
+              </RegistryKey>
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+    <Property Id="WIXUI_INSTALLDIR" Value="APPROOT" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <UIRef Id="WixUI_InstallDir" />
+		<Feature Id="PsMsi"
+			AllowAdvertise="no"
+			Description="Installs a PowerShell snapin."
+			ConfigurableDirectory="APPROOT"
+			Level="1"
+			Title="PowerShell SnapIn">
+			<ComponentRef Id="SnapIn" />
+		</Feature>
+	</Product>
+</Wix>
