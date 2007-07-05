@@ -37,15 +37,6 @@ namespace Microsoft.Windows.Installer
 		{
 			get { return ProductState.Advertised; }
 		}
-
-		internal override string PSPath
-		{
-			get
-			{
-				PackageSource source = new PackageSource(LastUsedSource);
-				return Path.Combine(source.Path, PackageName);
-			}
-		}
 	}
 }
 

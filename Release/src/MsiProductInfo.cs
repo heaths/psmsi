@@ -210,7 +210,13 @@ namespace Microsoft.Windows.Installer
 		}
 		string diskPrompt = null;
 
-		internal abstract string PSPath { get; }
+        internal virtual string PSPath
+        {
+            get
+            {
+                return null;
+            }
+        }
 
 		protected object GetProperty<T>(string property, ref string field)
 		{
