@@ -18,6 +18,10 @@
           </PropertySet>
         </Members>
       </MemberSet>
+      <AliasProperty>
+        <Name>Name</Name>
+        <ReferencedMemberName>ProductName</ReferencedMemberName>
+      </AliasProperty>
     </Members>
   </Type>
   <Type>
@@ -38,6 +42,10 @@
           </PropertySet>
         </Members>
       </MemberSet>
+      <AliasProperty>
+        <Name>Name</Name>
+        <ReferencedMemberName>DisplayName</ReferencedMemberName>
+      </AliasProperty>
     </Members>
   </Type>
 </Types>

@@ -13,6 +13,7 @@
 using System;
 using System.ComponentModel;
 using System.Configuration.Install;
+using System.IO;
 using System.Management;
 using System.Management.Automation;
 using Microsoft.Windows.Installer.PowerShell;
@@ -40,5 +41,31 @@ namespace Microsoft.Windows.Installer.PowerShell
                 return "Microsoft.Windows.Installer.Properties.Resources,SnapIn_Description";
 			}
 		}
+        public override string[] Formats
+        {
+            get
+            {
+                string[] formats = { "formats.ps1xml" };
+                Array.ForEach<string>(formats, delegate(string format)
+                {
+                    Path.Combine(GetType().Assembly.Location, format);
+                });
+
+                return formats;
+            }
+        }
+        public override string[] Types
+        {
+            get
+            {
+                string[] types = { "types.ps1xml" };
+                Array.ForEach<string>(Formats, delegate(string type)
+                {
+                    Path.Combine(GetType().Assembly.Location, type);
+                });
+
+                return types;
+            }
+        }
 	}
 }

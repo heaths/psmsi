@@ -292,7 +292,7 @@ namespace Microsoft.Windows.Installer
 
 			if (throwOtherwise && !check)
 			{
-				throw new NotSupportedException(Properties.Resources.MsiRequiredVersion(major, minor));
+				throw new NotSupportedException(string.Format(Properties.Resources.MsiRequiredVersion, major, minor));
 			}
 
 			return check;
