@@ -5,7 +5,7 @@ in sync with the assembly version and description of the appropriate payload.
 -->
 <?define Manufacturer = "Microsoft Corporation"?>
 <?define ProductName = "Windows Installer PowerShell Extensions"?>
-<?define ProductVersion = "1.0.0.0"?>
+<?define ProductVersion = "1.0.1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Product Id="2A551A80-FB0D-43CD-B3E3-AF046512F1C7"
 		Name="$(var.ProductName)"
@@ -17,7 +17,7 @@ in sync with the assembly version and description of the appropriate payload.
 			Description="$(var.ProductName)"
 			Comments="This installer database contains the logic and data required to install $(var.ProductName)."
 			Manufacturer="$(var.Manufacturer)"
-      Platforms="Intel" 
+      Platform="intel" 
 			InstallerVersion="200"
 			Compressed="yes"/>
 		<Media Id="1" Cabinet="psmsi.cab" EmbedCab="yes" />
@@ -34,11 +34,11 @@ in sync with the assembly version and description of the appropriate payload.
               <File Id="psmsi.Formats"
                 DiskId="1"
                 Name="formats.ps1xml"
-                Source="..\formats.ps1xml" />
+                Source="..\bin\$(var.Configuration)\formats.ps1xml" />
               <File Id="psmsi.Types"
                 DiskId="1"
                 Name="types.ps1xml"
-                Source="..\types.ps1xml" />
+                Source="..\bin\$(var.Configuration)\types.ps1xml" />
               <RegistryKey
 						    Key="SOFTWARE\Microsoft\PowerShell\1\PowerShellSnapIns\psmsi"
 						    Root="HKLM">
@@ -103,5 +103,15 @@ in sync with the assembly version and description of the appropriate payload.
 			Title="PowerShell SnapIn">
 			<ComponentRef Id="SnapIn" />
 		</Feature>
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallFinalize" />
+    </InstallExecuteSequence>
+    <Upgrade Id="E8119A6C-7752-46FA-904B-C6019D91D0BF">
+      <UpgradeVersion IncludeMinimum="yes"
+                      Minimum="1.0.0.0"
+                      Maximum="$(var.ProductVersion)"
+                      MigrateFeatures="yes"
+                      Property="OLDERVERSIONDETECTED"/>
+    </Upgrade>
 	</Product>
 </Wix>

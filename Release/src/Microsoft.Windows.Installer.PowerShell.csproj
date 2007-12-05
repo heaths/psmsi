@@ -84,14 +84,20 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Sign\" />
+    <None Include="Sign\Export.ps1" />
+    <None Include="Sign\Sign.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Target Name="SignContentFiles"
+          DependsOnTargets="CopyFilesToOutputDirectory">
+    <CreateItem Include="@(_SourceItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')"
+                Condition="'%(Extension)'=='.ps1xml'">
+      <Output TaskParameter="Include"
+              ItemName="SignContentFilesOutput"/>
+    </CreateItem>
+    <Exec Command='powershell.exe -command "$(MSBuildProjectDirectory)\Sign\Sign.ps1" "%(SignContentFilesOutput.FullPath)"' />
   </Target>
-  <Target Name="AfterBuild">
+  <Target Name="AfterBuild"
+          DependsOnTargets="SignContentFiles">
   </Target>
-  -->
 </Project>

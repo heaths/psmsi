@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="All" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -6,6 +6,7 @@
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <OutputName>psmsi</OutputName>
     <OutputType>package</OutputType>
+    <ProjectGuid>{f9da7492-b466-43d6-843c-40ebfaa89f34}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>Configuration=Debug</DefineConstants>
@@ -13,10 +14,10 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DefineConstants>Configuration=Release</DefineConstants>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets"/>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
   <ItemGroup>
-    <Compile Include="psmsi.wxs"/>
+    <Compile Include="psmsi.wxs" />
     <WixExtension Include="WixUIExtension" />
   </ItemGroup>
-  <Target Name="All" DependsOnTargets="Build"/>
+  <Target Name="All" DependsOnTargets="Build" />
 </Project>
