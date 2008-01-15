@@ -19,7 +19,8 @@ using Microsoft.Windows.Installer.PowerShell;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-	[Cmdlet(VerbsCommon.Get, "MSIRelatedProductInfo", DefaultParameterSetName=UpgradeCodeParameterSet)]
+	[Cmdlet(VerbsCommon.Get, "MSIRelatedProductInfo",
+        DefaultParameterSetName = GetRelatedProductCommand.UpgradeCodeParameterSet)]
 	public sealed class GetRelatedProductCommand : EnumCommand<ProductInfo>
 	{
 		const string UpgradeCodeParameterSet = "UpgradeCode";
@@ -27,7 +28,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 
 		protected override void ProcessRecord()
 		{
-			WriteDebug("Enumerating product instances for each upgrade code.");
+            WriteCommandDetail("Enumerating product instances for each upgrade code.");
 			foreach (string upgradeCode in this.upgradeCodes)
 			{
 				this.upgradeCode = upgradeCode;

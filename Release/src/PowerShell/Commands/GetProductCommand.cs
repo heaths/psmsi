@@ -19,7 +19,8 @@ using Microsoft.Windows.Installer.PowerShell;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-    [Cmdlet(VerbsCommon.Get, "MSIProductInfo", DefaultParameterSetName = ParameterAttribute.AllParameterSets)]
+    [Cmdlet(VerbsCommon.Get, "MSIProductInfo",
+        DefaultParameterSetName = GetProductCommand.ProductCodeParameterSet)]
     public sealed class GetProductCommand : EnumCommand<ProductInfo>
     {
         const string EVERYONE = "s-1-1-0";
@@ -31,7 +32,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             // Create Product objects for each given ProductCode.
             if (ParameterSetName == ProductCodeParameterSet)
             {
-                WriteVerbose("Creating products for each input ProductCode.");
+                WriteCommandDetail("Creating products for each input ProductCode.");
                 foreach (string productCode in this.productCodes)
                 {
                     WritePSObject(ProductInfo.Create(productCode, userSid, context));
@@ -40,7 +41,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             // Enumerate instances of each given Product based on each Product's ProductCode.
             else if (ParameterSetName == ProductInfoParameterSet)
             {
-                WriteVerbose("Enumerating product instances for input products.");
+                WriteCommandDetail("Enumerating product instances for input products.");
                 foreach (ProductInfo product in this.inputObjects)
                 {
                     ProcessProduct(product);
@@ -50,13 +51,13 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             else
             {
                 if ((context & InstallContext.Machine) != 0)
-                    WriteVerbose("Enumerating machine assigned products.");
+                    WriteCommandDetail("Enumerating machine assigned products.");
 
                 if ((context & InstallContext.UserManaged) != 0)
-                    WriteVerbose(string.Format("Enumerating user-managed products for '{0}'.", userSid));
+                    WriteCommandDetail(string.Format("Enumerating user-managed products for '{0}'.", userSid));
 
                 if ((context & InstallContext.UserUnmanaged) != 0)
-                    WriteVerbose(string.Format("Enumerating user-unmanaged products for '{0}'.", userSid));
+                    WriteCommandDetail(string.Format("Enumerating user-unmanaged products for '{0}'.", userSid));
 
                 // Enumerate all products on the system.
                 base.ProcessRecord();

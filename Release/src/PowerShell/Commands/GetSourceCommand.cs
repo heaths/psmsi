@@ -19,7 +19,8 @@ using Microsoft.Windows.Installer.PowerShell;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-	[Cmdlet(VerbsCommon.Get, "MSISource", DefaultParameterSetName=ParameterAttribute.AllParameterSets)]
+	[Cmdlet(VerbsCommon.Get, "MSISource",
+        DefaultParameterSetName = GetSourceCommand.ProductOrPatchCodeParameterSet)]
 	public sealed class GetSourceCommand : EnumCommand<PackageSource>
 	{
 		internal const string ProductOrPatchCodeParameterSet = "ProductOrPatchCode";
@@ -29,7 +30,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 		{
 			if (ParameterSetName == GetProductCommand.ProductCodeParameterSet)
 			{
-				WriteVerbose("Enumerating source list for input product codes.");
+                WriteCommandDetail("Enumerating source list for input product codes.");
 				foreach (string productCode in this.productCodes)
 				{
 					this.code = Code.Product;
@@ -40,7 +41,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			}
 			else if (ParameterSetName == GetPatchCommand.PatchCodeParameterSet)
 			{
-				WriteVerbose("Enumerating source list for input patch codes.");
+                WriteCommandDetail("Enumerating source list for input patch codes.");
 				foreach (string patchCode in this.patchCodes)
 				{
 					this.code = Code.Patch;
@@ -52,7 +53,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 
 			else if (ParameterSetName == ProductOrPatchCodeParameterSet)
 			{
-				WriteVerbose("Enumerating source list for input objects.");
+                WriteCommandDetail("Enumerating source list for input objects.");
 				foreach (PSObject obj in this.inputObjects)
 				{
 					if (obj.BaseObject is ProductInfo)
@@ -64,15 +65,19 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 						this.userSid = info.UserSid;
 						this.context = info.InstallContext;
 					}
-					else if (obj.BaseObject is PatchInfo)
-					{
-						PatchInfo info = (PatchInfo)obj.BaseObject;
+                    else if (obj.BaseObject is PatchInfo)
+                    {
+                        PatchInfo info = (PatchInfo)obj.BaseObject;
 
-						this.code = Code.Patch;
-						this.productOrPatchCode = info.PatchCode;
-						this.userSid = info.UserSid;
-						this.context = info.InstallContext;
-					}
+                        this.code = Code.Patch;
+                        this.productOrPatchCode = info.PatchCode;
+                        this.userSid = info.UserSid;
+                        this.context = info.InstallContext;
+                    }
+                    else
+                    {
+                        WriteVerbose("Skipping invalid input object.");
+                    }
 
 					base.ProcessRecord();
 				}
@@ -83,29 +88,27 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 		string userSid = null;
 		InstallContext context = InstallContext.Machine;
 		Code code = Code.Product;
-		SourceType sourceType = SourceType.Network | SourceType.URL;
+		SourceType sourceType = SourceType.Network;
 
-		[Parameter(
-				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-				HelpMessageResourceId="GetSource_InputObject",
-				ParameterSetName=ProductOrPatchCodeParameterSet,
-				Position=0,
-				ValueFromPipeline=true,
-				ValueFromPipelineByPropertyName=true)]
-		[ValidateNotNullOrEmpty]
-		public PSObject[] InputObject
-		{
-			get { return this.inputObjects; }
-			set { this.inputObjects = value; }
-		}
-		PSObject[] inputObjects = null;
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
+                HelpMessageResourceId = "GetSource_InputObject",
+                ParameterSetName = ProductOrPatchCodeParameterSet,
+                Position = 0,
+                ValueFromPipeline = true)]
+        [ValidateNotNullOrEmpty]
+        public PSObject[] InputObject
+        {
+            get { return this.inputObjects; }
+            set { this.inputObjects = value; }
+        }
+        PSObject[] inputObjects = null;
 
 		[Parameter(
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetSource_ProductCode",
 				ParameterSetName=GetProductCommand.ProductCodeParameterSet,
 				Position=0,
-				ValueFromPipeline=true,
 				ValueFromPipelineByPropertyName=true)]
 		[ValidateNotNullOrEmpty]
 		public string[] ProductCode
@@ -120,7 +123,6 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 				HelpMessageResourceId="GetSource_PatchCode",
 				ParameterSetName=GetPatchCommand.PatchCodeParameterSet,
 				Position=0,
-				ValueFromPipeline=true,
 				ValueFromPipelineByPropertyName=true)]
 		[ValidateNotNullOrEmpty]
 		public string[] PatchCode
@@ -217,7 +219,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 
 				if (Msi.ERROR_SUCCESS == ret)
 				{
-					source = new PackageSource(sb.ToString());
+                    source = new PackageSource(this.sourceType, index, sb.ToString());
 				}
 			}
 

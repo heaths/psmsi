@@ -277,6 +277,15 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specifies the path to an item. Wildcards are permitted..
+        /// </summary>
+        internal static string Location_Path {
+            get {
+                return ResourceManager.GetString("Location_Path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Windows Installer {0}.{1} is required to execute this command..
         /// </summary>
         internal static string MsiRequiredVersion {

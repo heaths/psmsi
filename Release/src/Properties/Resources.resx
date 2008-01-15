@@ -198,4 +198,7 @@
   <data name="MsiRequiredVersion" xml:space="preserve">
     <value>Windows Installer {0}.{1} is required to execute this command.</value>
   </data>
+  <data name="Location_Path" xml:space="preserve">
+    <value>Specifies the path to an item. Wildcards are permitted.</value>
+  </data>
 </root>

@@ -11,6 +11,7 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Management.Automation;
@@ -20,10 +21,13 @@ namespace Microsoft.Windows.Installer.PowerShell
 {
 	internal static class Location
 	{
+        internal const string PathParameterSet = "Path";
+        internal const string LiteralPathParameterSet = "LiteralPath";
+        
 		internal static string GetProviderQualifiedPath(string path, ProviderInfo provider)
 		{
-			if (path == null) throw new ArgumentNullException("path");
-			if (provider == null) throw new ArgumentNullException("provider");
+            Debug.Assert(null != path);
+            Debug.Assert(null != provider);
 	
 			// Determine if the path already has a provider reference in it.
 			int pos = path.IndexOf("::", StringComparison.Ordinal);
@@ -41,9 +45,9 @@ namespace Microsoft.Windows.Installer.PowerShell
 
 		internal static void AddPSPath(string path, PSObject obj, PSCmdlet cmd)
 		{
-			if (path == null) throw new ArgumentNullException("path");
-			if (obj == null) throw new ArgumentNullException("obj");
-			if (cmd == null) throw new ArgumentNullException("cmd");
+            Debug.Assert(null != path);
+            Debug.Assert(null != obj);
+            Debug.Assert(null != cmd);
 
 			ProviderInfo provider = cmd.SessionState.Provider.GetOne("FileSystem");
 

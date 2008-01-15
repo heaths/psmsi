@@ -19,7 +19,8 @@ using Microsoft.Windows.Installer.PowerShell;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-	[Cmdlet(VerbsCommon.Get, "MSIPatchInfo", DefaultParameterSetName=ParameterAttribute.AllParameterSets)]
+	[Cmdlet(VerbsCommon.Get, "MSIPatchInfo",
+        DefaultParameterSetName = GetPatchCommand.PatchCodeParameterSet)]
 	public sealed class GetPatchCommand : EnumCommand<PatchInfo>
 	{
 		const string EVERYONE = "s-1-1-0";
@@ -31,7 +32,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			// Use input Product objects to enumerate patches for each Product.
 			if (ParameterSetName == ProductInfoParameterSet)
 			{
-				WriteVerbose("Enumerating patches for input products.");
+				WriteCommandDetail("Enumerating patches for input products.");
 				foreach (ProductInfo product in this.inputObjects)
 				{
 					ProcessProduct(product);
@@ -40,7 +41,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			// Use input patch codes to get properties for each specific patch codes.
 			else if (ParameterSetName == PatchCodeParameterSet)
 			{
-				WriteVerbose("Enumerating patches for input patch codes.");
+                WriteCommandDetail("Enumerating patches for input patch codes.");
 				foreach (string patchCode in this.patchCodes)
 				{
 					// Write out patches for each PatchCode for a given product in a given context.
@@ -51,25 +52,25 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			else
 			{
 				if ((context & InstallContext.Machine) != 0)
-					WriteVerbose("Enumerating patches for machine assigned products.");
+                    WriteCommandDetail("Enumerating patches for machine assigned products.");
 
 				if ((context & InstallContext.UserManaged) != 0)
-					WriteVerbose(string.Format("Enumerating paches for user-managed products for '{0}'.", userSid));
+                    WriteCommandDetail(string.Format("Enumerating paches for user-managed products for '{0}'.", userSid));
 
 				if ((context & InstallContext.UserUnmanaged) != 0)
-					WriteVerbose(string.Format("Enumerating patches for user-unmanaged products for '{0}'.", userSid));
+                    WriteCommandDetail(string.Format("Enumerating patches for user-unmanaged products for '{0}'.", userSid));
 				
 				if ((filter & PatchState.Applied) != 0)
-					WriteVerbose("Enumerating applied patches.");
+                    WriteCommandDetail("Enumerating applied patches.");
 
 				if ((filter & PatchState.Superseded) != 0)
-					WriteVerbose("Enumerating superseded patches.");
+                    WriteCommandDetail("Enumerating superseded patches.");
 
 				if ((filter & PatchState.Obsoleted) != 0)
-					WriteVerbose("Enumerating obsoleted patches.");
+                    WriteCommandDetail("Enumerating obsoleted patches.");
 
 				if ((filter & PatchState.Registered) != 0)
-					WriteVerbose("Enumerating registered patches.");
+                    WriteCommandDetail("Enumerating registered patches.");
 
 				// Enumerate all products on the system.
 				base.ProcessRecord();

@@ -16,6 +16,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using System.Runtime.ConstrainedExecution;
 
 namespace Microsoft.Windows.Installer
 {
@@ -39,6 +40,15 @@ namespace Microsoft.Windows.Installer
 		internal const int MAX_PATH = 260;
 	
 		internal const string DLL = "msi.dll";
+
+        // STATSTG.clsid values
+        internal static readonly Guid CLSID_MsiPackage = new Guid(0xC1084, 0x0, 0x0, new byte[] { 0xC0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46 });
+        internal static readonly Guid CLSID_MsiPatch = new Guid(0xC1086, 0x0, 0x0, new byte[] {0xC0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46});
+        internal static readonly Guid CLSID_MsiTransform = new Guid(0xC1082, 0x0, 0x0, new byte[] {0xC0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46});
+
+        internal const string MsiPackage = "Package";
+        internal const string MsiPatch = "Patch";
+        internal const string MsiTransform = "Transform";
 
 		// Properties or advertised products
 		internal const string INSTALLPROPERTY_PACKAGENAME = "PackageName";
@@ -90,7 +100,12 @@ namespace Microsoft.Windows.Installer
 		// Version callback function
 		[DllImport(DLL)]
 		internal static extern int DllGetVersion(ref DLLVERSIONINFO pdvi);
-	
+
+        [DllImport(DLL)]
+        [return: MarshalAs(UnmanagedType.U4)]
+        internal static extern int MsiCloseHandle(
+            [MarshalAs(UnmanagedType.U4)] int hAny);
+
 		// Enumerator functions
 		[DllImport(DLL, CharSet=CharSet.Unicode)]
 		[return: MarshalAs(UnmanagedType.U4)]
@@ -233,7 +248,21 @@ namespace Microsoft.Windows.Installer
 				[Out] StringBuilder lpValue,
 				[MarshalAs(UnmanagedType.U4)] ref int pcchValue);
 
-		// Action functions
+        // Database functions
+
+        // Creates a database handle by path.
+        [DllImport(DLL, CharSet=CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.U4)]
+        internal static extern int MsiOpenDatabase(
+            string szDatabasePath,
+            DbOpen szPersist,
+            out MsiHandle phDatabase);
+
+        // Get a database handle from a product handle.
+        [DllImport(DLL, CharSet=CharSet.Unicode)]
+        internal static extern MsiHandle MsiGetActiveDatabase(MsiHandle hInstall);
+
+        // Action functions
 		[DllImport(DLL, CharSet=CharSet.Unicode)]
 		[return: MarshalAs(UnmanagedType.U4)]
 		internal static extern int MsiRemovePatches(
@@ -299,6 +328,60 @@ namespace Microsoft.Windows.Installer
 		}
 
 	}
+
+    [StructLayout(LayoutKind.Sequential)]
+    sealed class MsiHandle// : CriticalFinalizerObject, IDisposable
+    {
+        // The MSIHANDLE.
+        int handle;
+
+        const int InvalidHandleValue = 0;
+
+        //[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        //internal MsiHandle()
+        //{
+        //    this.handle = InvalidHandleValue;
+        //    GC.SuppressFinalize(this);
+        //}
+
+        //~MsiHandle()
+        //{
+        //    Dispose(false);
+        //}
+
+        //[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        //void Dispose(bool disposing)
+        //{
+        //    Msi.MsiCloseHandle(handle);
+        //}
+
+        //[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        //public void Dispose()
+        //{
+        //    Dispose(true);
+        //}
+
+        //public override bool Equals(object obj)
+        //{
+        //    MsiHandle other = obj as MsiHandle;
+        //    if (null != other)
+        //    {
+        //        return handle == other.handle;
+        //    }
+
+        //    return base.Equals(obj);
+        //}
+
+        //public override int GetHashCode()
+        //{
+        //    return handle;
+        //}
+
+        //public override string ToString()
+        //{
+        //    return handle.ToString();
+        //}
+    }
 
 	[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet=CharSet.Unicode)]
 	internal delegate int InstallUIHandler(
@@ -426,8 +509,19 @@ namespace Microsoft.Windows.Installer
 	public enum Code : int
 	{
 		Product = 0,
-		Patch = 0x40000000
+        Patch = 0x40000000
 	}
+
+    [Flags]
+    public enum DbOpen : int
+    {
+        ReadOnly = 0,
+        Transact,
+        Direct,
+        Create,
+        CreateDirect,
+        PatchFile = 32
+    }
 
 	[StructLayout(LayoutKind.Sequential)]
 	struct DLLVERSIONINFO

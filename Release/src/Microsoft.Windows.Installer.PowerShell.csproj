@@ -41,8 +41,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Management" />
     <Reference Include="System.Management.Automation" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Msi.cs" />
@@ -53,6 +55,7 @@
     <Compile Include="MsiPatchInfo.cs" />
     <Compile Include="MsiProductInfo.cs" />
     <Compile Include="PowerShell\Commands\EnumCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
@@ -67,6 +70,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Storage.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -88,16 +92,12 @@
     <None Include="Sign\Sign.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Target Name="SignContentFiles"
-          DependsOnTargets="CopyFilesToOutputDirectory">
-    <CreateItem Include="@(_SourceItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')"
-                Condition="'%(Extension)'=='.ps1xml'">
-      <Output TaskParameter="Include"
-              ItemName="SignContentFilesOutput"/>
+  <Target Name="SignContentFiles" DependsOnTargets="CopyFilesToOutputDirectory">
+    <CreateItem Include="@(_SourceItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')" Condition="'%(Extension)'=='.ps1xml'">
+      <Output TaskParameter="Include" ItemName="SignContentFilesOutput" />
     </CreateItem>
-    <Exec Command='powershell.exe -command "$(MSBuildProjectDirectory)\Sign\Sign.ps1" "%(SignContentFilesOutput.FullPath)"' />
+    <Exec Command="powershell.exe -command &quot;$(MSBuildProjectDirectory)\Sign\Sign.ps1&quot; &quot;%(SignContentFilesOutput.FullPath)&quot;" />
   </Target>
-  <Target Name="AfterBuild"
-          DependsOnTargets="SignContentFiles">
+  <Target Name="AfterBuild" DependsOnTargets="SignContentFiles">
   </Target>
 </Project>
