@@ -5,9 +5,9 @@ in sync with the assembly version and description of the appropriate payload.
 -->
 <?define Manufacturer = "Microsoft Corporation"?>
 <?define ProductName = "Windows Installer PowerShell Extensions"?>
-<?define ProductVersion = "1.0.1.0"?>
+<?define ProductVersion = "1.0.2.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="2A551A80-FB0D-43CD-B3E3-AF046512F1C7"
+	<Product Id="F64490BA-1016-4B09-8C84-783D370B94D2"
 		Name="$(var.ProductName)"
 		Language="1033"
 		Version="$(var.ProductVersion)"
