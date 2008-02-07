@@ -22,6 +22,9 @@ namespace Microsoft.Windows.Installer
     {
         internal const string DLL = "ole32.dll";
 
+        const int ERROR_SUCCESS = 0;
+        const int ERROR_NO_MORE_ITEMS = 259;
+
         static readonly Guid IID_IStorage = new Guid("0000000b-0000-0000-C000-000000000046");
         static readonly Guid IID_IPropertySetStorage = new Guid("0000013A-0000-0000-C000-000000000046");
         static readonly Guid IID_IPropertyStorage = new Guid("00000138-0000-0000-C000-000000000046");
@@ -103,7 +106,7 @@ namespace Microsoft.Windows.Installer
         {
             get
             {
-                int ret = 0;
+                int ret = ERROR_SUCCESS;
 				IEnumSTATSTG estats;
             	stg.EnumElements(0, IntPtr.Zero, 0, out estats);
                 STATSTG[] stats = new STATSTG[1];
@@ -113,7 +116,7 @@ namespace Microsoft.Windows.Installer
                 {
                     if (1 != fetched)
                     {
-                        ret = 1;
+                        ret = ERROR_NO_MORE_ITEMS;
                         break;
                     }
                     else if (IID_IStorage == stats[0].clsid)
@@ -125,7 +128,7 @@ namespace Microsoft.Windows.Installer
                     }
                 }
 
-                if (0 != ret && 1 != ret)
+                if (ERROR_SUCCESS != ret && ERROR_NO_MORE_ITEMS != ret)
                 {
                     throw new System.ComponentModel.Win32Exception(ret);
                 }

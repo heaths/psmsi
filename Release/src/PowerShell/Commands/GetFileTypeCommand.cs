@@ -63,7 +63,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                             {
                                 // non-terminating error; continue to the next file
                                 string message = ex.Message.Replace("%1", fsPath);
-                                PSInvalidOperationException psex = new PSInvalidOperationException(ex.Message, ex);
+                                PSInvalidOperationException psex = new PSInvalidOperationException(message, ex);
                                 this.WriteError(psex.ErrorRecord);
                             }
 

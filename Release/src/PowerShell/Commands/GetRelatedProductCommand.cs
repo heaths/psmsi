@@ -37,6 +37,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 		}
 
 		[Parameter(
+                Mandatory = true,
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetRelatedProduct_UpgradeCode",
 				ParameterSetName=UpgradeCodeParameterSet,

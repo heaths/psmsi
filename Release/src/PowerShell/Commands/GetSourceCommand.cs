@@ -91,6 +91,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 		SourceType sourceType = SourceType.Network;
 
         [Parameter(
+                Mandatory = true,
                 HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
                 HelpMessageResourceId = "GetSource_InputObject",
                 ParameterSetName = ProductOrPatchCodeParameterSet,
@@ -105,6 +106,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         PSObject[] inputObjects = null;
 
 		[Parameter(
+                Mandatory = true,
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetSource_ProductCode",
 				ParameterSetName=GetProductCommand.ProductCodeParameterSet,
@@ -119,6 +121,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 		string[] productCodes = null;
 
 		[Parameter(
+                Mandatory = true,
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetSource_PatchCode",
 				ParameterSetName=GetPatchCommand.PatchCodeParameterSet,
