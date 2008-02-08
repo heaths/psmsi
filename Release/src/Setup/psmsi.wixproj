@@ -7,9 +7,11 @@
     <OutputName>psmsi</OutputName>
     <OutputType>package</OutputType>
     <ProjectGuid>{f9da7492-b466-43d6-843c-40ebfaa89f34}</ProjectGuid>
+	<SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>Configuration=Debug</DefineConstants>
+	<SuppressValidation>true</SuppressValidation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DefineConstants>Configuration=Release</DefineConstants>
@@ -18,6 +20,7 @@
   <ItemGroup>
     <Compile Include="psmsi.wxs" />
     <WixExtension Include="WixUIExtension" />
+	<WixExtension Include="WixPSExtension" />
   </ItemGroup>
   <Target Name="All" DependsOnTargets="Build" />
 </Project>
