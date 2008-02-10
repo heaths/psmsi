@@ -16,11 +16,12 @@ using System.Management.Automation;
 using System.Text;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
+using System.Globalization;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
     [Cmdlet(VerbsCommon.Get, "MSIProductInfo",
-        DefaultParameterSetName = GetProductCommand.ProductCodeParameterSet)]
+        DefaultParameterSetName = ParameterAttribute.AllParameterSets)]
     public sealed class GetProductCommand : EnumCommand<ProductInfo>
     {
         const string EVERYONE = "s-1-1-0";
@@ -33,9 +34,9 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             if (ParameterSetName == ProductCodeParameterSet)
             {
                 WriteCommandDetail("Creating products for each input ProductCode.");
-                foreach (string productCode in this.productCodes)
+                foreach (string _productCode in this.productCodes)
                 {
-                    WritePSObject(ProductInfo.Create(productCode, userSid, context));
+                    WritePSObject(ProductInfo.Create(_productCode, userSid, context));
                 }
             }
             // Enumerate instances of each given Product based on each Product's ProductCode.
@@ -54,10 +55,10 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                     WriteCommandDetail("Enumerating machine assigned products.");
 
                 if ((context & InstallContext.UserManaged) != 0)
-                    WriteCommandDetail(string.Format("Enumerating user-managed products for '{0}'.", userSid));
+                    WriteCommandDetail(string.Format(CultureInfo.InvariantCulture, "Enumerating user-managed products for '{0}'.", userSid));
 
                 if ((context & InstallContext.UserUnmanaged) != 0)
-                    WriteCommandDetail(string.Format("Enumerating user-unmanaged products for '{0}'.", userSid));
+                    WriteCommandDetail(string.Format(CultureInfo.InvariantCulture, "Enumerating user-unmanaged products for '{0}'.", userSid));
 
                 // Enumerate all products on the system.
                 base.ProcessRecord();
@@ -74,11 +75,11 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             base.ProcessRecord();
         }
 
-        string productCode = null;
-        string userSid = null;
+        string productCode;
+        string userSid;
         InstallContext context = InstallContext.Machine;
 
-        [Parameter(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
                 HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
                 HelpMessageResourceId = "GetProduct_InputObject",
                 ParameterSetName = ProductInfoParameterSet,
@@ -91,9 +92,9 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             get { return inputObjects; }
             set { inputObjects = value; }
         }
-        ProductInfo[] inputObjects = null;
+        ProductInfo[] inputObjects;
 
-        [Parameter(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
                 HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
                 HelpMessageResourceId = "GetProduct_ProductCode",
                 ParameterSetName = ProductCodeParameterSet,
@@ -106,7 +107,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             get { return productCodes; }
             set { productCodes = value; }
         }
-        string[] productCodes = null;
+        string[] productCodes;
 
         [Parameter(
                 HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
@@ -133,7 +134,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 HelpMessageResourceId = "GetProduct_Everyone")]
         public SwitchParameter Everyone
         {
-            get { return string.Compare(userSid, EVERYONE, true) == 0; }
+            get { return string.Compare(userSid, EVERYONE, StringComparison.OrdinalIgnoreCase) == 0; }
             set
             {
                 if (value)

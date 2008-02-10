@@ -11,6 +11,8 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Collections;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -42,6 +44,27 @@ namespace Microsoft.Windows.Installer.PowerShell
 				return string.Concat(provider.PSSnapIn.Name, "\\", provider.Name, "::", path);
 			}
 		}
+
+        internal static string GetOneResolvedProviderPathFromPSObject(PSObject psObject, PSCmdlet cmd)
+        {
+            // Get the file system path.
+            PSPropertyInfo psPathInfo = psObject.Properties["PSPath"];
+            if (null != psPathInfo && null != psPathInfo.Value)
+            {
+                string psPath = psPathInfo.Value.ToString();
+                if (null != psPath)
+                {
+                    ProviderInfo provider;
+                    Collection<string> fsPaths = cmd.GetResolvedProviderPathFromPSPath(psPath, out provider);
+                    if (null != fsPaths && 0 < fsPaths.Count)
+                    {
+                        return fsPaths[0];
+                    }
+                }
+            }
+
+            return null;
+        }
 
 		internal static void AddPSPath(string path, PSObject obj, PSCmdlet cmd)
 		{

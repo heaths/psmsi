@@ -16,11 +16,14 @@ using System.Management.Automation;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
 using Microsoft.Windows.Installer.Properties;
+using System.Globalization;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
 	public abstract class EnumCommand<T> : PSCmdlet
 	{
+        internal const string PSObjectParameterSet = "PSObject";
+
 		protected override void ProcessRecord()
 		{
 			foreach (T obj in new MsiEnumerable<T>(Enumerate))
@@ -29,7 +32,8 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			}
 		}
 
-		protected abstract int Enumerate(int index, out T data);
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "1#")]
+        protected abstract int Enumerate(int index, out T data);
 
 		protected virtual void WritePSObject(T obj)
 		{
@@ -40,7 +44,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 		[System.Diagnostics.Conditional("DEBUG")]
 		internal void Debug(string format, params object[] args)
 		{
-			WriteDebug(string.Format(format, args));
+            WriteDebug(string.Format(CultureInfo.InvariantCulture, format, args));
 		}
 	}
 }

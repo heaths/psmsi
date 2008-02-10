@@ -23,14 +23,8 @@ namespace Microsoft.Windows.Installer
 {
 	public class PatchInfo
 	{
-		string patchCode, productCode, userSid, transforms = null;
+		string patchCode, productCode, userSid;
 		InstallContext context;
-
-		internal PatchInfo(string patchCode, string transforms) :
-			this(patchCode, null, null, InstallContext.None)
-		{
-			this.transforms = transforms;
-		}
 
 		internal PatchInfo(string patchCode, string productCode, string userSid, InstallContext context)
 		{
@@ -59,32 +53,34 @@ namespace Microsoft.Windows.Installer
 		public string UserSid { get { return userSid; } }
 		public InstallContext InstallContext { get { return context; } }
 
-		public bool Uninstallable
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Uninstallable")]
+        public bool Uninstallable
 		{
 			get
 			{
 				return (bool)GetProperty<bool>(Msi.INSTALLPROPERTY_UNINSTALLABLE, ref uninstallable);
 			}
 		}
-		string uninstallable = null;
+		string uninstallable;
 
-		public PatchState PatchState
+		public PatchStates PatchState
 		{
 			get
 			{
-				return (PatchState)GetProperty<PatchState>(Msi.INSTALLPROPERTY_PATCHSTATE, ref patchState);
+				return (PatchStates)GetProperty<PatchStates>(Msi.INSTALLPROPERTY_PATCHSTATE, ref patchState);
 			}
 		}
-		string patchState = null;
+		string patchState;
 
-		public bool LuaEnabled
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "LUA")]
+        public bool LUAEnabled
 		{
 			get
 			{
 				return (bool)GetProperty<bool>(Msi.INSTALLPROPERTY_LUAENABLED, ref luaEnabled);
 			}
 		}
-		string luaEnabled = null;
+		string luaEnabled;
 
 		public string DisplayName
 		{
@@ -93,16 +89,17 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_DISPLAYNAME, ref displayName);
 			}
 		}
-		string displayName = null;
+		string displayName;
 
-		public string MoreInfoUrl
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
+        public string MoreInfoUrl
 		{
 			get
 			{
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_MOREINFOURL, ref moreInfoUrl);
 			}
 		}
-		string moreInfoUrl = null;
+		string moreInfoUrl;
 
 		public string LocalPackage
 		{
@@ -111,9 +108,10 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LOCALPACKAGE, ref localPackage);
 			}
 		}
-		string localPackage = null;
+		string localPackage;
 
-		protected object GetProperty<T>(string property, ref string field)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        protected object GetProperty<T>(string property, ref string field)
 		{
 			// If field is not yet assigned, get product property.
 			if (string.IsNullOrEmpty(field))

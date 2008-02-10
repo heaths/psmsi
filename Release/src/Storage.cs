@@ -24,12 +24,13 @@ namespace Microsoft.Windows.Installer
 
         const int ERROR_SUCCESS = 0;
         const int ERROR_NO_MORE_ITEMS = 259;
+        const int STG_E_FILEALREADYEXISTS = unchecked((int)0x80030050);
 
         static readonly Guid IID_IStorage = new Guid("0000000b-0000-0000-C000-000000000046");
-        static readonly Guid IID_IPropertySetStorage = new Guid("0000013A-0000-0000-C000-000000000046");
-        static readonly Guid IID_IPropertyStorage = new Guid("00000138-0000-0000-C000-000000000046");
+        //static readonly Guid IID_IPropertySetStorage = new Guid("0000013A-0000-0000-C000-000000000046");
+        //static readonly Guid IID_IPropertyStorage = new Guid("00000138-0000-0000-C000-000000000046");
 
-        IStorage stg = null;
+        IStorage stg;
         STGM mode;
 
         Storage(IStorage stg, STGM mode)
@@ -38,21 +39,11 @@ namespace Microsoft.Windows.Installer
             this.mode = mode;
         }
 
-        Storage(Storage parent, string childName)
-        {
-            this.mode = parent.mode;
-            parent.stg.OpenStorage(childName, null, this.mode, null, 0, out this.stg);
-        }
-
-        /// <summary>
-        /// Opens a storage file in read-only mode.
-        /// </summary>
-        /// <param name="path">Path to a storage file.</param>
-        /// <returns>An instance of the <see cref="Storage"/> class.</returns>
-        internal static Storage OpenStorage(string path)
-        {
-            return OpenStorage(path, true);
-        }
+        //Storage(Storage parent, string childName)
+        //{
+        //    this.mode = parent.mode;
+        //    parent.stg.OpenStorage(childName, null, this.mode, null, 0, out this.stg);
+        //}
 
         /// <summary>
         /// Opens a storage file.
@@ -76,7 +67,11 @@ namespace Microsoft.Windows.Installer
                 ref iid,
                 out stg);
 
-            if (0 != ret)
+            if (STG_E_FILEALREADYEXISTS == ret)
+            {
+                throw new NotSupportedException();
+            }
+            else if (0 != ret)
             {
                 throw new System.ComponentModel.Win32Exception(ret);
             }
@@ -102,38 +97,38 @@ namespace Microsoft.Windows.Installer
             }
         }
 
-        internal IEnumerable<Storage> SubStorages
-        {
-            get
-            {
-                int ret = ERROR_SUCCESS;
-				IEnumSTATSTG estats;
-            	stg.EnumElements(0, IntPtr.Zero, 0, out estats);
-                STATSTG[] stats = new STATSTG[1];
-                int fetched = 0;
+        //internal IEnumerable<Storage> SubStorages
+        //{
+        //    get
+        //    {
+        //        int ret = ERROR_SUCCESS;
+        //        IEnumSTATSTG estats;
+        //        stg.EnumElements(0, IntPtr.Zero, 0, out estats);
+        //        STATSTG[] stats = new STATSTG[1];
+        //        int fetched = 0;
 
-                while (0 == (ret = estats.Next(1, stats, out fetched)))
-                {
-                    if (1 != fetched)
-                    {
-                        ret = ERROR_NO_MORE_ITEMS;
-                        break;
-                    }
-                    else if (IID_IStorage == stats[0].clsid)
-                    {
-                        using (stats[0])
-                        {
-                            yield return new Storage(this, stats[0].Name);
-                        }
-                    }
-                }
+        //        while (0 == (ret = estats.Next(1, stats, out fetched)))
+        //        {
+        //            if (1 != fetched)
+        //            {
+        //                ret = ERROR_NO_MORE_ITEMS;
+        //                break;
+        //            }
+        //            else if (IID_IStorage == stats[0].clsid)
+        //            {
+        //                using (stats[0])
+        //                {
+        //                    yield return new Storage(this, stats[0].Name);
+        //                }
+        //            }
+        //        }
 
-                if (ERROR_SUCCESS != ret && ERROR_NO_MORE_ITEMS != ret)
-                {
-                    throw new System.ComponentModel.Win32Exception(ret);
-                }
-            }
-        }
+        //        if (ERROR_SUCCESS != ret && ERROR_NO_MORE_ITEMS != ret)
+        //        {
+        //            throw new System.ComponentModel.Win32Exception(ret);
+        //        }
+        //    }
+        //}
 
         [DllImport(DLL, CharSet = CharSet.Unicode)]
         static extern int StgOpenStorageEx(
@@ -265,14 +260,14 @@ namespace Microsoft.Windows.Installer
         [MarshalAs(UnmanagedType.U4)] internal int grfStateBits;
         [MarshalAs(UnmanagedType.U4)] internal int reserved;
 
-        internal string Name
-        {
-            get
-            {
-                string name = Marshal.PtrToStringUni(pwcsName);
-                return name;
-            }
-        }
+        //internal string Name
+        //{
+        //    get
+        //    {
+        //        string name = Marshal.PtrToStringUni(pwcsName);
+        //        return name;
+        //    }
+        //}
 
         void IDisposable.Dispose()
         {
@@ -280,6 +275,8 @@ namespace Microsoft.Windows.Installer
             {
                 Marshal.FreeCoTaskMem(pwcsName);
             }
+
+            GC.SuppressFinalize(this);
         }
     }
 

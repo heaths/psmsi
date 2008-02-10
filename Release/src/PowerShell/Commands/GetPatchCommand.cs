@@ -16,11 +16,12 @@ using System.Management.Automation;
 using System.Text;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
+using System.Globalization;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
 	[Cmdlet(VerbsCommon.Get, "MSIPatchInfo",
-        DefaultParameterSetName = GetPatchCommand.PatchCodeParameterSet)]
+        DefaultParameterSetName = ParameterAttribute.AllParameterSets)]
 	public sealed class GetPatchCommand : EnumCommand<PatchInfo>
 	{
 		const string EVERYONE = "s-1-1-0";
@@ -55,21 +56,21 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                     WriteCommandDetail("Enumerating patches for machine assigned products.");
 
 				if ((context & InstallContext.UserManaged) != 0)
-                    WriteCommandDetail(string.Format("Enumerating paches for user-managed products for '{0}'.", userSid));
+                    WriteCommandDetail(string.Format(CultureInfo.InvariantCulture, "Enumerating paches for user-managed products for '{0}'.", userSid));
 
 				if ((context & InstallContext.UserUnmanaged) != 0)
-                    WriteCommandDetail(string.Format("Enumerating patches for user-unmanaged products for '{0}'.", userSid));
+                    WriteCommandDetail(string.Format(CultureInfo.InvariantCulture, "Enumerating patches for user-unmanaged products for '{0}'.", userSid));
 				
-				if ((filter & PatchState.Applied) != 0)
+				if ((filter & PatchStates.Applied) != 0)
                     WriteCommandDetail("Enumerating applied patches.");
 
-				if ((filter & PatchState.Superseded) != 0)
+				if ((filter & PatchStates.Superseded) != 0)
                     WriteCommandDetail("Enumerating superseded patches.");
 
-				if ((filter & PatchState.Obsoleted) != 0)
+				if ((filter & PatchStates.Obsoleted) != 0)
                     WriteCommandDetail("Enumerating obsoleted patches.");
 
-				if ((filter & PatchState.Registered) != 0)
+				if ((filter & PatchStates.Registered) != 0)
                     WriteCommandDetail("Enumerating registered patches.");
 
 				// Enumerate all products on the system.
@@ -87,12 +88,12 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			base.ProcessRecord();
 		}
 
-		string productCode = null;
-		string userSid = null;
+		string productCode;
+		string userSid;
 		InstallContext context = InstallContext.Machine;
-		PatchState filter = PatchState.Applied;
+		PatchStates filter = PatchStates.Applied;
 
-		[Parameter(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetPatch_InputObject",
 				ParameterSetName=ProductInfoParameterSet,
@@ -104,9 +105,9 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			get { return inputObjects; }
 			set { inputObjects = value; }
 		}
-		ProductInfo[] inputObjects = null;
+		ProductInfo[] inputObjects;
 
-		[Parameter(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetPatch_PackageCode",
 				ParameterSetName=PatchCodeParameterSet,
@@ -119,7 +120,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			get { return patchCodes; }
 			set { patchCodes = value; }
 		}
-		string[] patchCodes = null;
+		string[] patchCodes;
 
 		[Parameter(
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
@@ -156,7 +157,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetPatch_Filter",
 				ValueFromPipelineByPropertyName=true)]
-		public PatchState Filter
+		public PatchStates Filter
 		{
 			get { return filter; }
 			set { filter = value; }
@@ -167,7 +168,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 				HelpMessageResourceId="GetPatch_Everyone")]
 		public SwitchParameter Everyone
 		{
-			get { return string.Compare(userSid, EVERYONE, true) == 0; }
+			get { return string.Compare(userSid, EVERYONE, StringComparison.OrdinalIgnoreCase) == 0; }
 			set
 			{
 				if (value)
@@ -242,7 +243,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 
 				if (Msi.ERROR_SUCCESS == ret)
 				{
-					patch = new PatchInfo(pac.ToString(), msts.ToString());
+					patch = new PatchInfo(pac.ToString(), null, null, InstallContext.None);
 				}
 			}
 

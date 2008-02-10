@@ -88,7 +88,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PACKAGENAME, ref packageName);
 			}
 		}
-		string packageName = null;
+		string packageName;
 
 		public string Transforms
 		{
@@ -97,7 +97,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_TRANSFORMS, ref transforms);
 			}
 		}
-		string transforms = null;
+		string transforms;
 
 		public string Language
 		{
@@ -106,7 +106,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LANGUAGE, ref language);
 			}
 		}
-		string language = null;
+		string language;
 
 		public string ProductName
 		{
@@ -115,7 +115,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PRODUCTNAME, ref productName);
 			}
 		}
-		string productName = null;
+		string productName;
 
 		public AssignmentType AssignmentType
 		{
@@ -125,7 +125,7 @@ namespace Microsoft.Windows.Installer
 						ref assignmentType);
 			}
 		}
-		string assignmentType = null;
+		string assignmentType;
 
 		public InstanceType InstanceType
 		{
@@ -135,17 +135,18 @@ namespace Microsoft.Windows.Installer
 						ref instanceType);
 			}
 		}
-		string instanceType = null;
+		string instanceType;
 
-		public bool AuthorizedLuaApp
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "LUA")]
+        public bool AuthorizedLUAApp
 		{
 			get
 			{
 				return (bool)GetProperty<bool>(Msi.INSTALLPROPERTY_AUTHORIZED_LUA_APP,
-						ref authorizedLuaApp);
+						ref authorizedLUAApp);
 			}
 		}
-		string authorizedLuaApp = null;
+		string authorizedLUAApp;
 
 		public string PackageCode
 		{
@@ -154,7 +155,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PACKAGECODE, ref packageCode);
 			}
 		}
-		string packageCode = null;
+		string packageCode;
 
 		public string Version
 		{
@@ -163,7 +164,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_VERSION, ref version);
 			}
 		}
-		string version = null;
+		string version;
 
 		public string ProductIcon
 		{
@@ -172,7 +173,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PRODUCTICON, ref productIcon);
 			}
 		}
-		string productIcon = null;
+		string productIcon;
 
 		public string LastUsedSource
 		{
@@ -181,7 +182,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LASTUSEDSOURCE, ref lastUsedSource);
 			}
 		}
-		string lastUsedSource = null;
+		string lastUsedSource;
 
 		public string LastUsedType
 		{
@@ -190,7 +191,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LASTUSEDTYPE, ref lastUsedType);
 			}
 		}
-		string lastUsedType = null;
+		string lastUsedType;
 
 		public string MediaPackagePath
 		{
@@ -199,7 +200,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_MEDIAPACKAGEPATH, ref mediaPackagePath);
 			}
 		}
-		string mediaPackagePath = null;
+		string mediaPackagePath;
 
 		public string DiskPrompt
 		{
@@ -208,7 +209,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_DISKPROMPT, ref diskPrompt);
 			}
 		}
-		string diskPrompt = null;
+		string diskPrompt;
 
         internal virtual string PSPath
         {
@@ -218,7 +219,8 @@ namespace Microsoft.Windows.Installer
             }
         }
 
-		protected object GetProperty<T>(string property, ref string field)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        protected object GetProperty<T>(string property, ref string field)
 		{
 			// If field is not yet assigned, get product property.
 			if (string.IsNullOrEmpty(field))

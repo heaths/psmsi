@@ -12,27 +12,29 @@
 
 using System;
 using System.Management.Automation;
+using System.Globalization;
 
 namespace Microsoft.Windows.Installer
 {
 	public class PackageSource
 	{
-		internal PackageSource(string source)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal PackageSource(string source)
 		{
 			string[] fields = source.Split(';');
 			try
 			{
 				// Get the type.
-				switch (fields[0].ToLower())
+				switch (fields[0].ToLowerInvariant())
 				{
-					case "u": type = SourceType.URL; break;
-					case "n": type = SourceType.Network; break;
-					case "m": type = SourceType.Media; break;
+					case "u": sourceType = SourceTypes.Url; break;
+					case "n": sourceType = SourceTypes.Network; break;
+					case "m": sourceType = SourceTypes.Media; break;
 					default: throw new PSNotSupportedException();
 				}
 
 				// Get the index.
-				index = int.Parse(fields[1]);
+				index = int.Parse(fields[1], CultureInfo.InvariantCulture);
 
 				// Get the path.
 				path = fields[2];
@@ -43,16 +45,16 @@ namespace Microsoft.Windows.Installer
 			}
 		}
 
-		internal PackageSource(SourceType type, int index, string path)
+		internal PackageSource(SourceTypes type, int index, string path)
 		{
-			if (type != SourceType.Network && type != SourceType.URL && type != SourceType.Media)
+			if (type != SourceTypes.Network && type != SourceTypes.Url && type != SourceTypes.Media)
 			{
 				throw new PSNotSupportedException(Properties.Resources.Argument_InvalidSourceType);
 			}
 			if (index < 0) throw new PSArgumentOutOfRangeException("index");
 			if (string.IsNullOrEmpty(path)) throw new PSArgumentNullException("path");
 
-			this.type = type;
+			this.sourceType = type;
 			this.index = index;
 			this.path = path;
 		}
@@ -60,14 +62,14 @@ namespace Microsoft.Windows.Installer
 		public override string ToString()
 		{
 			// Faster than string.Format.
-			return string.Join(";", new string[] { TypeChar.ToString(), Index.ToString(), Path });
+			return string.Join(";", new string[] { TypeChar.ToString(), Index.ToString(CultureInfo.InvariantCulture), Path });
 		}
 
-		public SourceType Type
+		public SourceTypes SourceType
 		{
-			get { return type; }
+			get { return sourceType; }
 		}
-		SourceType type;
+		SourceTypes sourceType;
 
 		public int Index
 		{
@@ -85,11 +87,11 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				switch (type)
+				switch (sourceType)
 				{
-					case SourceType.Network: return 'n';
-					case SourceType.URL: return 'u';
-					case SourceType.Media: return 'm';
+					case SourceTypes.Network: return 'n';
+					case SourceTypes.Url: return 'u';
+					case SourceTypes.Media: return 'm';
 					default: throw new PSNotSupportedException(Properties.Resources.Argument_InvalidSourceType);
 				}
 			}

@@ -201,4 +201,10 @@
   <data name="Location_Path" xml:space="preserve">
     <value>Specifies the path to an item. Wildcards are permitted.</value>
   </data>
+  <data name="File_NotStorage" xml:space="preserve">
+    <value>The file '{0}' is not a structure storage file.</value>
+  </data>
+  <data name="Location_LiteralPath" xml:space="preserve">
+    <value>Specifies the path to an item. Wildcards are not permitted.</value>
+  </data>
 </root>

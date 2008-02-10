@@ -22,11 +22,6 @@ namespace Microsoft.Windows.Installer
 {
 	public class InstalledProductInfo : ProductInfo
 	{
-		internal InstalledProductInfo(string productCode) :
-			this(productCode, null, InstallContext.Machine)
-		{
-		}
-
 		internal InstalledProductInfo(string productCode, string userSid, InstallContext context) :
 			base(productCode, userSid, context)
 		{
@@ -45,7 +40,7 @@ namespace Microsoft.Windows.Installer
 						ref installedProductName);
 			}
 		}
-		string installedProductName = null;
+		string installedProductName;
 
 		public string VersionString
 		{
@@ -54,7 +49,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_VERSIONSTRING, ref versionString);
 			}
 		}
-		string versionString = null;
+		string versionString;
 
 		public string HelpLink
 		{
@@ -63,7 +58,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_HELPLINK, ref helpLink);
 			}
 		}
-		string helpLink = null;
+		string helpLink;
 
 		public string HelpTelephone
 		{
@@ -72,7 +67,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_HELPTELEPHONE, ref helpTelephone);
 			}
 		}
-		string helpTelephone = null;
+		string helpTelephone;
 
 		public string InstallLocation
 		{
@@ -81,7 +76,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_INSTALLLOCATION, ref installLocation);
 			}
 		}
-		string installLocation = null;
+		string installLocation;
 
 		public string InstallSource
 		{
@@ -90,7 +85,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_INSTALLSOURCE, ref installSource);
 			}
 		}
-		string installSource = null;
+		string installSource;
 
 		public DateTime InstallDate
 		{
@@ -99,7 +94,7 @@ namespace Microsoft.Windows.Installer
 				return (DateTime)GetProperty<DateTime>(Msi.INSTALLPROPERTY_INSTALLDATE, ref installDate);
 			}
 		}
-		string installDate = null;
+		string installDate;
 
 		public string Publisher
 		{
@@ -108,7 +103,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PUBLISHER, ref publisher);
 			}
 		}
-		string publisher = null;
+		string publisher;
 
 		public string LocalPackage
 		{
@@ -117,25 +112,27 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LOCALPACKAGE, ref localPackage);
 			}
 		}
-		string localPackage = null;
+		string localPackage;
 
-		public string UrlInfoAbout
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
+        public string UrlInfoAbout
 		{
 			get
 			{
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_URLINFOABOUT, ref urlInfoAbout);
 			}
 		}
-		string urlInfoAbout = null;
+		string urlInfoAbout;
 
-		public string UrlUpdateInfo
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
+        public string UrlUpdateInfo
 		{
 			get
 			{
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_URLUPDATEINFO, ref urlUpdateInfo);
 			}
 		}
-		string urlUpdateInfo = null;
+		string urlUpdateInfo;
 
 		public int VersionMinor
 		{
@@ -144,7 +141,7 @@ namespace Microsoft.Windows.Installer
 				return (int)GetProperty<int>(Msi.INSTALLPROPERTY_VERSIONMINOR, ref versionMinor);
 			}
 		}
-		string versionMinor = null;
+		string versionMinor;
 
 		public int VersionMajor
 		{
@@ -153,16 +150,16 @@ namespace Microsoft.Windows.Installer
 				return (int)GetProperty<int>(Msi.INSTALLPROPERTY_VERSIONMAJOR, ref versionMajor);
 			}
 		}
-		string versionMajor = null;
+		string versionMajor;
 
-		public string ProductID
+		public string ProductId
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PRODUCTID, ref productID);
+				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PRODUCTID, ref productId);
 			}
 		}
-		string productID = null;
+		string productId;
 
 		public string RegCompany
 		{
@@ -171,7 +168,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_REGCOMPANY, ref regCompany);
 			}
 		}
-		string regCompany = null;
+		string regCompany;
 
 		public string RegOwner
 		{
@@ -180,7 +177,7 @@ namespace Microsoft.Windows.Installer
 				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_REGOWNER, ref regOwner);
 			}
 		}
-		string regOwner = null;
+		string regOwner;
 
 		internal override string PSPath
 		{

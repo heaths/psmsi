@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Msi.cs" />
     <Compile Include="MsiAdvertisedProductInfo.cs" />
     <Compile Include="MsiEnumerable.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="MsiPackage.cs" />
     <Compile Include="MsiPatchInfo.cs" />
     <Compile Include="MsiProductInfo.cs" />
+    <Compile Include="PowerShell\Commands\GetFileHashCommand.cs" />
     <Compile Include="PowerShell\Commands\EnumCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />

@@ -24,19 +24,19 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 	public sealed class GetRelatedProductCommand : EnumCommand<ProductInfo>
 	{
 		const string UpgradeCodeParameterSet = "UpgradeCode";
-		string upgradeCode = null;
+		string upgradeCode;
 
 		protected override void ProcessRecord()
 		{
             WriteCommandDetail("Enumerating product instances for each upgrade code.");
-			foreach (string upgradeCode in this.upgradeCodes)
+			foreach (string _upgradeCode in this.upgradeCodes)
 			{
-				this.upgradeCode = upgradeCode;
+				this.upgradeCode = _upgradeCode;
 				base.ProcessRecord();
 			}
 		}
 
-		[Parameter(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
                 Mandatory = true,
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetRelatedProduct_UpgradeCode",
@@ -50,7 +50,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			get { return upgradeCodes; }
 			set { upgradeCodes = value; }
 		}
-		string[] upgradeCodes = null;
+		string[] upgradeCodes;
 
 		protected override int Enumerate(int index, out ProductInfo product)
 		{

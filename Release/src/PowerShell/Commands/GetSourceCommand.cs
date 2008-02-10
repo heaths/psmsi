@@ -16,6 +16,7 @@ using System.Management.Automation;
 using System.Text;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
+using System.Globalization;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
@@ -84,13 +85,13 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			}
 		}
 
-		string productOrPatchCode = null;
-		string userSid = null;
+		string productOrPatchCode;
+		string userSid;
 		InstallContext context = InstallContext.Machine;
 		Code code = Code.Product;
-		SourceType sourceType = SourceType.Network;
+		SourceTypes sourceType = SourceTypes.Network;
 
-        [Parameter(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
                 Mandatory = true,
                 HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
                 HelpMessageResourceId = "GetSource_InputObject",
@@ -103,9 +104,9 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             get { return this.inputObjects; }
             set { this.inputObjects = value; }
         }
-        PSObject[] inputObjects = null;
+        PSObject[] inputObjects;
 
-		[Parameter(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
                 Mandatory = true,
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetSource_ProductCode",
@@ -118,9 +119,9 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			get { return this.productCodes; }
 			set { this.productCodes = value; }
 		}
-		string[] productCodes = null;
+		string[] productCodes;
 
-		[Parameter(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
                 Mandatory = true,
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetSource_PatchCode",
@@ -133,7 +134,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 			get { return this.patchCodes; }
 			set { this.patchCodes = value; }
 		}
-		string[] patchCodes = null;
+		string[] patchCodes;
 
 		[Parameter(
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
@@ -159,14 +160,14 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
 				HelpMessageResourceId="GetSource_SourceType",
 				ValueFromPipelineByPropertyName=true)]
-		public SourceType SourceType
+		public SourceTypes SourceType
 		{
 			get { return this.sourceType; }
 			set
 			{
-				if ((value & SourceType.Media) == SourceType.Media)
+				if ((value & SourceTypes.Media) == SourceTypes.Media)
 				{
-					throw new ArgumentException(Properties.Resources.Argument_InvalidSourceType, "SourceType");
+					throw new ArgumentException(Properties.Resources.Argument_InvalidSourceType);
 				}
 
 				this.sourceType = value;
@@ -178,7 +179,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 				HelpMessageResourceId="GetSource_Everyone")]
 		public SwitchParameter Everyone
 		{
-			get { return string.Compare(this.userSid, EVERYONE, true) == 0; }
+			get { return string.Compare(this.userSid, EVERYONE, StringComparison.OrdinalIgnoreCase) == 0; }
 			set
 			{
 				if (value)

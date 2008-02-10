@@ -23,11 +23,6 @@ namespace Microsoft.Windows.Installer
 {
 	public class AdvertisedProductInfo : ProductInfo
 	{
-		internal AdvertisedProductInfo(string productCode) :
-			this(productCode, null, InstallContext.Machine)
-		{
-		}
-
 		internal AdvertisedProductInfo(string productCode, string userSid, InstallContext context) :
 			base(productCode, userSid, context)
 		{

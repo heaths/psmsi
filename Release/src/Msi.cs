@@ -17,6 +17,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Runtime.ConstrainedExecution;
+using System.Globalization;
 
 namespace Microsoft.Windows.Installer
 {
@@ -101,54 +102,54 @@ namespace Microsoft.Windows.Installer
 		[DllImport(DLL)]
 		internal static extern int DllGetVersion(ref DLLVERSIONINFO pdvi);
 
-        [DllImport(DLL)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiCloseHandle(
-            [MarshalAs(UnmanagedType.U4)] int hAny);
+        //[DllImport(DLL)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern int MsiCloseHandle(
+        //    [MarshalAs(UnmanagedType.U4)] int hAny);
 
 		// Enumerator functions
-		[DllImport(DLL, CharSet=CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.U4)]
-		internal static extern int MsiEnumClients(
-				string szComponent,
-				[MarshalAs(UnmanagedType.U4)] int iProductIndex,
-				[Out] StringBuilder lpProductBuf);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern int MsiEnumClients(
+        //        string szComponent,
+        //        [MarshalAs(UnmanagedType.U4)] int iProductIndex,
+        //        [Out] StringBuilder lpProductBuf);
 	
-		[DllImport(DLL, CharSet=CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.U4)]
-		internal static extern int MsiEnumComponentCosts(
-				[MarshalAs(UnmanagedType.U4)] int hInstall,
-				string szComponent,
-				[MarshalAs(UnmanagedType.U4)] int dwIndex,
-				[MarshalAs(UnmanagedType.U4)] int iState,
-				[Out] StringBuilder lpDriveBuf,
-				[MarshalAs(UnmanagedType.U4)] ref int pcchDriveBuf,
-				[MarshalAs(UnmanagedType.I4)] out int piCost,
-				[MarshalAs(UnmanagedType.I4)] out int pTempCost);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern int MsiEnumComponentCosts(
+        //        [MarshalAs(UnmanagedType.U4)] int hInstall,
+        //        string szComponent,
+        //        [MarshalAs(UnmanagedType.U4)] int dwIndex,
+        //        [MarshalAs(UnmanagedType.U4)] int iState,
+        //        [Out] StringBuilder lpDriveBuf,
+        //        [MarshalAs(UnmanagedType.U4)] ref int pcchDriveBuf,
+        //        [MarshalAs(UnmanagedType.I4)] out int piCost,
+        //        [MarshalAs(UnmanagedType.I4)] out int pTempCost);
 	
-		[DllImport(DLL, CharSet=CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.U4)]
-		internal static extern int MsiEnumComponentQualifiers(
-				string szComponent,
-				[MarshalAs(UnmanagedType.U4)] int iIndex,
-				[Out] StringBuilder lpQualifierBuf,
-				[MarshalAs(UnmanagedType.U4)] ref int pcchQualifierBuf,
-				[Out] StringBuilder lpApplicationDataBuf,
-				[MarshalAs(UnmanagedType.U4)] ref int pcchApplicationDataBuf);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern int MsiEnumComponentQualifiers(
+        //        string szComponent,
+        //        [MarshalAs(UnmanagedType.U4)] int iIndex,
+        //        [Out] StringBuilder lpQualifierBuf,
+        //        [MarshalAs(UnmanagedType.U4)] ref int pcchQualifierBuf,
+        //        [Out] StringBuilder lpApplicationDataBuf,
+        //        [MarshalAs(UnmanagedType.U4)] ref int pcchApplicationDataBuf);
 	
-		[DllImport(DLL, CharSet=CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.U4)]
-		internal static extern int MsiEnumComponents(
-				[MarshalAs(UnmanagedType.U4)] int iComponentIndex,
-				[Out] StringBuilder lpComponentBuf);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern int MsiEnumComponents(
+        //        [MarshalAs(UnmanagedType.U4)] int iComponentIndex,
+        //        [Out] StringBuilder lpComponentBuf);
 	
-		[DllImport(DLL, CharSet=CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.U4)]
-		internal static extern int MsiEnumFeatures(
-				string szProduct,
-				[MarshalAs(UnmanagedType.U4)] int iFeatureIndex,
-				[Out] StringBuilder lpFeatureBuf,
-				[Out] StringBuilder lpParentBuf);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern int MsiEnumFeatures(
+        //        string szProduct,
+        //        [MarshalAs(UnmanagedType.U4)] int iFeatureIndex,
+        //        [Out] StringBuilder lpFeatureBuf,
+        //        [Out] StringBuilder lpParentBuf);
 	
 		[DllImport(DLL, CharSet=CharSet.Unicode)]
 		[return: MarshalAs(UnmanagedType.U4)]
@@ -165,7 +166,7 @@ namespace Microsoft.Windows.Installer
 				string szProductcode,
 				string szUserSid,
 				[MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-				[MarshalAs(UnmanagedType.U4)] PatchState dwFilter,
+				[MarshalAs(UnmanagedType.U4)] PatchStates dwFilter,
 				[MarshalAs(UnmanagedType.U4)] int dwIndex,
 				[Out] StringBuilder szPatchCode,
 				[Out] StringBuilder szTargetProductCode,
@@ -219,16 +220,16 @@ namespace Microsoft.Windows.Installer
 				[Out] StringBuilder lpValue,
 				[MarshalAs(UnmanagedType.U4)] ref int pcchValue);
 
-		[DllImport(DLL, CharSet=CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.U4)]
-		internal static extern int MsiGetProductInfoEx(
-				string szPatchCode,
-				string szProductCode,
-				string szUserSid,
-				[MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-				string szProperty,
-				[Out] StringBuilder lpValue,
-				[MarshalAs(UnmanagedType.U4)] ref int pcchValue);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern int MsiGetProductInfoEx(
+        //        string szPatchCode,
+        //        string szProductCode,
+        //        string szUserSid,
+        //        [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
+        //        string szProperty,
+        //        [Out] StringBuilder lpValue,
+        //        [MarshalAs(UnmanagedType.U4)] ref int pcchValue);
 
 		[DllImport(DLL, CharSet=CharSet.Unicode)]
 		[return: MarshalAs(UnmanagedType.U4)]
@@ -248,41 +249,48 @@ namespace Microsoft.Windows.Installer
 				[Out] StringBuilder lpValue,
 				[MarshalAs(UnmanagedType.U4)] ref int pcchValue);
 
+        [DllImport(DLL)]
+        [return: MarshalAs(UnmanagedType.U4)]
+        internal static extern int MsiGetFileHash(
+            string szFilePath,
+            [MarshalAs(UnmanagedType.U4)] int dwOptions,
+            [MarshalAs(UnmanagedType.LPStruct), Out] FileHashInfo pHash);
+
         // Database functions
 
         // Creates a database handle by path.
-        [DllImport(DLL, CharSet=CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiOpenDatabase(
-            string szDatabasePath,
-            DbOpen szPersist,
-            out MsiHandle phDatabase);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern int MsiOpenDatabase(
+        //    string szDatabasePath,
+        //    [MarshalAs(UnmanagedType.SysUInt)] DBOpen szPersist,
+        //    out MsiHandle phDatabase);
 
         // Get a database handle from a product handle.
-        [DllImport(DLL, CharSet=CharSet.Unicode)]
-        internal static extern MsiHandle MsiGetActiveDatabase(MsiHandle hInstall);
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1901:PInvokeDeclarationsShouldBePortable", MessageId = "0"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1901:PInvokeDeclarationsShouldBePortable", MessageId = "return"), DllImport(DLL, CharSet = CharSet.Unicode)]
+        //internal static extern MsiHandle MsiGetActiveDatabase(MsiHandle hInstall);
 
         // Action functions
-		[DllImport(DLL, CharSet=CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.U4)]
-		internal static extern int MsiRemovePatches(
-				string szPatchList,
-				string szProductCode,
-				[MarshalAs(UnmanagedType.U4)] InstallType eUninstallType,
-				string szPropertyList);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern int MsiRemovePatches(
+        //        string szPatchList,
+        //        string szProductCode,
+        //        [MarshalAs(UnmanagedType.U4)] InstallType eUninstallType,
+        //        string szPropertyList);
 
 		// Miscellaneous functions
-		[DllImport(DLL, CharSet=CharSet.Unicode)]
-		internal static extern InstallUIHandler MsiSetExternalUI(
-				InstallUIHandler puiHandler,
-				[MarshalAs(UnmanagedType.U4)] InstallLogMode dwMessageFilter,
-				IntPtr pvContext);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //internal static extern InstallUIHandler MsiSetExternalUI(
+        //        InstallUIHandler puiHandler,
+        //        [MarshalAs(UnmanagedType.U4)] InstallLogModes dwMessageFilter,
+        //        IntPtr pvContext);
 
-		[DllImport(DLL, CharSet=CharSet.Unicode)]
-		[return: MarshalAs(UnmanagedType.U4)]
-		internal static extern InstallUILevel MsiSetInternalUI(
-				[MarshalAs(UnmanagedType.U4)] InstallUILevel dwUILevel,
-				ref IntPtr phWnd);
+        //[DllImport(DLL, CharSet=CharSet.Unicode)]
+        //[return: MarshalAs(UnmanagedType.U4)]
+        //internal static extern InstallUILevels MsiSetInternalUI(
+        //        [MarshalAs(UnmanagedType.U4)] InstallUILevels dwUILevel,
+        //        ref IntPtr phWnd);
 
 		[DllImport(DLL, CharSet=CharSet.Unicode)]
 		[return: MarshalAs(UnmanagedType.U4)]
@@ -296,8 +304,8 @@ namespace Microsoft.Windows.Installer
 				[MarshalAs(UnmanagedType.U4)] ref int pcchSource);
 
 		// Wrapper methods
-		static int _major = 0;
-		static int _minor = 0;
+		static int _major;
+		static int _minor;
 
 		internal static bool CheckVersion(int major, int minor)
 		{
@@ -321,7 +329,7 @@ namespace Microsoft.Windows.Installer
 
 			if (throwOtherwise && !check)
 			{
-				throw new NotSupportedException(string.Format(Properties.Resources.MsiRequiredVersion, major, minor));
+                throw new NotSupportedException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.MsiRequiredVersion, major, minor));
 			}
 
 			return check;
@@ -388,8 +396,8 @@ namespace Microsoft.Windows.Installer
 			IntPtr pvContext,
 			[MarshalAs(UnmanagedType.U4)] int iMessageType,
 			string szMessage);
-	
-	[Flags]
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1714:FlagsEnumsShouldHavePluralNames"), Flags]
 	public enum InstallContext : int
 	{
 		None = 0,
@@ -411,19 +419,21 @@ namespace Microsoft.Windows.Installer
 		Instance = 1
 	}
 
-	public enum ProductState : int
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue")]
+    public enum ProductState : int
 	{
 		Advertised = 1,
 		Installed = 5
 	}
-	
-	[Flags]
-	public enum PatchState : int
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue"), Flags]
+	public enum PatchStates : int
 	{
 		Invalid = 0,
 		Applied = 1,
 		Superseded = 2,
-		Obsoleted = 4,
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Obsoleted")]
+        Obsoleted = 4,
 		Registered = 8,
 		All = Applied | Superseded | Obsoleted | Registered
 	}
@@ -435,8 +445,8 @@ namespace Microsoft.Windows.Installer
 		SingleInstance = 2
 	}
 
-	[Flags]
-	public enum InstallMessage : int
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2217:DoNotMarkEnumsWithFlags"), Flags]
+	public enum InstallMessages : int
 	{
 		FatalExit = 0,
 		Error = 0x01000000,
@@ -457,32 +467,32 @@ namespace Microsoft.Windows.Installer
 	}
 
 	[Flags]
-	public enum InstallLogMode : int
+	public enum InstallLogModes : int
 	{
-		FatalExit = 1 << (InstallMessage.FatalExit >> 24),
-		Error = 1 << (InstallMessage.Error >> 24),
-		Warning = 1 << (InstallMessage.Warning >> 24),
-		User = 1 << (InstallMessage.User >> 24),
-		Info = 1 << (InstallMessage.Info >> 24),
-		ResolveSource = 1 << (InstallMessage.ResolveSource >> 24),
-		OutOfDiskSpace = 1 << (InstallMessage.OutOfDiskSpace >> 24),
-		ActionStart = 1 << (InstallMessage.ActionStart >> 24),
-		ActionData = 1 << (InstallMessage.ActionData >> 24),
-		CommonData = 1 << (InstallMessage.CommonData >> 24),
-		PropertyDump = 1 << (InstallMessage.Progress >> 24),
-		Verbose = 1 << (InstallMessage.Initialize >> 24),
-		ExtraDebug = 1 << (InstallMessage.Terminate >> 24),
-		LogOnlyOnError = 1 << (InstallMessage.ShowDialog >> 24),
-		Progress = 1 << (InstallMessage.Progress >> 24),
-		Initialize = 1 << (InstallMessage.Initialize >> 24),
-		Terminate = 1 << (InstallMessage.Terminate >> 24),
-		ShowDialog = 1 << (InstallMessage.ShowDialog >> 24),
-		FilesInUse = 1 << (InstallMessage.FilesInUse >> 24),
-		RMFilesInUse = 1 << (InstallMessage.RMFilesInUse >> 24)
+		FatalExit = 1 << (InstallMessages.FatalExit >> 24),
+        Error = 1 << (InstallMessages.Error >> 24),
+        Warning = 1 << (InstallMessages.Warning >> 24),
+        User = 1 << (InstallMessages.User >> 24),
+        Info = 1 << (InstallMessages.Info >> 24),
+        ResolveSource = 1 << (InstallMessages.ResolveSource >> 24),
+        OutOfDiskSpace = 1 << (InstallMessages.OutOfDiskSpace >> 24),
+        ActionStart = 1 << (InstallMessages.ActionStart >> 24),
+        ActionData = 1 << (InstallMessages.ActionData >> 24),
+        CommonData = 1 << (InstallMessages.CommonData >> 24),
+        PropertyDump = 1 << (InstallMessages.Progress >> 24),
+        Verbose = 1 << (InstallMessages.Initialize >> 24),
+        ExtraDebug = 1 << (InstallMessages.Terminate >> 24),
+        LogOnlyOnError = 1 << (InstallMessages.ShowDialog >> 24),
+        Progress = 1 << (InstallMessages.Progress >> 24),
+        Initialize = 1 << (InstallMessages.Initialize >> 24),
+        Terminate = 1 << (InstallMessages.Terminate >> 24),
+        ShowDialog = 1 << (InstallMessages.ShowDialog >> 24),
+        FilesInUse = 1 << (InstallMessages.FilesInUse >> 24),
+        RMFilesInUse = 1 << (InstallMessages.RMFilesInUse >> 24)
 	}
 
-	[Flags]
-	public enum InstallUILevel : int
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue"), Flags]
+	public enum InstallUILevels : int
 	{
 		NoChange = 0,
 		Default = 1,
@@ -497,23 +507,24 @@ namespace Microsoft.Windows.Installer
 	}
 
 	[Flags]
-	public enum SourceType : int
+	public enum SourceTypes : int
 	{
-		Unknown = 0,
+		None = 0,
 		Network = 1,
-		URL = 2,
+		Url = 2,
 		Media = 4,
-		All = Network | URL | Media
+		All = Network | Url | Media
 	}
 
-	public enum Code : int
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1027:MarkEnumsWithFlags")]
+    public enum Code : int
 	{
 		Product = 0,
         Patch = 0x40000000
 	}
 
-    [Flags]
-    public enum DbOpen : int
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1714:FlagsEnumsShouldHavePluralNames"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue"), Flags]
+    public enum DBOpen : int
     {
         ReadOnly = 0,
         Transact,
@@ -526,7 +537,8 @@ namespace Microsoft.Windows.Installer
 	[StructLayout(LayoutKind.Sequential)]
 	struct DLLVERSIONINFO
 	{
-		internal DLLVERSIONINFO(byte reserved)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "reserved")]
+        internal DLLVERSIONINFO(byte reserved)
 		{
 			cbSize = Marshal.SizeOf(typeof(DLLVERSIONINFO));
 			dwMajorVersion = 0;
@@ -547,4 +559,24 @@ namespace Microsoft.Windows.Installer
 					dvi.dwBuildNumber);
 		}
 	}
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class FileHashInfo
+    {
+        [MarshalAs(UnmanagedType.U4)] int dwFileHashInfoSize;
+        [MarshalAs(UnmanagedType.U4)] int dwData0;
+        [MarshalAs(UnmanagedType.U4)] int dwData1;
+        [MarshalAs(UnmanagedType.U4)] int dwData2;
+        [MarshalAs(UnmanagedType.U4)] int dwData3;
+
+        internal FileHashInfo()
+        {
+            dwFileHashInfoSize = Marshal.SizeOf(this.GetType());
+        }
+
+        public int HashPart1 { get { return dwData0; } }
+        public int HashPart2 { get { return dwData1; } }
+        public int HashPart3 { get { return dwData2; } }
+        public int HashPart4 { get { return dwData3; } }
+    }
 }

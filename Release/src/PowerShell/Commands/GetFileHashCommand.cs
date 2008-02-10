@@ -19,13 +19,12 @@ using System.Management;
 using System.Management.Automation;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
-using System.Globalization;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-    [Cmdlet(VerbsCommon.Get, "MSIFileType",
+    [Cmdlet(VerbsCommon.Get, "MSIFileHash",
         DefaultParameterSetName = Location.PathParameterSet)]
-    public sealed class GetFileTypeCommand : PSCmdlet
+    public sealed class GetFileHashCommand : PSCmdlet
     {
         protected override void ProcessRecord()
         {
@@ -43,48 +42,25 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                     string fsPath = Location.GetOneResolvedProviderPathFromPSObject(item, this);
                     if (null != fsPath && File.Exists(fsPath))
                     {
-                        string fileType = null;
-                        Guid clsid = Guid.Empty;
-
-                        try
+                        FileHashInfo hashInfo = new FileHashInfo();
+                        int ret = Msi.MsiGetFileHash(fsPath, 0, hashInfo);
+                        if (Msi.ERROR_SUCCESS != ret)
                         {
-                            Storage stg = Storage.OpenStorage(fsPath, true);
-                            clsid = stg.Clsid;
-                        }
-                        catch (NotSupportedException)
-                        {
-                            this.WriteDebug(string.Format(CultureInfo.InvariantCulture, Properties.Resources.File_NotStorage, fsPath));
-                        }
-                        catch (System.ComponentModel.Win32Exception ex)
-                        {
-                            // non-terminating error; continue to the next file
-                            string message = ex.Message.Replace("%1", fsPath);
-                            PSInvalidOperationException psex = new PSInvalidOperationException(message, ex);
+                            // write the Win32 error message
+                            System.ComponentModel.Win32Exception ex = new System.ComponentModel.Win32Exception(ret);
+                            PSInvalidOperationException psex = new PSInvalidOperationException(ex.Message, ex);
                             this.WriteError(psex.ErrorRecord);
                         }
-
-                        // set a friendly type name
-                        if (Msi.CLSID_MsiPackage == clsid)
+                        else if (this.passThru)
                         {
-                                fileType = Msi.MsiPackage;
-                        }
-                        else if (Msi.CLSID_MsiPatch == clsid)
-                        {
-                                fileType = Msi.MsiPatch;
-                        }
-                        else if (Msi.CLSID_MsiTransform == clsid)
-                        {
-                                fileType = Msi.MsiTransform;
-                        }
-
-                        // append or write out the file type
-                        if (this.passThru)
-                        {
-                            item.Properties.Add(new PSNoteProperty("MSIFileType", fileType));
+                            item.Properties.Add(new PSNoteProperty("MSIHashPart1", hashInfo.HashPart1));
+                            item.Properties.Add(new PSNoteProperty("MSIHashPart2", hashInfo.HashPart2));
+                            item.Properties.Add(new PSNoteProperty("MSIHashPart3", hashInfo.HashPart3));
+                            item.Properties.Add(new PSNoteProperty("MSIHashPart4", hashInfo.HashPart4));
                         }
                         else
                         {
-                            this.WriteObject(fileType);
+                            this.WriteObject(hashInfo);
                         }
                     }
 
@@ -115,7 +91,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             set
             {
                 this.literal = false;
-                this.path = value; 
+                this.path = value;
             }
         }
 
