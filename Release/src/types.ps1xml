@@ -11,6 +11,13 @@
             <Value>ProductCode</Value>
           </NoteProperty>
           <PropertySet>
+            <Name>DefaultDisplayPropertySet</Name>
+            <ReferencedProperties>
+              <Name>ProductCode</Name>
+              <Name>ProductName</Name>
+            </ReferencedProperties>
+          </PropertySet>
+          <PropertySet>
             <Name>DefaultKeyPropertySet</Name>
             <ReferencedProperties>
               <Name>ProductCode</Name>
@@ -35,6 +42,13 @@
             <Value>PatchCode</Value>
           </NoteProperty>
           <PropertySet>
+            <Name>DefaultDisplayPropertySet</Name>
+            <ReferencedProperties>
+              <Name>PatchCode</Name>
+              <Name>DisplayName</Name>
+            </ReferencedProperties>
+          </PropertySet>
+          <PropertySet>
             <Name>DefaultKeyPropertySet</Name>
             <ReferencedProperties>
               <Name>PatchCode</Name>
@@ -46,6 +60,33 @@
         <Name>Name</Name>
         <ReferencedMemberName>DisplayName</ReferencedMemberName>
       </AliasProperty>
+    </Members>
+  </Type>
+  <Type>
+    <Name>Microsoft.Windows.Installer.PackageSource</Name>
+    <Members>
+      <MemberSet>
+        <Name>PSStandardMembers</Name>
+        <Members>
+          <NoteProperty>
+            <Name>DefaultDisplayProperty</Name>
+            <Value>Path</Value>
+          </NoteProperty>
+          <PropertySet>
+            <Name>DefaultDisplayPropertySet</Name>
+            <ReferencedProperties>
+              <Name>SourceType</Name>
+              <Name>Path</Name>
+            </ReferencedProperties>
+          </PropertySet>
+          <PropertySet>
+            <Name>DefaultKeyPropertySet</Name>
+            <ReferencedProperties>
+              <Name>Index</Name>
+            </ReferencedProperties>
+          </PropertySet>
+        </Members>
+      </MemberSet>
     </Members>
   </Type>
 </Types>
