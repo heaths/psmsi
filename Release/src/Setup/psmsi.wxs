@@ -24,6 +24,9 @@ in sync with the assembly version and description of the appropriate payload.
               <ps:TypesFile SnapIn="psmsi" />
             </File>
           </Component>
+		  <Component Id="SnapIn.Help" Guid="2CC04A21-89DE-4C21-9986-25C91C013BE9" DiskId="1">
+            <File Id="psmsi.Help" Name="Microsoft.Windows.Installer.PowerShell.dll-Help.xml" Source="..\bin\$(var.Configuration)\Microsoft.Windows.Installer.PowerShell.dll-Help.xml" KeyPath="yes" />
+		  </Component>
         </Directory>
       </Directory>
     </Directory>
@@ -32,6 +35,7 @@ in sync with the assembly version and description of the appropriate payload.
     <UIRef Id="WixUI_InstallDir" />
     <Feature Id="PsMsi" AllowAdvertise="no" Description="Installs a PowerShell snapin." ConfigurableDirectory="APPROOT" Level="1" Title="PowerShell SnapIn">
       <ComponentRef Id="SnapIn" />
+	  <ComponentRef Id="SnapIn.Help" />
     </Feature>
     <InstallExecuteSequence>
       <InstallExecute Before="RemoveExistingProducts" />
