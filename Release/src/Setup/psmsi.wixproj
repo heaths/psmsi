@@ -61,4 +61,7 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="en-us.wxl" />
+  </ItemGroup>
 </Project>

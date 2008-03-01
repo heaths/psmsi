@@ -1,18 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
-Variables below are used often throughout authoring and should be kept
-in sync with the assembly version and description of the appropriate payload.
--->
-<?define Manufacturer = "Microsoft Corporation"?>
-<?define ProductName = "Windows Installer PowerShell Extensions"?>
-<?define ProductVersion = "1.0.4.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:ps="http://schemas.microsoft.com/wix/PSExtension" ps:RequiredVersion="3.0.3829">
-  <Product Id="D4D7590C-36E7-4930-8EED-FA00ED113DAC" Name="$(var.ProductName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="E8119A6C-7752-46FA-904B-C6019D91D0BF">
-    <Package Id="*" Description="$(var.ProductName)" Comments="This installer database contains the logic and data required to install $(var.ProductName)." Manufacturer="$(var.Manufacturer)" Platform="intel" InstallerVersion="200" Compressed="yes"/>
+  <Product Id="D4D7590C-36E7-4930-8EED-FA00ED113DAC" Name="!(loc.ProductName)" Language="1033" Version="!(bind.assemblyFileVersion.psmsi)" Manufacturer="!(loc.Manufacturer)" UpgradeCode="E8119A6C-7752-46FA-904B-C6019D91D0BF">
+    <Package Id="*" Description="!(loc.ProductName)" Comments="!(loc.Comments)" Manufacturer="!(loc.Manufacturer)" Platform="intel" InstallerVersion="200" Compressed="yes"/>
     <Media Id="1" Cabinet="psmsi.cab" EmbedCab="yes" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder" Name="Program Files">
-        <Directory Id="APPROOT" Name="$(var.ProductName)">
+        <Directory Id="APPROOT" Name="!(loc.ProductName)">
           <Component Id="SnapIn" Guid="59162062-6A78-40C5-BA7D-D1EE9192E26A" DiskId="1">
             <File Id="psmsi" Name="Microsoft.Windows.Installer.PowerShell.dll" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetPath)" KeyPath="yes" Assembly=".net" AssemblyApplication="psmsi">
               <ps:SnapIn Id="psmsi" DescriptionIndirect="Microsoft.Windows.Installer.Properties.Resources,SnapIn_Description" VendorIndirect="Microsoft.Windows.Installer.Properties.Resources,SnapIn_Vendor" />
@@ -33,7 +26,7 @@ in sync with the assembly version and description of the appropriate payload.
     <Property Id="WIXUI_INSTALLDIR" Value="APPROOT" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     <UIRef Id="WixUI_InstallDir" />
-    <Feature Id="PsMsi" AllowAdvertise="no" Description="Installs a PowerShell snapin." ConfigurableDirectory="APPROOT" Level="1" Title="PowerShell SnapIn">
+    <Feature Id="PsMsi" AllowAdvertise="no" Description="!(loc.F_PsMsi_Description)" ConfigurableDirectory="APPROOT" Level="1" Title="!(loc.F_PsMsi_Title)">
       <ComponentRef Id="SnapIn" />
 	  <ComponentRef Id="SnapIn.Help" />
     </Feature>
@@ -42,7 +35,7 @@ in sync with the assembly version and description of the appropriate payload.
       <RemoveExistingProducts Before="InstallFinalize" />
     </InstallExecuteSequence>
     <Upgrade Id="E8119A6C-7752-46FA-904B-C6019D91D0BF">
-      <UpgradeVersion IncludeMinimum="yes" Minimum="1.0.0.0" Maximum="$(var.ProductVersion)" MigrateFeatures="yes" Property="OLDERVERSIONDETECTED"/>
+      <UpgradeVersion IncludeMinimum="yes" Minimum="1.0.0.0" Maximum="!(bind.assemblyFileVersion.psmsi)" MigrateFeatures="yes" Property="OLDERVERSIONDETECTED"/>
     </Upgrade>
   </Product>
 </Wix>
