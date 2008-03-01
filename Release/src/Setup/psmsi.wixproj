@@ -7,20 +7,58 @@
     <OutputName>psmsi</OutputName>
     <OutputType>package</OutputType>
     <ProjectGuid>{f9da7492-b466-43d6-843c-40ebfaa89f34}</ProjectGuid>
-	<SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
+    <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants>Configuration=Debug</DefineConstants>
-	<SuppressValidation>true</SuppressValidation>
+    <DefineConstants>Debug</DefineConstants>
+    <SuppressValidation>true</SuppressValidation>
+    <Cultures>en-us</Cultures>
+    <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
+    <LibBindFiles>False</LibBindFiles>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <SuppressPdbOutput>False</SuppressPdbOutput>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+    <WixVariables>
+    </WixVariables>
+    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <Pedantic>False</Pedantic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants>Configuration=Release</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
+    <Cultures>en-us</Cultures>
+    <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
+    <LibBindFiles>False</LibBindFiles>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <SuppressPdbOutput>False</SuppressPdbOutput>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+    <WixVariables>
+    </WixVariables>
+    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <Pedantic>False</Pedantic>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
   <ItemGroup>
     <Compile Include="psmsi.wxs" />
-    <WixExtension Include="WixUIExtension" />
-	<WixExtension Include="WixPSExtension" />
+    <WixExtension Include="WixUIExtension">
+      <HintPath>C:\Program Files\Windows Installer XML v3\bin\WixUIExtension.dll</HintPath>
+    </WixExtension>
+    <WixExtension Include="WixPSExtension">
+      <HintPath>C:\Program Files\Windows Installer XML v3\bin\WixPSExtension.dll</HintPath>
+    </WixExtension>
   </ItemGroup>
   <Target Name="All" DependsOnTargets="Build" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Microsoft.Windows.Installer.PowerShell.csproj">
+      <Name>Microsoft.Windows.Installer.PowerShell</Name>
+      <Project>{eae7d4bf-5061-4220-be94-e268e965dce5}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

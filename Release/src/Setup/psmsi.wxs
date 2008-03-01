@@ -6,7 +6,7 @@ in sync with the assembly version and description of the appropriate payload.
 <?define Manufacturer = "Microsoft Corporation"?>
 <?define ProductName = "Windows Installer PowerShell Extensions"?>
 <?define ProductVersion = "1.0.4.0"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:ps="http://schemas.microsoft.com/wix/PSExtension">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:ps="http://schemas.microsoft.com/wix/PSExtension" ps:RequiredVersion="3.0.3829">
   <Product Id="D4D7590C-36E7-4930-8EED-FA00ED113DAC" Name="$(var.ProductName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="E8119A6C-7752-46FA-904B-C6019D91D0BF">
     <Package Id="*" Description="$(var.ProductName)" Comments="This installer database contains the logic and data required to install $(var.ProductName)." Manufacturer="$(var.Manufacturer)" Platform="intel" InstallerVersion="200" Compressed="yes"/>
     <Media Id="1" Cabinet="psmsi.cab" EmbedCab="yes" />
@@ -14,18 +14,18 @@ in sync with the assembly version and description of the appropriate payload.
       <Directory Id="ProgramFilesFolder" Name="Program Files">
         <Directory Id="APPROOT" Name="$(var.ProductName)">
           <Component Id="SnapIn" Guid="59162062-6A78-40C5-BA7D-D1EE9192E26A" DiskId="1">
-            <File Id="psmsi" Name="Microsoft.Windows.Installer.PowerShell.dll" Source="..\bin\$(var.Configuration)\Microsoft.Windows.Installer.PowerShell.dll" KeyPath="yes" Assembly=".net" AssemblyApplication="psmsi">
+            <File Id="psmsi" Name="Microsoft.Windows.Installer.PowerShell.dll" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetPath)" KeyPath="yes" Assembly=".net" AssemblyApplication="psmsi">
               <ps:SnapIn Id="psmsi" DescriptionIndirect="Microsoft.Windows.Installer.Properties.Resources,SnapIn_Description" VendorIndirect="Microsoft.Windows.Installer.Properties.Resources,SnapIn_Vendor" />
             </File>
-            <File Id="psmsi.Formats" Name="formats.ps1xml" Source="..\bin\$(var.Configuration)\formats.ps1xml">
+            <File Id="psmsi.Formats" Name="formats.ps1xml" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\formats.ps1xml">
               <ps:FormatsFile SnapIn="psmsi" />
             </File>
-            <File Id="psmsi.Types" Name="types.ps1xml" Source="..\bin\$(var.Configuration)\types.ps1xml">
+            <File Id="psmsi.Types" Name="types.ps1xml" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\types.ps1xml">
               <ps:TypesFile SnapIn="psmsi" />
             </File>
           </Component>
 		  <Component Id="SnapIn.Help" Guid="2CC04A21-89DE-4C21-9986-25C91C013BE9" DiskId="1">
-            <File Id="psmsi.Help" Name="Microsoft.Windows.Installer.PowerShell.dll-Help.xml" Source="..\bin\$(var.Configuration)\Microsoft.Windows.Installer.PowerShell.dll-Help.xml" KeyPath="yes" />
+            <File Id="psmsi.Help" Name="Microsoft.Windows.Installer.PowerShell.dll-Help.xml" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\Microsoft.Windows.Installer.PowerShell.dll-Help.xml" KeyPath="yes" />
 		  </Component>
         </Directory>
       </Directory>
