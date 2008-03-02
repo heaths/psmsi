@@ -543,9 +543,10 @@ namespace Microsoft.Windows.Installer
             this.dwFileHashInfoSize = Marshal.SizeOf(this);
         }
 
-        public int HashPart1 { get { return dwData0; } }
-        public int HashPart2 { get { return dwData1; } }
-        public int HashPart3 { get { return dwData2; } }
-        public int HashPart4 { get { return dwData3; } }
+        // Use Nullable<Int32> so that directories display correct with format cmdlets
+        public int? HashPart1 { get { return 0 == this.dwData0 ? null : new int?(this.dwData0); } }
+        public int? HashPart2 { get { return 0 == this.dwData1 ? null : new int?(this.dwData1); } }
+        public int? HashPart3 { get { return 0 == this.dwData2 ? null : new int?(this.dwData2); } }
+        public int? HashPart4 { get { return 0 == this.dwData3 ? null : new int?(this.dwData3); } }
     }
 }

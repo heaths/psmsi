@@ -40,10 +40,11 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 Collection<PSObject> items = this.InvokeProvider.Item.Get(_path);
                 foreach (PSObject item in items)
                 {
+                    string fileType = null;
                     string fsPath = Location.GetOneResolvedProviderPathFromPSObject(item, this);
+
                     if (null != fsPath && File.Exists(fsPath))
                     {
-                        string fileType = null;
                         Guid clsid = Guid.Empty;
 
                         try
@@ -60,6 +61,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                             // non-terminating error; continue to the next file
                             string message = ex.Message.Replace("%1", fsPath);
                             PSInvalidOperationException psex = new PSInvalidOperationException(message, ex);
+
                             this.WriteError(psex.ErrorRecord);
                         }
 
@@ -76,22 +78,18 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                         {
                                 fileType = Msi.MsiTransform;
                         }
-
-                        // append or write out the file type
-                        if (this.passThru)
-                        {
-                            item.Properties.Add(new PSNoteProperty("MSIFileType", fileType));
-                        }
-                        else
-                        {
-                            this.WriteObject(fileType);
-                        }
                     }
 
-                    // pass everything through whether we added a property or not
+                    // pass everything through so format cmdlets work properly
                     if (this.passThru)
                     {
+                        item.Properties.Add(new PSNoteProperty("MSIFileType", fileType));
+
                         this.WriteObject(item);
+                    }
+                    else
+                    {
+                        this.WriteObject(fileType);
                     }
                 }
             }

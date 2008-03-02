@@ -39,10 +39,11 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 Collection<PSObject> items = this.InvokeProvider.Item.Get(_path);
                 foreach (PSObject item in items)
                 {
+                    FileHashInfo hashInfo = new FileHashInfo();
                     string fsPath = Location.GetOneResolvedProviderPathFromPSObject(item, this);
+
                     if (null != fsPath && File.Exists(fsPath))
                     {
-                        FileHashInfo hashInfo = new FileHashInfo();
                         int ret = NativeMethods.MsiGetFileHash(fsPath, 0, hashInfo);
                         if (NativeMethods.ERROR_SUCCESS != ret)
                         {
@@ -51,23 +52,21 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                             PSInvalidOperationException psex = new PSInvalidOperationException(ex.Message, ex);
                             this.WriteError(psex.ErrorRecord);
                         }
-                        else if (this.passThru)
-                        {
-                            item.Properties.Add(new PSNoteProperty("MSIHashPart1", hashInfo.HashPart1));
-                            item.Properties.Add(new PSNoteProperty("MSIHashPart2", hashInfo.HashPart2));
-                            item.Properties.Add(new PSNoteProperty("MSIHashPart3", hashInfo.HashPart3));
-                            item.Properties.Add(new PSNoteProperty("MSIHashPart4", hashInfo.HashPart4));
-                        }
-                        else
-                        {
-                            this.WriteObject(hashInfo);
-                        }
                     }
 
-                    // pass everything through whether we added a property or not
+                    // pass everything through so format cmdlets work properly
                     if (this.passThru)
                     {
+                        item.Properties.Add(new PSNoteProperty("MSIHashPart1", hashInfo.HashPart1));
+                        item.Properties.Add(new PSNoteProperty("MSIHashPart2", hashInfo.HashPart2));
+                        item.Properties.Add(new PSNoteProperty("MSIHashPart3", hashInfo.HashPart3));
+                        item.Properties.Add(new PSNoteProperty("MSIHashPart4", hashInfo.HashPart4));
+
                         this.WriteObject(item);
+                    }
+                    else
+                    {
+                        this.WriteObject(hashInfo);
                     }
                 }
             }
