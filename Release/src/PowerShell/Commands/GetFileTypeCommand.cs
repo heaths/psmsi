@@ -51,7 +51,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                             Storage stg = Storage.OpenStorage(fsPath, true);
                             clsid = stg.Clsid;
                         }
-                        catch (NotSupportedException)
+                        catch (IOException)
                         {
                             this.WriteDebug(string.Format(CultureInfo.InvariantCulture, Properties.Resources.File_NotStorage, fsPath));
                         }
@@ -64,15 +64,15 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                         }
 
                         // set a friendly type name
-                        if (Msi.CLSID_MsiPackage == clsid)
+                        if (NativeMethods.CLSID_MsiPackage == clsid)
                         {
                                 fileType = Msi.MsiPackage;
                         }
-                        else if (Msi.CLSID_MsiPatch == clsid)
+                        else if (NativeMethods.CLSID_MsiPatch == clsid)
                         {
                                 fileType = Msi.MsiPatch;
                         }
-                        else if (Msi.CLSID_MsiTransform == clsid)
+                        else if (NativeMethods.CLSID_MsiTransform == clsid)
                         {
                                 fileType = Msi.MsiTransform;
                         }

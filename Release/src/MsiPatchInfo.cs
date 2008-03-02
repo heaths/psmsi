@@ -58,7 +58,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (bool)GetProperty<bool>(Msi.INSTALLPROPERTY_UNINSTALLABLE, ref uninstallable);
+				return (bool)GetProperty<bool>(NativeMethods.INSTALLPROPERTY_UNINSTALLABLE, ref uninstallable);
 			}
 		}
 		string uninstallable;
@@ -67,7 +67,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (PatchStates)GetProperty<PatchStates>(Msi.INSTALLPROPERTY_PATCHSTATE, ref patchState);
+				return (PatchStates)GetProperty<PatchStates>(NativeMethods.INSTALLPROPERTY_PATCHSTATE, ref patchState);
 			}
 		}
 		string patchState;
@@ -77,7 +77,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (bool)GetProperty<bool>(Msi.INSTALLPROPERTY_LUAENABLED, ref luaEnabled);
+				return (bool)GetProperty<bool>(NativeMethods.INSTALLPROPERTY_LUAENABLED, ref luaEnabled);
 			}
 		}
 		string luaEnabled;
@@ -86,7 +86,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_DISPLAYNAME, ref displayName);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_DISPLAYNAME, ref displayName);
 			}
 		}
 		string displayName;
@@ -96,7 +96,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_MOREINFOURL, ref moreInfoUrl);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_MOREINFOURL, ref moreInfoUrl);
 			}
 		}
 		string moreInfoUrl;
@@ -105,7 +105,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LOCALPACKAGE, ref localPackage);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LOCALPACKAGE, ref localPackage);
 			}
 		}
 		string localPackage;
@@ -154,25 +154,25 @@ namespace Microsoft.Windows.Installer
 			if (string.IsNullOrEmpty(productCode) || Msi.CheckVersion(3, 0))
 			{
 				// Use MsiGetPatchInfoEx for MSI versions 3.0 and newer.
-				ret = Msi.MsiGetPatchInfoEx(patchCode, productCode, userSid, context, property, sb, ref cch);
-				if (Msi.ERROR_MORE_DATA == ret)
+				ret = NativeMethods.MsiGetPatchInfoEx(patchCode, productCode, userSid, context, property, sb, ref cch);
+				if (NativeMethods.ERROR_MORE_DATA == ret)
 				{
 					sb.Capacity = ++cch;
-					ret = Msi.MsiGetPatchInfoEx(patchCode, productCode, userSid, context, property, sb, ref cch);
+					ret = NativeMethods.MsiGetPatchInfoEx(patchCode, productCode, userSid, context, property, sb, ref cch);
 				}
 			}
 			else
 			{
 				// Use MsiGetPatchInfo for MSI versions prior to 3.0 or if no ProductCode is specified.
-				ret = Msi.MsiGetPatchInfo(patchCode, property, sb, ref cch);
-				if (Msi.ERROR_MORE_DATA == ret)
+				ret = NativeMethods.MsiGetPatchInfo(patchCode, property, sb, ref cch);
+				if (NativeMethods.ERROR_MORE_DATA == ret)
 				{
 					sb.Capacity = ++cch;
-					ret = Msi.MsiGetPatchInfo(patchCode, property, sb, ref cch);
+					ret = NativeMethods.MsiGetPatchInfo(patchCode, property, sb, ref cch);
 				}
 			}
 
-			if (Msi.ERROR_SUCCESS == ret)
+			if (NativeMethods.ERROR_SUCCESS == ret)
 			{
 				return sb.ToString();
 			}

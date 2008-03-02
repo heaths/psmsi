@@ -97,7 +97,16 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The file &apos;{0}&apos; is not a structure storage file..
+        ///   Looks up a localized string similar to The file &quot;{0}&quot; already exists..
+        /// </summary>
+        internal static string File_AlreadyExists {
+            get {
+                return ResourceManager.GetString("File_AlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file &quot;{0}&quot; is not a structure storage file..
         /// </summary>
         internal static string File_NotStorage {
             get {

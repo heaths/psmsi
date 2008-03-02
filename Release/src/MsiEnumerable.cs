@@ -70,8 +70,8 @@ namespace Microsoft.Windows.Installer
 			public bool MoveNext()
 			{
 				int ret = this.outer.callback(this.i++, out this.data);
-				if (ret == Msi.ERROR_SUCCESS) return true;
-				else if (ret == Msi.ERROR_NO_MORE_ITEMS) return false;
+				if (ret == NativeMethods.ERROR_SUCCESS) return true;
+				else if (ret == NativeMethods.ERROR_NO_MORE_ITEMS) return false;
 				else
 					// Something catastrophic happened, so throw.
 					throw new System.ComponentModel.Win32Exception(ret);

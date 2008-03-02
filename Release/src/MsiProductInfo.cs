@@ -56,7 +56,7 @@ namespace Microsoft.Windows.Installer
 			string sid = string.IsNullOrEmpty(userSid) || context == InstallContext.Machine ? null : userSid;
 
 			// Determine if the product is advertised or installed.
-			string value = GetProductProperty(productCode, sid, context, Msi.INSTALLPROPERTY_PRODUCTSTATE);
+			string value = GetProductProperty(productCode, sid, context, NativeMethods.INSTALLPROPERTY_PRODUCTSTATE);
 			TypeConverter converter = TypeDescriptor.GetConverter(typeof(ProductState));
 			ProductState state = (ProductState)converter.ConvertFromString(value);
 
@@ -85,7 +85,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PACKAGENAME, ref packageName);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PACKAGENAME, ref packageName);
 			}
 		}
 		string packageName;
@@ -94,7 +94,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_TRANSFORMS, ref transforms);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_TRANSFORMS, ref transforms);
 			}
 		}
 		string transforms;
@@ -103,7 +103,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LANGUAGE, ref language);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LANGUAGE, ref language);
 			}
 		}
 		string language;
@@ -112,7 +112,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PRODUCTNAME, ref productName);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PRODUCTNAME, ref productName);
 			}
 		}
 		string productName;
@@ -121,7 +121,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (AssignmentType)GetProperty<AssignmentType>(Msi.INSTALLPROPERTY_ASSIGNMENTTYPE,
+				return (AssignmentType)GetProperty<AssignmentType>(NativeMethods.INSTALLPROPERTY_ASSIGNMENTTYPE,
 						ref assignmentType);
 			}
 		}
@@ -131,7 +131,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (InstanceType)GetProperty<InstanceType>(Msi.INSTALLPROPERTY_INSTANCETYPE,
+				return (InstanceType)GetProperty<InstanceType>(NativeMethods.INSTALLPROPERTY_INSTANCETYPE,
 						ref instanceType);
 			}
 		}
@@ -142,7 +142,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (bool)GetProperty<bool>(Msi.INSTALLPROPERTY_AUTHORIZED_LUA_APP,
+				return (bool)GetProperty<bool>(NativeMethods.INSTALLPROPERTY_AUTHORIZED_LUA_APP,
 						ref authorizedLUAApp);
 			}
 		}
@@ -152,7 +152,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PACKAGECODE, ref packageCode);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PACKAGECODE, ref packageCode);
 			}
 		}
 		string packageCode;
@@ -161,7 +161,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_VERSION, ref version);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_VERSION, ref version);
 			}
 		}
 		string version;
@@ -170,7 +170,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PRODUCTICON, ref productIcon);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PRODUCTICON, ref productIcon);
 			}
 		}
 		string productIcon;
@@ -179,7 +179,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LASTUSEDSOURCE, ref lastUsedSource);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LASTUSEDSOURCE, ref lastUsedSource);
 			}
 		}
 		string lastUsedSource;
@@ -188,7 +188,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LASTUSEDTYPE, ref lastUsedType);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LASTUSEDTYPE, ref lastUsedType);
 			}
 		}
 		string lastUsedType;
@@ -197,7 +197,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_MEDIAPACKAGEPATH, ref mediaPackagePath);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_MEDIAPACKAGEPATH, ref mediaPackagePath);
 			}
 		}
 		string mediaPackagePath;
@@ -206,7 +206,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_DISKPROMPT, ref diskPrompt);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_DISKPROMPT, ref diskPrompt);
 			}
 		}
 		string diskPrompt;
@@ -262,29 +262,29 @@ namespace Microsoft.Windows.Installer
 			if (Msi.CheckVersion(3, 0))
 			{
 				// Use MsiGetProductInfoEx for MSI versions 3.0 and newer.
-				ret = Msi.MsiGetProductInfoEx(productCode, userSid, context, property, sb, ref cch);
-				if (Msi.ERROR_MORE_DATA == ret)
+				ret = NativeMethods.MsiGetProductInfoEx(productCode, userSid, context, property, sb, ref cch);
+				if (NativeMethods.ERROR_MORE_DATA == ret)
 				{
 					sb.Capacity = ++cch;
-					ret = Msi.MsiGetProductInfoEx(productCode, userSid, context, property, sb, ref cch);
+					ret = NativeMethods.MsiGetProductInfoEx(productCode, userSid, context, property, sb, ref cch);
 				}
 			}
 			else
 			{
 				// Use MsiGetProductInfo for MSI versions prior to 3.0.
-				ret = Msi.MsiGetProductInfo(productCode, property, null, ref cch);
-				if (Msi.ERROR_MORE_DATA == ret)
+				ret = NativeMethods.MsiGetProductInfo(productCode, property, null, ref cch);
+				if (NativeMethods.ERROR_MORE_DATA == ret)
 				{
 					sb.Capacity = ++cch;
-					ret = Msi.MsiGetProductInfo(productCode, property, sb, ref cch);
+					ret = NativeMethods.MsiGetProductInfo(productCode, property, sb, ref cch);
 				}
 			}
 
-			if (Msi.ERROR_SUCCESS == ret)
+			if (NativeMethods.ERROR_SUCCESS == ret)
 			{
 				return sb.ToString();
 			}
-			else if (Msi.ERROR_UNKNOWN_PROPERTY == ret)
+			else if (NativeMethods.ERROR_UNKNOWN_PROPERTY == ret)
 			{
 				// MsiGetProductInfo returns ERROR_UNKNOWN_PROPERTY if the product
 				// is advertised but not installed. In any event, treat this as non-fatal.

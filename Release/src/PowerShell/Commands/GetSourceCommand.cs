@@ -196,24 +196,24 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 		protected override int Enumerate(int index, out PackageSource source)
 		{
 			int ret = 0;
-			StringBuilder sb = new StringBuilder(Msi.MAX_PATH);
+			StringBuilder sb = new StringBuilder(NativeMethods.MAX_PATH);
 			int cch = sb.Capacity;
 
 			source = null;
 			if (Msi.CheckVersion(3, 0, true))
 			{
-				ret = Msi.MsiSourceListEnumSources(this.productOrPatchCode, this.userSid, this.context,
+				ret = NativeMethods.MsiSourceListEnumSources(this.productOrPatchCode, this.userSid, this.context,
 						(int)this.code | (int)this.sourceType, index, sb, ref cch);
 				Debug(
 					"Returned {7}: MsiSourceListEnumSources('{0}', '{1}', 0x{2:x8}, 0x{3:x8}, {4}, '{5}', {6})",
 					this.productOrPatchCode, this.userSid, (int)this.context, (int)this.code | (int)this.sourceType,
 					index, sb, cch, ret);
 
-				if (Msi.ERROR_MORE_DATA == ret)
+				if (NativeMethods.ERROR_MORE_DATA == ret)
 				{
 					sb.Capacity = ++cch;
 
-					ret = Msi.MsiSourceListEnumSources(this.productOrPatchCode, this.userSid, this.context,
+					ret = NativeMethods.MsiSourceListEnumSources(this.productOrPatchCode, this.userSid, this.context,
 						(int)this.code | (int)this.sourceType, index, sb, ref cch);
 					Debug(
 						"Returned {7}: MsiSourceListEnumSources('{0}', '{1}', 0x{2:x8}, 0x{3:x8}, {4}, '{5}', {6})",
@@ -221,7 +221,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 						index, sb, cch, ret);
 				}
 
-				if (Msi.ERROR_SUCCESS == ret)
+				if (NativeMethods.ERROR_SUCCESS == ret)
 				{
                     source = new PackageSource(this.sourceType, index, sb.ToString());
 				}

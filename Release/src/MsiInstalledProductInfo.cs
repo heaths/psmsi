@@ -36,7 +36,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_INSTALLEDPRODUCTNAME,
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_INSTALLEDPRODUCTNAME,
 						ref installedProductName);
 			}
 		}
@@ -46,7 +46,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_VERSIONSTRING, ref versionString);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_VERSIONSTRING, ref versionString);
 			}
 		}
 		string versionString;
@@ -55,7 +55,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_HELPLINK, ref helpLink);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_HELPLINK, ref helpLink);
 			}
 		}
 		string helpLink;
@@ -64,7 +64,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_HELPTELEPHONE, ref helpTelephone);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_HELPTELEPHONE, ref helpTelephone);
 			}
 		}
 		string helpTelephone;
@@ -73,7 +73,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_INSTALLLOCATION, ref installLocation);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_INSTALLLOCATION, ref installLocation);
 			}
 		}
 		string installLocation;
@@ -82,7 +82,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_INSTALLSOURCE, ref installSource);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_INSTALLSOURCE, ref installSource);
 			}
 		}
 		string installSource;
@@ -91,7 +91,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (DateTime)GetProperty<DateTime>(Msi.INSTALLPROPERTY_INSTALLDATE, ref installDate);
+				return (DateTime)GetProperty<DateTime>(NativeMethods.INSTALLPROPERTY_INSTALLDATE, ref installDate);
 			}
 		}
 		string installDate;
@@ -100,7 +100,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PUBLISHER, ref publisher);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PUBLISHER, ref publisher);
 			}
 		}
 		string publisher;
@@ -109,7 +109,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_LOCALPACKAGE, ref localPackage);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LOCALPACKAGE, ref localPackage);
 			}
 		}
 		string localPackage;
@@ -119,7 +119,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_URLINFOABOUT, ref urlInfoAbout);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_URLINFOABOUT, ref urlInfoAbout);
 			}
 		}
 		string urlInfoAbout;
@@ -129,7 +129,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_URLUPDATEINFO, ref urlUpdateInfo);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_URLUPDATEINFO, ref urlUpdateInfo);
 			}
 		}
 		string urlUpdateInfo;
@@ -138,7 +138,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (int)GetProperty<int>(Msi.INSTALLPROPERTY_VERSIONMINOR, ref versionMinor);
+				return (int)GetProperty<int>(NativeMethods.INSTALLPROPERTY_VERSIONMINOR, ref versionMinor);
 			}
 		}
 		string versionMinor;
@@ -147,7 +147,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (int)GetProperty<int>(Msi.INSTALLPROPERTY_VERSIONMAJOR, ref versionMajor);
+				return (int)GetProperty<int>(NativeMethods.INSTALLPROPERTY_VERSIONMAJOR, ref versionMajor);
 			}
 		}
 		string versionMajor;
@@ -156,7 +156,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_PRODUCTID, ref productId);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PRODUCTID, ref productId);
 			}
 		}
 		string productId;
@@ -165,7 +165,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_REGCOMPANY, ref regCompany);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_REGCOMPANY, ref regCompany);
 			}
 		}
 		string regCompany;
@@ -174,7 +174,7 @@ namespace Microsoft.Windows.Installer
 		{
 			get
 			{
-				return (string)GetProperty<string>(Msi.INSTALLPROPERTY_REGOWNER, ref regOwner);
+				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_REGOWNER, ref regOwner);
 			}
 		}
 		string regOwner;

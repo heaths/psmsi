@@ -55,15 +55,15 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 		protected override int Enumerate(int index, out ProductInfo product)
 		{
 			int ret = 0;
-			StringBuilder pc = new StringBuilder(Msi.GUID_CHARS + 1);
+			StringBuilder pc = new StringBuilder(NativeMethods.MAX_GUID_CHARS + 1);
 
 			product = null;
-			ret = Msi.MsiEnumRelatedProducts(this.upgradeCode, 0, index, pc);
+			ret = NativeMethods.MsiEnumRelatedProducts(this.upgradeCode, 0, index, pc);
 			Debug(
 				"Returned {3}: MsiEnumRelatedProducts('{0}', 0, {1}, '{2}')",
 				this.upgradeCode, index, pc, ret);
 
-			if (Msi.ERROR_SUCCESS == ret)
+			if (NativeMethods.ERROR_SUCCESS == ret)
 			{
 				product = ProductInfo.Create(pc.ToString());
 			}

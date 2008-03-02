@@ -20,9 +20,6 @@ using System.Resources;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("b1f3c865-4312-4657-9d35-cc1a59b37cbc")]
 
-// Default CharSet for any DllImportAttribute that does not declare CharSet.
-[module: DefaultCharSet(CharSet.Unicode)]
-
 // Version information for an assembly consists of the following four values:
 //
 //      Major Version
@@ -32,6 +29,6 @@ using System.Resources;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.30209.0")]
+[assembly: AssemblyVersion("1.0.30301.0")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
 [assembly: System.CLSCompliant(false)]

@@ -151,7 +151,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         protected override int Enumerate(int index, out ProductInfo product)
         {
             int ret = 0;
-            StringBuilder pc = new StringBuilder(Msi.GUID_CHARS + 1);
+            StringBuilder pc = new StringBuilder(NativeMethods.MAX_GUID_CHARS + 1);
             InstallContext ctx = InstallContext.None;
             int cch = 0;
 
@@ -161,34 +161,34 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 StringBuilder sid = new StringBuilder(80);
                 cch = sid.Capacity;
 
-                ret = Msi.MsiEnumProductsEx(productCode, userSid, context, index, pc, out ctx, sid, ref cch);
+                ret = NativeMethods.MsiEnumProductsEx(productCode, userSid, context, index, pc, out ctx, sid, ref cch);
                 Debug(
                     "Returned {8}: MsiEnumProductsEx('{0}', '{1}', 0x{2:x8}, {3}, '{4}', 0x{5:x8}, '{6}', {7})",
                     productCode, userSid, (int)context, index, pc, (int)ctx, sid, cch, ret);
 
-                if (Msi.ERROR_MORE_DATA == ret)
+                if (NativeMethods.ERROR_MORE_DATA == ret)
                 {
                     pc.Length = 0;
                     sid.Capacity = ++cch;
                     sid.Length = 0; // Null terminate in case of junk data
 
-                    ret = Msi.MsiEnumProductsEx(productCode, userSid, context, index, pc, out ctx, sid, ref cch);
+                    ret = NativeMethods.MsiEnumProductsEx(productCode, userSid, context, index, pc, out ctx, sid, ref cch);
                     Debug(
                         "Returned {8}: MsiEnumProductsEx('{0}', '{1}', 0x{2:x8}, {3}, '{4}', 0x{5:x8}, '{6}', {7})",
                         productCode, userSid, (int)context, index, pc, (int)ctx, sid, cch, ret);
                 }
 
-                if (Msi.ERROR_SUCCESS == ret)
+                if (NativeMethods.ERROR_SUCCESS == ret)
                 {
                     product = ProductInfo.Create(pc.ToString(), sid.ToString(), ctx);
                 }
             }
             else
             {
-                ret = Msi.MsiEnumProducts(index, pc);
+                ret = NativeMethods.MsiEnumProducts(index, pc);
                 Debug("Returned {2}: MsiEnumProducts({0}, '{1}')", index, pc, ret);
 
-                if (Msi.ERROR_SUCCESS == ret)
+                if (NativeMethods.ERROR_SUCCESS == ret)
                 {
                     product = ProductInfo.Create(pc.ToString());
                 }

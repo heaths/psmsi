@@ -185,8 +185,8 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 		protected override int Enumerate(int index, out PatchInfo patch)
 		{
 			int ret = 0;
-			StringBuilder pac = new StringBuilder(Msi.GUID_CHARS + 1);
-			StringBuilder prc = new StringBuilder(Msi.GUID_CHARS + 1);
+			StringBuilder pac = new StringBuilder(NativeMethods.MAX_GUID_CHARS + 1);
+			StringBuilder prc = new StringBuilder(NativeMethods.MAX_GUID_CHARS + 1);
 			InstallContext ctx = InstallContext.None;
 			int cch = 0;
 
@@ -197,26 +197,26 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 				StringBuilder sid = new StringBuilder(80);
 				cch = sid.Capacity;
 
-				ret = Msi.MsiEnumPatchesEx(productCode, userSid, context,
+				ret = NativeMethods.MsiEnumPatchesEx(productCode, userSid, context,
 						filter, index, pac, prc, out ctx, sid, ref cch);
 				Debug(
 					"Returned {10}: MsiEnumPatchesEx('{0}', '{1}', 0x{2:x8}, 0x{3:x8}, {4}, '{5}', '{6}', 0x{7:x8}, '{8}', {9})",
 					productCode, userSid, (int)context, (int)filter, index, pac, prc, (int)ctx, sid, cch, ret);
 
-				if (Msi.ERROR_MORE_DATA == ret)
+				if (NativeMethods.ERROR_MORE_DATA == ret)
 				{
 					pac.Length = 0;
 					prc.Length = 0;
 					sid.Capacity = ++cch;
 
-					ret = Msi.MsiEnumPatchesEx(productCode, userSid, context,
+					ret = NativeMethods.MsiEnumPatchesEx(productCode, userSid, context,
 									filter, index, pac, prc, out ctx, sid, ref cch);
 					Debug(
 						"Returned {10}: MsiEnumPatchesEx('{0}', '{1}', 0x{2:x8}, 0x{3:x8}, {4}, '{5}', '{6}', 0x{7:x8}, '{8}', {9})",
 						productCode, userSid, (int)context, (int)filter, index, pac, prc, (int)ctx, sid, cch, ret);
 				}
 
-				if (Msi.ERROR_SUCCESS == ret)
+				if (NativeMethods.ERROR_SUCCESS == ret)
 				{
 					patch = new PatchInfo(pac.ToString(), prc.ToString(), sid.ToString(), ctx);
 				}
@@ -227,21 +227,21 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 				StringBuilder msts = new StringBuilder(80);
 				cch = msts.Capacity;
 
-				ret = Msi.MsiEnumPatches(productCode, index, pac, msts, ref cch);
+				ret = NativeMethods.MsiEnumPatches(productCode, index, pac, msts, ref cch);
 				Debug("Returned {5}: MsiEnumPatches('{0}', {1}, '{2}', '{3}', {4})",
 					productCode, index, pac, msts, cch, ret);
 
-				if (Msi.ERROR_MORE_DATA == ret)
+				if (NativeMethods.ERROR_MORE_DATA == ret)
 				{
 					pac.Length = 0;
 					msts.Capacity = ++cch;
 
-					ret = Msi.MsiEnumPatches(productCode, index, pac, msts, ref cch);
+					ret = NativeMethods.MsiEnumPatches(productCode, index, pac, msts, ref cch);
 					Debug("Returned {5}: MsiEnumPatches('{0}', {1}, '{2}', '{3}', {4})",
 						productCode, index, pac, msts, cch, ret);
 				}
 
-				if (Msi.ERROR_SUCCESS == ret)
+				if (NativeMethods.ERROR_SUCCESS == ret)
 				{
 					patch = new PatchInfo(pac.ToString(), null, null, InstallContext.None);
 				}

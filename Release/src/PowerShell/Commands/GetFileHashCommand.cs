@@ -43,8 +43,8 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                     if (null != fsPath && File.Exists(fsPath))
                     {
                         FileHashInfo hashInfo = new FileHashInfo();
-                        int ret = Msi.MsiGetFileHash(fsPath, 0, hashInfo);
-                        if (Msi.ERROR_SUCCESS != ret)
+                        int ret = NativeMethods.MsiGetFileHash(fsPath, 0, hashInfo);
+                        if (NativeMethods.ERROR_SUCCESS != ret)
                         {
                             // write the Win32 error message
                             System.ComponentModel.Win32Exception ex = new System.ComponentModel.Win32Exception(ret);
