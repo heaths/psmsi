@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:ps="http://schemas.microsoft.com/wix/PSExtension" ps:RequiredVersion="3.0.3829">
-  <Product Id="D4D7590C-36E7-4930-8EED-FA00ED113DAC" Name="!(loc.ProductName)" Language="1033" Version="!(bind.assemblyFileVersion.psmsi)" Manufacturer="!(loc.Manufacturer)" UpgradeCode="E8119A6C-7752-46FA-904B-C6019D91D0BF">
+  <Product Id="*" Name="!(loc.ProductName)" Language="1033" Version="!(bind.assemblyFileVersion.psmsi)" Manufacturer="!(loc.Manufacturer)" UpgradeCode="E8119A6C-7752-46FA-904B-C6019D91D0BF">
     <Package Id="*" Description="!(loc.ProductName)" Comments="!(loc.Comments)" Manufacturer="!(loc.Manufacturer)" Platform="intel" InstallerVersion="200" Compressed="yes"/>
     <Media Id="1" Cabinet="psmsi.cab" EmbedCab="yes" />
     <Directory Id="TARGETDIR" Name="SourceDir">
