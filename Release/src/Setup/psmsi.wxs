@@ -2,6 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:ps="http://schemas.microsoft.com/wix/PSExtension" ps:RequiredVersion="3.0.3829">
   <Product Id="*" Name="!(loc.ProductName)" Language="1033" Version="!(bind.assemblyFileVersion.psmsi)" Manufacturer="!(loc.Manufacturer)" UpgradeCode="E8119A6C-7752-46FA-904B-C6019D91D0BF">
     <Package Id="*" Description="!(loc.ProductName)" Comments="!(loc.Comments)" Manufacturer="!(loc.Manufacturer)" Platform="intel" InstallerVersion="200" Compressed="yes"/>
+	<Condition Message="!(loc.ALLUSERS_eq_1)"><![CDATA[ALLUSERS=1]]></Condition>
     <Media Id="1" Cabinet="psmsi.cab" EmbedCab="yes" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder" Name="Program Files">
@@ -23,6 +24,7 @@
         </Directory>
       </Directory>
     </Directory>
+	<Property Id="ALLUSERS" Value="1" />
     <Property Id="WIXUI_INSTALLDIR" Value="APPROOT" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     <UIRef Id="WixUI_InstallDir" />
