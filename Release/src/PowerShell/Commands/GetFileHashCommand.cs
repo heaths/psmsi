@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Management;
 using System.Management.Automation;
@@ -23,8 +24,8 @@ using Microsoft.Windows.Installer.PowerShell;
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
     [Cmdlet(VerbsCommon.Get, "MSIFileHash",
-        DefaultParameterSetName = Location.PathParameterSet)]
-    public sealed class GetFileHashCommand : PSCmdlet
+        DefaultParameterSetName = ParameterSet.Path)]
+    public sealed class GetFileHashCommand : CommandBase
     {
         protected override void ProcessRecord()
         {
@@ -44,6 +45,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 
                     if (null != fsPath && File.Exists(fsPath))
                     {
+                        this.CallingNativeFunction("MsiGetFileHash", fsPath, 0);
                         int ret = NativeMethods.MsiGetFileHash(fsPath, 0, hashInfo);
                         if (NativeMethods.ERROR_SUCCESS != ret)
                         {
@@ -64,7 +66,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 
                         this.WriteObject(item);
                     }
-                    else
+                    else if (!this.Stopping)
                     {
                         this.WriteObject(hashInfo);
                     }
@@ -72,14 +74,11 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             }
         }
 
-        string[] path;
-        bool literal;
-        bool passThru;
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "Location_Path",
-                ParameterSetName = Location.PathParameterSet,
+                ParameterSetName = ParameterSet.Path,
                 Mandatory = true,
                 Position = 0,
                 ValueFromPipeline = true,
@@ -93,16 +92,18 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 this.path = value;
             }
         }
+        bool literal;
+        string[] path;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "Location_LiteralPath",
-                ParameterSetName = Location.LiteralPathParameterSet,
+                ParameterSetName = ParameterSet.LiteralPath,
                 Mandatory = true,
                 Position = 0,
-                ValueFromPipeline = false,
-                ValueFromPipelineByPropertyName = true),
-        Alias("PSPath")]
+                ValueFromPipelineByPropertyName = true)]
+        [Alias("PSPath")]
         public string[] LiteralPath
         {
             get { return this.path; }
@@ -119,5 +120,6 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             get { return passThru; }
             set { passThru = value; }
         }
+        bool passThru;
     }
 }

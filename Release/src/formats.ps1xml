@@ -1,5 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Configuration>
+  <Controls>
+    <Control>
+      <Name>PatchOrProductGrouping</Name>
+      <CustomControl>
+        <CustomEntries>
+          <CustomEntry>
+            <CustomItem>
+              <Frame>
+                <LeftIndent>4</LeftIndent>
+                <CustomItem>
+                  <ExpressionBinding>
+                    <ItemSelectionCondition>
+                      <ScriptBlock><![CDATA[$_.ProductCode -ne $null]]></ScriptBlock>
+                    </ItemSelectionCondition>
+                    <ScriptBlock><![CDATA["ProductCode: " + $_.ProductCode]]></ScriptBlock>
+                  </ExpressionBinding>
+                  <ExpressionBinding>
+                    <ItemSelectionCondition>
+                      <ScriptBlock><![CDATA[$_.PatchCode -ne $null]]></ScriptBlock>
+                    </ItemSelectionCondition>
+                    <ScriptBlock><![CDATA["PatchCode: " + $_.PatchCode]]></ScriptBlock>
+                  </ExpressionBinding>
+                  <NewLine/>
+                </CustomItem>
+              </Frame>
+            </CustomItem>
+          </CustomEntry>
+        </CustomEntries>
+      </CustomControl>
+    </Control>
+  </Controls>
   <ViewDefinitions>
     <View>
       <Name>Product</Name>
@@ -10,12 +41,12 @@
         <TableHeaders>
           <TableColumnHeader>
             <Label>ProductCode</Label>
-            <Width>39</Width>
+            <Width>38</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>ProductVersion</Label>
-            <Width>20</Width>
+            <Width>19</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -80,12 +111,12 @@
         <TableHeaders>
           <TableColumnHeader>
             <Label>ProductCode</Label>
-            <Width>39</Width>
+            <Width>38</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>LocalPackage</Label>
-            <Width>33</Width>
+            <Width>32</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -119,7 +150,7 @@
         <TableHeaders>
           <TableColumnHeader>
             <Label>PatchCode</Label>
-            <Width>39</Width>
+            <Width>38</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -129,7 +160,7 @@
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>Uninstallable</Label>
-            <Width>14</Width>
+            <Width>13</Width>
             <Alignment>Right</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -200,17 +231,17 @@
         <TableHeaders>
           <TableColumnHeader>
             <Label>PatchCode</Label>
-            <Width>39</Width>
+            <Width>38</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>State</Label>
-            <Width>9</Width>
+            <Width>10</Width>
             <Alignment>Right</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>Uninstallable</Label>
-            <Width>14</Width>
+            <Width>13</Width>
             <Alignment>Right</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -247,17 +278,17 @@
         <TableHeaders>
           <TableColumnHeader>
             <Label>PatchCode</Label>
-            <Width>39</Width>
+            <Width>38</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>State</Label>
-            <Width>9</Width>
+            <Width>10</Width>
             <Alignment>Right</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>LocalPackage</Label>
-            <Width>33</Width>
+            <Width>32</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -294,12 +325,12 @@
         <TableHeaders>
           <TableColumnHeader>
             <Label>Index</Label>
-            <Width>6</Width>
+            <Width>5</Width>
             <Alignment>Right</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>Type</Label>
-            <Width>8</Width>
+            <Width>7</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -347,6 +378,58 @@
           </ListEntry>
         </ListEntries>
       </ListControl>
+    </View>
+    <View>
+      <Name>Package</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Windows.Installer.PackageSource</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <ScriptBlock><![CDATA[
+          if ($_.ProductCode -ne $null)
+          {
+            $_.ProductCode
+          }
+          elseif ($_.PatchCode -ne $null)
+          {
+            $_.PatchCode
+          }
+        ]]></ScriptBlock>
+        <CustomControlName>PatchOrProductGrouping</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>Index</Label>
+            <Width>5</Width>
+            <Alignment>Right</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Type</Label>
+            <Width>7</Width>
+            <Alignment>Left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Path</Label>
+            <Alignment>Left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>SourceType</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Path</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
     </View>
   </ViewDefinitions>
 </Configuration>

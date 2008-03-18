@@ -56,6 +56,7 @@
     <Compile Include="MsiPatchInfo.cs" />
     <Compile Include="MsiProductInfo.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="PowerShell\Commands\CommandBase.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommand.cs" />
     <Compile Include="PowerShell\Commands\EnumCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
@@ -63,6 +64,9 @@
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
     <Compile Include="PowerShell\Commands\GetSourceCommand.cs" />
+    <Compile Include="PowerShell\Commands\ParameterSet.cs" />
+    <Compile Include="PowerShell\Help.cs" />
+    <Compile Include="PowerShell\DebugMessageAttribute.cs" />
     <Compile Include="PowerShell\Location.cs" />
     <Compile Include="PowerShell\Installer.cs">
       <SubType>Component</SubType>

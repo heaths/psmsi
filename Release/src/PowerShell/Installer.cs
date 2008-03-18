@@ -21,51 +21,55 @@ using Microsoft.Windows.Installer.Properties;
 
 namespace Microsoft.Windows.Installer.PowerShell
 {
-	[RunInstaller(true)]
-	public class WindowsInstallerSnapIn : PSSnapIn
-	{
-		public override string Name { get { return "psmsi"; } }
-		public override string Vendor { get { return Properties.Resources.SnapIn_Vendor; } }
-		public override string VendorResource
-		{
-			get
-			{
-				return "Microsoft.Windows.Installer.Properties.Resources,SnapIn_Vendor";
-			}
-		}
-		public override string Description { get { return Properties.Resources.SnapIn_Description; } }
-		public override string DescriptionResource
-		{
-			get
-			{
+    [RunInstaller(true)]
+    public class WindowsInstallerSnapIn : PSSnapIn
+    {
+        public override string Name { get { return "psmsi"; } }
+
+        public override string Vendor { get { return Properties.Resources.SnapIn_Vendor; } }
+        public override string VendorResource
+        {
+            get
+            {
+                return "Microsoft.Windows.Installer.Properties.Resources,SnapIn_Vendor";
+            }
+        }
+
+        public override string Description { get { return Properties.Resources.SnapIn_Description; } }
+        public override string DescriptionResource
+        {
+            get
+            {
                 return "Microsoft.Windows.Installer.Properties.Resources,SnapIn_Description";
-			}
-		}
+            }
+        }
+
         public override string[] Formats
         {
             get
             {
                 string[] formats = { "formats.ps1xml" };
-                Array.ForEach<string>(formats, delegate(string format)
+                for (int i = 0; i < formats.Length; i++)
                 {
-                    Path.Combine(GetType().Assembly.Location, format);
-                });
+                    formats[i] = Path.Combine(GetType().Assembly.Location, formats[i]);
+                }
 
                 return formats;
             }
         }
+
         public override string[] Types
         {
             get
             {
                 string[] types = { "types.ps1xml" };
-                Array.ForEach<string>(Formats, delegate(string type)
+                for (int i = 0; i < types.Length; i++)
                 {
-                    Path.Combine(GetType().Assembly.Location, type);
-                });
+                    types[i] = Path.Combine(GetType().Assembly.Location, types[i]);
+                }
 
                 return types;
             }
         }
-	}
+    }
 }

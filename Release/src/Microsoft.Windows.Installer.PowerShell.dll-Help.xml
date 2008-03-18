@@ -22,7 +22,7 @@
 	<!--This is the Description section-->
 		<maml:para>Get-MSIFileHash returns a 128-bit file hash in 4 separate parts, compatible with columns in the MsiFileHash table in Windows Installer packages. All non-versioned files should contain this hash.
 
-You can optionally add these MSIHashPart1, MSIHashPart2, MSIHashPart3, and MSIHashPart4 properties to FileSystem items.</maml:para>
+        You can optionally add these MSIHashPart1, MSIHashPart2, MSIHashPart3, and MSIHashPart4 properties to FileSystem items.</maml:para>
 	</maml:description>
 	<command:syntax>		<command:syntaxItem>
 			<maml:name>Get-MSIFileHash</maml:name>
@@ -140,12 +140,12 @@ C:\PS&gt;			</maml:introduction>
 				<maml:para>This command outputs the file hash of every file in the current directory as a table.</maml:para>
 				<maml:para></maml:para>
 				<maml:para></maml:para>
-				<maml:para>  HashPart1  HashPart2   HashPart3  HashPart4
-  ---------  ---------   ---------  ---------
+				<maml:para>HashPart1  HashPart2   HashPart3  HashPart4
+---------  ---------   ---------  ---------
 -1643667048  449882840   118390364 -297169791
 -2089076205 -899316375 -1481523703 1123865403
- -682521837  -67240776   -34192105 -882582416
- -372861594  354787925   467130933 1798058961
+-682521837  -67240776   -34192105 -882582416
+-372861594  354787925   467130933 1798058961
 				</maml:para>
 				<maml:para></maml:para>
   			</dev:remarks>
@@ -211,7 +211,7 @@ psmsi.wxs      -1843146980   1595088216   -388421980  -1234740889
 	<!--This is the Description section-->
 		<maml:para>Gets the Windows Installer file type for a given file or files.
 
-You can optionally add this MSIFileType property to FileSystem items.</maml:para>
+        You can optionally add this MSIFileType property to FileSystem items.</maml:para>
 	</maml:description>
 	<command:syntax>		<command:syntaxItem>
 			<maml:name>Get-MSIFileType</maml:name>
@@ -410,88 +410,7 @@ C:\PS&gt;			</maml:introduction>
 	</maml:description>
 	<command:syntax>		<command:syntaxItem>
 			<maml:name>Get-MSIPatchInfo</maml:name>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>ProductCode</maml:name>
-				<maml:description>
-					<maml:para>Specifies the ProductCode or ProductCodes to get patch information.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>UserSid</maml:name>
-				<maml:description>
-					<maml:para>The security identifier for a user for user-managed and user-unmanaged patches.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>InstallContext</maml:name>
-				<maml:description>
-					<maml:para>The context for registered patches. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >InstallContext</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>Filter</maml:name>
-				<maml:description>
-					<maml:para>The state or states of patches to be retrieved. This can be a combination of &quot;Applied&quot;, &quot;Superseded&quot;, &quot;Obsoleted&quot;, &quot;Registered&quot;, or &quot;All&quot;.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >PatchStates</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Everyone</maml:name>
-				<maml:description>
-					<maml:para>Whether to retrieve user-managed or user-unmanaged patches for everyone.</maml:para>
-				</maml:description>
-			</command:parameter>
-		</command:syntaxItem>
-		<command:syntaxItem>
-			<maml:name>Get-MSIPatchInfo</maml:name>
-			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByValue)" position = "1" >
-				<maml:name>InputObject</maml:name>
-				<maml:description>
-					<maml:para>Product information returned from Get-MSIProductInfo for which patch information is retrieved.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "true" >ProductInfo[]</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>ProductCode</maml:name>
-				<maml:description>
-					<maml:para>Specifies the ProductCode or ProductCodes to get patch information.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>UserSid</maml:name>
-				<maml:description>
-					<maml:para>The security identifier for a user for user-managed and user-unmanaged patches.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>InstallContext</maml:name>
-				<maml:description>
-					<maml:para>The context for registered patches. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >InstallContext</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>Filter</maml:name>
-				<maml:description>
-					<maml:para>The state or states of patches to be retrieved. This can be a combination of &quot;Applied&quot;, &quot;Superseded&quot;, &quot;Obsoleted&quot;, &quot;Registered&quot;, or &quot;All&quot;.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >PatchStates</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Everyone</maml:name>
-				<maml:description>
-					<maml:para>Whether to retrieve user-managed or user-unmanaged patches for everyone.</maml:para>
-				</maml:description>
-			</command:parameter>
-		</command:syntaxItem>
-		<command:syntaxItem>
-			<maml:name>Get-MSIPatchInfo</maml:name>
-			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
+			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "2" >
 				<maml:name>PatchCode</maml:name>
 				<maml:description>
 					<maml:para>The patch code or patch codes to retrieve patch information.</maml:para>
@@ -499,11 +418,48 @@ C:\PS&gt;			</maml:introduction>
 			<command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+				<maml:name>UserSid</maml:name>
+				<maml:description>
+					<maml:para>The security identifier for a user for user-managed and user-unmanaged patches.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+				<maml:name>InstallContext</maml:name>
+				<maml:description>
+					<maml:para>The context for registered patches. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >InstallContext</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+				<maml:name>Filter</maml:name>
+				<maml:description>
+					<maml:para>The state or states of patches to be retrieved. This can be a combination of &quot;Applied&quot;, &quot;Superseded&quot;, &quot;Obsoleted&quot;, &quot;Registered&quot;, or &quot;All&quot;.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "false" >PatchStates</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+				<maml:name>Everyone</maml:name>
+				<maml:description>
+					<maml:para>Whether to retrieve user-managed or user-unmanaged patches for everyone.</maml:para>
+				</maml:description>
+			</command:parameter>
+		</command:syntaxItem>
+		<command:syntaxItem>
+			<maml:name>Get-MSIPatchInfo</maml:name>
+			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "1" >
 				<maml:name>ProductCode</maml:name>
 				<maml:description>
 					<maml:para>Specifies the ProductCode or ProductCodes to get patch information.</maml:para>
 				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+			<command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+			</command:parameter>
+			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "2" >
+				<maml:name>PatchCode</maml:name>
+				<maml:description>
+					<maml:para>The patch code or patch codes to retrieve patch information.</maml:para>
+				</maml:description>
+			<command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
 				<maml:name>UserSid</maml:name>
@@ -535,14 +491,14 @@ C:\PS&gt;			</maml:introduction>
 		</command:syntaxItem>
 	</command:syntax>
 	<command:parameters>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
-			<maml:name>ProductCode</maml:name>
+		<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="2">
+			<maml:name>PatchCode</maml:name>
 			<maml:description>
-				<maml:para>Specifies the ProductCode or ProductCodes to get patch information.</maml:para>
+				<maml:para>The patch code or patch codes to retrieve patch information.</maml:para>
 			</maml:description>
-			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
 			<dev:type>
-				<maml:name>String</maml:name>
+				<maml:name>String[]</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -594,22 +550,10 @@ C:\PS&gt;			</maml:introduction>
 			</dev:type>
 			<dev:defaultValue>False</dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByValue)" position="1">
-			<maml:name>InputObject</maml:name>
+		<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="1">
+			<maml:name>ProductCode</maml:name>
 			<maml:description>
-				<maml:para>Product information returned from Get-MSIProductInfo for which patch information is retrieved.</maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="true">ProductInfo[]</command:parameterValue>
-			<dev:type>
-				<maml:name>ProductInfo[]</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="1">
-			<maml:name>PatchCode</maml:name>
-			<maml:description>
-				<maml:para>The patch code or patch codes to retrieve patch information.</maml:para>
+				<maml:para>Specifies the ProductCode or ProductCodes to get patch information.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
 			<dev:type>
@@ -693,8 +637,7 @@ C:\PS&gt;			</maml:introduction>
 				<maml:para>This command gets file information for superseded patches on the machine.</maml:para>
 				<maml:para></maml:para>
 				<maml:para></maml:para>
-				<maml:para>    Directory: Microsoft.PowerShell.Core\FileSystem::C:\Windows\Installer
-
+				<maml:para>Directory: Microsoft.PowerShell.Core\FileSystem::C:\Windows\Installer
 
 Mode                LastWriteTime     Length Name
 ----                -------------     ------ ----
@@ -792,37 +735,7 @@ C:\PS&gt;			</maml:introduction>
 		</command:syntaxItem>
 		<command:syntaxItem>
 			<maml:name>Get-MSIProductInfo</maml:name>
-			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
-				<maml:name>InputObject</maml:name>
-				<maml:description>
-					<maml:para>Gets all product information for given partial product information.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "true" >ProductInfo[]</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>UserSid</maml:name>
-				<maml:description>
-					<maml:para>The security identifier for a user for user-managed and user-unmanaged patches.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
-				<maml:name>InstallContext</maml:name>
-				<maml:description>
-					<maml:para>The context for registered patches. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.</maml:para>
-				</maml:description>
-			<command:parameterValue required="true" variableLength = "false" >InstallContext</command:parameterValue>
-			</command:parameter>
-			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
-				<maml:name>Everyone</maml:name>
-				<maml:description>
-					<maml:para>Whether to retrieve user-managed or user-unmanaged patches for everyone.</maml:para>
-				</maml:description>
-			</command:parameter>
-		</command:syntaxItem>
-		<command:syntaxItem>
-			<maml:name>Get-MSIProductInfo</maml:name>
-			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
+			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "1" >
 				<maml:name>ProductCode</maml:name>
 				<maml:description>
 					<maml:para>The ProductCode or ProductCodes to retrieve product information.</maml:para>
@@ -887,19 +800,7 @@ C:\PS&gt;			</maml:introduction>
 			</dev:type>
 			<dev:defaultValue>False</dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="1">
-			<maml:name>InputObject</maml:name>
-			<maml:description>
-				<maml:para>Gets all product information for given partial product information.</maml:para>
-			</maml:description>
-			<command:parameterValue required="true" variableLength="true">ProductInfo[]</command:parameterValue>
-			<dev:type>
-				<maml:name>ProductInfo[]</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="1">
+		<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="1">
 			<maml:name>ProductCode</maml:name>
 			<maml:description>
 				<maml:para>The ProductCode or ProductCodes to retrieve product information.</maml:para>
@@ -955,15 +856,15 @@ C:\PS&gt;			</maml:introduction>
 C:\PS&gt;			</maml:introduction>
   			<dev:code>get-msiproductinfo</dev:code>
   			<dev:remarks>
+				<maml:para>This command outputs product information for all registered products assigned to this machine.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
 				<maml:para>ProductCode                             ProductVersion       ProductName
 -----------                             --------------       -----------
 {90120000-0030-0000-0000-0000000FF1CE}  12.0.6215.1000       Microsoft Office Enterprise 2007
 {90120000-0051-0000-0000-0000000FF1CE}  12.0.6215.1000       Microsoft Office Visio Professional 2007
 {90120000-00A1-0409-0000-0000000FF1CE}  12.0.6215.1000       Microsoft Office OneNote MUI (English) 2007
-{1862162E-3BBC-448F-AA63-49F33152D54A}  8.0.50728            Microsoft Visual Studio 2005 Team Suite - ENU</maml:para>
-				<maml:para></maml:para>
-				<maml:para></maml:para>
-				<maml:para>This command outputs product information for all registered products assigned to this machine.
+{1862162E-3BBC-448F-AA63-49F33152D54A}  8.0.50728            Microsoft Visual Studio 2005 Team Suite - ENU
 				</maml:para>
 				<maml:para></maml:para>
   			</dev:remarks>
@@ -1012,8 +913,7 @@ C:\PS&gt;			</maml:introduction>
 				<maml:para>This command gets file information for all installed user-unmanaged products.</maml:para>
 				<maml:para></maml:para>
 				<maml:para></maml:para>
-				<maml:para>    Directory: Microsoft.PowerShell.Core\FileSystem::C:\Windows\Installer
-
+				<maml:para>Directory: Microsoft.PowerShell.Core\FileSystem::C:\Windows\Installer
 
 Mode                LastWriteTime     Length Name
 ----                -------------     ------ ----
@@ -1443,7 +1343,7 @@ C:\PS&gt;			</maml:introduction>
 				<maml:para></maml:para>
 				<maml:para>SourceType Path
 ---------- ----
-   Network \\products\public\products\developers\visual studio 2005\vsts\vs\
+Network \\products\public\products\developers\visual studio 2005\vsts\vs\
 				</maml:para>
 				<maml:para></maml:para>
   			</dev:remarks>

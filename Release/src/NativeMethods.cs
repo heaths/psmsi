@@ -21,6 +21,7 @@ using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using Microsoft.Windows.Installer.PowerShell;
 
 using ComTypes = System.Runtime.InteropServices.ComTypes;
 
@@ -33,9 +34,12 @@ namespace Microsoft.Windows.Installer
     {
         #region Win32 error codes
         internal const int ERROR_SUCCESS = 0;
+        internal const int ERROR_ACCESS_DENIED = 5;
         internal const int ERROR_MORE_DATA = 234;
         internal const int ERROR_NO_MORE_ITEMS = 259;
+        internal const int ERROR_UNKNOWN_PRODUCT = 1605;
         internal const int ERROR_UNKNOWN_PROPERTY = 1608;
+        internal const int ERROR_BAD_CONFIGURATION = 1610;
         #endregion
 
         #region Storage error codes
@@ -146,7 +150,7 @@ namespace Microsoft.Windows.Installer
         #endregion
 
         #region Patch enumeration functions
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumPatches(""{0}"", {1}, ...)", 2)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiEnumPatches(
                 string szProduct,
@@ -155,7 +159,7 @@ namespace Microsoft.Windows.Installer
                 [Out] StringBuilder lpTransformsBuf,
                 [MarshalAs(UnmanagedType.U4)] ref int pcchTransformsBuf);
 
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumPatchesEx(""{0}"", ""{1}"", 0x{2:x2}, 0x{3:x2}, {4}, ...)", 5)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiEnumPatchesEx(
                 string szProductcode,
@@ -171,13 +175,13 @@ namespace Microsoft.Windows.Installer
         #endregion
 
         #region Product enumeration functions
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumProducts({0}, ...)", 1)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiEnumProducts(
                 [MarshalAs(UnmanagedType.U4)] int iProductIndex,
                 [Out] StringBuilder lpProductBuf);
 
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumProductsEx(""{0}"", ""{1}"", 0x{2:x2}, {3}, ...)", 4)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiEnumProductsEx(
                 string szProductCode,
@@ -189,7 +193,7 @@ namespace Microsoft.Windows.Installer
                 [Out] StringBuilder szSid,
                 [MarshalAs(UnmanagedType.U4)] ref int pcchSid);
 
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumRelatedProducts(""{0}"", 0, {1}, ...)", 2)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiEnumRelatedProducts(
                 string lpUpgradeCode,
@@ -240,7 +244,7 @@ namespace Microsoft.Windows.Installer
         #endregion
 
         #region File information functions
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiGetFileHash(""{0}"", 0x{1:x2}, ...)", 2)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiGetFileHash(
             string szFilePath,
@@ -249,7 +253,7 @@ namespace Microsoft.Windows.Installer
         #endregion
 
         #region Source list functions
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListEnumSources(""{0}"", ""{1}"", 0x{2:x2}, 0x{3:x2}, {4}, ...)", 5)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiSourceListEnumSources(
             string szProductOrPatchCode,
@@ -260,7 +264,7 @@ namespace Microsoft.Windows.Installer
             [Out] StringBuilder szSource,
             [MarshalAs(UnmanagedType.U4)] ref int pcchSource);
 
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListAddSource(""{0}"", ""{1}"", 0, ""{2}"")", 3)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiSourceListAddSource(
             string szProduct,
@@ -268,7 +272,7 @@ namespace Microsoft.Windows.Installer
             [MarshalAs(UnmanagedType.U4)] int dwReserved,
             string szSource);
 
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListAddSourceEx(""{0}"", ""{1}"", 0x{2:x2}, 0x{3:x2}, ""{4}"", {5})", 6)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiSourceListAddSourceEx(
             string szProductCodeOrPatchCode,
@@ -278,14 +282,14 @@ namespace Microsoft.Windows.Installer
             string szSource,
             [MarshalAs(UnmanagedType.U4)] int dwIndex);
 
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListClearAll(""{0}"", ""{1}"", 0)", 2)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiSourceListClearAll(
             string szProduct,
             string szUserName, // Format: DOMAIN|MACHINE\USERNAME
             [MarshalAs(UnmanagedType.U4)] int dwReserved);
 
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListClearAllEx(""{0}"", ""{1}"", 0x{2:x2}, {3})", 4)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiSourceListClearAllEx(
             string szProductCodeOrPatchCode,
@@ -293,7 +297,7 @@ namespace Microsoft.Windows.Installer
             [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
             [MarshalAs(UnmanagedType.U4)] int dwOptions);
 
-        [DllImport(Msi.DLL)]
+        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListClearSource(""{0}"", ""{1}"", 0x{2:x2}, 0x{3:x2}, ""{4}"")", 5)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiSourceListClearSource(
             string szProductCodeOrPatchCode,

@@ -11,40 +11,56 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Management;
 using System.Management.Automation;
+using System.Reflection;
+using System.Text;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
 using Microsoft.Windows.Installer.Properties;
-using System.Globalization;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-	public abstract class EnumCommand<T> : PSCmdlet
-	{
-        internal const string PSObjectParameterSet = "PSObject";
+    /// <summary>
+    /// Abstract base class for cmdlets that call Windows Installer enumerator functions.
+    /// </summary>
+    /// <typeparam name="T">The type of object output to the pipeline.</typeparam>
+    public abstract class EnumCommand<T> : CommandBase where T : class
+    {
+        /// <summary>
+        /// Runs the enumeration function for the current object in the pipeline.
+        /// </summary>
+        protected override void ProcessRecord()
+        {
+            foreach (T obj in new MsiEnumerable<T>(EnumerateWrapper))
+            {
+                WritePSObject(obj);
+            }
+        }
 
-		protected override void ProcessRecord()
-		{
-			foreach (T obj in new MsiEnumerable<T>(Enumerate))
-			{
-				WritePSObject(obj);
-			}
-		}
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "1#")]
+        /// <summary>
+        /// Abstract method for the enumeration function.
+        /// </summary>
+        /// <param name="index">The current index to pass to the enumeration function.</param>
+        /// <param name="data">The data to be returned upon success from the enumeration function output parameters.</param>
+        /// <returns>The result code of the native enumeration function. See overrides for more details.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "1#")]
         protected abstract int Enumerate(int index, out T data);
 
-		protected virtual void WritePSObject(T obj)
-		{
-			PSObject psobj = PSObject.AsPSObject(obj);
-			WriteObject(psobj);
-		}
-
-		[System.Diagnostics.Conditional("DEBUG")]
-		internal void Debug(string format, params object[] args)
-		{
-            WriteDebug(string.Format(CultureInfo.InvariantCulture, format, args));
-		}
-	}
+        /// <summary>
+        /// Handles common errors returned from <see cref="Enumerate"/>.
+        /// </summary>
+        /// <param name="index">The current index to pass to the enumeration function.</param>
+        /// <param name="data">The data to be returned upon success from the enumeration function output parameters.</param>
+        /// <returns>The result code of the native enumeration function. See overrides for more details.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "1#")]
+        private int EnumerateWrapper(int index, out T data)
+        {
+            int ret = Enumerate(index, out data);
+            return HandleCommonErrors(ret);
+        }
+    }
 }

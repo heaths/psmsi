@@ -87,6 +87,10 @@
           </PropertySet>
         </Members>
       </MemberSet>
+      <AliasProperty>
+        <Name>Type</Name>
+        <ReferencedMemberName>SourceType</ReferencedMemberName>
+      </AliasProperty>
     </Members>
   </Type>
 </Types>

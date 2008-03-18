@@ -11,12 +11,14 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Management;
 using System.Management.Automation;
 using System.Text;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
-using System.Globalization;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
@@ -24,82 +26,34 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         DefaultParameterSetName = ParameterAttribute.AllParameterSets)]
     public sealed class GetProductCommand : EnumCommand<ProductInfo>
     {
-        const string EVERYONE = "s-1-1-0";
-        internal const string ProductCodeParameterSet = "ProductCode";
-        const string ProductInfoParameterSet = "ProductInfo";
+        string currentProductCode;
 
         protected override void ProcessRecord()
         {
-            // Create Product objects for each given ProductCode.
-            if (ParameterSetName == ProductCodeParameterSet)
+            // Enumerate all product instances with the given parameters.
+            if (ParameterSet.ProductCode == this.ParameterSetName)
             {
-                WriteCommandDetail("Creating products for each input ProductCode.");
-                foreach (string _productCode in this.productCodes)
+                foreach (string productCode in this.productCodes)
                 {
-                    WritePSObject(ProductInfo.Create(_productCode, userSid, context));
+                    this.currentProductCode = productCode;
+
+                    // Enumerate all products on the system.
+                    base.ProcessRecord();
                 }
             }
-            // Enumerate instances of each given Product based on each Product's ProductCode.
-            else if (ParameterSetName == ProductInfoParameterSet)
-            {
-                WriteCommandDetail("Enumerating product instances for input products.");
-                foreach (ProductInfo product in this.inputObjects)
-                {
-                    ProcessProduct(product);
-                }
-            }
-            // Enumerate all products with the given parameters.
             else
             {
-                if ((context & InstallContext.Machine) != 0)
-                    WriteCommandDetail("Enumerating machine assigned products.");
-
-                if ((context & InstallContext.UserManaged) != 0)
-                    WriteCommandDetail(string.Format(CultureInfo.InvariantCulture, "Enumerating user-managed products for '{0}'.", userSid));
-
-                if ((context & InstallContext.UserUnmanaged) != 0)
-                    WriteCommandDetail(string.Format(CultureInfo.InvariantCulture, "Enumerating user-unmanaged products for '{0}'.", userSid));
-
-                // Enumerate all products on the system.
+                // Enumerate all products with the given parameters.
                 base.ProcessRecord();
             }
         }
 
-        void ProcessProduct(ProductInfo product)
-        {
-            // Set parameters using input product.
-            this.productCode = product.ProductCode;
-            this.userSid = product.UserSid;
-            this.context = product.InstallContext;
-
-            base.ProcessRecord();
-        }
-
-        string productCode;
-        string userSid;
-        InstallContext context = InstallContext.Machine;
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-                HelpMessageResourceId = "GetProduct_InputObject",
-                ParameterSetName = ProductInfoParameterSet,
-                Position = 0,
-                ValueFromPipeline = true,
-                ValueFromPipelineByPropertyName = true)]
-        [ValidateNotNullOrEmpty]
-        public ProductInfo[] InputObject
-        {
-            get { return inputObjects; }
-            set { inputObjects = value; }
-        }
-        ProductInfo[] inputObjects;
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "GetProduct_ProductCode",
-                ParameterSetName = ProductCodeParameterSet,
+                ParameterSetName = ParameterSet.ProductCode,
                 Position = 0,
-                ValueFromPipeline = true,
                 ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty]
         public string[] ProductCode
@@ -110,36 +64,38 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         string[] productCodes;
 
         [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-                HelpMessageResourceId = "GetProduct_UserSid",
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "Context_UserSid",
                 ValueFromPipelineByPropertyName = true)]
         public string UserSid
         {
             get { return userSid; }
             set { userSid = value; }
         }
+        string userSid;
 
         [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-                HelpMessageResourceId = "GetProduct_InstallContext",
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "Context_InstallContext",
                 ValueFromPipelineByPropertyName = true)]
         public InstallContext InstallContext
         {
             get { return context; }
             set { context = value; }
         }
+        InstallContext context = InstallContext.Machine;
 
         [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-                HelpMessageResourceId = "GetProduct_Everyone")]
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "Context_Everyone")]
         public SwitchParameter Everyone
         {
-            get { return string.Compare(userSid, EVERYONE, StringComparison.OrdinalIgnoreCase) == 0; }
+            get { return string.Compare(userSid, NativeMethods.World, StringComparison.OrdinalIgnoreCase) == 0; }
             set
             {
                 if (value)
                 {
-                    userSid = EVERYONE;
+                    userSid = NativeMethods.World;
                 }
                 else
                 {
@@ -161,10 +117,8 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 StringBuilder sid = new StringBuilder(80);
                 cch = sid.Capacity;
 
-                ret = NativeMethods.MsiEnumProductsEx(productCode, userSid, context, index, pc, out ctx, sid, ref cch);
-                Debug(
-                    "Returned {8}: MsiEnumProductsEx('{0}', '{1}', 0x{2:x8}, {3}, '{4}', 0x{5:x8}, '{6}', {7})",
-                    productCode, userSid, (int)context, index, pc, (int)ctx, sid, cch, ret);
+                this.CallingNativeFunction("MsiEnumProductsEx", this.currentProductCode, this.userSid, (int)this.context, index);
+                ret = NativeMethods.MsiEnumProductsEx(this.currentProductCode, this.userSid, this.context, index, pc, out ctx, sid, ref cch);
 
                 if (NativeMethods.ERROR_MORE_DATA == ret)
                 {
@@ -172,10 +126,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                     sid.Capacity = ++cch;
                     sid.Length = 0; // Null terminate in case of junk data
 
-                    ret = NativeMethods.MsiEnumProductsEx(productCode, userSid, context, index, pc, out ctx, sid, ref cch);
-                    Debug(
-                        "Returned {8}: MsiEnumProductsEx('{0}', '{1}', 0x{2:x8}, {3}, '{4}', 0x{5:x8}, '{6}', {7})",
-                        productCode, userSid, (int)context, index, pc, (int)ctx, sid, cch, ret);
+                    ret = NativeMethods.MsiEnumProductsEx(this.currentProductCode, this.userSid, this.context, index, pc, out ctx, sid, ref cch);
                 }
 
                 if (NativeMethods.ERROR_SUCCESS == ret)
@@ -185,9 +136,8 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             }
             else
             {
+                this.CallingNativeFunction("MsiEnumProducts", index);
                 ret = NativeMethods.MsiEnumProducts(index, pc);
-                Debug("Returned {2}: MsiEnumProducts({0}, '{1}')", index, pc, ret);
-
                 if (NativeMethods.ERROR_SUCCESS == ret)
                 {
                     product = ProductInfo.Create(pc.ToString());
@@ -197,18 +147,30 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             return ret;
         }
 
-        protected override void WritePSObject(ProductInfo obj)
+        protected override ErrorDetails GetErrorDetails(int returnCode)
         {
-            if (obj == null) throw new ArgumentNullException("obj");
-            PSObject psobj = PSObject.AsPSObject(obj);
+            switch (returnCode)
+            {
+                case NativeMethods.ERROR_BAD_CONFIGURATION:
+                    {
+                        string message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_BadProductConfiguration, this.currentProductCode);
+                        ErrorDetails err = new ErrorDetails(message);
+                        err.RecommendedAction = Properties.Resources.Recommend_Recache;
+                        return err;
+                    }
+            }
 
+            return base.GetErrorDetails(returnCode);
+        }
+
+        protected override void AddMembers(PSObject psobj)
+        {
             // Add PSPath with fully-qualified provider path.
+            ProductInfo obj = (ProductInfo)psobj.BaseObject;
             if (null != obj.PSPath)
             {
                 Location.AddPSPath(obj.PSPath, psobj, this);
             }
-
-            WriteObject(psobj);
         }
     }
 }

@@ -97,6 +97,60 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specify to search all users..
+        /// </summary>
+        internal static string Context_Everyone {
+            get {
+                return ResourceManager.GetString("Context_Everyone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install context to limit the search..
+        /// </summary>
+        internal static string Context_InstallContext {
+            get {
+                return ResourceManager.GetString("Context_InstallContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User SID to limit the search..
+        /// </summary>
+        internal static string Context_UserSid {
+            get {
+                return ResourceManager.GetString("Context_UserSid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access denied..
+        /// </summary>
+        internal static string Error_AccessDenied {
+            get {
+                return ResourceManager.GetString("Error_AccessDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The configuration data for patch {0} is corrupt..
+        /// </summary>
+        internal static string Error_BadPatchConfiguration {
+            get {
+                return ResourceManager.GetString("Error_BadPatchConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The configuration data for product {0} is corrupt..
+        /// </summary>
+        internal static string Error_BadProductConfiguration {
+            get {
+                return ResourceManager.GetString("Error_BadProductConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The file &quot;{0}&quot; already exists..
         /// </summary>
         internal static string File_AlreadyExists {
@@ -115,16 +169,7 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enumerates patches for everyone..
-        /// </summary>
-        internal static string GetPatch_Everyone {
-            get {
-                return ResourceManager.GetString("GetPatch_Everyone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Limits patches for the given install state filter..
+        ///   Looks up a localized string similar to Patch state filter to limit the search..
         /// </summary>
         internal static string GetPatch_Filter {
             get {
@@ -133,34 +178,16 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Input object from the pipeline..
+        ///   Looks up a localized string similar to Patch codes for which information is retrieved..
         /// </summary>
-        internal static string GetPatch_InputObject {
+        internal static string GetPatch_PatchCode {
             get {
-                return ResourceManager.GetString("GetPatch_InputObject", resourceCulture);
+                return ResourceManager.GetString("GetPatch_PatchCode", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Limits patches for the given installation context..
-        /// </summary>
-        internal static string GetPatch_InstallContext {
-            get {
-                return ResourceManager.GetString("GetPatch_InstallContext", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gets patch information for the given package codes..
-        /// </summary>
-        internal static string GetPatch_PackageCode {
-            get {
-                return ResourceManager.GetString("GetPatch_PackageCode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enumerates patches for the given product codes..
+        ///   Looks up a localized string similar to Product codes for which patches are enumerated..
         /// </summary>
         internal static string GetPatch_ProductCode {
             get {
@@ -169,43 +196,7 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Limits patches for the given user SID..
-        /// </summary>
-        internal static string GetPatch_UserSid {
-            get {
-                return ResourceManager.GetString("GetPatch_UserSid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enumerates product for everyone..
-        /// </summary>
-        internal static string GetProduct_Everyone {
-            get {
-                return ResourceManager.GetString("GetProduct_Everyone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Input object from the pipeline..
-        /// </summary>
-        internal static string GetProduct_InputObject {
-            get {
-                return ResourceManager.GetString("GetProduct_InputObject", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Limits products for the given installation context..
-        /// </summary>
-        internal static string GetProduct_InstallContext {
-            get {
-                return ResourceManager.GetString("GetProduct_InstallContext", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gets product information for the given product code..
+        ///   Looks up a localized string similar to Product codes for which information is retrieved..
         /// </summary>
         internal static string GetProduct_ProductCode {
             get {
@@ -214,16 +205,7 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Limits products for the given user SID..
-        /// </summary>
-        internal static string GetProduct_UserSid {
-            get {
-                return ResourceManager.GetString("GetProduct_UserSid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Get related product for the given upgrade code..
+        ///   Looks up a localized string similar to Upgrade codes for which related products are enumerated..
         /// </summary>
         internal static string GetRelatedProduct_UpgradeCode {
             get {
@@ -232,16 +214,7 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enumerates source information for everyone..
-        /// </summary>
-        internal static string GetSource_Everyone {
-            get {
-                return ResourceManager.GetString("GetSource_Everyone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Input object from the pipeline..
+        ///   Looks up a localized string similar to Product or patch information object from the pipeline..
         /// </summary>
         internal static string GetSource_InputObject {
             get {
@@ -250,16 +223,7 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Limits source information for the given installation context..
-        /// </summary>
-        internal static string GetSource_InstallContext {
-            get {
-                return ResourceManager.GetString("GetSource_InstallContext", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gets source paths for the given patch codes..
+        ///   Looks up a localized string similar to Patch codes for which source list information is retrieved..
         /// </summary>
         internal static string GetSource_PatchCode {
             get {
@@ -268,7 +232,7 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gets source paths for the given product codes..
+        ///   Looks up a localized string similar to Product codes for which source list information is retrieved..
         /// </summary>
         internal static string GetSource_ProductCode {
             get {
@@ -277,20 +241,11 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Limits source information for the given source type..
+        ///   Looks up a localized string similar to Source type to limit the search..
         /// </summary>
         internal static string GetSource_SourceType {
             get {
                 return ResourceManager.GetString("GetSource_SourceType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Limits source information for the given user SID..
-        /// </summary>
-        internal static string GetSource_UserSid {
-            get {
-                return ResourceManager.GetString("GetSource_UserSid", resourceCulture);
             }
         }
         
@@ -318,6 +273,24 @@ namespace Microsoft.Windows.Installer.Properties {
         internal static string MsiRequiredVersion {
             get {
                 return ResourceManager.GetString("MsiRequiredVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reinstall the product with REINSTALLMODE=vomus..
+        /// </summary>
+        internal static string Recommend_Recache {
+            get {
+                return ResourceManager.GetString("Recommend_Recache", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run the expression again in an elevated process..
+        /// </summary>
+        internal static string Recommend_RunElevated {
+            get {
+                return ResourceManager.GetString("Recommend_RunElevated", resourceCulture);
             }
         }
         

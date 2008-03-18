@@ -11,6 +11,8 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Management;
 using System.Management.Automation;
 using System.Text;
@@ -19,67 +21,63 @@ using Microsoft.Windows.Installer.PowerShell;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-	[Cmdlet(VerbsCommon.Get, "MSIRelatedProductInfo",
-        DefaultParameterSetName = GetRelatedProductCommand.UpgradeCodeParameterSet)]
-	public sealed class GetRelatedProductCommand : EnumCommand<ProductInfo>
-	{
-		const string UpgradeCodeParameterSet = "UpgradeCode";
-		string upgradeCode;
+    [Cmdlet(VerbsCommon.Get, "MSIRelatedProductInfo",
+        DefaultParameterSetName = ParameterSet.UpgradeCode)]
+    public sealed class GetRelatedProductCommand : EnumCommand<ProductInfo>
+    {
+        string currentUpgradeCode;
 
-		protected override void ProcessRecord()
-		{
-            WriteCommandDetail("Enumerating product instances for each upgrade code.");
-			foreach (string _upgradeCode in this.upgradeCodes)
-			{
-				this.upgradeCode = _upgradeCode;
-				base.ProcessRecord();
-			}
-		}
+        protected override void ProcessRecord()
+        {
+            if (ParameterSet.UpgradeCode == this.ParameterSetName)
+            {
+                foreach (string upgradeCode in this.upgradeCodes)
+                {
+                    this.currentUpgradeCode = upgradeCode;
+                    base.ProcessRecord();
+                }
+            }
+        }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(
                 Mandatory = true,
-				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-				HelpMessageResourceId="GetRelatedProduct_UpgradeCode",
-				ParameterSetName=UpgradeCodeParameterSet,
-				Position=0,
-				ValueFromPipeline=true,
-				ValueFromPipelineByPropertyName=true)]
-		[ValidateNotNullOrEmpty]
-		public string[] UpgradeCode
-		{
-			get { return upgradeCodes; }
-			set { upgradeCodes = value; }
-		}
-		string[] upgradeCodes;
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "GetRelatedProduct_UpgradeCode",
+                ParameterSetName = ParameterSet.UpgradeCode,
+                Position = 0,
+                ValueFromPipeline = true,
+                ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty]
+        public string[] UpgradeCode
+        {
+            get { return upgradeCodes; }
+            set { upgradeCodes = value; }
+        }
+        string[] upgradeCodes;
 
-		protected override int Enumerate(int index, out ProductInfo product)
-		{
-			int ret = 0;
-			StringBuilder pc = new StringBuilder(NativeMethods.MAX_GUID_CHARS + 1);
+        protected override int Enumerate(int index, out ProductInfo product)
+        {
+            int ret = 0;
+            product = null;
+            StringBuilder pc = new StringBuilder(NativeMethods.MAX_GUID_CHARS + 1);
 
-			product = null;
-			ret = NativeMethods.MsiEnumRelatedProducts(this.upgradeCode, 0, index, pc);
-			Debug(
-				"Returned {3}: MsiEnumRelatedProducts('{0}', 0, {1}, '{2}')",
-				this.upgradeCode, index, pc, ret);
+            this.CallingNativeFunction("MsiEnumRelatedProducts", this.currentUpgradeCode, index);
+            ret = NativeMethods.MsiEnumRelatedProducts(this.currentUpgradeCode, 0, index, pc);
 
-			if (NativeMethods.ERROR_SUCCESS == ret)
-			{
-				product = ProductInfo.Create(pc.ToString());
-			}
+            if (NativeMethods.ERROR_SUCCESS == ret)
+            {
+                product = ProductInfo.Create(pc.ToString());
+            }
 
-			return ret;
-		}
+            return ret;
+        }
 
-		protected override void WritePSObject(ProductInfo obj)
-		{
-			if (obj == null) throw new ArgumentNullException("obj");
-
-			// Add PSPath with fully-qualified provider path.
-			PSObject psobj = PSObject.AsPSObject(obj);
-			Location.AddPSPath(obj.PSPath, psobj, this);
-
-			WriteObject(psobj);
-		}
-	}
+        protected override void AddMembers(PSObject psobj)
+        {
+            // Add PSPath with fully-qualified provider path.
+            ProductInfo obj = (ProductInfo)psobj.BaseObject;
+            Location.AddPSPath(obj.PSPath, psobj, this);
+        }
+    }
 }

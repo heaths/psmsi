@@ -11,67 +11,65 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Management;
 using System.Management.Automation;
 using System.Text;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
-using System.Globalization;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-	[Cmdlet(VerbsCommon.Get, "MSISource",
-        DefaultParameterSetName = GetSourceCommand.ProductOrPatchCodeParameterSet)]
-	public sealed class GetSourceCommand : EnumCommand<PackageSource>
-	{
-		internal const string ProductOrPatchCodeParameterSet = "ProductOrPatchCode";
-		const string EVERYONE = "s-1-1-0";
+    [Cmdlet(VerbsCommon.Get, "MSISource",
+        DefaultParameterSetName = ParameterSet.ProductOrPatchCode)]
+    public sealed class GetSourceCommand : EnumCommand<PackageSource>
+    {
+        string currentProductOrPatchCode;
+        Code code = Code.Product;
 
-		protected override void ProcessRecord()
-		{
-			if (ParameterSetName == GetProductCommand.ProductCodeParameterSet)
-			{
-                WriteCommandDetail("Enumerating source list for input product codes.");
-				foreach (string productCode in this.productCodes)
-				{
-					this.code = Code.Product;
-					this.productOrPatchCode = productCode;
+        protected override void ProcessRecord()
+        {
+            if (ParameterSet.ProductCode == this.ParameterSetName)
+            {
+                foreach (string productCode in this.productCodes)
+                {
+                    this.code = Code.Product;
+                    this.currentProductOrPatchCode = productCode;
 
-					base.ProcessRecord();
-				}
-			}
-			else if (ParameterSetName == GetPatchCommand.PatchCodeParameterSet)
-			{
-                WriteCommandDetail("Enumerating source list for input patch codes.");
-				foreach (string patchCode in this.patchCodes)
-				{
-					this.code = Code.Patch;
-					this.productOrPatchCode = patchCode;
+                    base.ProcessRecord();
+                }
+            }
+            else if (ParameterSet.PatchCode == this.ParameterSetName)
+            {
+                foreach (string patchCode in this.patchCodes)
+                {
+                    this.code = Code.Patch;
+                    this.currentProductOrPatchCode = patchCode;
 
-					base.ProcessRecord();
-				}
-			}
+                    base.ProcessRecord();
+                }
+            }
+            else if (ParameterSet.ProductOrPatchCode == this.ParameterSetName)
+            {
+                foreach (PSObject obj in this.inputObjects)
+                {
+                    if (obj.BaseObject is ProductInfo)
+                    {
+                        ProductInfo info = (ProductInfo)obj.BaseObject;
 
-			else if (ParameterSetName == ProductOrPatchCodeParameterSet)
-			{
-                WriteCommandDetail("Enumerating source list for input objects.");
-				foreach (PSObject obj in this.inputObjects)
-				{
-					if (obj.BaseObject is ProductInfo)
-					{
-						ProductInfo info = (ProductInfo)obj.BaseObject;
-
-						this.code = Code.Product;
-						this.productOrPatchCode = info.ProductCode;
-						this.userSid = info.UserSid;
-						this.context = info.InstallContext;
-					}
+                        this.code = Code.Product;
+                        this.currentProductOrPatchCode = info.ProductCode;
+                        this.userSid = info.UserSid;
+                        this.context = info.InstallContext;
+                    }
                     else if (obj.BaseObject is PatchInfo)
                     {
                         PatchInfo info = (PatchInfo)obj.BaseObject;
 
                         this.code = Code.Patch;
-                        this.productOrPatchCode = info.PatchCode;
+                        this.currentProductOrPatchCode = info.PatchCode;
                         this.userSid = info.UserSid;
                         this.context = info.InstallContext;
                     }
@@ -80,22 +78,17 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                         WriteVerbose("Skipping invalid input object.");
                     }
 
-					base.ProcessRecord();
-				}
-			}
-		}
+                    base.ProcessRecord();
+                }
+            }
+        }
 
-		string productOrPatchCode;
-		string userSid;
-		InstallContext context = InstallContext.Machine;
-		Code code = Code.Product;
-		SourceTypes sourceType = SourceTypes.Network;
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(
                 Mandatory = true,
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "GetSource_InputObject",
-                ParameterSetName = ProductOrPatchCodeParameterSet,
+                ParameterSetName = ParameterSet.ProductOrPatchCode,
                 Position = 0,
                 ValueFromPipeline = true)]
         [ValidateNotNullOrEmpty]
@@ -106,139 +99,183 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         }
         PSObject[] inputObjects;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(
                 Mandatory = true,
-				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-				HelpMessageResourceId="GetSource_ProductCode",
-				ParameterSetName=GetProductCommand.ProductCodeParameterSet,
-				Position=0,
-				ValueFromPipelineByPropertyName=true)]
-		[ValidateNotNullOrEmpty]
-		public string[] ProductCode
-		{
-			get { return this.productCodes; }
-			set { this.productCodes = value; }
-		}
-		string[] productCodes;
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "GetSource_ProductCode",
+                ParameterSetName = ParameterSet.ProductCode,
+                Position = 0,
+                ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty]
+        public string[] ProductCode
+        {
+            get { return this.productCodes; }
+            set { this.productCodes = value; }
+        }
+        string[] productCodes;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(
                 Mandatory = true,
-				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-				HelpMessageResourceId="GetSource_PatchCode",
-				ParameterSetName=GetPatchCommand.PatchCodeParameterSet,
-				Position=0,
-				ValueFromPipelineByPropertyName=true)]
-		[ValidateNotNullOrEmpty]
-		public string[] PatchCode
-		{
-			get { return this.patchCodes; }
-			set { this.patchCodes = value; }
-		}
-		string[] patchCodes;
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "GetSource_PatchCode",
+                ParameterSetName = ParameterSet.PatchCode,
+                Position = 0,
+                ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty]
+        public string[] PatchCode
+        {
+            get { return this.patchCodes; }
+            set { this.patchCodes = value; }
+        }
+        string[] patchCodes;
 
-		[Parameter(
-				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-				HelpMessageResourceId="GetSource_UserSid",
-				ValueFromPipelineByPropertyName=true)]
-		public string UserSid
-		{
-			get { return this.userSid; }
-			set { this.userSid = value; }
-		}
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "Context_UserSid",
+                ValueFromPipelineByPropertyName = true)]
+        public string UserSid
+        {
+            get { return this.userSid; }
+            set { this.userSid = value; }
+        }
+        string userSid;
 
-		[Parameter(
-				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-				HelpMessageResourceId="GetSource_InstallContext",
-				ValueFromPipelineByPropertyName=true)]
-		public InstallContext InstallContext
-		{
-			get { return this.context; }
-			set { this.context = value; }
-		}
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "Context_InstallContext",
+                ValueFromPipelineByPropertyName = true)]
+        public InstallContext InstallContext
+        {
+            get { return this.context; }
+            set { this.context = value; }
+        }
+        InstallContext context = InstallContext.Machine;
 
-		[Parameter(
-				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-				HelpMessageResourceId="GetSource_SourceType",
-				ValueFromPipelineByPropertyName=true)]
-		public SourceTypes SourceType
-		{
-			get { return this.sourceType; }
-			set
-			{
-				if ((value & SourceTypes.Media) == SourceTypes.Media)
-				{
-					throw new ArgumentException(Properties.Resources.Argument_InvalidSourceType);
-				}
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "GetSource_SourceType",
+                ValueFromPipelineByPropertyName = true)]
+        public SourceTypes SourceType
+        {
+            get { return this.sourceType; }
+            set
+            {
+                if ((value & SourceTypes.Media) == SourceTypes.Media)
+                {
+                    throw new PSArgumentException(Properties.Resources.Argument_InvalidSourceType);
+                }
 
-				this.sourceType = value;
-			}
-		}
+                this.sourceType = value;
+            }
+        }
+        SourceTypes sourceType = SourceTypes.Network;
 
-		[Parameter(
-				HelpMessageBaseName="Microsoft.Windows.Installer.PowerShell.Properties.Resources",
-				HelpMessageResourceId="GetSource_Everyone")]
-		public SwitchParameter Everyone
-		{
-			get { return string.Compare(this.userSid, EVERYONE, StringComparison.OrdinalIgnoreCase) == 0; }
-			set
-			{
-				if (value)
-				{
-					this.userSid = EVERYONE;
-				}
-				else
-				{
-					this.userSid = null;
-				}
-			}
-		}
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
+                HelpMessageResourceId = "Context_Everyone")]
+        public SwitchParameter Everyone
+        {
+            get { return string.Compare(this.userSid, NativeMethods.World, StringComparison.OrdinalIgnoreCase) == 0; }
+            set
+            {
+                if (value)
+                {
+                    this.userSid = NativeMethods.World;
+                }
+                else
+                {
+                    this.userSid = null;
+                }
+            }
+        }
 
-		protected override int Enumerate(int index, out PackageSource source)
-		{
-			int ret = 0;
-			StringBuilder sb = new StringBuilder(NativeMethods.MAX_PATH);
-			int cch = sb.Capacity;
+        protected override int Enumerate(int index, out PackageSource source)
+        {
+            int ret = 0;
+            StringBuilder sb = new StringBuilder(NativeMethods.MAX_PATH);
+            int cch = sb.Capacity;
 
-			source = null;
-			if (Msi.CheckVersion(3, 0, true))
-			{
-				ret = NativeMethods.MsiSourceListEnumSources(this.productOrPatchCode, this.userSid, this.context,
-						(int)this.code | (int)this.sourceType, index, sb, ref cch);
-				Debug(
-					"Returned {7}: MsiSourceListEnumSources('{0}', '{1}', 0x{2:x8}, 0x{3:x8}, {4}, '{5}', {6})",
-					this.productOrPatchCode, this.userSid, (int)this.context, (int)this.code | (int)this.sourceType,
-					index, sb, cch, ret);
+            source = null;
+            if (Msi.CheckVersion(3, 0, true))
+            {
+                int options = (int)this.code | (int)this.sourceType;
 
-				if (NativeMethods.ERROR_MORE_DATA == ret)
-				{
-					sb.Capacity = ++cch;
+                this.CallingNativeFunction("MsiSourceListEnumSources", this.currentProductOrPatchCode, this.userSid, (int)this.context, options, index);
+                ret = NativeMethods.MsiSourceListEnumSources(this.currentProductOrPatchCode, this.userSid, this.context, options, index, sb, ref cch);
 
-					ret = NativeMethods.MsiSourceListEnumSources(this.productOrPatchCode, this.userSid, this.context,
-						(int)this.code | (int)this.sourceType, index, sb, ref cch);
-					Debug(
-						"Returned {7}: MsiSourceListEnumSources('{0}', '{1}', 0x{2:x8}, 0x{3:x8}, {4}, '{5}', {6})",
-						this.productOrPatchCode, this.userSid, (int)this.context, (int)this.code | (int)this.sourceType,
-						index, sb, cch, ret);
-				}
+                if (NativeMethods.ERROR_MORE_DATA == ret)
+                {
+                    sb.Capacity = ++cch;
 
-				if (NativeMethods.ERROR_SUCCESS == ret)
-				{
+                    ret = NativeMethods.MsiSourceListEnumSources(this.currentProductOrPatchCode, this.userSid, this.context, options, index, sb, ref cch);
+                }
+
+                if (NativeMethods.ERROR_SUCCESS == ret)
+                {
                     source = new PackageSource(this.sourceType, index, sb.ToString());
-				}
-			}
+                }
+            }
 
-			return ret;
-		}
+            return ret;
+        }
 
-		protected override void WritePSObject(PackageSource obj)
-		{
-			if (obj == null) throw new ArgumentNullException("obj");
-			
-			// Add PSPath with fully-qualified provider path.
-			PSObject psobj = PSObject.AsPSObject(obj);
-			Location.AddPSPath(obj.Path, psobj, this);
+        /// <summary>
+        /// Returns <see cref="ErrorDetails"/> with patch or product information depending on the current
+        /// object in the pipeline.
+        /// </summary>
+        /// <param name="returnCode">The return code for which <see cref="ErrorDetails"/> should be retrieved.</param>
+        /// <returns>If the <paramref name="returnCode"/> is handled, an <see cref="ErrorDetails"/> object
+        /// with additional information; otherwise, null.</returns>
+        protected override ErrorDetails GetErrorDetails(int returnCode)
+        {
+            if (Code.Patch == this.code)
+            {
+                switch (returnCode)
+                {
+                    case NativeMethods.ERROR_BAD_CONFIGURATION:
+                        {
+                            string message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_BadPatchConfiguration, this.currentProductOrPatchCode);
+                            ErrorDetails err = new ErrorDetails(message);
+                            return err;
+                        }
+                }
+            }
+            else if (Code.Product == this.code)
+            {
+                switch (returnCode)
+                {
+                    case NativeMethods.ERROR_BAD_CONFIGURATION:
+                        {
+                            string message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_BadProductConfiguration, this.currentProductOrPatchCode);
+                            ErrorDetails err = new ErrorDetails(message);
+                            err.RecommendedAction = Properties.Resources.Recommend_Recache;
+                            return err;
+                        }
+                }
+            }
 
-			WriteObject(psobj);
-		}
-	}
+            return base.GetErrorDetails(returnCode);
+        }
+
+        protected override void AddMembers(PSObject psobj)
+        {
+            // Add PSPath with fully-qualified provider path.
+            PackageSource obj = (PackageSource)psobj.BaseObject;
+            Location.AddPSPath(obj.Path, psobj, this);
+
+            // Add current fields to properties for parameter binding.
+            if (Code.Patch == this.code)
+            {
+                psobj.Properties.Add(new PSNoteProperty("PatchCode", this.currentProductOrPatchCode));
+            }
+            else
+            {
+                psobj.Properties.Add(new PSNoteProperty("ProductCode", this.currentProductOrPatchCode));
+            }
+            psobj.Properties.Add(new PSNoteProperty("UserSid", this.userSid));
+            psobj.Properties.Add(new PSNoteProperty("InstallContext", this.context));
+        }
+    }
 }

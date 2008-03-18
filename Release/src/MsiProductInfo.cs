@@ -12,7 +12,9 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.Management.Automation;
 using System.Resources;
 using System.Text;
 using Microsoft.Windows.Installer.PowerShell;
@@ -20,196 +22,192 @@ using Microsoft.Windows.Installer.Properties;
 
 namespace Microsoft.Windows.Installer
 {
-	public abstract class ProductInfo
-	{
-		string productCode, userSid;
-		InstallContext context;
+    public abstract class ProductInfo
+    {
+        string productCode, userSid;
+        InstallContext context;
 
-		protected ProductInfo(string productCode, string userSid, InstallContext context)
-		{
-			// Must at least have a ProductCode.
-			if (string.IsNullOrEmpty(productCode))
-			{
-				throw new ArgumentNullException("productCode");
-			}
+        protected ProductInfo(string productCode, string userSid, InstallContext context)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(productCode));
 
-			// Validate InstallContext and UserSid combinations.
-			if (((InstallContext.UserManaged | InstallContext.UserUnmanaged) & context) != 0
-				&& string.IsNullOrEmpty(userSid))
-			{
-				throw new ArgumentException(Resources.Argument_InvalidContextAndSid);
-			}
+            // Validate InstallContext and UserSid combinations.
+            if (((InstallContext.UserManaged | InstallContext.UserUnmanaged) & context) != 0
+                && string.IsNullOrEmpty(userSid))
+            {
+                throw new PSArgumentException(Resources.Argument_InvalidContextAndSid);
+            }
 
-			this.productCode = productCode;
-			this.userSid = string.IsNullOrEmpty(userSid) ||
-				context == InstallContext.Machine ? null : userSid;
-			this.context = context;
-		}
+            this.productCode = productCode;
+            this.userSid = string.IsNullOrEmpty(userSid) ||
+                context == InstallContext.Machine ? null : userSid;
+            this.context = context;
+        }
 
-		internal static ProductInfo Create(string productCode)
-		{
-			return Create(productCode, null, InstallContext.Machine);
-		}
+        internal static ProductInfo Create(string productCode)
+        {
+            return Create(productCode, null, InstallContext.Machine);
+        }
 
-		internal static ProductInfo Create(string productCode, string userSid, InstallContext context)
-		{
-			string sid = string.IsNullOrEmpty(userSid) || context == InstallContext.Machine ? null : userSid;
+        internal static ProductInfo Create(string productCode, string userSid, InstallContext context)
+        {
+            string sid = string.IsNullOrEmpty(userSid) || context == InstallContext.Machine ? null : userSid;
 
-			// Determine if the product is advertised or installed.
-			string value = GetProductProperty(productCode, sid, context, NativeMethods.INSTALLPROPERTY_PRODUCTSTATE);
-			TypeConverter converter = TypeDescriptor.GetConverter(typeof(ProductState));
-			ProductState state = (ProductState)converter.ConvertFromString(value);
+            // Determine if the product is advertised or installed.
+            string value = GetProductProperty(productCode, sid, context, NativeMethods.INSTALLPROPERTY_PRODUCTSTATE);
+            TypeConverter converter = TypeDescriptor.GetConverter(typeof(ProductState));
+            ProductState state = (ProductState)converter.ConvertFromString(value);
 
-			// Return appropriate product derivative or throw an exception.
-			if (state == ProductState.Advertised)
-			{
-				// Common properties, but additional functionality.
-				return new AdvertisedProductInfo(productCode, sid, context);
-			}
-			else if (state == ProductState.Installed)
-			{
-				// More properties available with installed products.
-				return new InstalledProductInfo(productCode, sid, context);
-			}
-			else throw new NotSupportedException();
-		}
+            // Return appropriate product derivative or throw an exception.
+            if (state == ProductState.Advertised)
+            {
+                // Common properties, but additional functionality.
+                return new AdvertisedProductInfo(productCode, sid, context);
+            }
+            else if (state == ProductState.Installed)
+            {
+                // More properties available with installed products.
+                return new InstalledProductInfo(productCode, sid, context);
+            }
+            else throw new PSNotSupportedException(Resources.Argument_InvalidProductState);
+        }
 
-		// Common properties used to create this instance.
-		public string ProductCode { get { return productCode; } }
-		public string UserSid { get { return userSid; } }
-		public InstallContext InstallContext { get { return context; } }
-		public abstract ProductState ProductState { get; }
+        // Common properties used to create this instance.
+        public string ProductCode { get { return productCode; } }
+        public string UserSid { get { return userSid; } }
+        public InstallContext InstallContext { get { return context; } }
+        public abstract ProductState ProductState { get; }
 
-		// Common properties to advertised and installed products.
-		public string PackageName
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PACKAGENAME, ref packageName);
-			}
-		}
-		string packageName;
+        // Common properties to advertised and installed products.
+        public string PackageName
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PACKAGENAME, ref packageName);
+            }
+        }
+        string packageName;
 
-		public string Transforms
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_TRANSFORMS, ref transforms);
-			}
-		}
-		string transforms;
+        public string Transforms
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_TRANSFORMS, ref transforms);
+            }
+        }
+        string transforms;
 
-		public string Language
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LANGUAGE, ref language);
-			}
-		}
-		string language;
+        public string Language
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LANGUAGE, ref language);
+            }
+        }
+        string language;
 
-		public string ProductName
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PRODUCTNAME, ref productName);
-			}
-		}
-		string productName;
+        public string ProductName
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PRODUCTNAME, ref productName);
+            }
+        }
+        string productName;
 
-		public AssignmentType AssignmentType
-		{
-			get
-			{
-				return (AssignmentType)GetProperty<AssignmentType>(NativeMethods.INSTALLPROPERTY_ASSIGNMENTTYPE,
-						ref assignmentType);
-			}
-		}
-		string assignmentType;
+        public AssignmentType AssignmentType
+        {
+            get
+            {
+                return (AssignmentType)GetProperty<AssignmentType>(NativeMethods.INSTALLPROPERTY_ASSIGNMENTTYPE,
+                        ref assignmentType);
+            }
+        }
+        string assignmentType;
 
-		public InstanceType InstanceType
-		{
-			get
-			{
-				return (InstanceType)GetProperty<InstanceType>(NativeMethods.INSTALLPROPERTY_INSTANCETYPE,
-						ref instanceType);
-			}
-		}
-		string instanceType;
+        public InstanceType InstanceType
+        {
+            get
+            {
+                return (InstanceType)GetProperty<InstanceType>(NativeMethods.INSTALLPROPERTY_INSTANCETYPE,
+                        ref instanceType);
+            }
+        }
+        string instanceType;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "LUA")]
         public bool AuthorizedLUAApp
-		{
-			get
-			{
-				return (bool)GetProperty<bool>(NativeMethods.INSTALLPROPERTY_AUTHORIZED_LUA_APP,
-						ref authorizedLUAApp);
-			}
-		}
-		string authorizedLUAApp;
+        {
+            get
+            {
+                return (bool)GetProperty<bool>(NativeMethods.INSTALLPROPERTY_AUTHORIZED_LUA_APP,
+                        ref authorizedLUAApp);
+            }
+        }
+        string authorizedLUAApp;
 
-		public string PackageCode
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PACKAGECODE, ref packageCode);
-			}
-		}
-		string packageCode;
+        public string PackageCode
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PACKAGECODE, ref packageCode);
+            }
+        }
+        string packageCode;
 
-		public string Version
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_VERSION, ref version);
-			}
-		}
-		string version;
+        public string Version
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_VERSION, ref version);
+            }
+        }
+        string version;
 
-		public string ProductIcon
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PRODUCTICON, ref productIcon);
-			}
-		}
-		string productIcon;
+        public string ProductIcon
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_PRODUCTICON, ref productIcon);
+            }
+        }
+        string productIcon;
 
-		public string LastUsedSource
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LASTUSEDSOURCE, ref lastUsedSource);
-			}
-		}
-		string lastUsedSource;
+        public string LastUsedSource
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LASTUSEDSOURCE, ref lastUsedSource);
+            }
+        }
+        string lastUsedSource;
 
-		public string LastUsedType
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LASTUSEDTYPE, ref lastUsedType);
-			}
-		}
-		string lastUsedType;
+        public string LastUsedType
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_LASTUSEDTYPE, ref lastUsedType);
+            }
+        }
+        string lastUsedType;
 
-		public string MediaPackagePath
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_MEDIAPACKAGEPATH, ref mediaPackagePath);
-			}
-		}
-		string mediaPackagePath;
+        public string MediaPackagePath
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_MEDIAPACKAGEPATH, ref mediaPackagePath);
+            }
+        }
+        string mediaPackagePath;
 
-		public string DiskPrompt
-		{
-			get
-			{
-				return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_DISKPROMPT, ref diskPrompt);
-			}
-		}
-		string diskPrompt;
+        public string DiskPrompt
+        {
+            get
+            {
+                return (string)GetProperty<string>(NativeMethods.INSTALLPROPERTY_DISKPROMPT, ref diskPrompt);
+            }
+        }
+        string diskPrompt;
 
         internal virtual string PSPath
         {
@@ -221,80 +219,80 @@ namespace Microsoft.Windows.Installer
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         protected object GetProperty<T>(string property, ref string field)
-		{
-			// If field is not yet assigned, get product property.
-			if (string.IsNullOrEmpty(field))
-			{
-				if (string.IsNullOrEmpty(property)) throw new ArgumentNullException("property");
-				field = GetProductProperty(productCode, userSid, context, property);
-			}
+        {
+            // If field is not yet assigned, get product property.
+            if (string.IsNullOrEmpty(field))
+            {
+                Debug.Assert(!string.IsNullOrEmpty(property));
+                field = GetProductProperty(productCode, userSid, context, property);
+            }
 
-			// Based on type T, convert non-null or empty string to T.
-			if (!string.IsNullOrEmpty(field))
-			{
-				Type t = typeof(T);
-				if ( t == typeof(bool))
-				{
-					return string.CompareOrdinal(field.Trim(), "0") != 0;
-				}
-				else if (t == typeof(DateTime))
-				{
-					// Dates in yyyyMMdd format.
-					return DateTime.ParseExact(field, "yyyyMMdd", null);
-				}
-				else
-				{
-					//Everything else, use a TypeConverter.
-					TypeConverter converter = TypeDescriptor.GetConverter(t);
-					return converter.ConvertFromString(field);
-				}
-			}
+            // Based on type T, convert non-null or empty string to T.
+            if (!string.IsNullOrEmpty(field))
+            {
+                Type t = typeof(T);
+                if (t == typeof(bool))
+                {
+                    return string.CompareOrdinal(field.Trim(), "0") != 0;
+                }
+                else if (t == typeof(DateTime))
+                {
+                    // Dates in yyyyMMdd format.
+                    return DateTime.ParseExact(field, "yyyyMMdd", null);
+                }
+                else
+                {
+                    //Everything else, use a TypeConverter.
+                    TypeConverter converter = TypeDescriptor.GetConverter(t);
+                    return converter.ConvertFromString(field);
+                }
+            }
 
-			return default(T);
-		}
+            return default(T);
+        }
 
-		static string GetProductProperty(string productCode, string userSid, InstallContext context, string property)
-		{
-			int ret = 0;
-			StringBuilder sb = new StringBuilder(80);
-			int cch = sb.Capacity;
+        static string GetProductProperty(string productCode, string userSid, InstallContext context, string property)
+        {
+            int ret = 0;
+            StringBuilder sb = new StringBuilder(80);
+            int cch = sb.Capacity;
 
-			if (Msi.CheckVersion(3, 0))
-			{
-				// Use MsiGetProductInfoEx for MSI versions 3.0 and newer.
-				ret = NativeMethods.MsiGetProductInfoEx(productCode, userSid, context, property, sb, ref cch);
-				if (NativeMethods.ERROR_MORE_DATA == ret)
-				{
-					sb.Capacity = ++cch;
-					ret = NativeMethods.MsiGetProductInfoEx(productCode, userSid, context, property, sb, ref cch);
-				}
-			}
-			else
-			{
-				// Use MsiGetProductInfo for MSI versions prior to 3.0.
-				ret = NativeMethods.MsiGetProductInfo(productCode, property, null, ref cch);
-				if (NativeMethods.ERROR_MORE_DATA == ret)
-				{
-					sb.Capacity = ++cch;
-					ret = NativeMethods.MsiGetProductInfo(productCode, property, sb, ref cch);
-				}
-			}
+            if (Msi.CheckVersion(3, 0))
+            {
+                // Use MsiGetProductInfoEx for MSI versions 3.0 and newer.
+                ret = NativeMethods.MsiGetProductInfoEx(productCode, userSid, context, property, sb, ref cch);
+                if (NativeMethods.ERROR_MORE_DATA == ret)
+                {
+                    sb.Capacity = ++cch;
+                    ret = NativeMethods.MsiGetProductInfoEx(productCode, userSid, context, property, sb, ref cch);
+                }
+            }
+            else
+            {
+                // Use MsiGetProductInfo for MSI versions prior to 3.0.
+                ret = NativeMethods.MsiGetProductInfo(productCode, property, null, ref cch);
+                if (NativeMethods.ERROR_MORE_DATA == ret)
+                {
+                    sb.Capacity = ++cch;
+                    ret = NativeMethods.MsiGetProductInfo(productCode, property, sb, ref cch);
+                }
+            }
 
-			if (NativeMethods.ERROR_SUCCESS == ret)
-			{
-				return sb.ToString();
-			}
-			else if (NativeMethods.ERROR_UNKNOWN_PROPERTY == ret)
-			{
-				// MsiGetProductInfo returns ERROR_UNKNOWN_PROPERTY if the product
-				// is advertised but not installed. In any event, treat this as non-fatal.
-				return null;
-			}
+            if (NativeMethods.ERROR_SUCCESS == ret)
+            {
+                return sb.ToString();
+            }
+            else if (NativeMethods.ERROR_UNKNOWN_PRODUCT == ret || NativeMethods.ERROR_UNKNOWN_PROPERTY == ret)
+            {
+                // MsiGetProductInfo returns errors if the product is advertised but not installed
+                // even for properties that should otherwise be valie. In any event, treat this as non-fatal.
+                return null;
+            }
 
-			// Getting this far means an unexpected error occured.
-			throw new Win32Exception(ret);
-		}
+            // Getting this far means an unexpected error occured.
+            throw new Win32Exception(ret);
+        }
 
-	}
+    }
 }
 

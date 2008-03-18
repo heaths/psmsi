@@ -20,12 +20,13 @@ using System.Management.Automation;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
     [Cmdlet(VerbsCommon.Get, "MSIFileType",
-        DefaultParameterSetName = Location.PathParameterSet)]
-    public sealed class GetFileTypeCommand : PSCmdlet
+        DefaultParameterSetName = ParameterSet.Path)]
+    public sealed class GetFileTypeCommand : CommandBase
     {
         protected override void ProcessRecord()
         {
@@ -68,15 +69,15 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                         // set a friendly type name
                         if (NativeMethods.CLSID_MsiPackage == clsid)
                         {
-                                fileType = Msi.MsiPackage;
+                            fileType = Msi.MsiPackage;
                         }
                         else if (NativeMethods.CLSID_MsiPatch == clsid)
                         {
-                                fileType = Msi.MsiPatch;
+                            fileType = Msi.MsiPatch;
                         }
                         else if (NativeMethods.CLSID_MsiTransform == clsid)
                         {
-                                fileType = Msi.MsiTransform;
+                            fileType = Msi.MsiTransform;
                         }
                     }
 
@@ -87,7 +88,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 
                         this.WriteObject(item);
                     }
-                    else
+                    else if (!this.Stopping)
                     {
                         this.WriteObject(fileType);
                     }
@@ -95,14 +96,11 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             }
         }
 
-        string[] path;
-        bool literal;
-        bool passThru;
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "Location_Path",
-                ParameterSetName = Location.PathParameterSet,
+                ParameterSetName = ParameterSet.Path,
                 Mandatory = true,
                 Position = 0,
                 ValueFromPipeline = true,
@@ -113,19 +111,21 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             set
             {
                 this.literal = false;
-                this.path = value; 
+                this.path = value;
             }
         }
+        string[] path;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.PowerShell.Properties.Resources",
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(
+                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "Location_LiteralPath",
-                ParameterSetName = Location.LiteralPathParameterSet,
+                ParameterSetName = ParameterSet.LiteralPath,
                 Mandatory = true,
                 Position = 0,
                 ValueFromPipeline = false,
-                ValueFromPipelineByPropertyName = true),
-        Alias("PSPath")]
+                ValueFromPipelineByPropertyName = true)]
+        [Alias("PSPath")]
         public string[] LiteralPath
         {
             get { return this.path; }
@@ -135,6 +135,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 this.path = value;
             }
         }
+        bool literal;
 
         [Parameter]
         public SwitchParameter PassThru
@@ -142,5 +143,6 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             get { return passThru; }
             set { passThru = value; }
         }
+        bool passThru;
     }
 }
