@@ -62,14 +62,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         protected void CallingNativeFunction(string functionName, params object[] args)
         {
             string message = Help.FormatDebugMessage(functionName, args);
-            try
-            {
-                WriteDebug(message);
-            }
-            catch (PipelineStoppedException)
-            {
-                // If someone halts the debugger, don't throw.
-            }
+            WriteDebug(message);
         }
 
         /// <summary>
