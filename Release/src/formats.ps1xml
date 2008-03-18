@@ -116,7 +116,7 @@
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>LocalPackage</Label>
-            <Width>32</Width>
+            <Width>33</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -288,7 +288,7 @@
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>LocalPackage</Label>
-            <Width>32</Width>
+            <Width>33</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
