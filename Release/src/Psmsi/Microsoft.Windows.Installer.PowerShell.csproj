@@ -98,12 +98,17 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)Dirs.targets" />
+  <ItemGroup>
+	<RootDirectory Include="$(SolutionDir)..\" />
+  </ItemGroup>
+  <PropertyGroup>
+	<ToolsDirectory>@(RootDirectory->'%(RootDir)%(Directory)')tools\</ToolsDirectory>
+  </PropertyGroup>
   <Target Name="SignContentFiles" DependsOnTargets="CopyFilesToOutputDirectory">
     <CreateItem Include="@(_SourceItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')" Condition="'%(Extension)'=='.ps1xml'">
       <Output TaskParameter="Include" ItemName="SignContentFilesOutput" />
     </CreateItem>
-    <Exec Command="powershell.exe -command &quot;$(SolutionDir)..\tools\Sign\Sign.ps1&quot; &quot;%(SignContentFilesOutput.FullPath)&quot;" />
+    <Exec Command="powershell.exe -command &quot;$(ToolsDirectory)Sign\Sign.ps1&quot; &quot;%(SignContentFilesOutput.FullPath)&quot;" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="SignContentFiles">
   </Target>
