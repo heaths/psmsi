@@ -8,6 +8,10 @@
     <OutputType>package</OutputType>
     <ProjectGuid>{f9da7492-b466-43d6-843c-40ebfaa89f34}</ProjectGuid>
     <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>Debug</DefineConstants>
@@ -55,7 +59,7 @@
   </ItemGroup>
   <Target Name="All" DependsOnTargets="Build" />
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.Windows.Installer.PowerShell.csproj">
+    <ProjectReference Include="..\Psmsi\Microsoft.Windows.Installer.PowerShell.csproj">
       <Name>Microsoft.Windows.Installer.PowerShell</Name>
       <Project>{eae7d4bf-5061-4220-be94-e268e965dce5}</Project>
       <Private>True</Private>
@@ -63,5 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="en-us.wxl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="License.rtf" />
   </ItemGroup>
 </Project>
