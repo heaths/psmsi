@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:ps="http://schemas.microsoft.com/wix/PSExtension" ps:RequiredVersion="3.0.3829">
   <Product Id="*" Name="!(loc.ProductName)" Language="1033" Version="!(bind.assemblyFileVersion.psmsi)" Manufacturer="!(loc.Manufacturer)" UpgradeCode="E8119A6C-7752-46FA-904B-C6019D91D0BF">
     <Package Id="*" Description="!(loc.ProductName)" Comments="!(loc.Comments)" Manufacturer="!(loc.Manufacturer)" Platform="intel" InstallerVersion="200" Compressed="yes"/>
-	<Condition Message="!(loc.ALLUSERS_eq_1)"><![CDATA[ALLUSERS=1]]></Condition>
+    <Condition Message="!(loc.ALLUSERS_eq_1)"><![CDATA[ALLUSERS=1]]></Condition>
     <Media Id="1" Cabinet="psmsi.cab" EmbedCab="yes" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder" Name="Program Files">
@@ -18,21 +18,25 @@
               <ps:TypesFile SnapIn="psmsi" />
             </File>
           </Component>
-		  <Component Id="SnapIn.Help" Guid="2CC04A21-89DE-4C21-9986-25C91C013BE9" DiskId="1">
+          <Component Id="SnapIn.Help" Guid="2CC04A21-89DE-4C21-9986-25C91C013BE9" DiskId="1">
             <File Id="psmsi.Help" Name="Microsoft.Windows.Installer.PowerShell.dll-Help.xml" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\Microsoft.Windows.Installer.PowerShell.dll-Help.xml" KeyPath="yes" />
-		  </Component>
+          </Component>
         </Directory>
       </Directory>
     </Directory>
-	<Property Id="ALLUSERS" Value="1" />
+    <Property Id="ALLUSERS" Value="1" />
+    <Property Id="ARPHELPLINK" Value="http://www.codeplex.com/psmsi/thread/list.aspx" />
+    <Property Id="ARPURLINFOABOUT" Value="http://www.codeplex.com/psmsi/" />
     <Property Id="WIXUI_INSTALLDIR" Value="APPROOT" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     <UIRef Id="WixUI_InstallDir" />
     <Feature Id="PsMsi" AllowAdvertise="no" Description="!(loc.F_PsMsi_Description)" ConfigurableDirectory="APPROOT" Level="1" Title="!(loc.F_PsMsi_Title)">
       <ComponentRef Id="SnapIn" />
-	  <ComponentRef Id="SnapIn.Help" />
+      <ComponentRef Id="SnapIn.Help" />
     </Feature>
+    <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[APPROOT]" />
     <InstallExecuteSequence>
+      <Custom Action="SetARPINSTALLLOCATION" After="CostFinalize" />
       <InstallExecute Before="RemoveExistingProducts" />
       <RemoveExistingProducts Before="InstallFinalize" />
     </InstallExecuteSequence>
