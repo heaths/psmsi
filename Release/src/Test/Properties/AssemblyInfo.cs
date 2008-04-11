@@ -6,19 +6,22 @@ using System.Resources;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Windows Installer PowerShell Extensions")]
-[assembly: AssemblyDescription("Exposes Windows Installer functionality to Windows PowerShell.")]
+[assembly: AssemblyTitle("Tests")]
+[assembly: AssemblyDescription("Tests for Windows Installer PowerShell Extensions")]
+[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft Corporation")]
 [assembly: AssemblyProduct("Windows Installer PowerShell Extensions")]
 [assembly: AssemblyCopyright("Copyright Microsoft Corporation")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
+// to COM componenets.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b1f3c865-4312-4657-9d35-cc1a59b37cbc")]
+[assembly: Guid("754ce94e-f816-49c4-aa34-fb627987096a")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,8 +32,5 @@ using System.Resources;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.30411.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
-[assembly: System.CLSCompliant(false)]
-
-[assembly: InternalsVisibleTo("Test, PublicKey=0024000004800000940000000602000000240000525341310004000001000100bf4ea0b9f31b834d5fb2e6b63dda15048bc58ac7f525f9ce1102a236b9b40e35b733577b48666a50131bb4dcb8bcb6f9a1cebb6db6a2f618a5415f8f567b3ed2702da2b82bb8bbbee4db44acc19f42e3abf95cb0f3a8a68eb4acbc283fc4202bed0a416b02ba5ae856f7bcd3dbfc1a4a2193a020394b7a102d74ae7eee3ffba7")]

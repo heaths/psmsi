@@ -127,13 +127,13 @@
     <value>Invalid combination of user SID and install context.</value>
   </data>
   <data name="Argument_InvalidSource" xml:space="preserve">
-    <value>Invalid source format.</value>
+    <value>The string "{0}" does not specify a valid source.</value>
   </data>
   <data name="Argument_InvalidSourceType" xml:space="preserve">
-    <value>Invalid source type.</value>
+    <value>The type {0} is not a valid source type.</value>
   </data>
   <data name="Argument_InvalidProductState" xml:space="preserve">
-    <value>Invalid product state.</value>
+    <value>The state {0} is not a valid product state.</value>
   </data>
   <data name="Context_Everyone" xml:space="preserve">
     <value>Specify to search all users.</value>
@@ -214,5 +214,11 @@
   </data>
   <data name="Recommend_RunElevated" xml:space="preserve">
     <value>Run the expression again in an elevated process.</value>
+  </data>
+  <data name="Argument_InvalidParameter" xml:space="preserve">
+    <value>"{1}" is not valid for the {0} parameter.</value>
+  </data>
+  <data name="Argument_ProductCodeRequired" xml:space="preserve">
+    <value>A ProductCode is required for the version of Windows Installer installed.</value>
   </data>
 </root>

@@ -56,6 +56,12 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             // Enumerate all patches in the given context.
             else
             {
+                if (!Msi.CheckVersion(3, 0))
+                {
+                    // Enumerating all patches isn't supported until MSI 3.0.
+                    throw new PSNotSupportedException(Properties.Resources.Argument_ProductCodeRequired);
+                }
+
                 base.ProcessRecord();
             }
         }
@@ -64,6 +70,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         [Parameter(
                 HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "GetPatch_ProductCode",
+                Mandatory = true,
                 ParameterSetName = ParameterSet.ProductCode,
                 Position = 0,
                 ValueFromPipelineByPropertyName = true)]
@@ -79,6 +86,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         [Parameter(
                 HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "GetPatch_PatchCode",
+                ParameterSetName = ParameterSet.ProductCode,
                 Position = 1,
                 ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty]
@@ -104,10 +112,19 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "Context_InstallContext",
                 ValueFromPipelineByPropertyName = true)]
+        [Alias("Context")]
         public InstallContext InstallContext
         {
             get { return context; }
-            set { context = value; }
+            set
+            {
+                if (value == InstallContext.None)
+                {
+                    throw new PSInvalidParameterException("InstallContext", value);
+                }
+
+                context = value;
+            }
         }
         InstallContext context = InstallContext.Machine;
 
@@ -118,7 +135,15 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         public PatchStates Filter
         {
             get { return filter; }
-            set { filter = value; }
+            set
+            {
+                if (value == PatchStates.Invalid)
+                {
+                    throw new PSInvalidParameterException("Filter", value);
+                }
+
+                filter = value;
+            }
         }
         PatchStates filter = PatchStates.Applied;
 
@@ -178,7 +203,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             else
             {
                 // Use MsiEnumPatches for releases prior to MSI 3.0
-                StringBuilder msts = new StringBuilder(80);
+                StringBuilder msts = new StringBuilder(NativeMethods.DefaultSidLength);
                 cch = msts.Capacity;
 
                 this.CallingNativeFunction("MsiEnumPatches", this.currentProductCode, index);
@@ -194,7 +219,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 
                 if (NativeMethods.ERROR_SUCCESS == ret)
                 {
-                    patch = new PatchInfo(pac.ToString(), null, null, InstallContext.None);
+                    patch = new PatchInfo(pac.ToString(), this.currentProductCode, null, InstallContext.None);
                 }
             }
 
@@ -207,7 +232,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             {
                 case NativeMethods.ERROR_BAD_CONFIGURATION:
                     {
-                        string message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_BadProductConfiguration, this.currentProductCode);
+                        string message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_BadPatchConfiguration, this.currentProductCode);
                         ErrorDetails err = new ErrorDetails(message);
                         err.RecommendedAction = Properties.Resources.Recommend_Recache;
                         return err;

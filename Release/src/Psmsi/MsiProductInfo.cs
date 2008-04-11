@@ -54,9 +54,13 @@ namespace Microsoft.Windows.Installer
             string sid = string.IsNullOrEmpty(userSid) || context == InstallContext.Machine ? null : userSid;
 
             // Determine if the product is advertised or installed.
-            string value = GetProductProperty(productCode, sid, context, NativeMethods.INSTALLPROPERTY_PRODUCTSTATE);
-            TypeConverter converter = TypeDescriptor.GetConverter(typeof(ProductState));
-            ProductState state = (ProductState)converter.ConvertFromString(value);
+            ProductState state = ProductState.Installed;
+            if (Msi.CheckVersion(3, 0))
+            {
+                string value = GetProductProperty(productCode, sid, context, NativeMethods.INSTALLPROPERTY_PRODUCTSTATE);
+                TypeConverter converter = TypeDescriptor.GetConverter(typeof(ProductState));
+                state = (ProductState)converter.ConvertFromString(value);
+            }
 
             // Return appropriate product derivative or throw an exception.
             if (state == ProductState.Advertised)
@@ -69,7 +73,7 @@ namespace Microsoft.Windows.Installer
                 // More properties available with installed products.
                 return new InstalledProductInfo(productCode, sid, context);
             }
-            else throw new PSNotSupportedException(Resources.Argument_InvalidProductState);
+            else throw new PSNotSupportedException(string.Format(Resources.Argument_InvalidProductState, state));
         }
 
         // Common properties used to create this instance.
@@ -254,7 +258,7 @@ namespace Microsoft.Windows.Installer
         static string GetProductProperty(string productCode, string userSid, InstallContext context, string property)
         {
             int ret = 0;
-            StringBuilder sb = new StringBuilder(80);
+            StringBuilder sb = new StringBuilder(NativeMethods.DefaultPropertyLength);
             int cch = sb.Capacity;
 
             if (Msi.CheckVersion(3, 0))

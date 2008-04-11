@@ -146,10 +146,19 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "Context_InstallContext",
                 ValueFromPipelineByPropertyName = true)]
+        [Alias("Context")]
         public InstallContext InstallContext
         {
             get { return this.context; }
-            set { this.context = value; }
+            set
+            {
+                if (value == InstallContext.None)
+                {
+                    throw new PSInvalidParameterException("InstallContext", value);
+                }
+
+                context = value;
+            }
         }
         InstallContext context = InstallContext.Machine;
 
@@ -162,9 +171,9 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             get { return this.sourceType; }
             set
             {
-                if ((value & SourceTypes.Media) == SourceTypes.Media)
+                if (value == SourceTypes.None || (value & SourceTypes.Media) == SourceTypes.Media)
                 {
-                    throw new PSArgumentException(Properties.Resources.Argument_InvalidSourceType);
+                    throw new PSInvalidParameterException("SourceType", value);
                 }
 
                 this.sourceType = value;
@@ -261,6 +270,8 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
 
         protected override void AddMembers(PSObject psobj)
         {
+            base.AddMembers(psobj);
+
             // Add PSPath with fully-qualified provider path.
             PackageSource obj = (PackageSource)psobj.BaseObject;
             Location.AddPSPath(obj.Path, psobj, this);

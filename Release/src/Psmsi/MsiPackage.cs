@@ -25,12 +25,13 @@ namespace Microsoft.Windows.Installer
             try
             {
                 // Get the type.
-                switch (fields[0].ToLowerInvariant())
+                string type = fields[0].ToLowerInvariant();
+                switch (type)
                 {
                     case "u": sourceType = SourceTypes.Url; break;
                     case "n": sourceType = SourceTypes.Network; break;
                     case "m": sourceType = SourceTypes.Media; break;
-                    default: throw new PSNotSupportedException(Properties.Resources.Argument_InvalidSourceType);
+                    default: throw new PSNotSupportedException(string.Format(Properties.Resources.Argument_InvalidSourceType, type));
                 }
 
                 // Get the index.
@@ -41,7 +42,7 @@ namespace Microsoft.Windows.Installer
             }
             catch (FormatException ex)
             {
-                throw new PSArgumentException(Properties.Resources.Argument_InvalidSource, ex);
+                throw new PSArgumentException(string.Format(Properties.Resources.Argument_InvalidSource, source), ex);
             }
         }
 
@@ -49,7 +50,7 @@ namespace Microsoft.Windows.Installer
         {
             if (type != SourceTypes.Network && type != SourceTypes.Url && type != SourceTypes.Media)
             {
-                throw new PSNotSupportedException(Properties.Resources.Argument_InvalidSourceType);
+                throw new PSNotSupportedException(string.Format(Properties.Resources.Argument_InvalidSourceType, type));
             }
             if (index < 0) throw new PSArgumentOutOfRangeException("index");
             if (string.IsNullOrEmpty(path)) throw new PSArgumentNullException("path");

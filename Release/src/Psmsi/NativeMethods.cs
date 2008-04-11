@@ -61,6 +61,15 @@ namespace Microsoft.Windows.Installer
         internal const int MAX_FEATURE_CHARS = 38;
         internal const int MAX_PATH = 260;
         internal const string World = "s-1-1-0";
+
+        // Define only as static for unit testing.
+#if DEBUG
+        internal static int DefaultPropertyLength = 40;
+        internal static int DefaultSidLength = 80;
+#else
+        internal const int DefaultPropertyLength = 40;
+        internal const int DefaultSidLength = 80;
+#endif
         #endregion
 
         #region Properties or advertised products

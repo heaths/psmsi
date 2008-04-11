@@ -70,7 +70,16 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid product state..
+        ///   Looks up a localized string similar to &quot;{1}&quot; is not valid for the {0} parameter..
+        /// </summary>
+        internal static string Argument_InvalidParameter {
+            get {
+                return ResourceManager.GetString("Argument_InvalidParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The state {0} is not a valid product state..
         /// </summary>
         internal static string Argument_InvalidProductState {
             get {
@@ -79,7 +88,7 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid source format..
+        ///   Looks up a localized string similar to The string &quot;{0}&quot; does not specify a valid source..
         /// </summary>
         internal static string Argument_InvalidSource {
             get {
@@ -88,11 +97,20 @@ namespace Microsoft.Windows.Installer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid source type..
+        ///   Looks up a localized string similar to The type {0} is not a valid source type..
         /// </summary>
         internal static string Argument_InvalidSourceType {
             get {
                 return ResourceManager.GetString("Argument_InvalidSourceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A ProductCode is required for the version of Windows Installer installed..
+        /// </summary>
+        internal static string Argument_ProductCodeRequired {
+            get {
+                return ResourceManager.GetString("Argument_ProductCodeRequired", resourceCulture);
             }
         }
         

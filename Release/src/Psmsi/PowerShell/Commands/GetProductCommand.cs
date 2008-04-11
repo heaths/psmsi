@@ -78,10 +78,19 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
                 HelpMessageResourceId = "Context_InstallContext",
                 ValueFromPipelineByPropertyName = true)]
+        [Alias("Context")]
         public InstallContext InstallContext
         {
             get { return context; }
-            set { context = value; }
+            set
+            {
+                if (value == InstallContext.None)
+                {
+                    throw new PSInvalidParameterException("InstallContext", value);
+                }
+
+                context = value;
+            }
         }
         InstallContext context = InstallContext.Machine;
 
@@ -114,7 +123,7 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
             product = null;
             if (Msi.CheckVersion(3, 0))
             {
-                StringBuilder sid = new StringBuilder(80);
+                StringBuilder sid = new StringBuilder(NativeMethods.DefaultSidLength);
                 cch = sid.Capacity;
 
                 this.CallingNativeFunction("MsiEnumProductsEx", this.currentProductCode, this.userSid, (int)this.context, index);

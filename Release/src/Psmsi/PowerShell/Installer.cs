@@ -49,13 +49,6 @@ namespace Microsoft.Windows.Installer.PowerShell
             get
             {
                 string[] formats = { "formats.ps1xml" };
-                string directory = Path.GetDirectoryName(GetType().Assembly.Location);
-
-                for (int i = 0; i < formats.Length; i++)
-                {
-                    formats[i] = Path.Combine(directory, formats[i]);
-                }
-
                 return formats;
             }
         }
@@ -65,13 +58,6 @@ namespace Microsoft.Windows.Installer.PowerShell
             get
             {
                 string[] types = { "types.ps1xml" };
-                string directory = Path.GetDirectoryName(GetType().Assembly.Location);
-
-                for (int i = 0; i < types.Length; i++)
-                {
-                    types[i] = Path.Combine(directory, types[i]);
-                }
-
                 return types;
             }
         }

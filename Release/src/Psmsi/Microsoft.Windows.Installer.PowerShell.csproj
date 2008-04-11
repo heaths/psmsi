@@ -71,6 +71,7 @@
     <Compile Include="PowerShell\Installer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PowerShell\PSExceptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -99,10 +100,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-	<RootDirectory Include="$(SolutionDir)..\" />
+    <RootDirectory Include="$(SolutionDir)..\" />
   </ItemGroup>
   <PropertyGroup>
-	<ToolsDirectory>@(RootDirectory->'%(RootDir)%(Directory)')tools\</ToolsDirectory>
+    <ToolsDirectory>@(RootDirectory->'%(RootDir)%(Directory)')tools\</ToolsDirectory>
   </PropertyGroup>
   <Target Name="SignContentFiles" DependsOnTargets="CopyFilesToOutputDirectory">
     <CreateItem Include="@(_SourceItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')" Condition="'%(Extension)'=='.ps1xml'">

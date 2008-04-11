@@ -147,7 +147,7 @@ namespace Microsoft.Windows.Installer
         string GetPatchProperty(string property)
         {
             int ret = 0;
-            StringBuilder sb = new StringBuilder(80);
+            StringBuilder sb = new StringBuilder(NativeMethods.DefaultPropertyLength);
             int cch = sb.Capacity;
 
             // Use older MsiGetPatchInfo if no ProductCode is specified.
