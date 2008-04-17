@@ -28,6 +28,8 @@
     <Property Id="ARPHELPLINK" Value="http://www.codeplex.com/psmsi/thread/list.aspx" />
     <Property Id="ARPURLINFOABOUT" Value="http://www.codeplex.com/psmsi/" />
     <Property Id="WIXUI_INSTALLDIR" Value="APPROOT" />
+    <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     <UIRef Id="WixUI_InstallDir" />
     <Feature Id="PsMsi" AllowAdvertise="no" Description="!(loc.F_PsMsi_Description)" ConfigurableDirectory="APPROOT" Level="1" Title="!(loc.F_PsMsi_Title)">

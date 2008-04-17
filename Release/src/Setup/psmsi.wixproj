@@ -71,4 +71,8 @@
   <ItemGroup>
     <None Include="License.rtf" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Banner.bmp" />
+    <None Include="Dialog.bmp" />
+  </ItemGroup>
 </Project>
