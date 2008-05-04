@@ -93,9 +93,11 @@
     </Content>
     <Content Include="formats.ps1xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  <Sign>True</Sign>
     </Content>
     <Content Include="types.ps1xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  <Sign>True</Sign>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -105,11 +107,16 @@
   <PropertyGroup>
     <ToolsDirectory>@(RootDirectory->'%(RootDir)%(Directory)')tools\</ToolsDirectory>
   </PropertyGroup>
-  <Target Name="SignContentFiles" DependsOnTargets="CopyFilesToOutputDirectory">
-    <CreateItem Include="@(_SourceItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')" Condition="'%(Extension)'=='.ps1xml'">
-      <Output TaskParameter="Include" ItemName="SignContentFilesOutput" />
+  <Target Name="GetItemsToSign" DependsOnTargets="CopyFilesToOutputDirectory">
+	<CreateItem Include="@(_SourceItemsToCopyToOutputDirectory)" Condition="'%(_SourceItemsToCopyToOutputDirectory.Sign)' == 'True'">
+	  <Output TaskParameter="Include" ItemName="ItemsToSign" />
     </CreateItem>
-    <Exec Command="powershell.exe -command &quot;$(ToolsDirectory)Sign\Sign.ps1&quot; &quot;%(SignContentFilesOutput.FullPath)&quot;" />
+	<CreateItem Include="@(ItemsToSign->'$(OutDir)%(TargetPath)')">
+	  <Output TaskParameter="Include" ItemName="SignedItems" />
+	</CreateItem>
+  </Target>
+  <Target Name="SignContentFiles" DependsOnTargets="GetItemsToSign" Inputs="@(ItemsToSign)" Outputs="@(SignedItems)">
+    <Exec Command="powershell.exe -command &quot;$(ToolsDirectory)Sign\Sign.ps1&quot; &quot;%(SignedItems.FullPath)&quot;" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="SignContentFiles">
   </Target>
