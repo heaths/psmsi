@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EAE7D4BF-5061-4220-BE94-E268E965DCE5}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -39,39 +39,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Deployment.WindowsInstaller.Package, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Management.Automation" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Msi.cs" />
-    <Compile Include="MsiAdvertisedProductInfo.cs" />
-    <Compile Include="MsiEnumerable.cs" />
-    <Compile Include="MsiInstalledProductInfo.cs" />
-    <Compile Include="MsiPackage.cs" />
-    <Compile Include="MsiPatchInfo.cs" />
-    <Compile Include="MsiProductInfo.cs" />
     <Compile Include="NativeMethods.cs" />
-    <Compile Include="PowerShell\Commands\CommandBase.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommand.cs" />
-    <Compile Include="PowerShell\Commands\EnumCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
     <Compile Include="PowerShell\Commands\GetSourceCommand.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
-    <Compile Include="PowerShell\Help.cs" />
-    <Compile Include="PowerShell\DebugMessageAttribute.cs" />
-    <Compile Include="PowerShell\Location.cs" />
     <Compile Include="PowerShell\Installer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PowerShell\PSExceptions.cs" />
+    <Compile Include="PowerShell\SidAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -84,7 +73,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -93,11 +82,16 @@
     </Content>
     <Content Include="formats.ps1xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  <Sign>True</Sign>
+      <Sign>True</Sign>
     </Content>
     <Content Include="types.ps1xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  <Sign>True</Sign>
+      <Sign>True</Sign>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="psmsi.psd1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -108,15 +102,15 @@
     <ToolsDirectory>@(RootDirectory->'%(RootDir)%(Directory)')tools\</ToolsDirectory>
   </PropertyGroup>
   <Target Name="GetItemsToSign" DependsOnTargets="CopyFilesToOutputDirectory">
-	<CreateItem Include="@(_SourceItemsToCopyToOutputDirectory)" Condition="'%(_SourceItemsToCopyToOutputDirectory.Sign)' == 'True'">
-	  <Output TaskParameter="Include" ItemName="ItemsToSign" />
+    <CreateItem Include="@(_SourceItemsToCopyToOutputDirectory)" Condition="'%(_SourceItemsToCopyToOutputDirectory.Sign)' == 'True'">
+      <Output TaskParameter="Include" ItemName="ItemsToSign" />
     </CreateItem>
-	<CreateItem Include="@(ItemsToSign->'$(OutDir)%(TargetPath)')">
-	  <Output TaskParameter="Include" ItemName="SignedItems" />
-	</CreateItem>
+    <CreateItem Include="@(ItemsToSign->'$(OutDir)%(TargetPath)')">
+      <Output TaskParameter="Include" ItemName="SignedItems" />
+    </CreateItem>
   </Target>
   <Target Name="SignContentFiles" DependsOnTargets="GetItemsToSign" Inputs="@(ItemsToSign)" Outputs="@(SignedItems)">
-    <Exec Command="powershell.exe -command &quot;$(ToolsDirectory)Sign\Sign.ps1&quot; &quot;%(SignedItems.FullPath)&quot;" />
+    <Exec Command="powershell.exe -command '&quot;$(ToolsDirectory)Sign\Sign.ps1&quot; &quot;%(SignedItems.FullPath)&quot;'" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="SignContentFiles">
   </Target>

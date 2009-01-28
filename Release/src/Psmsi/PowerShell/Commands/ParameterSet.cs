@@ -20,37 +20,27 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
     internal static class ParameterSet
     {
         /// <summary>
-        /// Use for InputObject parameters that typically accept object[] arrays.
+        /// Parameter set for product information.
         /// </summary>
-        internal const string InputObject = "InputObject";
+        internal const string Product = "Product";
 
         /// <summary>
-        /// Use when input may be a ProductCode or a patch code.
+        /// Parameter set for patch information.
         /// </summary>
-        internal const string ProductOrPatchCode = "ProductOrPatchCode";
+        internal const string Patch = "Patch";
 
         /// <summary>
-        /// Use when input is a ProductCode.
+        /// Parameter set for either product or patch information.
         /// </summary>
-        internal const string ProductCode = "ProductCode";
+        internal const string Installation = "Installation";
 
         /// <summary>
-        /// Use when input is a patch code.
-        /// </summary>
-        internal const string PatchCode = "PatchCode";
-
-        /// <summary>
-        /// Use when input is an UpgradeCode.
-        /// </summary>
-        internal const string UpgradeCode = "UpgradeCode";
-
-        /// <summary>
-        /// Use for wildcard paths.
+        /// Parameter set for a path supporting wildcards.
         /// </summary>
         internal const string Path = "Path";
 
         /// <summary>
-        /// Use for literal paths where wildcards are not supported.
+        /// Parameter set for a literal path.
         /// </summary>
         internal const string LiteralPath = "LiteralPath";
     }

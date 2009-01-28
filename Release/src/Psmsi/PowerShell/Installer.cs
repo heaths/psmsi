@@ -21,8 +21,14 @@ using Microsoft.Windows.Installer.Properties;
 
 namespace Microsoft.Windows.Installer.PowerShell
 {
+    /// <summary>
+    /// Installer class for installutil-supported installation.
+    /// </summary>
+    /// <remarks>
+    /// The snap-in should be installed using Windows Installer or imported as a module.
+    /// </remarks>
     [RunInstaller(true)]
-    public class WindowsInstallerSnapIn : PSSnapIn
+    public sealed class WindowsInstallerSnapIn : PSSnapIn
     {
         public override string Name { get { return "psmsi"; } }
 

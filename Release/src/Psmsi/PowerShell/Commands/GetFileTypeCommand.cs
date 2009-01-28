@@ -13,98 +13,31 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
-using System.Management;
 using System.Management.Automation;
 using Microsoft.Windows.Installer;
 using Microsoft.Windows.Installer.PowerShell;
-using System.Globalization;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-    [Cmdlet(VerbsCommon.Get, "MSIFileType",
-        DefaultParameterSetName = ParameterSet.Path)]
-    public sealed class GetFileTypeCommand : CommandBase
+    /// <summary>
+    /// The Get-MSIFileType cmdlet.
+    /// </summary>
+    [Cmdlet(VerbsCommon.Get, "MSIFileType", DefaultParameterSetName = ParameterSet.Path)]
+    public sealed class GetFileTypeCommand : PSCmdlet
     {
-        protected override void ProcessRecord()
-        {
-            foreach (string _path in this.path)
-            {
-                // with seemingly no other way, check if the path is valid if literal
-                if (this.literal && !this.SessionState.Path.IsValid(_path))
-                {
-                    continue;
-                }
+        private string[] path;
+        private bool literal;
+        private bool passThru;
 
-                Collection<PSObject> items = this.InvokeProvider.Item.Get(_path);
-                foreach (PSObject item in items)
-                {
-                    string fileType = null;
-                    string fsPath = Location.GetOneResolvedProviderPathFromPSObject(item, this);
-
-                    if (null != fsPath && File.Exists(fsPath))
-                    {
-                        Guid clsid = Guid.Empty;
-
-                        try
-                        {
-                            Storage stg = Storage.OpenStorage(fsPath, true);
-                            clsid = stg.Clsid;
-                        }
-                        catch (IOException)
-                        {
-                            this.WriteDebug(string.Format(CultureInfo.InvariantCulture, Properties.Resources.File_NotStorage, fsPath));
-                        }
-                        catch (System.ComponentModel.Win32Exception ex)
-                        {
-                            // non-terminating error; continue to the next file
-                            string message = ex.Message.Replace("%1", fsPath);
-                            PSInvalidOperationException psex = new PSInvalidOperationException(message, ex);
-
-                            this.WriteError(psex.ErrorRecord);
-                        }
-
-                        // set a friendly type name
-                        if (NativeMethods.CLSID_MsiPackage == clsid)
-                        {
-                            fileType = Msi.MsiPackage;
-                        }
-                        else if (NativeMethods.CLSID_MsiPatch == clsid)
-                        {
-                            fileType = Msi.MsiPatch;
-                        }
-                        else if (NativeMethods.CLSID_MsiTransform == clsid)
-                        {
-                            fileType = Msi.MsiTransform;
-                        }
-                    }
-
-                    // pass everything through so format cmdlets work properly
-                    if (this.passThru)
-                    {
-                        item.Properties.Add(new PSNoteProperty("MSIFileType", fileType));
-
-                        this.WriteObject(item);
-                    }
-                    else if (!this.Stopping)
-                    {
-                        this.WriteObject(fileType);
-                    }
-                }
-            }
-        }
-
+        /// <summary>
+        /// Gets or sets the path supporting wildcards to enumerate files.
+        /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
-                HelpMessageResourceId = "Location_Path",
-                ParameterSetName = ParameterSet.Path,
-                Mandatory = true,
-                Position = 0,
-                ValueFromPipeline = true,
-                ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.Path, Position = 0,
+            ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
         public string[] Path
         {
             get { return this.path; }
@@ -114,17 +47,13 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 this.path = value;
             }
         }
-        string[] path;
 
+        /// <summary>
+        /// Gets or sets the literal path for one or more files.
+        /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
-                HelpMessageResourceId = "Location_LiteralPath",
-                ParameterSetName = ParameterSet.LiteralPath,
-                Mandatory = true,
-                Position = 0,
-                ValueFromPipeline = false,
-                ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.LiteralPath, Position = 0, Mandatory = true,
+            ValueFromPipelineByPropertyName = true)]
         [Alias("PSPath")]
         public string[] LiteralPath
         {
@@ -135,14 +64,15 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
                 this.path = value;
             }
         }
-        bool literal;
 
+        /// <summary>
+        /// Gets or sets whether the file objects are returned.
+        /// </summary>
         [Parameter]
         public SwitchParameter PassThru
         {
-            get { return passThru; }
-            set { passThru = value; }
+            get { return this.passThru; }
+            set { this.passThru = value; }
         }
-        bool passThru;
     }
 }

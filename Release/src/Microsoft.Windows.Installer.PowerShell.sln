@@ -34,19 +34,33 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EAE7D4BF-5061-4220-BE94-E268E965DCE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EAE7D4BF-5061-4220-BE94-E268E965DCE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAE7D4BF-5061-4220-BE94-E268E965DCE5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EAE7D4BF-5061-4220-BE94-E268E965DCE5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{EAE7D4BF-5061-4220-BE94-E268E965DCE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAE7D4BF-5061-4220-BE94-E268E965DCE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAE7D4BF-5061-4220-BE94-E268E965DCE5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EAE7D4BF-5061-4220-BE94-E268E965DCE5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,41 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Configuration>
-  <Controls>
-    <Control>
-      <Name>PatchOrProductGrouping</Name>
-      <CustomControl>
-        <CustomEntries>
-          <CustomEntry>
-            <CustomItem>
-              <Frame>
-                <LeftIndent>4</LeftIndent>
-                <CustomItem>
-                  <ExpressionBinding>
-                    <ItemSelectionCondition>
-                      <ScriptBlock><![CDATA[$_.ProductCode -ne $null]]></ScriptBlock>
-                    </ItemSelectionCondition>
-                    <ScriptBlock><![CDATA["ProductCode: " + $_.ProductCode]]></ScriptBlock>
-                  </ExpressionBinding>
-                  <ExpressionBinding>
-                    <ItemSelectionCondition>
-                      <ScriptBlock><![CDATA[$_.PatchCode -ne $null]]></ScriptBlock>
-                    </ItemSelectionCondition>
-                    <ScriptBlock><![CDATA["PatchCode: " + $_.PatchCode]]></ScriptBlock>
-                  </ExpressionBinding>
-                  <NewLine/>
-                </CustomItem>
-              </Frame>
-            </CustomItem>
-          </CustomEntry>
-        </CustomEntries>
-      </CustomControl>
-    </Control>
-  </Controls>
   <ViewDefinitions>
+    <!-- ProductInstallation -->
     <View>
       <Name>Product</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.ProductInfo</TypeName>
+        <TypeName>Microsoft.Deployment.WindowsInstaller.ProductInstallation</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -61,7 +31,7 @@
                 <PropertyName>ProductCode</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>VersionString</PropertyName>
+                <PropertyName>ProductVersion</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>ProductName</PropertyName>
@@ -74,7 +44,7 @@
     <View>
       <Name>Product</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.ProductInfo</TypeName>
+        <TypeName>Microsoft.Deployment.WindowsInstaller.ProductInstallation</TypeName>
       </ViewSelectedBy>
       <ListControl>
         <ListEntries>
@@ -91,8 +61,7 @@
                 <PropertyName>ProductName</PropertyName>
               </ListItem>
               <ListItem>
-                <Label>ProductVersion</Label>
-                <PropertyName>VersionString</PropertyName>
+                <PropertyName>ProductVersion</PropertyName>
               </ListItem>
               <ListItem>
                 <PropertyName>InstallDate</PropertyName>
@@ -105,7 +74,7 @@
     <View>
       <Name>Package</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.ProductInfo</TypeName>
+        <TypeName>Microsoft.Deployment.WindowsInstaller.ProductInstallation</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
@@ -141,15 +110,21 @@
         </TableRowEntries>
       </TableControl>
     </View>
+    <!-- PatchInstallation -->
     <View>
       <Name>Patch</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.PatchInfo</TypeName>
+        <TypeName>Microsoft.Deployment.WindowsInstaller.PatchInstallation</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
             <Label>PatchCode</Label>
+            <Width>38</Width>
+            <Alignment>Left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>ProductCode</Label>
             <Width>38</Width>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
@@ -175,7 +150,10 @@
                 <PropertyName>PatchCode</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>PatchState</PropertyName>
+                <PropertyName>ProductCode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>State</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Uninstallable</PropertyName>
@@ -191,7 +169,7 @@
     <View>
       <Name>Patch</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.PatchInfo</TypeName>
+        <TypeName>Microsoft.Deployment.WindowsInstaller.PatchInstallation</TypeName>
       </ViewSelectedBy>
       <ListControl>
         <ListEntries>
@@ -207,8 +185,7 @@
                 <PropertyName>DisplayName</PropertyName>
               </ListItem>
               <ListItem>
-                <Label>State</Label>
-                <PropertyName>PatchState</PropertyName>
+                <PropertyName>State</PropertyName>
               </ListItem>
               <ListItem>
                 <PropertyName>Uninstallable</PropertyName>
@@ -221,7 +198,7 @@
     <View>
       <Name>State</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.PatchInfo</TypeName>
+        <TypeName>Microsoft.Deployment.WindowsInstaller.PatchInstallation</TypeName>
       </ViewSelectedBy>
       <GroupBy>
         <Label>ProductCode</Label>
@@ -272,8 +249,12 @@
     <View>
       <Name>Package</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.PatchInfo</TypeName>
+        <TypeName>Microsoft.Deployment.WindowsInstaller.PatchInstallation</TypeName>
       </ViewSelectedBy>
+      <GroupBy>
+        <Label>ProductCode</Label>
+        <PropertyName>ProductCode</PropertyName>
+      </GroupBy>
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
@@ -303,128 +284,13 @@
                 <PropertyName>PatchCode</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>PatchState</PropertyName>
+                <PropertyName>State</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>LocalPackage</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>DisplayName</PropertyName>
-              </TableColumnItem>
-            </TableColumnItems>
-          </TableRowEntry>
-        </TableRowEntries>
-      </TableControl>
-    </View>
-    <View>
-      <Name>Indexed</Name>
-      <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.PackageSource</TypeName>
-      </ViewSelectedBy>
-      <TableControl>
-        <TableHeaders>
-          <TableColumnHeader>
-            <Label>Index</Label>
-            <Width>5</Width>
-            <Alignment>Right</Alignment>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>Type</Label>
-            <Width>7</Width>
-            <Alignment>Left</Alignment>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>Path</Label>
-            <Alignment>Left</Alignment>
-          </TableColumnHeader>
-        </TableHeaders>
-        <TableRowEntries>
-          <TableRowEntry>
-            <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>Index</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>SourceType</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>Path</PropertyName>
-              </TableColumnItem>
-            </TableColumnItems>
-          </TableRowEntry>
-        </TableRowEntries>
-      </TableControl>
-    </View>
-    <View>
-      <Name>Indexed</Name>
-      <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.PackageSource</TypeName>
-      </ViewSelectedBy>
-      <ListControl>
-        <ListEntries>
-          <ListEntry>
-            <ListItems>
-              <ListItem>
-                <PropertyName>Index</PropertyName>
-              </ListItem>
-              <ListItem>
-                <Label>Type</Label>
-                <PropertyName>SourceType</PropertyName>
-              </ListItem>
-              <ListItem>
-                <PropertyName>Path</PropertyName>
-              </ListItem>
-            </ListItems>
-          </ListEntry>
-        </ListEntries>
-      </ListControl>
-    </View>
-    <View>
-      <Name>Package</Name>
-      <ViewSelectedBy>
-        <TypeName>Microsoft.Windows.Installer.PackageSource</TypeName>
-      </ViewSelectedBy>
-      <GroupBy>
-        <ScriptBlock><![CDATA[
-          if ($_.ProductCode -ne $null)
-          {
-            $_.ProductCode
-          }
-          elseif ($_.PatchCode -ne $null)
-          {
-            $_.PatchCode
-          }
-        ]]></ScriptBlock>
-        <CustomControlName>PatchOrProductGrouping</CustomControlName>
-      </GroupBy>
-      <TableControl>
-        <TableHeaders>
-          <TableColumnHeader>
-            <Label>Index</Label>
-            <Width>5</Width>
-            <Alignment>Right</Alignment>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>Type</Label>
-            <Width>7</Width>
-            <Alignment>Left</Alignment>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>Path</Label>
-            <Alignment>Left</Alignment>
-          </TableColumnHeader>
-        </TableHeaders>
-        <TableRowEntries>
-          <TableRowEntry>
-            <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>Index</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>SourceType</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>Path</PropertyName>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>

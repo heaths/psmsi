@@ -19,23 +19,19 @@ using System.Text;
 
 namespace Microsoft.Windows.Installer
 {
-    sealed class Storage
+    /// <summary>
+    /// Lightweight wrapper around OLE structure storages.
+    /// </summary>
+    internal sealed class Storage
     {
-        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        NativeMethods.STGM mode;
-        NativeMethods.IStorage stg;
+        private NativeMethods.IStorage stg;
+        private Guid clsid;
 
-        Storage(NativeMethods.IStorage stg, NativeMethods.STGM mode)
+        private Storage(NativeMethods.IStorage stg)
         {
             this.stg = stg;
-            this.mode = mode;
+            this.clsid = Guid.Empty;
         }
-
-        //Storage(Storage parent, string childName)
-        //{
-        //    this.mode = parent.mode;
-        //    parent.stg.OpenStorage(childName, null, this.mode, null, 0, out this.stg);
-        //}
 
         /// <summary>
         /// Opens a storage file.
@@ -54,25 +50,23 @@ namespace Microsoft.Windows.Installer
 
             int ret = NativeMethods.StgOpenStorageEx(path, mode,
                 NativeMethods.STGFMT.STGFMT_STORAGE,
-                0,
-                IntPtr.Zero,
-                IntPtr.Zero,
-                ref iid,
-                out stg);
+                0, IntPtr.Zero, IntPtr.Zero,
+                ref iid, out stg);
 
-            if (NativeMethods.STG_E_FILEALREADYEXISTS == ret)
-            {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.File_AlreadyExists, path));
-            }
-            else if (0 != ret)
+            if (0 != ret)
             {
                 throw new System.ComponentModel.Win32Exception(ret);
             }
-
-            return new Storage(stg, mode);
+            else
+            {
+                return new Storage(stg);
+            }
         }
 
-        Guid clsid = Guid.Empty;
+        /// <summary>
+        /// Gets the storage class identifier.
+        /// </summary>
+        /// <value>The storage class identifier.</value>
         internal Guid Clsid
         {
             get
@@ -89,38 +83,5 @@ namespace Microsoft.Windows.Installer
                 return clsid;
             }
         }
-
-        //internal IEnumerable<Storage> SubStorages
-        //{
-        //    get
-        //    {
-        //        int ret = ERROR_SUCCESS;
-        //        IEnumSTATSTG estats;
-        //        stg.EnumElements(0, IntPtr.Zero, 0, out estats);
-        //        STATSTG[] stats = new STATSTG[1];
-        //        int fetched = 0;
-
-        //        while (0 == (ret = estats.Next(1, stats, out fetched)))
-        //        {
-        //            if (1 != fetched)
-        //            {
-        //                ret = ERROR_NO_MORE_ITEMS;
-        //                break;
-        //            }
-        //            else if (IID_IStorage == stats[0].clsid)
-        //            {
-        //                using (stats[0])
-        //                {
-        //                    yield return new Storage(this, stats[0].Name);
-        //                }
-        //            }
-        //        }
-
-        //        if (ERROR_SUCCESS != ret && ERROR_NO_MORE_ITEMS != ret)
-        //        {
-        //            throw new System.ComponentModel.Win32Exception(ret);
-        //        }
-        //    }
-        //}
     }
 }

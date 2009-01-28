@@ -30,290 +30,23 @@ using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 namespace Microsoft.Windows.Installer
 {
-    static class NativeMethods
+    /// <summary>
+    /// Native methods, structures, enumerations, and constants.
+    /// </summary>
+    internal static class NativeMethods
     {
-        #region Win32 error codes
-        internal const int ERROR_SUCCESS = 0;
-        internal const int ERROR_ACCESS_DENIED = 5;
-        internal const int ERROR_MORE_DATA = 234;
-        internal const int ERROR_NO_MORE_ITEMS = 259;
-        internal const int ERROR_UNKNOWN_PRODUCT = 1605;
-        internal const int ERROR_UNKNOWN_PROPERTY = 1608;
-        internal const int ERROR_BAD_CONFIGURATION = 1610;
-        #endregion
-
-        #region Storage error codes
-        internal const int STG_E_FILEALREADYEXISTS = unchecked((int)0x80030050);
-        #endregion
-
-        #region Dialog return codes
-        internal const int IDOK = 1;
-        internal const int IDCANCEL = 2;
-        internal const int IDABORT = 3;
-        internal const int IDRETRY = 4;
-        internal const int IDIGNORE = 5;
-        internal const int IDYES = 6;
-        internal const int IDNO = 7;
-        #endregion
-
         #region Other constants
-        internal const int MAX_GUID_CHARS = 38;
-        internal const int MAX_FEATURE_CHARS = 38;
-        internal const int MAX_PATH = 260;
-        internal const string World = "s-1-1-0";
-
-        // Define only as static for unit testing.
-#if DEBUG
-        internal static int DefaultPropertyLength = 40;
-        internal static int DefaultSidLength = 80;
-#else
-        internal const int DefaultPropertyLength = 40;
-        internal const int DefaultSidLength = 80;
-#endif
-        #endregion
-
-        #region Properties or advertised products
-        internal const string INSTALLPROPERTY_PACKAGENAME = "PackageName";
-        internal const string INSTALLPROPERTY_TRANSFORMS = "Transforms";
-        internal const string INSTALLPROPERTY_LANGUAGE = "Language";
-        internal const string INSTALLPROPERTY_PRODUCTNAME = "ProductName";
-        internal const string INSTALLPROPERTY_ASSIGNMENTTYPE = "AssignmentType";
-        internal const string INSTALLPROPERTY_INSTANCETYPE = "InstanceType";
-        internal const string INSTALLPROPERTY_AUTHORIZED_LUA_APP = "AuthorizedLUAApp";
-        internal const string INSTALLPROPERTY_PACKAGECODE = "PackageCode";
-        internal const string INSTALLPROPERTY_VERSION = "Version";
-        internal const string INSTALLPROPERTY_PRODUCTICON = "ProductIcon";
-        #endregion
-
-        #region Properties for installed products
-        internal const string INSTALLPROPERTY_INSTALLEDPRODUCTNAME = "InstalledProductName";
-        internal const string INSTALLPROPERTY_VERSIONSTRING = "VersionString";
-        internal const string INSTALLPROPERTY_HELPLINK = "HelpLink";
-        internal const string INSTALLPROPERTY_HELPTELEPHONE = "HelpTelephone";
-        internal const string INSTALLPROPERTY_INSTALLLOCATION = "InstallLocation";
-        internal const string INSTALLPROPERTY_INSTALLSOURCE = "InstallSource";
-        internal const string INSTALLPROPERTY_INSTALLDATE = "InstallDate";
-        internal const string INSTALLPROPERTY_PUBLISHER = "Publisher";
-        internal const string INSTALLPROPERTY_LOCALPACKAGE = "LocalPackage";
-        internal const string INSTALLPROPERTY_URLINFOABOUT = "URLInfoAbout";
-        internal const string INSTALLPROPERTY_URLUPDATEINFO = "URLUpdateInfo";
-        internal const string INSTALLPROPERTY_VERSIONMINOR = "VersionMinor";
-        internal const string INSTALLPROPERTY_VERSIONMAJOR = "VersionMajor";
-        internal const string INSTALLPROPERTY_PRODUCTID = "ProductID";
-        internal const string INSTALLPROPERTY_REGCOMPANY = "RegCompany";
-        internal const string INSTALLPROPERTY_REGOWNER = "RegOwner";
-        internal const string INSTALLPROPERTY_PRODUCTSTATE = "State";
-        #endregion
-
-        #region Properties for installed patches
-        internal const string INSTALLPROPERTY_UNINSTALLABLE = "Uninstallable";
-        internal const string INSTALLPROPERTY_PATCHSTATE = "State";
-        internal const string INSTALLPROPERTY_PATCHTYPE = "PatchType";
-        internal const string INSTALLPROPERTY_LUAENABLED = "LUAEnabled";
-        internal const string INSTALLPROPERTY_DISPLAYNAME = "DisplayName";
-        internal const string INSTALLPROPERTY_MOREINFOURL = "MoreInfoURL";
-        #endregion
-
-        #region Source list information for advertised packages
-        internal const string INSTALLPROPERTY_LASTUSEDSOURCE = "LastUsedSource";
-        internal const string INSTALLPROPERTY_LASTUSEDTYPE = "LastUsedType";
-        internal const string INSTALLPROPERTY_MEDIAPACKAGEPATH = "MediaPackagePath";
-        internal const string INSTALLPROPERTY_DISKPROMPT = "DiskPrompt";
+        internal static readonly string World = "s-1-1-0";
         #endregion
 
         #region Interface identifiers
-        const string UUID_IStorage = "0000000b-0000-0000-C000-000000000046";
-        //const string UUID_IPropertySetStorage = "0000013A-0000-0000-C000-000000000046";
-        //const string UUID_IPropertyStorage = "00000138-0000-0000-C000-000000000046";
-        const string UUID_IEnumSTATSTG = "0000000d-0000-0000-C000-000000000046";
-
-        internal static readonly Guid IID_IStorage = new Guid(NativeMethods.UUID_IStorage);
-        //internal static readonly Guid IID_IPropertySetStorage = new Guid(NativeMethods.UUID_IPropertySetStorage);
-        //internal static readonly Guid IID_IPropertyStorage = new Guid(NativeMethods.UUID_IPropertyStorage);
+        internal static readonly Guid IID_IStorage = new Guid(0xb, 0x0, 0x0, new byte[] { 0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46 });
         #endregion
 
-        #region Class identifiers
+        #region Storage class identifiers
         internal static readonly Guid CLSID_MsiPackage = new Guid(0xC1084, 0x0, 0x0, new byte[] { 0xC0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46 });
         internal static readonly Guid CLSID_MsiPatch = new Guid(0xC1086, 0x0, 0x0, new byte[] { 0xC0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46 });
         internal static readonly Guid CLSID_MsiTransform = new Guid(0xC1082, 0x0, 0x0, new byte[] { 0xC0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46 });
-        #endregion
-
-        #region DllGetVersion functions
-        [DllImport(Msi.DLL, EntryPoint = "DllGetVersion")]
-        internal static extern int MsiDllGetVersion(NativeMethods.DLLVERSIONINFO pdvi);
-        #endregion
-
-        #region INSTALLUI_HANDLER callback function
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        internal delegate int InstallUIHandler(
-                IntPtr pvContext,
-                [MarshalAs(UnmanagedType.U4)] int iMessageType,
-                string szMessage);
-        #endregion
-
-        #region Handle functions
-        [DllImport(Msi.DLL), ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiCloseHandle(
-            [MarshalAs(UnmanagedType.U4)] MsiHandle hAny);
-        #endregion
-
-        #region Patch enumeration functions
-        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumPatches(""{0}"", {1}, ...)", 2)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiEnumPatches(
-                string szProduct,
-                [MarshalAs(UnmanagedType.U4)] int iPatchIndex,
-                [Out] StringBuilder lpPatchBuf,
-                [Out] StringBuilder lpTransformsBuf,
-                [MarshalAs(UnmanagedType.U4)] ref int pcchTransformsBuf);
-
-        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumPatchesEx(""{0}"", ""{1}"", 0x{2:x2}, 0x{3:x2}, {4}, ...)", 5)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiEnumPatchesEx(
-                string szProductcode,
-                string szUserSid,
-                [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-                [MarshalAs(UnmanagedType.U4)] PatchStates dwFilter,
-                [MarshalAs(UnmanagedType.U4)] int dwIndex,
-                [Out] StringBuilder szPatchCode,
-                [Out] StringBuilder szTargetProductCode,
-                [MarshalAs(UnmanagedType.U4)] out InstallContext pdwTargetProductContext,
-                [Out] StringBuilder szTargetUserSid,
-                [MarshalAs(UnmanagedType.U4)] ref int pcchTargetUserSid);
-        #endregion
-
-        #region Product enumeration functions
-        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumProducts({0}, ...)", 1)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiEnumProducts(
-                [MarshalAs(UnmanagedType.U4)] int iProductIndex,
-                [Out] StringBuilder lpProductBuf);
-
-        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumProductsEx(""{0}"", ""{1}"", 0x{2:x2}, {3}, ...)", 4)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiEnumProductsEx(
-                string szProductCode,
-                string szUserSid,
-                [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-                [MarshalAs(UnmanagedType.U4)] int dwIndex,
-                [Out] StringBuilder szInstalledProductCode,
-                [MarshalAs(UnmanagedType.U4)] out InstallContext pdwInstalledContext,
-                [Out] StringBuilder szSid,
-                [MarshalAs(UnmanagedType.U4)] ref int pcchSid);
-
-        [DllImport(Msi.DLL), DebugMessage(@"MsiEnumRelatedProducts(""{0}"", 0, {1}, ...)", 2)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiEnumRelatedProducts(
-                string lpUpgradeCode,
-                [MarshalAs(UnmanagedType.U4)] int dwReserved,
-                [MarshalAs(UnmanagedType.U4)] int iProductIndex,
-                [Out] StringBuilder lpProductBuf);
-        #endregion
-
-        #region Patch information functions
-        [DllImport(Msi.DLL)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiGetPatchInfo(
-                string szPatch,
-                string szAttribute,
-                [Out] StringBuilder lpValueBuf,
-                [MarshalAs(UnmanagedType.U4)] ref int pcchValueBuf);
-
-        [DllImport(Msi.DLL)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiGetPatchInfoEx(
-                string szPatchCode,
-                string szProductCode,
-                string szUserSid,
-                [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-                string szProperty,
-                [Out] StringBuilder lpValue,
-                [MarshalAs(UnmanagedType.U4)] ref int pcchValue);
-        #endregion
-
-        #region Product information functions
-        [DllImport(Msi.DLL)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiGetProductInfo(
-                string szProduct,
-                string szProperty,
-                [Out] StringBuilder lpValueBuf,
-                [MarshalAs(UnmanagedType.U4)] ref int pcchValueBuf);
-
-        [DllImport(Msi.DLL)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiGetProductInfoEx(
-                string szProductCode,
-                string szUserSid,
-                [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-                string szProperty,
-                [Out] StringBuilder lpValue,
-                [MarshalAs(UnmanagedType.U4)] ref int pcchValue);
-        #endregion
-
-        #region File information functions
-        [DllImport(Msi.DLL), DebugMessage(@"MsiGetFileHash(""{0}"", 0x{1:x2}, ...)", 2)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiGetFileHash(
-            string szFilePath,
-            [MarshalAs(UnmanagedType.U4)] int dwOptions,
-            [MarshalAs(UnmanagedType.LPStruct), Out] FileHashInfo pHash);
-        #endregion
-
-        #region Source list functions
-        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListEnumSources(""{0}"", ""{1}"", 0x{2:x2}, 0x{3:x2}, {4}, ...)", 5)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiSourceListEnumSources(
-            string szProductOrPatchCode,
-            string szUserSid,
-            [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-            [MarshalAs(UnmanagedType.U4)] int dwOptions,
-            [MarshalAs(UnmanagedType.U4)] int dwIndex,
-            [Out] StringBuilder szSource,
-            [MarshalAs(UnmanagedType.U4)] ref int pcchSource);
-
-        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListAddSource(""{0}"", ""{1}"", 0, ""{2}"")", 3)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiSourceListAddSource(
-            string szProduct,
-            string szUserName, // Format: DOMAIN|MACHINE\USERNAME
-            [MarshalAs(UnmanagedType.U4)] int dwReserved,
-            string szSource);
-
-        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListAddSourceEx(""{0}"", ""{1}"", 0x{2:x2}, 0x{3:x2}, ""{4}"", {5})", 6)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiSourceListAddSourceEx(
-            string szProductCodeOrPatchCode,
-            string szUserSid,
-            [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-            [MarshalAs(UnmanagedType.U4)] int dwOptions,
-            string szSource,
-            [MarshalAs(UnmanagedType.U4)] int dwIndex);
-
-        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListClearAll(""{0}"", ""{1}"", 0)", 2)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiSourceListClearAll(
-            string szProduct,
-            string szUserName, // Format: DOMAIN|MACHINE\USERNAME
-            [MarshalAs(UnmanagedType.U4)] int dwReserved);
-
-        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListClearAllEx(""{0}"", ""{1}"", 0x{2:x2}, {3})", 4)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiSourceListClearAllEx(
-            string szProductCodeOrPatchCode,
-            string szUserSid,
-            [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-            [MarshalAs(UnmanagedType.U4)] int dwOptions);
-
-        [DllImport(Msi.DLL), DebugMessage(@"MsiSourceListClearSource(""{0}"", ""{1}"", 0x{2:x2}, 0x{3:x2}, ""{4}"")", 5)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern int MsiSourceListClearSource(
-            string szProductCodeOrPatchCode,
-            string szUserSid,
-            [MarshalAs(UnmanagedType.U4)] InstallContext dwContext,
-            [MarshalAs(UnmanagedType.U4)] int dwOptions,
-            string szSource);
         #endregion
 
         #region Open storage functions
@@ -329,31 +62,8 @@ namespace Microsoft.Windows.Installer
             out NativeMethods.IStorage ppObjectOpen);
         #endregion
 
-        #region Other structures
-        [StructLayout(LayoutKind.Sequential)]
-        internal class DLLVERSIONINFO
-        {
-            internal DLLVERSIONINFO()
-            {
-                this.cbSize = Marshal.SizeOf(this);
-            }
-
-            [MarshalAs(UnmanagedType.U4)] internal int cbSize;
-            [MarshalAs(UnmanagedType.U4)] internal int dwMajorVersion;
-            [MarshalAs(UnmanagedType.U4)] internal int dwMinorVersion;
-            [MarshalAs(UnmanagedType.U4)] internal int dwBuildNumber;
-            [MarshalAs(UnmanagedType.U4)] internal PlatformID dwPlatformID;
-
-            public static implicit operator Version(DLLVERSIONINFO dvi)
-            {
-                return new Version(dvi.dwMajorVersion, dvi.dwMinorVersion,
-                        dvi.dwBuildNumber);
-            }
-        }
-        #endregion
-
         #region Storage interfaces
-        [ComImport, Guid(NativeMethods.UUID_IStorage)]
+        [ComImport, Guid("0000000b-0000-0000-c000-000000000046")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         internal interface IStorage
         {
@@ -396,10 +106,10 @@ namespace Microsoft.Windows.Installer
                 [MarshalAs(UnmanagedType.LPWStr)] string pwcsName,
                 NativeMethods.IStorage pstgDest,
                 [MarshalAs(UnmanagedType.LPWStr)] string pwcsNewName,
-                [MarshalAs(UnmanagedType.U4)] NativeMethods.STGMOVE grfFlags);
+                [MarshalAs(UnmanagedType.U4)] int grfFlags);
 
             void Commit(
-                [MarshalAs(UnmanagedType.U4)] NativeMethods.STGC grfCommitFlags);
+                [MarshalAs(UnmanagedType.U4)] int grfCommitFlags);
 
             void Revert();
 
@@ -434,7 +144,7 @@ namespace Microsoft.Windows.Installer
                 [MarshalAs(UnmanagedType.U4)] NativeMethods.STATFLAG grfStatFlag);
         }
 
-        [ComImport, Guid(NativeMethods.UUID_IEnumSTATSTG)]
+        [ComImport, Guid("0000000d-0000-0000-C000-000000000046")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         internal interface IEnumSTATSTG
         {
@@ -519,23 +229,6 @@ namespace Microsoft.Windows.Installer
             STGM_DIRECT_SWMR = 0x00400000
         }
 
-        internal enum STGMOVE : int
-        {
-            STGMOVE_MOVE = 0,
-            STGMOVE_COPY = 1,
-            STGMOVE_SHALLOWCOPY = 2
-        }
-
-        [Flags]
-        internal enum STGC : int
-        {
-            STGC_DEFAULT = 0,
-            STGC_OVERWRITE = 1,
-            STGC_ONLYIFCURRENT = 2,
-            STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE = 4,
-            STGC_CONSOLIDATE = 8
-        }
-
         internal enum STGFMT : int
         {
             STGFMT_STORAGE = 0,
@@ -561,74 +254,5 @@ namespace Microsoft.Windows.Installer
             STGTY_PROPERTY = 4
         }
         #endregion
-    }
-
-    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
-    [StructLayout(LayoutKind.Sequential)]
-    internal sealed class MsiHandle : IDisposable
-    {
-        int handle; // MSIHANDLE is an int.
-
-        MsiHandle()
-        {
-        }
-
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        public void Dispose()
-        {
-            RuntimeHelpers.PrepareConstrainedRegions();
-            try
-            {
-            }
-            finally
-            {
-                int ret = NativeMethods.MsiCloseHandle(this);
-                Debug.Assert(ret != 0);
-            }
-
-            GC.SuppressFinalize(this);
-        }
-
-        public override bool Equals(object obj)
-        {
-            MsiHandle other = obj as MsiHandle;
-            if (null != other)
-            {
-                return this.handle == other.handle;
-            }
-
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.handle;
-        }
-
-        public override string ToString()
-        {
-            return this.handle.ToString(CultureInfo.CurrentCulture);
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public class FileHashInfo
-    {
-        [MarshalAs(UnmanagedType.U4)] int dwFileHashInfoSize;
-        [MarshalAs(UnmanagedType.U4)] int dwData0;
-        [MarshalAs(UnmanagedType.U4)] int dwData1;
-        [MarshalAs(UnmanagedType.U4)] int dwData2;
-        [MarshalAs(UnmanagedType.U4)] int dwData3;
-
-        internal FileHashInfo()
-        {
-            this.dwFileHashInfoSize = Marshal.SizeOf(this);
-        }
-
-        // Use Nullable<Int32> so that directories display correct with format cmdlets
-        public int? HashPart1 { get { return 0 == this.dwData0 ? null : new int?(this.dwData0); } }
-        public int? HashPart2 { get { return 0 == this.dwData1 ? null : new int?(this.dwData1); } }
-        public int? HashPart3 { get { return 0 == this.dwData2 ? null : new int?(this.dwData2); } }
-        public int? HashPart4 { get { return 0 == this.dwData3 ? null : new int?(this.dwData3); } }
     }
 }

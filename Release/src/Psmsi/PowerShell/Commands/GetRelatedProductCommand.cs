@@ -21,63 +21,24 @@ using Microsoft.Windows.Installer.PowerShell;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-    [Cmdlet(VerbsCommon.Get, "MSIRelatedProductInfo",
-        DefaultParameterSetName = ParameterSet.UpgradeCode)]
-    public sealed class GetRelatedProductCommand : EnumCommand<ProductInfo>
+    /// <summary>
+    /// The Get-MSIRelatedProductInfo cmdlet.
+    /// </summary>
+    [Cmdlet(VerbsCommon.Get, "MSIRelatedProductInfo")]
+    public sealed class GetRelatedProductCommand : PSCmdlet
     {
-        string currentUpgradeCode;
+        private string[] upgradeCodes;
 
-        protected override void ProcessRecord()
-        {
-            if (ParameterSet.UpgradeCode == this.ParameterSetName)
-            {
-                foreach (string upgradeCode in this.upgradeCodes)
-                {
-                    this.currentUpgradeCode = upgradeCode;
-                    base.ProcessRecord();
-                }
-            }
-        }
-
+        /// <summary>
+        /// Gets or sets the UpgradeCode to enumerate related products.
+        /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(
-                Mandatory = true,
-                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
-                HelpMessageResourceId = "GetRelatedProduct_UpgradeCode",
-                ParameterSetName = ParameterSet.UpgradeCode,
-                Position = 0,
-                ValueFromPipeline = true,
-                ValueFromPipelineByPropertyName = true)]
+        [Parameter(Position = 0, ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty]
         public string[] UpgradeCode
         {
-            get { return upgradeCodes; }
-            set { upgradeCodes = value; }
-        }
-        string[] upgradeCodes;
-
-        protected override int Enumerate(int index, out ProductInfo product)
-        {
-            int ret = 0;
-            product = null;
-            StringBuilder pc = new StringBuilder(NativeMethods.MAX_GUID_CHARS + 1);
-
-            this.CallingNativeFunction("MsiEnumRelatedProducts", this.currentUpgradeCode, index);
-            ret = NativeMethods.MsiEnumRelatedProducts(this.currentUpgradeCode, 0, index, pc);
-
-            if (NativeMethods.ERROR_SUCCESS == ret)
-            {
-                product = ProductInfo.Create(pc.ToString());
-            }
-
-            return ret;
-        }
-
-        protected override void AddMembers(PSObject psobj)
-        {
-            // Add PSPath with fully-qualified provider path.
-            ProductInfo obj = (ProductInfo)psobj.BaseObject;
-            Location.AddPSPath(obj.PSPath, psobj, this);
+            get { return this.upgradeCodes; }
+            set { this.upgradeCodes = value; }
         }
     }
 }

@@ -7,6 +7,3 @@
 // Error List, point to "Suppress Message(s)", and click 
 // "In Project Suppression File". 
 // You do not need to add suppressions to this file manually. 
-
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Microsoft.Windows.Installer.PowerShell")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "vomus", Scope = "resource", Target = "Microsoft.Windows.Installer.Properties.Resources.resources")]

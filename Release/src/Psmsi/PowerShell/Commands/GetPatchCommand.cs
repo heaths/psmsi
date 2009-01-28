@@ -11,242 +11,92 @@
 // PARTICULAR PURPOSE.
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Management;
 using System.Management.Automation;
-using System.Text;
-using Microsoft.Windows.Installer;
+using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Windows.Installer.PowerShell;
 
 namespace Microsoft.Windows.Installer.PowerShell.Commands
 {
-    [Cmdlet(VerbsCommon.Get, "MSIPatchInfo",
-        DefaultParameterSetName = ParameterAttribute.AllParameterSets)]
-    public sealed class GetPatchCommand : EnumCommand<PatchInfo>
+    /// <summary>
+    /// The Get-MSIPatchInfo cmdlet.
+    /// </summary>
+    [Cmdlet(VerbsCommon.Get, "MSIPatchInfo", DefaultParameterSetName = ParameterSet.Product)]
+    public sealed class GetPatchCommand : PSCmdlet
     {
-        string currentProductCode;
+        private string[] productCodes;
+        private string[] patchCodes;
+        private PatchStates filter;
+        private UserContexts context;
+        private string userSid;
 
-        protected override void ProcessRecord()
-        {
-            // Enumerate patches for input product codes.
-            if (ParameterSet.ProductCode == this.ParameterSetName)
-            {
-                foreach (string productCode in this.productCodes)
-                {
-                    // If patch codes where specified, just write those to the pipeline.
-                    if (null != this.patchCodes && 0 < this.patchCodes.Length)
-                    {
-                        foreach (string patchCode in this.patchCodes)
-                        {
-                            // Write out patches for each patch code in a given context.
-                            WritePSObject(new PatchInfo(patchCode, productCode, userSid, context));
-                        }
-                    }
-                    else
-                    {
-                        this.currentProductCode = productCode;
-
-                        // Enumerate all products on the system.
-                        base.ProcessRecord();
-                    }
-                }
-            }
-            // Enumerate all patches in the given context.
-            else
-            {
-                if (!Msi.CheckVersion(3, 0))
-                {
-                    // Enumerating all patches isn't supported until MSI 3.0.
-                    throw new PSNotSupportedException(Properties.Resources.Argument_ProductCodeRequired);
-                }
-
-                base.ProcessRecord();
-            }
-        }
-
+        /// <summary>
+        /// Gets or sets the ProductCodes for which patches are enumerated.
+        /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
-                HelpMessageResourceId = "GetPatch_ProductCode",
-                Mandatory = true,
-                ParameterSetName = ParameterSet.ProductCode,
-                Position = 0,
-                ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.Patch, Position = 0, ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty]
         public string[] ProductCode
         {
-            get { return productCodes; }
-            set { productCodes = value; }
+            get { return this.productCodes; }
+            set { this.productCodes = value; }
         }
-        string[] productCodes;
 
+        /// <summary>
+        /// Gets or sets patch codes for which information is retrieved.
+        /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
-                HelpMessageResourceId = "GetPatch_PatchCode",
-                ParameterSetName = ParameterSet.ProductCode,
-                Position = 1,
-                ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.Patch, Position = 1, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty]
         public string[] PatchCode
         {
-            get { return patchCodes; }
-            set { patchCodes = value; }
+            get { return this.patchCodes; }
+            set { this.patchCodes = value; }
         }
-        string[] patchCodes;
 
-        [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
-                HelpMessageResourceId = "Context_UserSid",
-                ValueFromPipelineByPropertyName = true)]
-        public string UserSid
-        {
-            get { return userSid; }
-            set { userSid = value; }
-        }
-        string userSid;
-
-        [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
-                HelpMessageResourceId = "Context_InstallContext",
-                ValueFromPipelineByPropertyName = true)]
-        [Alias("Context")]
-        public InstallContext InstallContext
-        {
-            get { return context; }
-            set
-            {
-                if (value == InstallContext.None)
-                {
-                    throw new PSInvalidParameterException("InstallContext", value);
-                }
-
-                context = value;
-            }
-        }
-        InstallContext context = InstallContext.Machine;
-
-        [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
-                HelpMessageResourceId = "GetPatch_Filter",
-                ValueFromPipelineByPropertyName = true)]
+        /// <summary>
+        /// Gets or sets the patch states filter for enumeration.
+        /// </summary>
+        [Parameter(ValueFromPipelineByPropertyName = true)]
         public PatchStates Filter
         {
-            get { return filter; }
-            set
-            {
-                if (value == PatchStates.Invalid)
-                {
-                    throw new PSInvalidParameterException("Filter", value);
-                }
-
-                filter = value;
-            }
+            get { return this.filter; }
+            set { this.filter = value; }
         }
-        PatchStates filter = PatchStates.Applied;
 
-        [Parameter(
-                HelpMessageBaseName = "Microsoft.Windows.Installer.Properties.Resources",
-                HelpMessageResourceId = "Context_Everyone")]
+        /// <summary>
+        /// Gets or sets the user context for products to enumerate.
+        /// </summary>
+        [Parameter(ValueFromPipelineByPropertyName = true)]
+        [Alias("Context", "InstallContext")] // Backward compatibility.
+        public UserContexts UserContext
+        {
+            get { return this.context; }
+            set { this.context = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the user security identifier for products to enumerate.
+        /// </summary>
+        [Parameter(ValueFromPipelineByPropertyName = true)]
+        [Alias("User")]
+        [Sid]
+        public string UserSid
+        {
+            get { return this.userSid; }
+            set { this.userSid = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether products for everyone should be enumerated.
+        /// </summary>
+        [Parameter]
         public SwitchParameter Everyone
         {
-            get { return string.Compare(userSid, NativeMethods.World, StringComparison.OrdinalIgnoreCase) == 0; }
-            set
-            {
-                if (value)
-                {
-                    userSid = NativeMethods.World;
-                }
-                else
-                {
-                    userSid = null;
-                }
-            }
-        }
-
-        protected override int Enumerate(int index, out PatchInfo patch)
-        {
-            int ret = 0;
-            StringBuilder pac = new StringBuilder(NativeMethods.MAX_GUID_CHARS + 1);
-            StringBuilder prc = new StringBuilder(NativeMethods.MAX_GUID_CHARS + 1);
-            InstallContext ctx = InstallContext.None;
-            int cch = 0;
-
-            patch = null;
-            if (Msi.CheckVersion(3, 0))
-            {
-                // Use MsiEnumPatchesEx for MSI 3.0 and newer
-                StringBuilder sid = new StringBuilder(80);
-                cch = sid.Capacity;
-
-                this.CallingNativeFunction("MsiEnumPatchesEx", this.currentProductCode, this.userSid, (int)this.context, (int)this.filter, index);
-                ret = NativeMethods.MsiEnumPatchesEx(this.currentProductCode, this.userSid, this.context,
-                        this.filter, index, pac, prc, out ctx, sid, ref cch);
-
-                if (NativeMethods.ERROR_MORE_DATA == ret)
-                {
-                    pac.Length = 0;
-                    prc.Length = 0;
-                    sid.Capacity = ++cch;
-
-                    ret = NativeMethods.MsiEnumPatchesEx(this.currentProductCode, this.userSid, this.context,
-                            this.filter, index, pac, prc, out ctx, sid, ref cch);
-                }
-
-                if (NativeMethods.ERROR_SUCCESS == ret)
-                {
-                    patch = new PatchInfo(pac.ToString(), prc.ToString(), sid.ToString(), ctx);
-                }
-            }
-            else
-            {
-                // Use MsiEnumPatches for releases prior to MSI 3.0
-                StringBuilder msts = new StringBuilder(NativeMethods.DefaultSidLength);
-                cch = msts.Capacity;
-
-                this.CallingNativeFunction("MsiEnumPatches", this.currentProductCode, index);
-                ret = NativeMethods.MsiEnumPatches(this.currentProductCode, index, pac, msts, ref cch);
-
-                if (NativeMethods.ERROR_MORE_DATA == ret)
-                {
-                    pac.Length = 0;
-                    msts.Capacity = ++cch;
-
-                    ret = NativeMethods.MsiEnumPatches(this.currentProductCode, index, pac, msts, ref cch);
-                }
-
-                if (NativeMethods.ERROR_SUCCESS == ret)
-                {
-                    patch = new PatchInfo(pac.ToString(), this.currentProductCode, null, InstallContext.None);
-                }
-            }
-
-            return ret;
-        }
-
-        protected override ErrorDetails GetErrorDetails(int returnCode)
-        {
-            switch (returnCode)
-            {
-                case NativeMethods.ERROR_BAD_CONFIGURATION:
-                    {
-                        string message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_BadPatchConfiguration, this.currentProductCode);
-                        ErrorDetails err = new ErrorDetails(message);
-                        err.RecommendedAction = Properties.Resources.Recommend_Recache;
-                        return err;
-                    }
-            }
-            
-            return base.GetErrorDetails(returnCode);
-        }
-
-        protected override void AddMembers(PSObject psobj)
-        {
-            // Add PSPath with fully-qualified provider path.
-            PatchInfo obj = (PatchInfo)psobj.BaseObject;
-            Location.AddPSPath(obj.LocalPackage, psobj, this);
+            get { return string.Compare(this.userSid, NativeMethods.World, true, CultureInfo.InvariantCulture) == 0; }
+            set { this.userSid = value ? NativeMethods.World : null; }
         }
     }
 }
