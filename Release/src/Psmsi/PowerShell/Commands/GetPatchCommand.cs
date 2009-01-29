@@ -32,6 +32,18 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         private string userSid;
 
         /// <summary>
+        /// Creates a new instance of the <see cref="GetPatchCommand"/> class.
+        /// </summary>
+        public GetPatchCommand()
+        {
+            this.productCodes = null;
+            this.patchCodes = null;
+            this.filter = PatchStates.Applied;
+            this.context = UserContexts.Machine;
+            this.userSid = null;
+        }
+
+        /// <summary>
         /// Gets or sets the ProductCodes for which patches are enumerated.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]

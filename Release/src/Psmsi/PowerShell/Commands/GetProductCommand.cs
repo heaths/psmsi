@@ -29,6 +29,16 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         private string[] productCode;
         private UserContexts context;
         private string userSid;
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="GetProductCommand"/> class.
+        /// </summary>
+        public GetProductCommand()
+        {
+            this.productCode = null;
+            this.context = UserContexts.Machine;
+            this.userSid = null;
+        }
         
         /// <summary>
         /// Gets or sets the ProductCodes to enumerate.

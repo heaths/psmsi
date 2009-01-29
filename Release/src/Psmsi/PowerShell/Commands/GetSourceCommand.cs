@@ -33,6 +33,18 @@ namespace Microsoft.Windows.Installer.PowerShell.Commands
         private string userSid;
 
         /// <summary>
+        /// Creates a new instance of the <see cref="GetSourceCommand"/> class.
+        /// </summary>
+        public GetSourceCommand()
+        {
+            this.inputObject = null;
+            this.productCodes = null;
+            this.patchCodes = null;
+            this.context = UserContexts.Machine;
+            this.userSid = null;
+        }
+
+        /// <summary>
         /// Gets or sets an <see cref="Installation"/> object from which source is enumerated.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
