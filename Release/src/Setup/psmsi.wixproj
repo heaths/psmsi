@@ -59,8 +59,8 @@
   </ItemGroup>
   <Target Name="All" DependsOnTargets="Build" />
   <ItemGroup>
-    <ProjectReference Include="..\Psmsi\Microsoft.Windows.Installer.PowerShell.csproj">
-      <Name>Microsoft.Windows.Installer.PowerShell</Name>
+    <ProjectReference Include="..\Microsoft.WindowsInstaller.PowerShell\Microsoft.WindowsInstaller.PowerShell.csproj">
+      <Name>Microsoft.WindowsInstaller.PowerShell</Name>
       <Project>{eae7d4bf-5061-4220-be94-e268e965dce5}</Project>
       <Private>True</Private>
     </ProjectReference>

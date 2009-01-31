@@ -3,7 +3,7 @@
   <Description>This is a default test run configuration for a local test run.</Description>
   <CodeCoverage enabled="true" keyFile="KeyFile.snk">
     <Regular>
-      <CodeCoverageItem binaryFile="Psmsi\bin\Debug\Microsoft.Windows.Installer.PowerShell.dll" pdbFile="Psmsi\bin\Debug\Microsoft.Windows.Installer.PowerShell.pdb" instrumentInPlace="true" />
+      <CodeCoverageItem binaryFile="Microsoft.WindowsInstaller.PowerShell\bin\Debug\Microsoft.WindowsInstaller.PowerShell.dll" pdbFile="Microsoft.WindowsInstaller.PowerShell\bin\Debug\Microsoft.WindowsInstaller.PowerShell.pdb" instrumentInPlace="true" />
     </Regular>
   </CodeCoverage>
   <TestTypeSpecific>

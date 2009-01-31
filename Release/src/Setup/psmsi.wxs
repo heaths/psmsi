@@ -7,19 +7,19 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder" Name="Program Files">
         <Directory Id="APPROOT" Name="!(loc.ProductName)" DiskId="1">
-          <Component Id="SnapIn" Guid="59162062-6A78-40C5-BA7D-D1EE9192E26A">
-            <File Id="psmsi" Name="Microsoft.Windows.Installer.PowerShell.dll" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetPath)" KeyPath="yes" Assembly=".net" AssemblyApplication="psmsi">
-              <ps:SnapIn Id="psmsi" DescriptionIndirect="Microsoft.Windows.Installer.Properties.Resources,SnapIn_Description" VendorIndirect="Microsoft.Windows.Installer.Properties.Resources,SnapIn_Vendor" />
+          <Component Id="SnapIn" Guid="CE1F8ECF-0E25-4155-9BE1-E9DC1CADA4C2">
+            <File Id="psmsi" Name="Microsoft.WindowsInstaller.PowerShell.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" Assembly=".net" AssemblyApplication="psmsi">
+              <ps:SnapIn Id="psmsi" DescriptionIndirect="Microsoft.WindowsInstaller.Properties.Resources,SnapIn_Description" VendorIndirect="Microsoft.WindowsInstaller.Properties.Resources,SnapIn_Vendor" />
             </File>
-            <File Id="psmsi.Formats" Name="formats.ps1xml" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\formats.ps1xml">
+            <File Id="psmsi.Formats" Name="formats.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)\formats.ps1xml">
               <ps:FormatsFile SnapIn="psmsi" />
             </File>
-            <File Id="psmsi.Types" Name="types.ps1xml" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\types.ps1xml">
+            <File Id="psmsi.Types" Name="types.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)\types.ps1xml">
               <ps:TypesFile SnapIn="psmsi" />
             </File>
           </Component>
           <Component Id="SnapIn.Help" Guid="2CC04A21-89DE-4C21-9986-25C91C013BE9">
-            <File Id="psmsi.Help" Name="Microsoft.Windows.Installer.PowerShell.dll-Help.xml" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\Microsoft.Windows.Installer.PowerShell.dll-Help.xml" KeyPath="yes" />
+            <File Id="psmsi.Help" Name="Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" KeyPath="yes" />
           </Component>
         </Directory>
       </Directory>
@@ -51,23 +51,23 @@
   <Fragment>
     <DirectoryRef Id="APPROOT">
       <Component Id="Module" Guid="A168444F-CF48-423C-A146-60E832C8A625">
-        <File Id="psmsi.Module" Name="psmsi.psd1" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\psmsi.psd1" KeyPath="yes" />
+        <File Id="psmsi.Module" Name="psmsi.psd1" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)\psmsi.psd1" KeyPath="yes" />
       </Component>
     </DirectoryRef>
   </Fragment>
   <Fragment>
     <DirectoryRef Id="APPROOT">
       <Component Id="DTF" Guid="7CEE4BB6-1AE8-40BD-9CD1-0DE1FB58D4A7">
-        <File Id="DTF.File" Name="Microsoft.Deployment.WindowsInstaller.dll" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\Microsoft.Deployment.WindowsInstaller.dll" />
+        <File Id="DTF.File" Name="Microsoft.Deployment.WindowsInstaller.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)\Microsoft.Deployment.WindowsInstaller.dll" />
       </Component>
       <Component Id="DTF.Package" Guid="2C6DB1B4-3DA3-4542-86BE-CE94C52A104F">
-        <File Id="DTF.Package.File" Name="Microsoft.Deployment.WindowsInstaller.Package.dll" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\Microsoft.Deployment.WindowsInstaller.Package.dll" />
+        <File Id="DTF.Package.File" Name="Microsoft.Deployment.WindowsInstaller.Package.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)\Microsoft.Deployment.WindowsInstaller.Package.dll" />
       </Component>
       <Component Id="DTF.Compression" Guid="FA7623FA-270B-40E2-8955-969F3B5333DE">
-        <File Id="DTF.Compression.File" Name="Microsoft.Deployment.Compression.dll" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\Microsoft.Deployment.Compression.dll" />
+        <File Id="DTF.Compression.File" Name="Microsoft.Deployment.Compression.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)\Microsoft.Deployment.Compression.dll" />
       </Component>
       <Component Id="DTF.Compression.Cab" Guid="5EA7730E-DB36-4908-8F7E-43B9AB57F12F">
-        <File Id="DTF.Compression.Cab.File" Name="Microsoft.Deployment.Compression.Cab.dll" Source="$(var.Microsoft.Windows.Installer.PowerShell.TargetDir)\Microsoft.Deployment.Compression.Cab.dll" />
+        <File Id="DTF.Compression.Cab.File" Name="Microsoft.Deployment.Compression.Cab.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)\Microsoft.Deployment.Compression.Cab.dll" />
       </Component>
     </DirectoryRef>
     <ComponentGroup Id="DTF">
