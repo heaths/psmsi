@@ -23,7 +23,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     public class GetFileHashCommandTest : CmdletTestBase
     {
         [TestInitialize]
-        public void Initialize()
+        public override void Initialize()
         {
             base.Initialize();
             base.AddCmdlet(typeof(GetFileHashCommand));
