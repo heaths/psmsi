@@ -36,7 +36,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// Gets or sets the path supporting wildcards to enumerate files.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(ParameterSetName = ParameterSet.Path, Position = 0,
+        [Parameter(ParameterSetName = ParameterSet.Path, Position = 0, Mandatory = true,
             ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
         public string[] Path
         {
