@@ -10,6 +10,10 @@
   <xsl:output method="text" encoding="Windows-1252"/>
   <xsl:preserve-space elements="maml:code maml:para"/>
   <xsl:param name="version">2</xsl:param>
+  <xsl:variable name="crlf">
+    <xsl:text xml:space="preserve">
+</xsl:text>
+  </xsl:variable>
 
   <!-- for debugging purposes only -->
   <xsl:template match="msh:helpItems" xmlns:msh="http://msh">
@@ -31,8 +35,7 @@
     <!-- NAME -->
     <xsl:text xml:space="preserve">! </xsl:text>
     <xsl:value-of select="command:name"/>
-    <xsl:text xml:space="preserve">
-</xsl:text>
+    <xsl:value-of select="$crlf"/>
     <!-- SYNOPSIS -->
     <xsl:call-template name="heading">
       <xsl:with-param name="title">Synopsis</xsl:with-param>
@@ -114,12 +117,10 @@
     <xsl:if test="string-length(node()) > 0">
       <!-- add extra space for separate paragraphs -->
       <xsl:if test="preceding-sibling::maml:para">
-        <xsl:text xml:space="preserve">
-</xsl:text>
+        <xsl:value-of select="$crlf"/>
       </xsl:if>
       <xsl:value-of select="node()" disable-output-escaping="yes"/>
-      <xsl:text xml:space="preserve">
-</xsl:text>
+      <xsl:value-of select="$crlf"/>
     </xsl:if>
   </xsl:template>
 
@@ -127,8 +128,7 @@
     <xsl:text xml:space="preserve">* </xsl:text>
     <xsl:value-of select="maml:name"/>
     <xsl:apply-templates select="command:parameter" mode="syntax"/>
-    <xsl:text xml:space="preserve">
-</xsl:text>
+    <xsl:value-of select="$crlf"/>
   </xsl:template>
 
   <xsl:template match="command:parameter" mode="syntax">
@@ -157,11 +157,9 @@
       <xsl:value-of select="command:parameterValue"/>
       <xsl:text>&gt;</xsl:text>
     </xsl:if>
-    <xsl:text xml:space="preserve">
-</xsl:text>
+    <xsl:value-of select="$crlf"/>
     <xsl:apply-templates select="maml:description/maml:para"/>
-    <xsl:text xml:space="preserve">
-</xsl:text>
+    <xsl:value-of select="$crlf"/>
     <xsl:apply-templates select="@required" mode="parameters"/>
     <xsl:apply-templates select="@position" mode="parameters"/>
     <xsl:text xml:space="preserve">| Default value | </xsl:text>
@@ -200,8 +198,7 @@
 
 }}</xsl:text>
     <xsl:apply-templates select="dev:remarks/maml:para"/>
-    <xsl:text xml:space="preserve">
-</xsl:text>
+    <xsl:value-of select="$crlf"/>
   </xsl:template>
 
   <xsl:template match="command:inputType|command:returnValue">
@@ -215,8 +212,7 @@
         <xsl:apply-templates select="dev:type/maml:description/maml:para"/>
       </xsl:when>
         <xsl:otherwise>
-      <xsl:text xml:space="preserve">
-</xsl:text>
+          <xsl:value-of select="$crlf"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
