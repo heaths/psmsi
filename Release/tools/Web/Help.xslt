@@ -114,7 +114,7 @@
   </xsl:template>
 
   <xsl:template match="maml:para">
-    <xsl:if test="string-length(node()) > 0">
+    <xsl:if test="string-length(node())">
       <!-- add extra space for separate paragraphs -->
       <xsl:if test="preceding-sibling::maml:para">
         <xsl:value-of select="$crlf"/>
@@ -133,20 +133,20 @@
 
   <xsl:template match="command:parameter" mode="syntax">
     <xsl:text xml:space="preserve"> </xsl:text>
-    <xsl:if test="@required">&amp;#91;</xsl:if>
+    <xsl:if test="@required='false'">&amp;#91;</xsl:if>
     <xsl:if test="@position > 0">&amp;#91;</xsl:if>
     <xsl:text>-</xsl:text>
     <xsl:value-of select="maml:name"/>
     <xsl:if test="@position > 0">&amp;#93;</xsl:if>
     <xsl:if test="command:parameterValue">
       <xsl:text xml:space="preserve"> </xsl:text>
-      <xsl:if test="not(command:parameterValue/@required)">&amp;#91;</xsl:if>
+      <xsl:if test="command:parameterValue/@required='false'">&amp;#91;</xsl:if>
       <xsl:text>&lt;</xsl:text>
       <xsl:value-of select="command:parameterValue"/>
       <xsl:text>&gt;</xsl:text>
-      <xsl:if test="not(command:parameterValue/@required)">&amp;#93;</xsl:if>
+      <xsl:if test="command:parameterValue/@required='false'">&amp;#93;</xsl:if>
     </xsl:if>
-    <xsl:if test="@required">&amp;#93;</xsl:if>
+    <xsl:if test="@required='false'">&amp;#93;</xsl:if>
   </xsl:template>
 
   <xsl:template match="command:parameter" mode="parameters">
