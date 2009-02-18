@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="All" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Cultures>en-us</Cultures>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <OutputName>Module</OutputName>
+    <OutputType>package</OutputType>
+    <ProjectGuid>{d2630778-0547-48d1-a8ca-e93d0d7a8b02}</ProjectGuid>
+    <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+	<SuppressIces>ICE38;ICE64;ICE91</SuppressIces>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>Debug;PerUser</DefineConstants>
+    <SuppressValidation>true</SuppressValidation>
+    <Cultures>en-us</Cultures>
+    <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
+    <LibBindFiles>False</LibBindFiles>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <SuppressPdbOutput>False</SuppressPdbOutput>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <Pedantic>False</Pedantic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>PerUser</DefineConstants>
+    <Cultures>en-us</Cultures>
+    <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
+    <LibBindFiles>False</LibBindFiles>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <SuppressPdbOutput>False</SuppressPdbOutput>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <Pedantic>False</Pedantic>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
+  <ItemGroup>
+    <Compile Include="Module.wxs" />
+	<Compile Include="DTF.wxs" />
+	<Compile Include="WindowsInstaller.wxs" />
+    <WixExtension Include="WixUIExtension">
+      <HintPath>C:\Program Files\Windows Installer XML v3\bin\WixUIExtension.dll</HintPath>
+    </WixExtension>
+  </ItemGroup>
+  <Target Name="All" DependsOnTargets="Build" />
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.WindowsInstaller.PowerShell\Microsoft.WindowsInstaller.PowerShell.csproj">
+      <Name>Microsoft.WindowsInstaller.PowerShell</Name>
+      <Project>{eae7d4bf-5061-4220-be94-e268e965dce5}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="en-us.wxl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="License.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Banner.bmp" />
+    <None Include="Dialog.bmp" />
+  </ItemGroup>
+</Project>

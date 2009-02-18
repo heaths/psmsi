@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*" Name="!(loc.Module.ProductName)" Language="1033" Version="!(bind.fileVersion.Module.File)" Manufacturer="!(loc.Manufacturer)" UpgradeCode="17C59E89-3732-438F-8910-4F0FAE6DBF67">
+        <Package Id="*" Description="!(loc.Module.ProductName)" Comments="!(loc.Module.Comments)" Manufacturer="!(loc.Manufacturer)" Platform="x86" InstallerVersion="200" InstallPrivileges="limited" Compressed="yes" />
+        <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="PersonalFolder" Name="Documents">
+                <Directory Id="PSProfileFolder" Name="WindowsPowerShell">
+                    <Directory Id="APPROOT" Name="Modules" DiskId="1">
+						<Directory Id="ModuleFolder" Name="WindowsInstaller" />
+                    </Directory>
+                </Directory>
+            </Directory>
+        </Directory>
+        <Property Id="ARPHELPLINK" Value="http://www.codeplex.com/psmsi/thread/list.aspx" />
+        <Property Id="ARPURLINFOABOUT" Value="http://www.codeplex.com/psmsi/" />
+        <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
+        <WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
+        <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+        <UIRef Id="WixUI_Minimal" />
+        <Feature Id="Module" AllowAdvertise="no" Description="!(loc.Module.Description)" ConfigurableDirectory="APPROOT" Level="1" Title="!(loc.Module.Title)">
+            <ComponentGroupRef Id="DTF" />
+            <ComponentGroupRef Id="Help" />
+            <ComponentGroupRef Id="Module" />
+            <ComponentGroupRef Id="WindowsInstaller" />
+        </Feature>
+        <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[ModuleFolder]" />
+        <InstallExecuteSequence>
+            <Custom Action="SetARPINSTALLLOCATION" After="CostFinalize" />
+            <RemoveExistingProducts After="InstallInitialize" />
+        </InstallExecuteSequence>
+        <Upgrade Id="17C59E89-3732-438F-8910-4F0FAE6DBF67">
+            <UpgradeVersion IncludeMinimum="yes" Minimum="2.0.0.0" Maximum="!(bind.fileVersion.Module.File)" MigrateFeatures="yes" Property="OLDERVERSIONDETECTED" />
+        </Upgrade>
+    </Product>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="Module" Guid="DC0713D9-4D8F-4E3B-96B2-CD492D8AAB13">
+				<File Id="Module.File" Name="Microsoft.WindowsInstaller.PowerShell.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" />
+				<!-- ICE64: Make sure the application directory is always removed on uninstall. -->
+				<RemoveFolder Id="Module.RemoveFolder" On="uninstall" />
+            </Component>
+            <Component Id="Module.Formats" Guid="8C35F105-B437-495A-A83E-66AB5CB8F3B6">
+				<File Id="Module.Formats.File" Name="WindowsInstaller.formats.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.formats.ps1xml" KeyPath="yes" />
+            </Component>
+            <Component Id="Module.Types" Guid="B8D5A88D-5C16-4061-9118-BF4623657805">
+				<File Id="Module.Types.File" Name="WindowsInstaller.types.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.types.ps1xml" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+        <ComponentGroup Id="Module">
+            <ComponentRef Id="Module" />
+            <ComponentRef Id="Module.Formats" />
+            <ComponentRef Id="Module.Types" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>
