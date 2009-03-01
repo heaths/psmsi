@@ -83,7 +83,8 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the user context for products to enumerate.
         /// </summary>
-        [Parameter(ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.Patch, ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.Product, ValueFromPipelineByPropertyName = true)]
         [Alias("Context", "InstallContext")] // Backward compatibility.
         public UserContexts UserContext
         {
@@ -94,7 +95,8 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the user security identifier for products to enumerate.
         /// </summary>
-        [Parameter(ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.Patch, ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.Product, ValueFromPipelineByPropertyName = true)]
         [Alias("User")]
         [Sid]
         public string UserSid
@@ -106,11 +108,20 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets whether products for everyone should be enumerated.
         /// </summary>
-        [Parameter]
+        [Parameter(ParameterSetName = ParameterSet.Patch)]
+        [Parameter(ParameterSetName = ParameterSet.Product)]
         public SwitchParameter Everyone
         {
             get { return string.Compare(this.userSid, NativeMethods.World, true, CultureInfo.InvariantCulture) == 0; }
             set { this.userSid = value ? NativeMethods.World : null; }
+        }
+
+        /// <summary>
+        /// Processes the input objects and writes source list information to the pipeline.
+        /// </summary>
+        protected override void ProcessRecord()
+        {
+            
         }
     }
 }
