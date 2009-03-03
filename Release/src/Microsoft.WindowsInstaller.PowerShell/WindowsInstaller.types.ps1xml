@@ -333,4 +333,40 @@
       </AliasProperty>
     </Members>
   </Type>
+    <Type>
+        <Name>System.IO.FileSystemInfo</Name>
+        <Members>
+            <!-- V1 Compatibility -->
+            <AliasProperty>
+                <Name>MSIFileType</Name>
+                <ReferencedMemberName>WIFileType</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>MSIHashPart1</Name>
+                <ReferencedMemberName>WIHashPart1</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>MSIHashPart2</Name>
+                <ReferencedMemberName>WIHashPart2</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>MSIHashPart3</Name>
+                <ReferencedMemberName>WIHashPart3</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>MSIHashPart4</Name>
+                <ReferencedMemberName>WIHashPart4</ReferencedMemberName>
+            </AliasProperty>
+            <PropertySet>
+                <Name>PSV1</Name>
+                <ReferencedProperties>
+                    <Name>MSIFileType</Name>
+                    <Name>MSIHashPart1</Name>
+                    <Name>MSIHashPart2</Name>
+                    <Name>MSIHashPart3</Name>
+                    <Name>MSIHashPart4</Name>
+                </ReferencedProperties>
+            </PropertySet>
+        </Members>
+    </Type>
 </Types>

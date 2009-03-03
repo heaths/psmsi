@@ -35,8 +35,20 @@ namespace Microsoft.WindowsInstaller
     /// </summary>
     internal static class NativeMethods
     {
+        #region Error codes
+        internal const int ERROR_SUCCESS = 0;
+        #endregion
+
         #region Other constants
         internal static readonly string World = "s-1-1-0";
+        #endregion
+
+        #region Windows Installer functions
+        [DllImport("msi.dll", EntryPoint = "MsiGetFileHashW", ExactSpelling = true)]
+        internal static extern int MsiGetFileHash(
+            string szFilePath,
+            [MarshalAs(UnmanagedType.U4)] int dwOptions,
+            [Out] FileHash pHash);
         #endregion
 
         #region Interface identifiers
@@ -50,7 +62,7 @@ namespace Microsoft.WindowsInstaller
         #endregion
 
         #region Open storage functions
-        [DllImport("ole32.dll")]
+        [DllImport("ole32.dll", ExactSpelling = true)]
         internal static extern int StgOpenStorageEx(
             string pwcsName,
             [MarshalAs(UnmanagedType.U4)] NativeMethods.STGM grfMode,
@@ -190,10 +202,10 @@ namespace Microsoft.WindowsInstaller
 
             void IDisposable.Dispose()
             {
-                if (IntPtr.Zero != pwcsName)
-                {
-                    Marshal.FreeCoTaskMem(pwcsName);
-                }
+                //if (IntPtr.Zero != pwcsName)
+                //{
+                //    Marshal.FreeCoTaskMem(pwcsName);
+                //}
 
                 GC.SuppressFinalize(this);
             }
@@ -254,5 +266,95 @@ namespace Microsoft.WindowsInstaller
             STGTY_PROPERTY = 4
         }
         #endregion
+    }
+
+
+    /// <summary>
+    /// Represents a nullable file hash.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public class FileHash
+    {
+        [MarshalAs(UnmanagedType.U4)] private int dwFileHashInfoSie;
+        [MarshalAs(UnmanagedType.U4)] private int dwData0;
+        [MarshalAs(UnmanagedType.U4)] private int dwData1;
+        [MarshalAs(UnmanagedType.U4)] private int dwData2;
+        [MarshalAs(UnmanagedType.U4)] private int dwData3;
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="FileHash"/> class.
+        /// </summary>
+        internal FileHash()
+        {
+            this.dwFileHashInfoSie = Marshal.SizeOf(this);
+            this.dwData0 = 0;
+            this.dwData1 = 0;
+            this.dwData2 = 0;
+            this.dwData3 = 0;
+        }
+
+        /// <summary>
+        /// Gets the first hash part.
+        /// </summary>
+        public int? WIHashPart1
+        {
+            get
+            {
+                if (this.dwData0 == 0)
+                {
+                    return null;
+                }
+
+                return this.dwData0;
+            }
+        }
+
+        /// <summary>
+        /// Gets the second hash part.
+        /// </summary>
+        public int? WIHashPart2
+        {
+            get
+            {
+                if (this.dwData1 == 0)
+                {
+                    return null;
+                }
+
+                return this.dwData1;
+            }
+        }
+
+        /// <summary>
+        /// Gets the third hash part.
+        /// </summary>
+        public int? WIHashPart3
+        {
+            get
+            {
+                if (this.dwData2 == 0)
+                {
+                    return null;
+                }
+
+                return this.dwData2;
+            }
+        }
+
+        /// <summary>
+        /// Gets the fourth hash part.
+        /// </summary>
+        public int? WIHashPart4
+        {
+            get
+            {
+                if (this.dwData3 == 0)
+                {
+                    return null;
+                }
+
+                return this.dwData3;
+            }
+        }
     }
 }

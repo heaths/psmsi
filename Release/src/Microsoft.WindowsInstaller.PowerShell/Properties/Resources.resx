@@ -123,7 +123,25 @@
   <data name="SnapIn_Vendor" xml:space="preserve">
     <value>Microsoft Corporation</value>
   </data>
-  <data name="Exception_InvalidSid" xml:space="preserve">
+  <data name="Error_InvalidSid" xml:space="preserve">
     <value>The security identifier is invalid.</value>
+  </data>
+  <data name="Error_CannotConvertPath" xml:space="preserve">
+    <value>The path "{0}" could not be converted to a PowerShell path.</value>
+  </data>
+  <data name="Type_Package" xml:space="preserve">
+    <value>Package</value>
+  </data>
+  <data name="Type_Patch" xml:space="preserve">
+    <value>Patch</value>
+  </data>
+  <data name="Type_Transform" xml:space="preserve">
+    <value>Transform</value>
+  </data>
+  <data name="Error_InvalidContext" xml:space="preserve">
+    <value>The user context "None" is not validation for this operation.</value>
+  </data>
+  <data name="Error_InvalidFilter" xml:space="preserve">
+    <value>The patch state filter "None" is not valid for this operation.</value>
   </data>
 </root>

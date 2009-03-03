@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{FFCC062A
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs02.codeplex.com/
 		SccLocalPath0 = .
@@ -69,19 +69,8 @@ Global
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|x86.ActiveCfg = Release|Any CPU
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|x86.ActiveCfg = Debug|x86
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|x86.Build.0 = Debug|x86
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Any CPU.ActiveCfg = Release|x86
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Mixed Platforms.Build.0 = Release|x86
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|x86.ActiveCfg = Release|x86
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|x86.Build.0 = Release|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|x86.ActiveCfg = Debug|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|x86.Build.0 = Debug|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|Any CPU.ActiveCfg = Release|x86
@@ -89,6 +78,15 @@ Global
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|Mixed Platforms.Build.0 = Release|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|x86.ActiveCfg = Release|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|x86.Build.0 = Release|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|x86.ActiveCfg = Debug|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|x86.Build.0 = Debug|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Any CPU.ActiveCfg = Release|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Mixed Platforms.Build.0 = Release|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|x86.ActiveCfg = Release|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -52,7 +52,8 @@
     <Compile Include="PowerShell\Commands\GetPatchCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommandTest.cs" />
-    <Compile Include="PowerShell\Commands\GetSourceCommandTest.cs" />
+    <Compile Include="PowerShell\PathConverterTest.cs" />
+    <Compile Include="PowerShell\SidAttributeTest.cs" />
     <Compile Include="PowerShell\WindowsInstallerSnapInTest.cs" />
     <Compile Include="RegistryXml.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommandTest.cs" />

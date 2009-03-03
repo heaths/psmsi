@@ -22,9 +22,11 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     /// <summary>
     /// The Get-MSIPatchInfo cmdlet.
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "MSIPatchInfo", DefaultParameterSetName = ParameterSet.Product)]
+    [Cmdlet(VerbsCommon.Get, "MSIPatchInfo", DefaultParameterSetName = ParameterSet.Patch)]
     public sealed class GetPatchCommand : PSCmdlet
     {
+        private static readonly string[] Empty = new string[] { null };
+
         private string[] productCodes;
         private string[] patchCodes;
         private PatchStates filter;
@@ -47,9 +49,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// Gets or sets the ProductCodes for which patches are enumerated.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, ValueFromPipelineByPropertyName = true)]
         [Parameter(ParameterSetName = ParameterSet.Patch, Position = 0, ValueFromPipelineByPropertyName = true)]
-        [ValidateNotNullOrEmpty]
         public string[] ProductCode
         {
             get { return this.productCodes; }
@@ -60,8 +60,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// Gets or sets patch codes for which information is retrieved.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(ParameterSetName = ParameterSet.Patch, Position = 1, Mandatory = true, ValueFromPipelineByPropertyName = true)]
-        [ValidateNotNullOrEmpty]
+        [Parameter(ParameterSetName = ParameterSet.Patch, Position = 1, ValueFromPipelineByPropertyName = true)]
         public string[] PatchCode
         {
             get { return this.patchCodes; }
@@ -75,7 +74,15 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public PatchStates Filter
         {
             get { return this.filter; }
-            set { this.filter = value; }
+            set
+            {
+                if (value == PatchStates.None)
+                {
+                    throw new ArgumentException();
+                }
+
+                this.filter = value;
+            }
         }
 
         /// <summary>
@@ -86,7 +93,15 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public UserContexts UserContext
         {
             get { return this.context; }
-            set { this.context = value; }
+            set
+            {
+                if (value == UserContexts.None)
+                {
+                    throw new ArgumentException(Properties.Resources.Error_InvalidContext);
+                }
+
+                this.context = value;
+            }
         }
 
         /// <summary>
@@ -109,6 +124,51 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         {
             get { return string.Compare(this.userSid, NativeMethods.World, true, CultureInfo.InvariantCulture) == 0; }
             set { this.userSid = value ? NativeMethods.World : null; }
+        }
+
+        /// <summary>
+        /// Processes the ProductCodes or PatchCodes and writes a patch to the pipeline.
+        /// </summary>
+        protected override void ProcessRecord()
+        {
+            // Enumerate a set of null of no input was provided.
+            if (this.productCodes == null || this.productCodes.Length == 0)
+            {
+                this.productCodes = Empty;
+            }
+
+            if (this.patchCodes == null || this.patchCodes.Length == 0)
+            {
+                this.patchCodes = Empty;
+            }
+
+            // Enumerate all given patches for all given products.
+            foreach (string productCode in this.productCodes)
+            {
+                foreach (string patchCode in this.patchCodes)
+                {
+                    this.WritePatches(patchCode, productCode);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enumerates patches for the given patch codes and ProductCodes and writes them to the pipeline.
+        /// </summary>
+        /// <param name="patchCode">The patch code to enumerate.</param>
+        /// <param name="productCode">The ProductCode having patches to enumerate.</param>
+        private void WritePatches(string patchCode, string productCode)
+        {
+            foreach (PatchInstallation patch in PatchInstallation.GetPatches(patchCode, productCode, this.userSid, this.context, this.filter))
+            {
+                PSObject obj = PSObject.AsPSObject(patch);
+
+                // Add the local package as the PSPath.
+                string path = PathConverter.ToPSPath(this.SessionState, patch.LocalPackage);
+                obj.Properties.Add(new PSNoteProperty("PSPath", path));
+
+                this.WriteObject(obj);
+            }
         }
     }
 }

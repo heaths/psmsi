@@ -30,9 +30,19 @@ namespace Microsoft.WindowsInstaller.PowerShell
     [RunInstaller(true)]
     public sealed class WindowsInstallerSnapIn : PSSnapIn
     {
+        /// <summary>
+        /// Gets the fixed name of the snap-in.
+        /// </summary>
         public override string Name { get { return "psmsi"; } }
 
+        /// <summary>
+        /// Gets the name of the vendor.
+        /// </summary>
         public override string Vendor { get { return Properties.Resources.SnapIn_Vendor; } }
+
+        /// <summary>
+        /// Gets the localiable resource name of the vendor.
+        /// </summary>
         public override string VendorResource
         {
             get
@@ -41,7 +51,15 @@ namespace Microsoft.WindowsInstaller.PowerShell
             }
         }
 
+        /// <summary>
+        /// Gets the description of this snap-in.
+        /// </summary>
         public override string Description { get { return Properties.Resources.SnapIn_Description; } }
+
+
+        /// <summary>
+        /// Gets the localizable resource name of the description of this snap-in.
+        /// </summary>
         public override string DescriptionResource
         {
             get
@@ -50,20 +68,26 @@ namespace Microsoft.WindowsInstaller.PowerShell
             }
         }
 
+        /// <summary>
+        /// Gets the list of format XML files.
+        /// </summary>
         public override string[] Formats
         {
             get
             {
-                string[] formats = { "formats.ps1xml" };
+                string[] formats = { "WindowsInstaller.formats.ps1xml" };
                 return formats;
             }
         }
 
+        /// <summary>
+        /// Gets the list of types XML files.
+        /// </summary>
         public override string[] Types
         {
             get
             {
-                string[] types = { "types.ps1xml" };
+                string[] types = { "WindowsInstaller.types.ps1xml" };
                 return types;
             }
         }

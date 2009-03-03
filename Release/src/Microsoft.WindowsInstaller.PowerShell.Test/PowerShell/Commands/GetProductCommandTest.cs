@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
@@ -55,7 +56,16 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                         // Import our registry entries.
                         reg.Import(@"registry.xml");
 
-                        // TODO: Validate that the ProductCodes above were fond.
+                        Collection<PSObject> objs = p.Invoke();
+
+                        List<string> actual = new List<string>(objs.Count);
+                        foreach (PSObject obj in objs)
+                        {
+                            actual.Add(obj.Properties["ProductCode"].Value as string);
+                        }
+
+                        Assert.AreEqual<int>(products.Count, objs.Count);
+                        CollectionAssert.AreEquivalent(products, actual);
                     }
                 }
             }
@@ -69,9 +79,6 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [DeploymentItem(@"data\registry.xml")]
         public void EnumerateUserUnmanagedProducts()
         {
-            List<string> products = new List<string>();
-            products.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
-
             using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
             {
                 rs.Open();
@@ -83,7 +90,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                     {
                         reg.Import(@"registry.xml");
 
-                        // TODO: Validate that the ProductCode above was found.
+                        Collection<PSObject> objs = p.Invoke();
+
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>("{EC637522-73A5-4428-8B46-65A621529CC7}", objs[0].Properties["ProductCode"].Value as string);
                     }
                 }
             }
@@ -114,7 +124,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                         // Import our registry entries.
                         reg.Import(@"registry.xml");
 
-                        // TODO: Validate that the ProductCode above was found.
+                        Collection<PSObject> objs = p.Invoke();
+
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
                     }
                 }
             }
@@ -159,15 +172,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Test that None is not supported.
-            try
+            TestProject.ExpectException(typeof(ArgumentException), null, delegate()
             {
                 cmdlet.UserContext = UserContexts.None;
-                Assert.Fail("UserContexts.None should not be supported");
-            }
-            catch (Exception)
-            {
-                // TODO: Should verify exception type.
-            }
+            });
 
             // Test that "Context" is a supported alias.
             using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
@@ -181,7 +189,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                     {
                         reg.Import(@"registry.xml");
 
-                        // TODO: Validate that the right ProductCodes were found.
+                        Collection<PSObject> objs = p.Invoke();
+
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>("{EC637522-73A5-4428-8B46-65A621529CC7}", objs[0].Properties["ProductCode"].Value as string);
                     }
                 }
             }
@@ -203,7 +214,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             // Test that we can set it to true.
             cmdlet.Everyone = true;
             Assert.AreEqual<bool>(true, cmdlet.Everyone);
-            Assert.AreEqual<string>(NativeMethods.World, cmdlet.UserSid);
+            Assert.AreEqual<string>(NativeMethods_Accessor.World, cmdlet.UserSid);
 
             // Test that explicitly setting it to false nullifies the UserSid.
             cmdlet.Everyone = false;

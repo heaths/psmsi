@@ -10,7 +10,7 @@
     <RootNamespace>Microsoft.WindowsInstaller</RootNamespace>
     <AssemblyName>Microsoft.WindowsInstaller.PowerShell</AssemblyName>
     <SignAssembly>true</SignAssembly>
-	<SolutionDir Condition=" '$(SolutionDir)' == '' ">..\</SolutionDir>
+    <SolutionDir Condition=" '$(SolutionDir)' == '' ">..\</SolutionDir>
     <AssemblyOriginatorKeyFile>$(SolutionDir)KeyFile.snk</AssemblyOriginatorKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -30,6 +30,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Microsoft.WindowsInstaller.PowerShell.XML</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,6 +40,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Microsoft.WindowsInstaller.PowerShell.XML</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
@@ -60,11 +64,12 @@
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
-    <Compile Include="PowerShell\Commands\GetSourceCommand.cs" />
+    <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
     <Compile Include="PowerShell\Installer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PowerShell\PathConverter.cs" />
     <Compile Include="PowerShell\SidAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -78,7 +83,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -102,7 +107,7 @@
   <ItemGroup>
     <Content Include="WindowsInstaller.psm1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  <Sign>True</Sign>
+      <Sign>True</Sign>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

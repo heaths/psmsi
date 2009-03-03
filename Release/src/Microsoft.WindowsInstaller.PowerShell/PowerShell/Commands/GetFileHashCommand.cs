@@ -13,12 +13,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.WindowsInstaller;
 using Microsoft.WindowsInstaller.PowerShell;
+using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 namespace Microsoft.WindowsInstaller.PowerShell.Commands
 {
@@ -26,53 +30,56 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIFileHash cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIFileHash", DefaultParameterSetName = ParameterSet.Path)]
-    public sealed class GetFileHashCommand : PSCmdlet
+    public sealed class GetFileHashCommand : ItemCommandBase
     {
-        private string[] path;
-        private bool literal;
-        private bool passThru;
-
         /// <summary>
-        /// Gets or sets the path supporting wildcards to enumerate files.
+        /// Creates a new instance of the <see cref="GetFileHashCommand"/> class.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(ParameterSetName = ParameterSet.Path, Position = 0, Mandatory = true,
-            ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        public string[] Path
+        public GetFileHashCommand() : base()
         {
-            get { return this.path; }
-            set
-            {
-                this.literal = false;
-                this.path = value;
-            }
         }
 
         /// <summary>
-        /// Gets or sets the literal path for one or more files.
+        /// Processes the item enumerated by the base class.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(ParameterSetName = ParameterSet.LiteralPath, Position = 0, Mandatory = true,
-            ValueFromPipelineByPropertyName = true)]
-        [Alias("PSPath")]
-        public string[] LiteralPath
+        /// <param name="item">The <see cref="PSObject"/> to process.</param>
+        /// <param name="path">The provider path from the PSPath attached to the <paramref name="item"/>.</param>
+        protected override void ProcessItem(PSObject item, string path)
         {
-            get { return this.path; }
-            set
-            {
-                this.literal = true;
-                this.path = value;
-            }
-        }
+            FileHash hash = new FileHash();
 
-        /// <summary>
-        /// Gets or sets whether the file objects are returned.
-        /// </summary>
-        [Parameter]
-        public SwitchParameter PassThru
-        {
-            get { return this.passThru; }
-            set { this.passThru = value; }
+            // Only process files.
+            if (!this.SessionState.InvokeProvider.Item.IsContainer(path))
+            {
+                int ret = NativeMethods.MsiGetFileHash(path, 0, hash);
+                if (ret != NativeMethods.ERROR_SUCCESS)
+                {
+                    // Write the error record and continue enumerating files.
+                    Win32Exception ex = new Win32Exception(ret);
+
+                    string message = ex.Message.Replace("%1", path);
+                    PSInvalidOperationException psex = new PSInvalidOperationException(message, ex);
+
+                    this.WriteError(psex.ErrorRecord);
+                }
+
+                // Write only the hash if not passing the input through.
+                if (!this.PassThru)
+                {
+                    this.WriteObject(hash);
+                }
+            }
+
+            // Attach NoteProperties if passing the input through.
+            if (this.PassThru)
+            {
+                item.Properties.Add(new PSNoteProperty("WIHashPart1", hash.WIHashPart1));
+                item.Properties.Add(new PSNoteProperty("WIHashPart2", hash.WIHashPart2));
+                item.Properties.Add(new PSNoteProperty("WIHashPart3", hash.WIHashPart3));
+                item.Properties.Add(new PSNoteProperty("WIHashPart4", hash.WIHashPart4));
+
+                this.WriteObject(item);
+            }
         }
     }
 }

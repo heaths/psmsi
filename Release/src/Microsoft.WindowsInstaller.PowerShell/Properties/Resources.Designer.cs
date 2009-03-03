@@ -8,11 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.WindowsInstaller.Properties
-{
+namespace Microsoft.WindowsInstaller.Properties {
     using System;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,82 +22,122 @@ namespace Microsoft.WindowsInstaller.Properties
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources
-    {
-
+    internal class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.WindowsInstaller.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path &quot;{0}&quot; could not be converted to a PowerShell path..
+        /// </summary>
+        internal static string Error_CannotConvertPath {
+            get {
+                return ResourceManager.GetString("Error_CannotConvertPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user context &quot;None&quot; is not validation for this operation..
+        /// </summary>
+        internal static string Error_InvalidContext {
+            get {
+                return ResourceManager.GetString("Error_InvalidContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The patch state filter &quot;None&quot; is not valid for this operation..
+        /// </summary>
+        internal static string Error_InvalidFilter {
+            get {
+                return ResourceManager.GetString("Error_InvalidFilter", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to The security identifier is invalid..
         /// </summary>
-        internal static string Exception_InvalidSid
-        {
-            get
-            {
-                return ResourceManager.GetString("Exception_InvalidSid", resourceCulture);
+        internal static string Error_InvalidSid {
+            get {
+                return ResourceManager.GetString("Error_InvalidSid", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Windows Installer PowerShell Snap-In.
         /// </summary>
-        internal static string SnapIn_Description
-        {
-            get
-            {
+        internal static string SnapIn_Description {
+            get {
                 return ResourceManager.GetString("SnapIn_Description", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Microsoft Corporation.
         /// </summary>
-        internal static string SnapIn_Vendor
-        {
-            get
-            {
+        internal static string SnapIn_Vendor {
+            get {
                 return ResourceManager.GetString("SnapIn_Vendor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package.
+        /// </summary>
+        internal static string Type_Package {
+            get {
+                return ResourceManager.GetString("Type_Package", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patch.
+        /// </summary>
+        internal static string Type_Patch {
+            get {
+                return ResourceManager.GetString("Type_Patch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transform.
+        /// </summary>
+        internal static string Type_Transform {
+            get {
+                return ResourceManager.GetString("Type_Transform", resourceCulture);
             }
         }
     }

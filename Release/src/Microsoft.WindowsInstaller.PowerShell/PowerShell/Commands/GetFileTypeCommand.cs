@@ -19,6 +19,7 @@ using System.IO;
 using System.Management.Automation;
 using Microsoft.WindowsInstaller;
 using Microsoft.WindowsInstaller.PowerShell;
+using System.ComponentModel;
 
 namespace Microsoft.WindowsInstaller.PowerShell.Commands
 {
@@ -26,53 +27,72 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIFileType cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIFileType", DefaultParameterSetName = ParameterSet.Path)]
-    public sealed class GetFileTypeCommand : PSCmdlet
+    public sealed class GetFileTypeCommand : ItemCommandBase
     {
-        private string[] path;
-        private bool literal;
-        private bool passThru;
-
         /// <summary>
-        /// Gets or sets the path supporting wildcards to enumerate files.
+        /// Creates a new instance of the <see cref="GetFileTypeCommand"/> class.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(ParameterSetName = ParameterSet.Path, Position = 0, Mandatory = true,
-            ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        public string[] Path
+        public GetFileTypeCommand() : base()
         {
-            get { return this.path; }
-            set
-            {
-                this.literal = false;
-                this.path = value;
-            }
         }
 
         /// <summary>
-        /// Gets or sets the literal path for one or more files.
+        /// Processes the item enumerated by the base class.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(ParameterSetName = ParameterSet.LiteralPath, Position = 0, Mandatory = true,
-            ValueFromPipelineByPropertyName = true)]
-        [Alias("PSPath")]
-        public string[] LiteralPath
+        /// <param name="item"></param>
+        /// <param name="path"></param>
+        protected override void ProcessItem(PSObject item, string path)
         {
-            get { return this.path; }
-            set
-            {
-                this.literal = true;
-                this.path = value;
-            }
-        }
+            string fileType = null;
 
-        /// <summary>
-        /// Gets or sets whether the file objects are returned.
-        /// </summary>
-        [Parameter]
-        public SwitchParameter PassThru
-        {
-            get { return this.passThru; }
-            set { this.passThru = value; }
+            // Only process files.
+            if (!this.SessionState.InvokeProvider.Item.IsContainer(path))
+            {
+                try
+                {
+                    Storage stg = Storage.OpenStorage(path, true);
+                    Guid clsid = stg.Clsid;
+
+                    // Set the friendly name.
+                    if (clsid == NativeMethods.CLSID_MsiPackage)
+                    {
+                        fileType = Properties.Resources.Type_Package;
+                    }
+                    else if (clsid == NativeMethods.CLSID_MsiPatch)
+                    {
+                        fileType = Properties.Resources.Type_Patch;
+                    }
+                    else if (clsid == NativeMethods.CLSID_MsiTransform)
+                    {
+                        fileType = Properties.Resources.Type_Transform;
+                    }
+                }
+                catch (IOException)
+                {
+                    // Not a storage file; continue silently.
+                }
+                catch (Win32Exception ex)
+                {
+                    string message = ex.Message.Replace("%1", path);
+                    PSInvalidOperationException psex = new PSInvalidOperationException(message, ex);
+
+                    // Write the error record and continue.
+                    this.WriteError(psex.ErrorRecord);
+                }
+
+                // Write only the file type if not passing the input through.
+                if (!this.PassThru)
+                {
+                    this.WriteObject(fileType);
+                }
+            }
+
+            // Attach NoteProperty if passing the input through.
+            if (this.PassThru)
+            {
+                item.Properties.Add(new PSNoteProperty("WIFileType", fileType));
+                this.WriteObject(item);
+            }
         }
     }
 }

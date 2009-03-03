@@ -26,7 +26,9 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     [Cmdlet(VerbsCommon.Get, "MSIProductInfo", DefaultParameterSetName = ParameterSet.Product)]
     public sealed class GetProductCommand : PSCmdlet
     {
-        private string[] productCode;
+        private static readonly string[] Empty = new string[] { null };
+
+        private string[] productCodes;
         private UserContexts context;
         private string userSid;
 
@@ -35,7 +37,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         public GetProductCommand()
         {
-            this.productCode = null;
+            this.productCodes = null;
             this.context = UserContexts.Machine;
             this.userSid = null;
         }
@@ -45,11 +47,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, ValueFromPipelineByPropertyName = true)]
-        [ValidateNotNullOrEmpty]
         public string[] ProductCode
         {
-            get { return this.productCode; }
-            set { this.productCode = value; }
+            get { return this.productCodes; }
+            set { this.productCodes = value; }
         }
 
         /// <summary>
@@ -60,7 +61,15 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public UserContexts UserContext
         {
             get { return this.context; }
-            set { this.context = value; }
+            set
+            {
+                if (value == UserContexts.None)
+                {
+                    throw new ArgumentException(Properties.Resources.Error_InvalidContext);
+                }
+
+                this.context = value;
+            }
         }
 
         /// <summary>
@@ -83,6 +92,42 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         {
             get { return string.Compare(this.userSid, NativeMethods.World, true, CultureInfo.InvariantCulture) == 0; }
             set { this.userSid = value ? NativeMethods.World : null; }
+        }
+
+        /// <summary>
+        /// Processes the input ProductCodes and writes a product to the pipeline.
+        /// </summary>
+        protected override void ProcessRecord()
+        {
+            // Enumerate a set of null if no input was provided.
+            if (this.productCodes == null || this.productCodes.Length == 0)
+            {
+                this.productCodes = Empty;
+            }
+
+            // Return each product instance.
+            foreach (string productCode in this.productCodes)
+            {
+                this.WriteProducts(productCode);
+            }
+        }
+
+        /// <summary>
+        /// Enumerates products for the given ProductCode and writes them to the pipeline.
+        /// </summary>
+        /// <param name="productCode">The ProductCode of products to enumerate.</param>
+        private void WriteProducts(string productCode)
+        {
+            foreach (ProductInstallation product in ProductInstallation.GetProducts(productCode, this.userSid, this.context))
+            {
+                PSObject obj = PSObject.AsPSObject(product);
+
+                // Add the local package as the PSPath.
+                string path = PathConverter.ToPSPath(this.SessionState, product.LocalPackage);
+                obj.Properties.Add(new PSNoteProperty("PSPath", path));
+
+                this.WriteObject(obj);
+            }
         }
     }
 }

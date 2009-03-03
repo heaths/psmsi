@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
@@ -41,9 +42,6 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [DeploymentItem(@"data\registry.xml")]
         public void EnumeratePatches()
         {
-            List<string> patches = new List<string>();
-            patches.Add("{6E52C409-0D0D-4B84-AB63-463438D4D33B}");
-
             using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
             {
                 rs.Open();
@@ -54,7 +52,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                         // Import our registry entries.
                         reg.Import(@"registry.xml");
 
-                        // TODO: Validate that the patch listed above was found.
+                        Collection<PSObject> objs = p.Invoke();
+
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
                     }
                 }
             }
@@ -68,9 +69,6 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [DeploymentItem(@"data\registry.xml")]
         public void EnumerateProductPatches()
         {
-            List<string> patches = new List<string>();
-            patches.Add("{6E52C409-0D0D-4B84-AB63-463438D4D33B}");
-
             using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
             {
                 rs.Open();
@@ -81,7 +79,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                         // Import our registry entries.
                         reg.Import(@"registry.xml");
 
-                        // TODO: Validate that the patch listed above was found.
+                        Collection<PSObject> objs = p.Invoke();
+
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
                     }
                 }
             }
@@ -95,9 +96,6 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [DeploymentItem(@"data\registry.xml")]
         public void GetSpecificPatch()
         {
-            List<string> patches = new List<string>();
-            patches.Add("{6E52C409-0D0D-4B84-AB63-463438D4D33B}");
-
             using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
             {
                 rs.Open();
@@ -108,7 +106,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                         // Import our registry entries.
                         reg.Import(@"registry.xml");
 
-                        // TODO: Validate that the patch listed above was found.
+                        Collection<PSObject> objs = p.Invoke();
+
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
                     }
                 }
             }
@@ -174,18 +175,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Test that None is not supported.
-            try
+            TestProject.ExpectException(typeof(ArgumentException), null, delegate()
             {
                 cmdlet.UserContext = UserContexts.None;
-                Assert.Fail("UserContexts.None should not be supported");
-            }
-            catch (Exception)
-            {
-                // TODO: Should verify exception type.
-            }
-
-            List<string> patches = new List<string>();
-            patches.Add("{6E52C409-0D0D-4B84-AB63-463438D4D33B}");
+            });
 
             // Test that "Context" is a supported alias.
             using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
@@ -199,7 +192,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                     {
                         reg.Import(@"registry.xml");
 
-                        // TODO: Validate that the patch listed above was found.
+                        Collection<PSObject> objs = p.Invoke();
+
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
                     }
                 }
             }
@@ -227,15 +223,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Test that Invalid is not supported.
-            try
+            TestProject.ExpectException(typeof(ArgumentException), null, delegate()
             {
                 cmdlet.Filter = PatchStates.None;
-                Assert.Fail("PatchStates.None should not be supported");
-            }
-            catch (Exception)
-            {
-                // TODO: Should verify exception type.
-            }
+            });
         }
 
         /// <summary>
@@ -254,7 +245,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             // Test that we can set it to true.
             cmdlet.Everyone = true;
             Assert.AreEqual<bool>(true, cmdlet.Everyone);
-            Assert.AreEqual<string>(NativeMethods.World, cmdlet.UserSid);
+            Assert.AreEqual<string>(NativeMethods_Accessor.World, cmdlet.UserSid);
 
             // Test that explicitly setting it to false nullifies the UserSid.
             cmdlet.Everyone = false;

@@ -29,8 +29,6 @@ using System.Resources;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("2.0.10118.0")]
+[assembly: AssemblyVersion("2.0.10302.0")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
 [assembly: System.CLSCompliant(false)]
-
-[assembly: InternalsVisibleTo("Microsoft.WindowsInstaller.PowerShell.Test, PublicKey=0024000004800000940000000602000000240000525341310004000001000100bf4ea0b9f31b834d5fb2e6b63dda15048bc58ac7f525f9ce1102a236b9b40e35b733577b48666a50131bb4dcb8bcb6f9a1cebb6db6a2f618a5415f8f567b3ed2702da2b82bb8bbbee4db44acc19f42e3abf95cb0f3a8a68eb4acbc283fc4202bed0a416b02ba5ae856f7bcd3dbfc1a4a2193a020394b7a102d74ae7eee3ffba7")]

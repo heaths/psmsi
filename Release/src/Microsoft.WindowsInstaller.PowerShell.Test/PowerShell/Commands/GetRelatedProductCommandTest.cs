@@ -40,9 +40,6 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [DeploymentItem(@"data\registry.xml")]
         public void EnumerateRelatedProducts()
         {
-            List<string> products = new List<string>();
-            products.Add("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}");
-
             using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
             {
                 rs.Open();
@@ -53,7 +50,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                         // Import our registry entries.
                         reg.Import(@"registry.xml");
 
-                        // TODO: Validate that the correct products were found.
+                        Collection<PSObject> objs = p.Invoke();
+
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
                     }
                 }
             }

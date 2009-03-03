@@ -50,7 +50,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
         {
             WindowsInstallerSnapIn snapIn = new WindowsInstallerSnapIn();
             List<string> formats = new List<string>(snapIn.Formats);
-            Assert.IsTrue(formats.Contains("formats.ps1xml"));
+            CollectionAssert.AreEqual(new string[] { @"WindowsInstaller.formats.ps1xml" }, formats, StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
         {
             WindowsInstallerSnapIn snapIn = new WindowsInstallerSnapIn();
             List<string> types = new List<string>(snapIn.Types);
-            Assert.IsTrue(types.Contains("types.ps1xml"));
+            CollectionAssert.AreEqual(new string[] { @"WindowsInstaller.types.ps1xml" }, types, StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
