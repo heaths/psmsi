@@ -61,15 +61,6 @@ namespace Microsoft.WindowsInstaller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The path &quot;{0}&quot; could not be converted to a PowerShell path..
-        /// </summary>
-        internal static string Error_CannotConvertPath {
-            get {
-                return ResourceManager.GetString("Error_CannotConvertPath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The user context &quot;None&quot; is not validation for this operation..
         /// </summary>
         internal static string Error_InvalidContext {

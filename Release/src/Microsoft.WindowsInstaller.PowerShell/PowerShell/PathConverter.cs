@@ -11,6 +11,7 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Management.Automation;
 
@@ -22,7 +23,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
     internal static class PathConverter
     {
         /// <summary>
-        /// Converts an unqualified path to a provider-qualified PSPath.
+        /// Converts a path to a provider-qualified PSPath.
         /// </summary>
         /// <param name="session">The <see cref="SessionState"/> for the current execution context.</param>
         /// <param name="path">The provider path to convert.</param>
@@ -38,38 +39,18 @@ namespace Microsoft.WindowsInstaller.PowerShell
                 return null;
             }
 
-            PathIntrinsics pi = session.Path;
-            if (!pi.IsProviderQualified(path))
-            {
-                // Get the drive info in order to qualify the path.
-                string driveName = null;
-                if (!pi.IsPSAbsolute(path, out driveName))
-                {
-                    PathInfo current = pi.CurrentFileSystemLocation;
-                    driveName = current.Drive.Name;
-                    path = pi.Combine(current.ProviderPath, path);
-                }
+            ProviderInfo provider = null;
+            PSDriveInfo drive = null;
 
-                // Format the path as a PSPath using the current provider.
-                PSDriveInfo drive = session.Drive.Get(driveName);
-                if (drive != null)
-                {
-                    ProviderInfo provider = drive.Provider;
-                    return string.Concat(provider.ModuleName, @"\", provider.Name, @"::", path);
-                }
-            }
-            else
-            {
-                // Return the provider-qualified path.
-                return path;
-            }
+            // Get the unresolved path information.
+            string unresolvedPath = session.Path.GetUnresolvedProviderPathFromPSPath(path, out provider, out drive);
 
-            // If we got this far, throw an exception.
-            throw new ArgumentException(string.Format(Properties.Resources.Error_CannotConvertPath, path), "path");
+            // Return the fully-qualified PSPath.
+            return string.Concat(provider.ModuleName, @"\", provider.Name, "::", unresolvedPath);
         }
 
         /// <summary>
-        /// Converts a PSPath to a provider path.
+        /// Converts a PSPath to an unqualified provider path.
         /// </summary>
         /// <param name="session">The <see cref="SessionState"/> for the current execution context.</param>
         /// <param name="path">The PSPath to convert.</param>
@@ -85,9 +66,11 @@ namespace Microsoft.WindowsInstaller.PowerShell
                 return null;
             }
 
-            // Get the provider path.
-            PathIntrinsics pi = session.Path;
-            return pi.GetUnresolvedProviderPathFromPSPath(path);
+            ProviderInfo provider = null;
+            PSDriveInfo drive = null;
+
+            // Get the unresolved provider path and let the APIs return errors.
+            return session.Path.GetUnresolvedProviderPathFromPSPath(path, out provider, out drive);
         }
     }
 }

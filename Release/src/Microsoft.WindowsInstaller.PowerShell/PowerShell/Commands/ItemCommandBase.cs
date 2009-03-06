@@ -96,10 +96,12 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                 if (property != null && property.Value is string)
                 {
                     // Get the provider path.
-                    string path = PathConverter.ToProviderPath(this.SessionState, (string)property.Value);
-
-                    // Process the item.
-                    this.ProcessItem(item, path);
+                    string path = PathConverter.ToProviderPath(this.SessionState, property.Value as string);
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        // Process the item.
+                        this.ProcessItem(item, path);
+                    }
                 }
             }
         }
