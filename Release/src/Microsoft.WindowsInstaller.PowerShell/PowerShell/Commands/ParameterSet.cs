@@ -1,8 +1,6 @@
 ﻿// Parameter set name constants.
 //
-// Author: Heath Stewart <heaths@microsoft.com>
 // Created: Wed, 12 Mar 2008 20:59:23 GMT
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -19,6 +17,16 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     /// </summary>
     internal static class ParameterSet
     {
+        /// <summary>
+        /// Parameter set for component information.
+        /// </summary>
+        internal const string Component = "Component";
+
+        /// <summary>
+        /// Parameter set for feature information.
+        /// </summary>
+        internal const string Feature = "Feature";
+
         /// <summary>
         /// Parameter set for product information.
         /// </summary>

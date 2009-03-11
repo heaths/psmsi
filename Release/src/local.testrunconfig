@@ -6,6 +6,9 @@
       <CodeCoverageItem binaryFile="Microsoft.WindowsInstaller.PowerShell\bin\Debug\Microsoft.WindowsInstaller.PowerShell.dll" pdbFile="Microsoft.WindowsInstaller.PowerShell\bin\Debug\Microsoft.WindowsInstaller.PowerShell.pdb" instrumentInPlace="true" />
     </Regular>
   </CodeCoverage>
+  <Deployment>
+    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\WindowsInstaller.types.ps1xml" />
+  </Deployment>
   <TestTypeSpecific>
     <WebTestRunConfiguration testTypeId="4e7599fa-5ecb-43e9-a887-cd63cf72d207">
       <Browser name="Internet Explorer 7.0">

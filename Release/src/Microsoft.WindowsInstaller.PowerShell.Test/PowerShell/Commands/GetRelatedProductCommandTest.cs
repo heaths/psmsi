@@ -8,13 +8,9 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using System.Reflection;
-using System.Security.Principal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.WindowsInstaller.PowerShell.Commands

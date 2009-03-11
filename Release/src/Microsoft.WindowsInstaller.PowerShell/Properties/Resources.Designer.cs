@@ -79,6 +79,15 @@ namespace Microsoft.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The argument is not in the acceptable form of {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx} where x is a number or a letter from A-F..
+        /// </summary>
+        internal static string Error_InvalidGuid {
+            get {
+                return ResourceManager.GetString("Error_InvalidGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The security identifier is invalid..
         /// </summary>
         internal static string Error_InvalidSid {

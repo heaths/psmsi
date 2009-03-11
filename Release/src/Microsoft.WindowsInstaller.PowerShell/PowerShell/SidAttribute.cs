@@ -1,6 +1,16 @@
-﻿using System;
-using System.Security.Principal;
+﻿// Converts username parameter values to SIDs.
+//
+// Created: Sun, 01 Mar 2009 09:30:02 GMT
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
+
+using System;
 using System.Management.Automation;
+using System.Security.Principal;
 
 namespace Microsoft.WindowsInstaller.PowerShell
 {

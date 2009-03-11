@@ -1,8 +1,6 @@
 // Cmdlet to get or enumerator Windows Installer products.
 //
-// Author: Heath Stewart <heaths@microsoft.com>
 // Created: Thu, 01 Feb 2007 06:54:27 GMT
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -14,9 +12,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
-using System.Security.Principal;
 using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.WindowsInstaller.PowerShell;
 
 namespace Microsoft.WindowsInstaller.PowerShell.Commands
 {
@@ -47,6 +43,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, ValueFromPipelineByPropertyName = true)]
+        [ValidateGuid]
         public string[] ProductCode
         {
             get { return this.productCodes; }

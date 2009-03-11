@@ -1,8 +1,6 @@
 ﻿// Base class for cmdlets which process items (files).
 //
-// Author: Heath Stewart <heaths@microsoft.com>
 // Created: Sun, 01 Mar 2009 08:40:54 GMT
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -10,15 +8,9 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.IO;
 using System.Management.Automation;
-using Microsoft.WindowsInstaller;
-using Microsoft.WindowsInstaller.PowerShell;
 
 namespace Microsoft.WindowsInstaller.PowerShell.Commands
 {

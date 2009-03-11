@@ -1,8 +1,6 @@
 ﻿// Native methods.
 //
-// Author: Heath Stewart (heaths@microsoft.com)
 // Created: Sat, 01 Mar 2008 22:58:00 GMT
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -11,17 +9,7 @@
 // PARTICULAR PURPOSE.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Runtime.CompilerServices;
-using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Text;
-using Microsoft.WindowsInstaller.PowerShell;
 
 using ComTypes = System.Runtime.InteropServices.ComTypes;
 

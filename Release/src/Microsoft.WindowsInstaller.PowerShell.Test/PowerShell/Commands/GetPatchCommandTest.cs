@@ -9,14 +9,10 @@
 // PARTICULAR PURPOSE.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using System.Security.Principal;
 using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.WindowsInstaller.PowerShell;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.WindowsInstaller.PowerShell.Commands

@@ -1,8 +1,6 @@
 ﻿// Converts paths from one form to another.
 //
-// Author: Heath Stewart <heaths@microsoft.com>
 // Created: Sun, 01 Mar 2009 09:30:02 GMT
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -11,8 +9,7 @@
 // PARTICULAR PURPOSE.
 
 using System;
-using System.Collections.ObjectModel;
-using System.IO;
+using System.Text;
 using System.Management.Automation;
 
 namespace Microsoft.WindowsInstaller.PowerShell
@@ -22,6 +19,85 @@ namespace Microsoft.WindowsInstaller.PowerShell
     /// </summary>
     internal static class PathConverter
     {
+        /// <summary>
+        /// Convers a component key path to a provider-qualified PSPath.
+        /// </summary>
+        /// <param name="session">The <see cref="SessionState"/> for the current execution context.</param>
+        /// <param name="path">The component key path to convert.</param>
+        /// <returns>A PSPath or null if passed a null path.</returns>
+        internal static string FromKeyPathToPSPath(SessionState session, string path)
+        {
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+            else if (path == null)
+            {
+                // Probably no key path.
+                return null;
+            }
+
+            // Detect UNC paths: string stars with two backslashes.
+            if (path.StartsWith(@"\\"))
+            {
+                return PathConverter.ToPSPath(session, path);
+            }
+
+            // Get the prefix to determine the type. Windows Installer rarely uses
+            // a '?' instead of a ':' so search for both.
+            int pos = path.IndexOfAny(new char[] { ':', '?'});
+            string prefix = path.Substring(0, pos);
+
+            // Detect file system paths: single drive letter followed by a colon.
+            if (pos == 1)
+            {
+                // Translate the '?' if used.
+                if (path[pos] == '?')
+                {
+                    path = string.Concat(path.Substring(0, pos), ":", path.Substring(pos + 1));
+                }
+
+                return PathConverter.ToPSPath(session, path);
+            }
+
+            // Detect registry key paths: 2 digits followed by a colon.
+            else if (pos == 2)
+            {
+                string root = null;
+                switch (path.Substring(0, pos))
+                {
+                    case "00":
+                        root = "HKEY_CLASSES_ROOT";
+                        break;
+
+                    case "01":
+                        root = "HKEY_CURRENT_USER";
+                        break;
+
+                    case "02":
+                        root = "HKEY_LOCAL_MACHINE";
+                        break;
+
+                    case "03":
+                        root = "HKEY_USERS";
+                        break;
+
+                    default:
+                        // Not supported, but not an error.
+                        return null;
+                }
+
+                // Not all the roots have drivers, so we have to hard code the provider-qualified root.
+                return string.Concat(@"Microsoft.PowerShell.Core\Registry::", root, path.Substring(pos + 1));
+            }
+
+            // Fallback to return null (not supported, but not an error).
+            else
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Converts a path to a provider-qualified PSPath.
         /// </summary>

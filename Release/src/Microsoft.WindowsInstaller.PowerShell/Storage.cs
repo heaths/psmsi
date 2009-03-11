@@ -1,8 +1,6 @@
 // Native methods for Windows Installer.
 //
-// Author: Heath Stewart (heaths@microsoft.com)
 // Created: Tue, 10 Jul 2007 04:03:23 GMT
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -11,11 +9,6 @@
 // PARTICULAR PURPOSE.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
 
 namespace Microsoft.WindowsInstaller
 {

@@ -1,8 +1,6 @@
 // Cmdlet to get or enumerator Windows Installer patches.
 //
-// Author: Heath Stewart <heaths@microsoft.com>
 // Created: Thu, 01 Feb 2007 22:08:18 GMT
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -15,7 +13,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.WindowsInstaller.PowerShell;
 
 namespace Microsoft.WindowsInstaller.PowerShell.Commands
 {
@@ -45,11 +42,14 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             this.userSid = null;
         }
 
+        // Parameter positions below are to maintain backward call-compatibility.
+
         /// <summary>
         /// Gets or sets the ProductCodes for which patches are enumerated.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Patch, Position = 0, ValueFromPipelineByPropertyName = true)]
+        [ValidateGuid]
         public string[] ProductCode
         {
             get { return this.productCodes; }
@@ -61,6 +61,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Patch, Position = 1, ValueFromPipelineByPropertyName = true)]
+        [ValidateGuid]
         public string[] PatchCode
         {
             get { return this.patchCodes; }

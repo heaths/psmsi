@@ -8,11 +8,10 @@
 // PARTICULAR PURPOSE.
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.WindowsInstaller;
 
 namespace Microsoft.WindowsInstaller.PowerShell.Commands
 {
@@ -37,6 +36,9 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public virtual void Initialize()
         {
             this.config = RunspaceConfiguration.Create();
+
+            string path = Path.Combine(this.TestContext.TestDeploymentDir, @"WindowsInstaller.types.ps1xml");
+            this.config.Types.Append(new TypeConfigurationEntry(path));
         }
 
         /// <summary>

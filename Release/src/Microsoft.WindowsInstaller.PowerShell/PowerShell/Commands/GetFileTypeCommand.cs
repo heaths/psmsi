@@ -12,14 +12,9 @@
 // PARTICULAR PURPOSE.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+using System.ComponentModel;
 using System.IO;
 using System.Management.Automation;
-using Microsoft.WindowsInstaller;
-using Microsoft.WindowsInstaller.PowerShell;
-using System.ComponentModel;
 
 namespace Microsoft.WindowsInstaller.PowerShell.Commands
 {

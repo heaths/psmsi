@@ -8,8 +8,8 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -53,6 +53,62 @@ namespace Microsoft.WindowsInstaller.PowerShell
             this.config.Cmdlets.Append(new CmdletConfigurationEntry("test-pathconverter", typeof(TestPathConverterCommand), null));
         }
 
+        [TestMethod]
+        [Description("A test for PathConverter.FromKeyPathToPSPath")]
+        public void FromKeyPathToPSPathTest()
+        {
+            using (Runspace rs = RunspaceFactory.CreateRunspace(this.config))
+            {
+                // Test null session.
+                TestProject.ExpectException(typeof(ArgumentNullException), null, delegate()
+                {
+                    PathConverter_Accessor.ToPSPath(null, null);
+                });
+
+                rs.Open();
+
+                // Define all the possible translations.
+                Dictionary<string, string> paths = new Dictionary<string, string>();
+                paths[@"C:\foo"] = @"Microsoft.PowerShell.Core\FileSystem::C:\foo";
+                paths[@"C?\foo"] = @"Microsoft.PowerShell.Core\FileSystem::C:\foo";
+                paths[@"\\server\share\directory"] = @"Microsoft.PowerShell.Core\FileSystem::\\server\share\directory";
+                paths[@"00:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_CLASSES_ROOT\SOFTWARE";
+                paths[@"01:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_CURRENT_USER\SOFTWARE";
+                paths[@"02:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE";
+                paths[@"03:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_USERS\SOFTWARE";
+
+                foreach (string path in paths.Keys)
+                {
+                    // Test each combination.
+                    using (Pipeline p = rs.CreatePipeline(string.Format(@"test-pathconverter '{0}' -fromkeypathtopspath", path)))
+                    {
+                        Collection<PSObject> objs = p.Invoke();
+
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>(paths[path], objs[0].BaseObject as string);
+                    }
+                }
+
+                // Test an invalid registry root.
+                using (Pipeline p = rs.CreatePipeline(@"test-pathconverter '04:\SOFTWARE' -fromkeypathtopspath"))
+                {
+                    Collection<PSObject> objs = p.Invoke();
+
+                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.IsNull(objs[0]);
+                }
+
+                // Test an unsupported path.
+                using (Pipeline p = rs.CreatePipeline(@"test-pathconverter 'FOO:\bar' -fromkeypathtopspath"))
+                {
+                    Collection<PSObject> objs = p.Invoke();
+
+                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.IsNull(objs[0]);
+                }
+            }
+        }
+
         /// <summary>
         /// Tests the <see cref="PathConverter.ToPSPath"/> method.
         /// </summary>
@@ -70,7 +126,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
                     PathConverter_Accessor.ToPSPath(null, null);
                 });
 
-                // Test using a provider path.
+                // Test using a null path.
                 using (Pipeline p = rs.CreatePipeline(@"test-pathconverter $null -topspath"))
                 {
                     Collection<PSObject> objs = p.Invoke();
@@ -81,7 +137,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
 
                 // Test using a provider-qualified path.
                 string pspath = @"Microsoft.PowerShell.Core\FileSystem::C:\foo";
-                string expression = string.Format(@"test-pathconverter ""{0}"" -topspath", pspath);
+                string expression = string.Format(@"test-pathconverter '{0}' -topspath", pspath);
                 using (Pipeline p = rs.CreatePipeline(expression))
                 {
                     Collection<PSObject> objs = p.Invoke();
@@ -91,7 +147,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
                 }
 
                 // Test using a provider path with a drive.
-                expression = @"test-pathconverter ""C:\foo"" -topspath";
+                expression = @"test-pathconverter 'C:\foo' -topspath";
                 using (Pipeline p = rs.CreatePipeline(expression))
                 {
                     Collection<PSObject> objs = p.Invoke();
@@ -140,7 +196,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
 
                 // Test using a PSPath.
                 string pspath = @"Microsoft.PowerShell.Core\FileSystem::C:\foo";
-                string expression = string.Format(@"test-pathconverter ""{0}"" -toproviderpath", pspath);
+                string expression = string.Format(@"test-pathconverter '{0}' -toproviderpath", pspath);
                 using (Pipeline p = rs.CreatePipeline(expression))
                 {
                     Collection<PSObject> objs = p.Invoke();
@@ -156,12 +212,20 @@ namespace Microsoft.WindowsInstaller.PowerShell
         {
             private string path = null;
 
+            [Parameter(ParameterSetName = "FromKeyPathToPSPath", Position = 0)]
             [Parameter(ParameterSetName = "ToPSPath", Position = 0)]
             [Parameter(ParameterSetName = "ToProviderPath", Position = 0)]
             public string Path
             {
                 get { return this.path; }
                 set { this.path = value; }
+            }
+
+            [Parameter(ParameterSetName = "FromKeyPathToPSPath", Mandatory = true)]
+            public SwitchParameter FromKeyPathToPSPath
+            {
+                get { return true; }
+                set { ; }
             }
 
             [Parameter(ParameterSetName = "ToPSPath", Mandatory = true)]
@@ -180,7 +244,11 @@ namespace Microsoft.WindowsInstaller.PowerShell
 
             protected override void EndProcessing()
             {
-                if (this.ParameterSetName == "ToPSPath")
+                if (this.ParameterSetName == "FromKeyPathToPSPath")
+                {
+                    this.WriteObject(PathConverter_Accessor.FromKeyPathToPSPath(this.SessionState, this.path));
+                }
+                else if (this.ParameterSetName == "ToPSPath")
                 {
                     this.WriteObject(PathConverter_Accessor.ToPSPath(this.SessionState, this.path));
                 }
