@@ -90,7 +90,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="en\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml">
+    <Content Include="en-US\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="WindowsInstaller.formats.ps1xml">
