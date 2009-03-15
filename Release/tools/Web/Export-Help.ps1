@@ -38,7 +38,12 @@ param(
 process {
 
 	[xml] $doc = get-content $Path
-	$doc.helpItems.command | foreach-object -begin {
+
+	# Select only elements and not the "command" namespace prefix.
+	$nsmgr = new-object -type System.Xml.XmlNamespaceManager $doc.NameTable
+	$nsmgr.AddNamespace("command", "http://schemas.microsoft.com/maml/dev/command/2004/10")
+
+	$doc.helpItems.SelectNodes("command:command", $nsmgr) | foreach-object -begin {
 
 		$xslt = new-object -type System.Xml.Xsl.XslCompiledTransform
 		$xargs = new-object -type System.Xml.Xsl.XsltArgumentList
@@ -64,7 +69,7 @@ process {
 
 	}
 
-	$doc.helpItems.command | foreach-object -begin {
+	$doc.helpItems.SelectNodes("command:command", $nsmgr) | foreach-object -begin {
 
 		$line = "! Help`n!! Cmdlets"
 

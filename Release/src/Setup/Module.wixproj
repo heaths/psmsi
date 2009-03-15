@@ -12,7 +12,7 @@
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
-	<SuppressIces>ICE38;ICE64;ICE91</SuppressIces>
+	<SuppressIces>ICE03;ICE38;ICE64;ICE91</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>Debug;PerUser</DefineConstants>

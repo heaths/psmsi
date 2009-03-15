@@ -32,7 +32,7 @@
             <RemoveExistingProducts Before="InstallFinalize" />
         </InstallExecuteSequence>
         <Upgrade Id="E8119A6C-7752-46FA-904B-C6019D91D0BF">
-            <UpgradeVersion IncludeMinimum="yes" Minimum="1.0.0.0" Maximum="!(bind.assemblyFileVersion.SnapIn.File)" MigrateFeatures="yes" Property="OLDERVERSIONDETECTED" />
+            <UpgradeVersion IncludeMinimum="yes" Minimum="1.0.0" Maximum="!(bind.assemblyFileVersion.SnapIn.File)" MigrateFeatures="yes" Property="OLDERVERSIONDETECTED" />
         </Upgrade>
     </Product>
     <Fragment>

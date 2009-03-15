@@ -76,6 +76,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [DeploymentItem(@"data\registry.xml")]
         public void EnumerateUserUnmanagedProducts()
         {
+            List<string> expected = new List<string>();
+            expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
+            expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
+
             using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
             {
                 rs.Open();
@@ -89,8 +93,14 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
 
                         Collection<PSObject> objs = p.Invoke();
 
-                        Assert.AreEqual<int>(1, objs.Count);
-                        Assert.AreEqual<string>("{EC637522-73A5-4428-8B46-65A621529CC7}", objs[0].Properties["ProductCode"].Value as string);
+                        List<string> actual = new List<string>(objs.Count);
+                        foreach (PSObject obj in objs)
+                        {
+                            actual.Add(obj.Properties["ProductCode"].Value as string);
+                        }
+
+                        Assert.AreEqual<int>(expected.Count, objs.Count);
+                        CollectionAssert.AreEquivalent(expected, actual);
                     }
                 }
             }
@@ -177,6 +187,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             // Test that "Context" is a supported alias.
             using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
             {
+                List<string> expected = new List<string>();
+                expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
+                expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
+
                 rs.Open();
 
                 string cmd = string.Format(@"get-msiproductinfo -context userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
@@ -188,8 +202,14 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
 
                         Collection<PSObject> objs = p.Invoke();
 
-                        Assert.AreEqual<int>(1, objs.Count);
-                        Assert.AreEqual<string>("{EC637522-73A5-4428-8B46-65A621529CC7}", objs[0].Properties["ProductCode"].Value as string);
+                        List<string> actual = new List<string>(objs.Count);
+                        foreach (PSObject obj in objs)
+                        {
+                            actual.Add(obj.Properties["ProductCode"].Value as string);
+                        }
+
+                        Assert.AreEqual<int>(expected.Count, objs.Count);
+                        CollectionAssert.AreEquivalent(expected, actual);
                     }
                 }
             }

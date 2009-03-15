@@ -19,9 +19,9 @@
         <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
         <UIRef Id="WixUI_Minimal" />
         <Feature Id="Module" AllowAdvertise="no" Description="!(loc.Module.Description)" ConfigurableDirectory="APPROOT" Level="1" Title="!(loc.Module.Title)">
+            <ComponentRef Id="Module" />
             <ComponentGroupRef Id="DTF" />
             <ComponentGroupRef Id="Help" />
-            <ComponentGroupRef Id="Module" />
             <ComponentGroupRef Id="WindowsInstaller" />
         </Feature>
         <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[ModuleFolder]" />
@@ -30,27 +30,18 @@
             <RemoveExistingProducts After="InstallInitialize" />
         </InstallExecuteSequence>
         <Upgrade Id="17C59E89-3732-438F-8910-4F0FAE6DBF67">
-            <UpgradeVersion IncludeMinimum="yes" Minimum="2.0.0.0" Maximum="!(bind.fileVersion.Module.File)" MigrateFeatures="yes" Property="OLDERVERSIONDETECTED" />
+            <UpgradeVersion IncludeMinimum="yes" Minimum="2.0.0" Maximum="!(bind.fileVersion.Module.File)" MigrateFeatures="yes" Property="OLDERVERSIONDETECTED" />
         </Upgrade>
     </Product>
     <Fragment>
         <DirectoryRef Id="ModuleFolder">
-            <Component Id="Module" Guid="DC0713D9-4D8F-4E3B-96B2-CD492D8AAB13">
+            <Component Id="Module" Guid="CE1F8ECF-0E25-4155-9BE1-E9DC1CADA4C2">
 				<File Id="Module.File" Name="Microsoft.WindowsInstaller.PowerShell.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" />
+				<File Id="Module.Formats.File" Name="WindowsInstaller.formats.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.formats.ps1xml" />
+				<File Id="Module.Types.File" Name="WindowsInstaller.types.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.types.ps1xml" />
 				<!-- ICE64: Make sure the application directory is always removed on uninstall. -->
 				<RemoveFolder Id="Module.RemoveFolder" On="uninstall" />
             </Component>
-            <Component Id="Module.Formats" Guid="8C35F105-B437-495A-A83E-66AB5CB8F3B6">
-				<File Id="Module.Formats.File" Name="WindowsInstaller.formats.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.formats.ps1xml" KeyPath="yes" />
-            </Component>
-            <Component Id="Module.Types" Guid="B8D5A88D-5C16-4061-9118-BF4623657805">
-				<File Id="Module.Types.File" Name="WindowsInstaller.types.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.types.ps1xml" KeyPath="yes" />
-            </Component>
         </DirectoryRef>
-        <ComponentGroup Id="Module">
-            <ComponentRef Id="Module" />
-            <ComponentRef Id="Module.Formats" />
-            <ComponentRef Id="Module.Types" />
-        </ComponentGroup>
     </Fragment>
 </Wix>

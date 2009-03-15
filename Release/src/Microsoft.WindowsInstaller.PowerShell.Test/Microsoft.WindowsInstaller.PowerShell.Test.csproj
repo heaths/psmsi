@@ -54,6 +54,7 @@
     <Compile Include="PowerShell\Commands\GetPatchCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommandTest.cs" />
+    <Compile Include="PowerShell\ModuleTest.cs" />
     <Compile Include="PowerShell\PathConverterTest.cs" />
     <Compile Include="PowerShell\SidAttributeTest.cs" />
     <Compile Include="PowerShell\ValidateGuidAttributeTest.cs" />

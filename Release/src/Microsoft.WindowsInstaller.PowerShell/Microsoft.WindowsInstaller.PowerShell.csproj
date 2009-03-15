@@ -71,6 +71,7 @@
     <Compile Include="PowerShell\Installer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PowerShell\Module.cs" />
     <Compile Include="PowerShell\PathConverter.cs" />
     <Compile Include="PowerShell\SidAttribute.cs" />
     <Compile Include="PowerShell\ValidateGuidAttribute.cs" />

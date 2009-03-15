@@ -10,6 +10,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using Microsoft.Deployment.WindowsInstaller;
 
 using ComTypes = System.Runtime.InteropServices.ComTypes;
 
@@ -33,10 +34,19 @@ namespace Microsoft.WindowsInstaller
 
         #region Windows Installer functions
         [DllImport("msi.dll", EntryPoint = "MsiGetFileHashW", ExactSpelling = true)]
+        [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiGetFileHash(
             string szFilePath,
             [MarshalAs(UnmanagedType.U4)] int dwOptions,
             [Out] FileHash pHash);
+
+        [DllImport("msi.dll", EntryPoint = "MsiUseFeatureExW", ExactSpelling = true)]
+        [return: MarshalAs(UnmanagedType.U4)]
+        internal static extern InstallState MsiUseFeatureEx(
+            string szProduct,
+            string szFeature,
+            [MarshalAs(UnmanagedType.U4)] InstallMode dwInstallMode,
+            [MarshalAs(UnmanagedType.U4)] int dwReserved);
         #endregion
 
         #region Interface identifiers

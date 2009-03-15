@@ -330,8 +330,17 @@
                                         <key name="D80A368E0A76EBE5B99ED9B256EFEEBA">
                                             <value name="225736CE5A378244B864566A1225C97C" type="String">C:\Program Files\Microsoft Location Finder\unreg.vbs</value>
                                         </key>
+                                        <key name="FCE8F1EC52E05514B91E9ECDC1DA4A2C">
+                                            <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">C:\TEST\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
+                                        </key>
                                     </key>
                                     <key name="Products">
+                                        <key name="1287AE4B1CA15B1408122ACF771D7B7B">
+                                            <key name="Features">
+                                                <value name="Module" type="String"/>
+                                            </key>
+                                            <key name="Usage"/>
+                                        </key>
                                         <key name="225736CE5A378244B864566A1225C97C">
                                             <key name="Features">
                                                 <value name="DefaultFeature" type="String"><![CDATA[5[eR&TALl$26kapM-^YP-A1h5B]dWND1Urzv~yi!M@]csM)ANFwxW$2~{%=`DNw92byW$!O2~k@mCp-v%xaQfnA$!R=7xTB1Dsya{ypSejsBYGOGCj?^W'.{.2Tlqjj?`y~Skii@be&'*5DPd_GN5+JAq^(q)zT$IA@BvH3R]TSeQaU`7f^de+Mn^FAN,HST)LGUD=GeBp7O]vZqAZ6_S,KNa=N2F4Iyr-QX!oev8CK.-uDj,O16Ex[INZss}5WJ1_}yCcO44idOe&,Bs3V}Y&^N]]></value>
@@ -412,12 +421,19 @@
                     <key name="Installer">
                         <key name="Assemblies"/>
                         <key name="Features">
+                            <key name="1287AE4B1CA15B1408122ACF771D7B7B">
+                                <value name="Module" type="String"/>
+                            </key>
                             <key name="225736CE5A378244B864566A1225C97C">
                                 <value name="DefaultFeature" type="String"/>
                             </key>
                         </key>
                         <key name="Patches"/>
                         <key name="Products">
+                            <key name="1287AE4B1CA15B1408122ACF771D7B7B">
+                                <!-- Just enough is registered for ModuleTest -->
+                                <value name="ProductName" type="String">Windows Installer PowerShell Module</value>
+                            </key>
                             <key name="225736CE5A378244B864566A1225C97C">
                                 <key name="SourceList">
                                     <key name="Media">
