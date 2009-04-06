@@ -39,14 +39,6 @@ namespace Microsoft.WindowsInstaller
             string szFilePath,
             [MarshalAs(UnmanagedType.U4)] int dwOptions,
             [Out] FileHash pHash);
-
-        [DllImport("msi.dll", EntryPoint = "MsiUseFeatureExW", ExactSpelling = true)]
-        [return: MarshalAs(UnmanagedType.U4)]
-        internal static extern InstallState MsiUseFeatureEx(
-            string szProduct,
-            string szFeature,
-            [MarshalAs(UnmanagedType.U4)] InstallMode dwInstallMode,
-            [MarshalAs(UnmanagedType.U4)] int dwReserved);
         #endregion
 
         #region Interface identifiers

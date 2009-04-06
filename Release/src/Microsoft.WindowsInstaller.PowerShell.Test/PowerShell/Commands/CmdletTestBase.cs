@@ -21,6 +21,15 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         private RunspaceConfiguration config;
 
         /// <summary>
+        /// Creates an instance of the <see cref="CmdletTestBase"/> class.
+        /// </summary>
+        protected CmdletTestBase()
+        {
+            this.context = null;
+            this.context = null;
+        }
+
+        /// <summary>
         /// Gets or sets the test context which provides information about and functionality for the current test run.
         ///</summary>
         public TestContext TestContext
@@ -30,7 +39,15 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
-        /// Initializes the test class. Overrides should call this method fist
+        /// Gets the <see cref="RunspaceConfiguration"/> for the cmdlet test class.
+        /// </summary>
+        protected RunspaceConfiguration Configuration
+        {
+            get { return this.config; }
+        }
+
+        /// <summary>
+        /// Initializes the test class. Overrides should call this method first
         /// to set up the runspace configuration.
         /// </summary>
         public virtual void Initialize()
@@ -39,14 +56,6 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
 
             string path = Path.Combine(this.TestContext.TestDeploymentDir, @"WindowsInstaller.types.ps1xml");
             this.config.Types.Append(new TypeConfigurationEntry(path));
-        }
-
-        /// <summary>
-        /// Gets the <see cref="RunspaceConfiguration"/> for the cmdlet test class.
-        /// </summary>
-        protected RunspaceConfiguration Configuration
-        {
-            get { return this.config; }
         }
 
         /// <summary>

@@ -107,6 +107,33 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
+        /// Enumerates all products matching a given name.
+        /// </summary>
+        [TestMethod]
+        [Description("Enumerates all products matching a given name")]
+        [DeploymentItem(@"data\registry.xml")]
+        public void EnumerateNamedProducts()
+        {
+            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            {
+                rs.Open();
+
+                // Use two strings that will match the same product; make sure only one product is returned.
+                using (Pipeline p = rs.CreatePipeline(@"get-msiproductinfo -name Silver*, *Light"))
+                {
+                    using (MockRegistry reg = new MockRegistry())
+                    {
+                        reg.Import(@"registry.xml");
+
+                        Collection<PSObject> objs = p.Invoke();
+                        Assert.AreEqual<int>(1, objs.Count);
+                        Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// A test for <see cref="GetProductCommand.ProductCode"/>.
         /// </summary>
         [TestMethod]
@@ -138,6 +165,19 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// A test for <see cref="GetProductCommand.Name"/>.
+        /// </summary>
+        [TestMethod]
+        [Description("A test for GetProductCommand.Name")]
+        public void NameTest()
+        {
+            // Mostly to increase code coverage.
+            GetProductCommand cmdlet = new GetProductCommand();
+            cmdlet.Name = new string[] { "Windows*" };
+            Assert.AreEqual<string>("Windows*", cmdlet.Name[0]);
         }
 
         /// <summary>

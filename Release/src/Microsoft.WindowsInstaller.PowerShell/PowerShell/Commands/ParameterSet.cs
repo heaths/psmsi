@@ -51,5 +51,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// Parameter set for a literal path.
         /// </summary>
         internal const string LiteralPath = "LiteralPath";
+
+        /// <summary>
+        /// Parameter set for a Name parameter.
+        /// </summary>
+        internal const string Name = "Name";
     }
 }

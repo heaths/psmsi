@@ -9,6 +9,7 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
@@ -25,6 +26,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         private static readonly string[] Empty = new string[] { null };
 
         private string[] productCodes;
+        private string[] names;
         private UserContexts context;
         private string userSid;
 
@@ -33,6 +35,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         public GetProductCommand()
         {
+            this.names = null;
             this.productCodes = null;
             this.context = UserContexts.Machine;
             this.userSid = null;
@@ -48,6 +51,16 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         {
             get { return this.productCodes; }
             set { this.productCodes = value; }
+        }
+
+        /// Gets or sets the ProductCodes to enumerate.
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(ParameterSetName = ParameterSet.Name, Mandatory = true)]
+        public string[] Name
+        {
+            get { return this.names; }
+            set { this.names = value; }
         }
 
         /// <summary>
@@ -96,16 +109,47 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         protected override void ProcessRecord()
         {
-            // Enumerate a set of null if no input was provided.
-            if (this.productCodes == null || this.productCodes.Length == 0)
+            // Enumerate products by ProductCode or all products.
+            if (this.ParameterSetName == ParameterSet.Product)
             {
-                this.productCodes = Empty;
-            }
+                // Enumerate a set of null if no input was provided.
+                if (this.productCodes == null || this.productCodes.Length == 0)
+                {
+                    this.productCodes = Empty;
+                }
 
-            // Return each product instance.
-            foreach (string productCode in this.productCodes)
+                // Return each product instance.
+                foreach (string productCode in this.productCodes)
+                {
+                    this.WriteProducts(productCode);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Processes the input Names and writes a unique list of products to the pipeline.
+        /// </summary>
+        protected override void EndProcessing()
+        {
+            // Enumerate all products in context and match the names using regex.
+            if (this.ParameterSetName == ParameterSet.Name)
             {
-                this.WriteProducts(productCode);
+                // Create a list of compiled patterns.
+                List<WildcardPattern> patterns = new List<WildcardPattern>(this.names.Length);
+                foreach (string name in this.names)
+                {
+                    patterns.Add(new WildcardPattern(name, WildcardOptions.Compiled | WildcardOptions.IgnoreCase));
+                }
+
+                // Enumerate all products in the context and attempt a match against each pattern.
+                foreach (ProductInstallation product in ProductInstallation.GetProducts(null, this.userSid, this.context))
+                {
+                    string productName = product.ProductName;
+                    if (!string.IsNullOrEmpty(productName) && Utilities.MatchesAnyWildcardPattern(productName, patterns))
+                    {
+                        this.WriteProduct(product);
+                    }
+                }
             }
         }
 
@@ -117,14 +161,23 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         {
             foreach (ProductInstallation product in ProductInstallation.GetProducts(productCode, this.userSid, this.context))
             {
-                PSObject obj = PSObject.AsPSObject(product);
-
-                // Add the local package as the PSPath.
-                string path = PathConverter.ToPSPath(this.SessionState, product.LocalPackage);
-                obj.Properties.Add(new PSNoteProperty("PSPath", path));
-
-                this.WriteObject(obj);
+                this.WriteProduct(product);
             }
+        }
+
+        /// <summary>
+        /// Adds properties to the <see cref="ProductInstallation"/> object and writes it to the pipeline.
+        /// </summary>
+        /// <param name="product">The <see cref="ProductInstallation"/> to write to the pipeline.</param>
+        private void WriteProduct(ProductInstallation product)
+        {
+            PSObject obj = PSObject.AsPSObject(product);
+
+            // Add the local package as the PSPath.
+            string path = PathConverter.ToPSPath(this.SessionState, product.LocalPackage);
+            obj.Properties.Add(new PSNoteProperty("PSPath", path));
+
+            this.WriteObject(obj);
         }
     }
 }

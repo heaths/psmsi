@@ -19,14 +19,14 @@
         <command:syntax>
             <command:syntaxItem>
                 <maml:name>Get-MSIFileHash</maml:name>
-                <command:parameter required = "true" variableLength = "true" globbing = "true" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
+                <command:parameter required="true" variableLength="true" globbing="true" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
                     <maml:name>Path</maml:name>
                     <maml:description>
                         <maml:para>Specifies the path to the item or items which must resolve to a file system path.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="true" >String[]</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position = "named" >
                     <maml:name>PassThru</maml:name>
                     <maml:description>
                         <maml:para>Passes the item or items passed into this cmdlet through the pipeline with additional properties for the file hash.</maml:para>
@@ -35,14 +35,14 @@
             </command:syntaxItem>
             <command:syntaxItem>
                 <maml:name>Get-MSIFileHash</maml:name>
-                <command:parameter required = "true" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "1" >
+                <command:parameter required="true" variableLength="true" globbing="false" pipelineInput = "true (ByPropertyName)" position = "1" >
                     <maml:name>LiteralPath</maml:name>
                     <maml:description>
                         <maml:para>Specifies the path to the item or items which must resolve to a file system path. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="true" >String[]</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position = "named" >
                     <maml:name>PassThru</maml:name>
                     <maml:description>
                         <maml:para>Passes the item or items passed into this cmdlet through the pipeline with additional properties for the file hash.</maml:para>
@@ -147,14 +147,14 @@
         <command:syntax>
             <command:syntaxItem>
                 <maml:name>Get-MSIFileType</maml:name>
-                <command:parameter required = "true" variableLength = "true" globbing = "true" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
+                <command:parameter required="true" variableLength="true" globbing="true" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
                     <maml:name>Path</maml:name>
                     <maml:description>
                         <maml:para>Specifies the path to the item or items which must resolve to a file system path.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="true" >String[]</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position = "named" >
                     <maml:name>PassThru</maml:name>
                     <maml:description>
                         <maml:para>Passes the item or items passed into this cmdlet through the pipeline with the additional property for the file type.</maml:para>
@@ -163,14 +163,14 @@
             </command:syntaxItem>
             <command:syntaxItem>
                 <maml:name>Get-MSIFileType</maml:name>
-                <command:parameter required = "true" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "1" >
+                <command:parameter required="true" variableLength="true" globbing="false" pipelineInput = "true (ByPropertyName)" position = "1" >
                     <maml:name>LiteralPath</maml:name>
                     <maml:description>
                         <maml:para>Specifies the path to the item or items which must resolve to a file system path. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="true" >String[]</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position = "named" >
                     <maml:name>PassThru</maml:name>
                     <maml:description>
                         <maml:para>Passes the item or items passed into this cmdlet through the pipeline with the additional property for the file type.</maml:para>
@@ -275,35 +275,35 @@
         <command:syntax>
             <command:syntaxItem>
                 <maml:name>Get-MSIPatchInfo</maml:name>
-                <command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "2" >
+                <command:parameter required="false" variableLength="true" globbing="false" pipelineInput = "true (ByPropertyName)" position = "2" >
                     <maml:name>PatchCode</maml:name>
                     <maml:description>
                         <maml:para>The patch code or patch codes to retrieve patch information.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="true" >String[]</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>UserSid</maml:name>
                     <maml:description>
                         <maml:para>The security identifier for a user for user-managed and user-unmanaged patches.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >String</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>InstallContext</maml:name>
                     <maml:description>
                         <maml:para>The context for registered patches. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >InstallContext</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >InstallContext</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>Filter</maml:name>
                     <maml:description>
                         <maml:para>The state or states of patches to be retrieved. This can be a combination of &quot;Applied&quot;, &quot;Superseded&quot;, &quot;Obsoleted&quot;, &quot;Registered&quot;, or &quot;All&quot;.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >PatchStates</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >PatchStates</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position = "named" >
                     <maml:name>Everyone</maml:name>
                     <maml:description>
                         <maml:para>Whether to retrieve user-managed or user-unmanaged patches for everyone.</maml:para>
@@ -312,42 +312,42 @@
             </command:syntaxItem>
             <command:syntaxItem>
                 <maml:name>Get-MSIPatchInfo</maml:name>
-                <command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "1" >
+                <command:parameter required="false" variableLength="true" globbing="false" pipelineInput = "true (ByPropertyName)" position = "1" >
                     <maml:name>ProductCode</maml:name>
                     <maml:description>
                         <maml:para>Specifies the ProductCode or ProductCodes to get patch information.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="true" >String[]</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "2" >
+                <command:parameter required="false" variableLength="true" globbing="false" pipelineInput = "true (ByPropertyName)" position = "2" >
                     <maml:name>PatchCode</maml:name>
                     <maml:description>
                         <maml:para>The patch code or patch codes to retrieve patch information.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="true" >String[]</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>UserSid</maml:name>
                     <maml:description>
                         <maml:para>The security identifier for a user for user-managed and user-unmanaged patches.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >String</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>InstallContext</maml:name>
                     <maml:description>
                         <maml:para>The context for registered patches. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >InstallContext</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >InstallContext</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>Filter</maml:name>
                     <maml:description>
                         <maml:para>The state or states of patches to be retrieved. This can be a combination of &quot;Applied&quot;, &quot;Superseded&quot;, &quot;Obsoleted&quot;, &quot;Registered&quot;, or &quot;All&quot;.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >PatchStates</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >PatchStates</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position = "named" >
                     <maml:name>Everyone</maml:name>
                     <maml:description>
                         <maml:para>Whether to retrieve user-managed or user-unmanaged patches for everyone.</maml:para>
@@ -497,21 +497,28 @@
         <command:syntax>
             <command:syntaxItem>
                 <maml:name>Get-MSIProductInfo</maml:name>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="true" globbing="false" pipelineInput = "true (ByPropertyName)" position = "1" >
+                    <maml:name>ProductCode</maml:name>
+                    <maml:description>
+                        <maml:para>The ProductCode or ProductCodes to retrieve product information.</maml:para>
+                    </maml:description>
+                    <command:parameterValue required="true" variableLength="true" >String[]</command:parameterValue>
+                </command:parameter>
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>UserSid</maml:name>
                     <maml:description>
                         <maml:para>The security identifier for a user for user-managed and user-unmanaged patches.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >String</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>InstallContext</maml:name>
                     <maml:description>
                         <maml:para>The context for registered patches. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >InstallContext</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >InstallContext</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position = "named" >
                     <maml:name>Everyone</maml:name>
                     <maml:description>
                         <maml:para>Whether to retrieve user-managed or user-unmanaged patches for everyone.</maml:para>
@@ -520,28 +527,28 @@
             </command:syntaxItem>
             <command:syntaxItem>
                 <maml:name>Get-MSIProductInfo</maml:name>
-                <command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "1" >
-                    <maml:name>ProductCode</maml:name>
+                <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="false" position="named">
+                    <maml:name>Name</maml:name>
                     <maml:description>
-                        <maml:para>The ProductCode or ProductCodes to retrieve product information.</maml:para>
+                        <maml:para>The name of a product or products to retrieve. Wildcards are supported.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>UserSid</maml:name>
                     <maml:description>
                         <maml:para>The security identifier for a user for user-managed and user-unmanaged patches.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >String</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByPropertyName)" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput = "true (ByPropertyName)" position = "named" >
                     <maml:name>InstallContext</maml:name>
                     <maml:description>
                         <maml:para>The context for registered patches. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "false" >InstallContext</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="false" >InstallContext</command:parameterValue>
                 </command:parameter>
-                <command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
+                <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position = "named" >
                     <maml:name>Everyone</maml:name>
                     <maml:description>
                         <maml:para>Whether to retrieve user-managed or user-unmanaged patches for everyone.</maml:para>
@@ -550,6 +557,26 @@
             </command:syntaxItem>
         </command:syntax>
         <command:parameters>
+            <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="1">
+                <maml:name>ProductCode</maml:name>
+                <maml:description>
+                    <maml:para>The ProductCode or ProductCodes to retrieve product information.</maml:para>
+                </maml:description>
+                <command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
+                <dev:type>
+                    <maml:name>String[]</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="false" position="named">
+                <maml:name>Name</maml:name>
+                <maml:description>
+                    <maml:para>The name of a product or products to retrieve. Wildcards are supported.</maml:para>
+                </maml:description>
+                <command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
+                <dev:type>
+                    <maml:name>String[]</maml:name>
+                </dev:type>
+            </command:parameter>
             <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
                 <maml:name>UserSid</maml:name>
                 <maml:description>
@@ -687,12 +714,12 @@
         <command:syntax>
             <command:syntaxItem>
                 <maml:name>Get-MSIRelatedProductInfo</maml:name>
-                <command:parameter required = "true" variableLength = "true" globbing = "false" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
+                <command:parameter required="true" variableLength="true" globbing="false" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
                     <maml:name>UpgradeCode</maml:name>
                     <maml:description>
                         <maml:para>The UpgradeCode for related products.</maml:para>
                     </maml:description>
-                    <command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
+                    <command:parameterValue required="true" variableLength="true" >String[]</command:parameterValue>
                 </command:parameter>
             </command:syntaxItem>
         </command:syntax>

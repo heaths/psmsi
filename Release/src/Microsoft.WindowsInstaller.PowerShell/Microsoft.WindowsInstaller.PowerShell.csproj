@@ -68,12 +68,13 @@
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
     <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
-    <Compile Include="PowerShell\Installer.cs">
+    <Compile Include="PowerShell\SnapIn.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PowerShell\Module.cs" />
     <Compile Include="PowerShell\PathConverter.cs" />
     <Compile Include="PowerShell\SidAttribute.cs" />
+    <Compile Include="PowerShell\Utilities.cs" />
     <Compile Include="PowerShell\ValidateGuidAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

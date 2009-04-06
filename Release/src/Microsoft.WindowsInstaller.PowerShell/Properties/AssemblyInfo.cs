@@ -29,6 +29,6 @@ using System.Resources;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("2.0.10314.0")]
+[assembly: AssemblyVersion("2.0.10326.0")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
 [assembly: System.CLSCompliant(false)]
