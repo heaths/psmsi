@@ -53,6 +53,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             set { this.productCodes = value; }
         }
 
+		/// <summary>
         /// Gets or sets the ProductCodes to enumerate.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]

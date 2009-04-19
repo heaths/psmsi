@@ -132,21 +132,22 @@
   </xsl:template>
 
   <xsl:template match="command:parameter" mode="syntax">
-    <xsl:text xml:space="preserve"> </xsl:text>
-    <xsl:if test="@required='false'">&amp;#91;</xsl:if>
-    <xsl:if test="@position > 0">&amp;#91;</xsl:if>
+	<xsl:text xml:space="preserve"> {"</xsl:text>
+    <xsl:if test="@required='false'">[</xsl:if>
+    <xsl:if test="@position > 0">[</xsl:if>
     <xsl:text>-</xsl:text>
     <xsl:value-of select="maml:name"/>
-    <xsl:if test="@position > 0">&amp;#93;</xsl:if>
+    <xsl:if test="@position > 0">]</xsl:if>
     <xsl:if test="command:parameterValue">
       <xsl:text xml:space="preserve"> </xsl:text>
-      <xsl:if test="command:parameterValue/@required='false'">&amp;#91;</xsl:if>
+      <xsl:if test="command:parameterValue/@required='false'">[</xsl:if>
       <xsl:text>&lt;</xsl:text>
       <xsl:value-of select="command:parameterValue"/>
       <xsl:text>&gt;</xsl:text>
-      <xsl:if test="command:parameterValue/@required='false'">&amp;#93;</xsl:if>
+      <xsl:if test="command:parameterValue/@required='false'">]</xsl:if>
     </xsl:if>
-    <xsl:if test="@required='false'">&amp;#93;</xsl:if>
+    <xsl:if test="@required='false'">]</xsl:if>
+	<xsl:text xml:space="preserve">"}</xsl:text>
   </xsl:template>
 
   <xsl:template match="command:parameter" mode="parameters">
@@ -222,10 +223,9 @@
     <xsl:text xml:space="preserve">* [</xsl:text>
     <xsl:value-of select="node()"/>
     <xsl:text xml:space="preserve">|</xsl:text>
-    <xsl:text>v</xsl:text>
-    <xsl:value-of select="$version"/>
-    <xsl:text>_</xsl:text>
     <xsl:value-of select="node()"/>
+    <xsl:text>.v</xsl:text>
+    <xsl:value-of select="$version"/>
     <xsl:text xml:space="preserve">]
 </xsl:text>
   </xsl:template>

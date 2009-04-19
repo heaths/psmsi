@@ -29,7 +29,7 @@ param(
 	[string[]] $Path,
 
 	[Parameter(Position=1)]
-	[int] $Version = 2,
+	[Version] $Version = "2.0",
 
 	[Parameter(Position=2)]
 	[string] $OutDirectory = $([System.IO.Path]::GetTempPath())
@@ -43,6 +43,7 @@ process {
 	$nsmgr = new-object -type System.Xml.XmlNamespaceManager $doc.NameTable
 	$nsmgr.AddNamespace("command", "http://schemas.microsoft.com/maml/dev/command/2004/10")
 
+	$names = @()
 	$doc.helpItems.SelectNodes("command:command", $nsmgr) | foreach-object -begin {
 
 		$xslt = new-object -type System.Xml.Xsl.XslCompiledTransform
@@ -53,7 +54,7 @@ process {
 
 		$xslt.Load($stylesheet);
 
-		$xargs.AddParam("version", "", $Version);
+		$xargs.AddParam("version", "", [string] $Version);
 
 	} -process {
 
@@ -62,25 +63,26 @@ process {
 
 		$xslt.Transform($reader, $xargs, $writer);
 
-		$page = join-path $OutDirectory $("v{0}_{1}.txt" -f $Version, $_.details.name)
+		$page = join-path $OutDirectory $("{1}.v{0}.txt" -f $Version, $_.details.name)
 		$writer.ToString() | set-content -path $page -encoding "UTF8"
 		
+		$names += $_.details.name
 		$page
 
 	}
 
-	$doc.helpItems.SelectNodes("command:command", $nsmgr) | foreach-object -begin {
+	$names | sort-object | foreach-object -begin {
 
-		$line = "! Help`n!! Cmdlets"
+		$lines = "! Help", "!! Cmdlets"
 
 	} -process {
 
-		$line += $("`n* [{1}|v{0}_{1}]" -f $Version, $_.details.name)
+		$lines += $("* [{1}|{1}.v{0}]" -f $Version, $_)
 
 	} -end {
 
-		$page = join-path $OutDirectory $("v{0}_Help.txt" -f $Version)
-		$line | set-content -path $page -encoding "UTF8"
+		$page = join-path $OutDirectory $("Help.v{0}.txt" -f $Version)
+		$lines | set-content -path $page -encoding "UTF8"
 
 		$page
 
