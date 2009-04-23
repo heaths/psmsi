@@ -23,6 +23,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
     /// This does not extend ValidateEnumeratedArgumentsAttribute since that throws if the
     /// actual argument is null, which some cmdlets in this project allow.
     /// </remarks>
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public sealed class ValidateGuidAttribute : ValidateArgumentsAttribute
     {
         // Define and compile the regular expression to validate GUIDs in a format Windows Installer understands.
@@ -50,13 +51,13 @@ namespace Microsoft.WindowsInstaller.PowerShell
                 IEnumerable e = LanguagePrimitives.GetEnumerable(arguments);
                 if (e == null)
                 {
-                    this.ValidateElement(arguments);
+                    ValidateGuidAttribute.ValidateElement(arguments);
                 }
                 else
                 {
                     foreach (object obj in e)
                     {
-                        this.ValidateElement(obj);
+                        ValidateGuidAttribute.ValidateElement(obj);
                     }
                 }
             }
@@ -66,7 +67,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
         /// Validates that the element is a string in the format {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}.
         /// </summary>
         /// <param name="element">The element to validate.</param>
-        private void ValidateElement(object element)
+        private static void ValidateElement(object element)
         {
             // Let other validators check for null elements.
             if (element != null)

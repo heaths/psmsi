@@ -75,29 +75,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\Example.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\Example.txt" />
   </ItemGroup>
   <ItemGroup>
     <Shadow Include="Test References\Microsoft.WindowsInstaller.PowerShell.accessor" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\Example.jpn.mst">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Example.msi">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Example.msp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Example.mst">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Registry.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\Example.jpn.mst" />
+    <Content Include="Data\Example.msi" />
+    <Content Include="Data\Example.msp" />
+    <Content Include="Data\Example.mst" />
+    <Content Include="Data\Registry.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

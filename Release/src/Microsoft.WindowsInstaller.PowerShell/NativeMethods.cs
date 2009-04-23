@@ -29,7 +29,7 @@ namespace Microsoft.WindowsInstaller
         #endregion
 
         #region Other constants
-        internal static readonly string World = "s-1-1-0";
+        internal const string World = "s-1-1-0";
         #endregion
 
         #region Windows Installer functions
@@ -277,10 +277,6 @@ namespace Microsoft.WindowsInstaller
         internal FileHash()
         {
             this.dwFileHashInfoSie = Marshal.SizeOf(this);
-            this.dwData0 = 0;
-            this.dwData1 = 0;
-            this.dwData2 = 0;
-            this.dwData3 = 0;
         }
 
         /// <summary>

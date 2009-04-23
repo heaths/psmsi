@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
 
@@ -35,10 +34,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         public GetProductCommand()
         {
-            this.names = null;
-            this.productCodes = null;
             this.context = UserContexts.Machine;
-            this.userSid = null;
         }
         
         /// <summary>
@@ -56,6 +52,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
 		/// <summary>
         /// Gets or sets the ProductCodes to enumerate.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly", Justification = "Get accessor not required for cmdlet parameter that does not accept pipeline input.")]
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Name, Mandatory = true)]
         public string[] Name
@@ -100,7 +97,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Parameter]
         public SwitchParameter Everyone
         {
-            get { return string.Compare(this.userSid, NativeMethods.World, true, CultureInfo.InvariantCulture) == 0; }
+            get { return string.Compare(this.userSid, NativeMethods.World, StringComparison.OrdinalIgnoreCase) == 0; }
             set { this.userSid = value ? NativeMethods.World : null; }
         }
 

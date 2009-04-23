@@ -9,6 +9,7 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using System.Security.Principal;
 
@@ -46,7 +47,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
             if (LanguagePrimitives.TryConvertTo<string>(inputData, out username))
             {
                 string sddl;
-                if (this.TryParseUsername(username, out sddl))
+                if (SidAttribute.TryParseUsername(username, out sddl))
                 {
                     return sddl;
                 }
@@ -62,9 +63,10 @@ namespace Microsoft.WindowsInstaller.PowerShell
         /// <param name="username">The string to parse as a username.</param>
         /// <param name="sddl">The SDDL format of a SID to return.</param>
         /// <returns>Returns true if the string was parsed as a username and an SDDL was returned; otherwise, false.</returns>
-        private bool TryParseUsername(string username, out string sddl)
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Return false on any failure like a typical TryParse.")]
+        private static bool TryParseUsername(string username, out string sddl)
         {
-            if (username.IndexOf("\\") >= 0)
+            if (username.IndexOf("\\", StringComparison.Ordinal) >= 0)
             {
                 try
                 {

@@ -8,8 +8,7 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System;
-using Microsoft.WindowsInstaller;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.WindowsInstaller.PowerShell
@@ -17,10 +16,11 @@ namespace Microsoft.WindowsInstaller.PowerShell
     /// <summary>
     /// Static methods specific to the WindowsInstaller module.
     /// </summary>
+    [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Module", Justification = "This assembly is not designed for others' consumption.")]
     public static class Module
     {
-        private static readonly string FeatureName = "Module";
-        private static readonly string ModuleId = "{CE1F8ECF-0E25-4155-9BE1-E9DC1CADA4C2}";
+        private const string FeatureName = "Module";
+        private const string ModuleId = "{CE1F8ECF-0E25-4155-9BE1-E9DC1CADA4C2}";
 
         /// <summary>
         /// Increments the use count and sets the last used date if the Module installer was installed.

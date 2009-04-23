@@ -38,7 +38,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
             }
 
             // Detect UNC paths: string stars with two backslashes.
-            if (path.StartsWith(@"\\"))
+            if (path.StartsWith(@"\\", StringComparison.Ordinal))
             {
                 return PathConverter.ToPSPath(session, path);
             }
@@ -46,7 +46,6 @@ namespace Microsoft.WindowsInstaller.PowerShell
             // Get the prefix to determine the type. Windows Installer rarely uses
             // a '?' instead of a ':' so search for both.
             int pos = path.IndexOfAny(new char[] { ':', '?'});
-            string prefix = path.Substring(0, pos);
 
             // Detect file system paths: single drive letter followed by a colon.
             if (pos == 1)

@@ -25,15 +25,6 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         private bool passThru;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="ItemCommandBase"/> class.
-        /// </summary>
-        public ItemCommandBase()
-        {
-            this.paths = null;
-            this.passThru = false;
-        }
-
-        /// <summary>
         /// Gets or sets the path supporting wildcards to enumerate files.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]

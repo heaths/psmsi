@@ -45,7 +45,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             {
                 try
                 {
-                    Storage stg = Storage.OpenStorage(path, true);
+                    Storage stg = Storage.OpenStorage(path);
                     Guid clsid = stg.Clsid;
 
                     // Set the friendly name.

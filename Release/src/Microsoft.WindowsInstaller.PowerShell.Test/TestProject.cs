@@ -20,7 +20,7 @@ namespace Microsoft.WindowsInstaller
     /// Support methods and properties for the test project.
     /// </summary>
     [TestClass]
-    internal static class TestProject
+    public static class TestProject
     {
         private static Runspace testRunspace;
 

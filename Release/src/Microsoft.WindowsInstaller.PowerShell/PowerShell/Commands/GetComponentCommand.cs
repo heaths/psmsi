@@ -8,6 +8,7 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
 
@@ -23,18 +24,9 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         private string productCode;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="GetComponentCommand"/> class.
-        /// </summary>
-        public GetComponentCommand()
-        {
-            this.productCode = null;
-            this.componentCodes = null;
-        }
-
-        /// <summary>
         /// Gets or sets the component GUIDs to enumerate.
         /// </summary>
-        [Parameter(ParameterSetName = ParameterSet.Component, Position = 0, ValueFromPipelineByPropertyName = true)]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(ParameterSetName = ParameterSet.Component, Position = 0, ValueFromPipelineByPropertyName = true)]
         [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty, ValidateGuid]
         public string[] ComponentCode

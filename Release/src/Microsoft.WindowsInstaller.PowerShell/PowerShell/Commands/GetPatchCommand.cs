@@ -10,7 +10,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
 
@@ -35,11 +34,8 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         public GetPatchCommand()
         {
-            this.productCodes = null;
-            this.patchCodes = null;
             this.filter = PatchStates.Applied;
             this.context = UserContexts.Machine;
-            this.userSid = null;
         }
 
         // Parameter positions below are to maintain backward call-compatibility.
@@ -79,7 +75,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             {
                 if (value == PatchStates.None)
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException(Properties.Resources.Error_InvalidFilter);
                 }
 
                 this.filter = value;
@@ -123,7 +119,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Parameter]
         public SwitchParameter Everyone
         {
-            get { return string.Compare(this.userSid, NativeMethods.World, true, CultureInfo.InvariantCulture) == 0; }
+            get { return string.Compare(this.userSid, NativeMethods.World, StringComparison.OrdinalIgnoreCase) == 0; }
             set { this.userSid = value ? NativeMethods.World : null; }
         }
 

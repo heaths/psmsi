@@ -8,6 +8,7 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
 
@@ -24,19 +25,9 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         private string[] featureNames;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="GetComponentCommand"/> class.
-        /// </summary>
-        public GetFeatureCommand()
-        {
-            this.products = null;
-            this.productCode = null;
-            this.featureNames = null;
-        }
-
-        /// <summary>
         /// Gets or sets the <see cref="ProductInstallation"/> for which features are enumerated.
         /// </summary>
-        [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, Mandatory = true, ValueFromPipeline = true)]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(ParameterSetName = ParameterSet.Product, Position = 0, Mandatory = true, ValueFromPipeline = true)]
         public ProductInstallation[] Product
         {
             get { return this.products; }
@@ -57,7 +48,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the feature names to enumerate.
         /// </summary>
-        [Parameter(ParameterSetName = ParameterSet.Feature, Position = 1, Mandatory = true, ValueFromPipelineByPropertyName = true)]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(ParameterSetName = ParameterSet.Feature, Position = 1, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [Alias("Name")]
         public string[] FeatureName
         {

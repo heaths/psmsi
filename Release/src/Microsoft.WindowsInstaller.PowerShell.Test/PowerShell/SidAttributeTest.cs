@@ -98,19 +98,18 @@ namespace Microsoft.WindowsInstaller.PowerShell
         [Description("A test for SidAttribute.TryParseUsername")]
         public void TryParseUsernameTest()
         {
-            SidAttribute_Accessor attr = new SidAttribute_Accessor();
             string param = null;
 
             // Test a string without backslashes.
-            Assert.IsFalse(attr.TryParseUsername(@"foo", out param));
+            Assert.IsFalse(SidAttribute_Accessor.TryParseUsername(@"foo", out param));
             Assert.IsNull(param);
 
             // Test a string with backslashes but not a valid username.
-            Assert.IsFalse(attr.TryParseUsername(@"foo\bar\baz", out param));
+            Assert.IsFalse(SidAttribute_Accessor.TryParseUsername(@"foo\bar\baz", out param));
             Assert.IsNull(param);
 
             // Test a valid username.
-            Assert.IsTrue(attr.TryParseUsername(TestProject.CurrentUsername, out param));
+            Assert.IsTrue(SidAttribute_Accessor.TryParseUsername(TestProject.CurrentUsername, out param));
             Assert.AreEqual<string>(TestProject.CurrentSID, param);
         }
 

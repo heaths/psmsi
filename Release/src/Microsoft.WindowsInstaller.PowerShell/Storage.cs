@@ -31,13 +31,13 @@ namespace Microsoft.WindowsInstaller
         /// </summary>
         /// <param name="path">Path to a storage file.</param>
         /// <returns>An instance of the <see cref="Storage"/> class.</returns>
-        internal static Storage OpenStorage(string path, bool readOnly)
+        internal static Storage OpenStorage(string path)
         {
             NativeMethods.IStorage stg = null;
             Guid iid = NativeMethods.IID_IStorage;
 
-            NativeMethods.STGM mode = NativeMethods.STGM.STGM_DIRECT | NativeMethods.STGM.STGM_READ | NativeMethods.STGM.STGM_SHARE_DENY_WRITE;
-            int ret = NativeMethods.StgOpenStorageEx(path, mode,
+            int ret = NativeMethods.StgOpenStorageEx(path,
+				NativeMethods.STGM.STGM_READ | NativeMethods.STGM.STGM_SHARE_DENY_WRITE,
                 NativeMethods.STGFMT.STGFMT_STORAGE,
                 0, IntPtr.Zero, IntPtr.Zero,
                 ref iid, out stg);
