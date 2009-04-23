@@ -8,6 +8,10 @@
   </CodeCoverage>
   <Deployment>
     <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\WindowsInstaller.types.ps1xml" />
+    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\WindowsInstaller.psm1" />
+    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\WindowsInstaller.formats.ps1xml" />
+    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell.Test\Data\" />
+    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\WindowsInstaller.psd1" />
   </Deployment>
   <TestTypeSpecific>
     <WebTestRunConfiguration testTypeId="4e7599fa-5ecb-43e9-a887-cd63cf72d207">

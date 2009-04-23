@@ -40,7 +40,6 @@ namespace Microsoft.WindowsInstaller.PowerShell
 
         [TestMethod]
         [Description("A test for Module.Use")]
-        [DeploymentItem(@"data\registry.xml")]
         public void UseTest()
         {
             using (MockRegistry reg = new MockRegistry())

@@ -62,10 +62,6 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                         fileType = Properties.Resources.Type_Transform;
                     }
                 }
-                catch (IOException)
-                {
-                    // Not a storage file; continue silently.
-                }
                 catch (Win32Exception ex)
                 {
                     string message = ex.Message.Replace("%1", path);

@@ -67,6 +67,12 @@ namespace Microsoft.WindowsInstaller.PowerShell
 
                 rs.Open();
 
+                // Test null session.
+                TestProject.ExpectException(typeof(ArgumentNullException), null, delegate()
+                {
+                    PathConverter_Accessor.FromKeyPathToPSPath(null, null);
+                });
+
                 // Define all the possible translations.
                 Dictionary<string, string> paths = new Dictionary<string, string>();
                 paths[@"C:\foo"] = @"Microsoft.PowerShell.Core\FileSystem::C:\foo";

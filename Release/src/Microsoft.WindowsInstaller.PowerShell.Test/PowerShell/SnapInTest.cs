@@ -1,4 +1,4 @@
-﻿// Unit test class for the Get-MSIProduct cmdlet.
+﻿// Unit test class for the SnapIn class.
 //
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //

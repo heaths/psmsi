@@ -54,6 +54,7 @@
     <Compile Include="PowerShell\Commands\GetPatchCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommandTest.cs" />
+    <Compile Include="PowerShell\Commands\GetSharedComponentFunctionTest.cs" />
     <Compile Include="PowerShell\ModuleTest.cs" />
     <Compile Include="PowerShell\PathConverterTest.cs" />
     <Compile Include="PowerShell\SidAttributeTest.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="RegistryXml.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommandTest.cs" />
-    <Compile Include="PowerShell\Commands\CmdletTestBase.cs" />
+    <Compile Include="PowerShell\Commands\CommandTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestProject.cs" />
   </ItemGroup>
@@ -97,9 +98,6 @@
     <Content Include="Data\Registry.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="registry.xsd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

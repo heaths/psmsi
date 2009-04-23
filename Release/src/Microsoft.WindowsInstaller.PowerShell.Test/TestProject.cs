@@ -9,6 +9,8 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.IO;
+using System.Management.Automation.Runspaces;
 using System.Security.Principal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,8 +19,11 @@ namespace Microsoft.WindowsInstaller
     /// <summary>
     /// Support methods and properties for the test project.
     /// </summary>
+    [TestClass]
     internal static class TestProject
     {
+        private static Runspace testRunspace;
+
         /// <summary>
         /// A delegate that takes no parameters and returns no value.
         /// </summary>
@@ -40,6 +45,14 @@ namespace Microsoft.WindowsInstaller
         }
 
         /// <summary>
+        /// Gets the <see cref="Runspace"/> for all the cmdlet tests.
+        /// </summary>
+        internal static Runspace TestRunspace
+        {
+            get { return TestProject.testRunspace; }
+        }
+
+        /// <summary>
         /// Gets the username for the current user.
         /// </summary>
         internal static string CurrentUsername
@@ -50,6 +63,36 @@ namespace Microsoft.WindowsInstaller
                 {
                     return id.Name;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Initializes the test assembly and loads the PowerShell module.
+        /// </summary>
+        [AssemblyInitialize]
+        public static void Initialize(TestContext context)
+        {
+            // Create the initial state with the module specified.
+            InitialSessionState state = InitialSessionState.CreateDefault();
+            state.ImportPSModule(new string[] { Path.Combine(context.TestDeploymentDir, "WindowsInstaller.psd1") });
+
+            // Create and configure the runspace.
+            TestProject.testRunspace = RunspaceFactory.CreateRunspace(state);
+            TestProject.testRunspace.ThreadOptions = PSThreadOptions.UseNewThread;
+
+            TestProject.testRunspace.Open();
+        }
+
+        /// <summary>
+        /// Cleans up the test assembly.
+        /// </summary>
+        [AssemblyCleanup]
+        public static void Cleanup()
+        {
+            // Close and dispose of the pool.
+            using (TestProject.testRunspace)
+            {
+                TestProject.testRunspace.Close();
             }
         }
 

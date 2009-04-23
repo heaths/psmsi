@@ -8,9 +8,6 @@
                     <key name="Assemblies"/>
                     <key name="Components"/>
                     <key name="Features">
-                        <key name="CACEBAC032E4829478A1E656DC73F0F9">
-                            <value name="PsMsi" type="String"/>
-                        </key>
                         <key name="D7314F9862C648A4DB8BE2A5B47BE100">
                             <value name="Complete" type="String"/>
                             <value name="Complete2.0.30226.2" type="String"/>
@@ -31,27 +28,6 @@
                         </key>
                     </key>
                     <key name="Products">
-                        <key name="CACEBAC032E4829478A1E656DC73F0F9">
-                            <key name="SourceList">
-                                <key name="Media">
-                                    <value name="1" type="String">;</value>
-                                </key>
-                                <key name="Net">
-                                    <value name="1" type="ExpandString">C:\Source\psmsi\Release\src\Setup\bin\Release\</value>
-                                </key>
-                                <value name="PackageName" type="String">psmsi.msi</value>
-                            </key>
-                            <value name="AdvertiseFlags" type="DWord">388</value>
-                            <value name="Assignment" type="DWord">1</value>
-                            <value name="AuthorizedLUAApp" type="DWord">0</value>
-                            <value name="Clients" type="MultiString" xml:space="preserve">:</value>
-                            <value name="DeploymentFlags" type="DWord">3</value>
-                            <value name="InstanceType" type="DWord">0</value>
-                            <value name="Language" type="DWord">1033</value>
-                            <value name="PackageCode" type="String">7980F4F9C6DAA484FAE5FD150D3DD8B7</value>
-                            <value name="ProductName" type="String">Windows Installer PowerShell Snap-In</value>
-                            <value name="Version" type="DWord">16807534</value>
-                        </key>
                         <key name="D7314F9862C648A4DB8BE2A5B47BE100">
                             <key name="Patches">
                                 <value name="904C25E6D0D048B4BA366443834D3DB3" type="String">:oldTocurrent;:#oldTocurrent</value>
@@ -84,9 +60,6 @@
                     <key name="UpgradeCodes">
                         <key name="4AE2841C3D7016247914C7DE6E8A2CA5">
                             <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String"/>
-                        </key>
-                        <key name="C6A9118E2577AF6409B46C10D9190DFB">
-                            <value name="CACEBAC032E4829478A1E656DC73F0F9" type="String"/>
                         </key>
                     </key>
                 </key>
@@ -230,6 +203,10 @@
                                         <key name="FCA83C9FA40CC774DB6C93FCF529E671">
                                             <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\npctrl.dll</value>
                                         </key>
+                                        <!-- {FFEE4573-F7C4-4775-8E37-1820A0893765} -->
+                                        <key name="3754EEFF4C7F5774E87381020A987356">
+                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\baz\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
+                                        </key>
                                     </key>
                                     <key name="Patches">
                                         <key name="904C25E6D0D048B4BA366443834D3DB3">
@@ -239,8 +216,8 @@
                                     <key name="Products">
                                         <key name="D7314F9862C648A4DB8BE2A5B47BE100">
                                             <key name="Features">
-                                                <value name="Complete" type="String"><![CDATA[8gDDj*Qc3Ay44bkUr)[G]]></value>
-                                                <value name="Complete2.0.30226.2" type="String"><![CDATA[fPfwqJCA?9^Ri%DAsJx^8gDDj*Qc3Ay44bkUr)[Gg9xFlh+!y@q!qFPLd,[ONznfx!Qk.A}nK-TyYUF3@,??yL,z{=a$3[kJJ.U*OVQeh}!GUA5RE!iUWdt'GkT_vrt),Aw@p{h&XXB(c7qVsVywn=*kbAg!EZ^F-a4z^wa4T=&r?Vq}A3gBjqMAsFeAx=Mz^83Ef'9IWRO)pQ`M'=2ONaQC,1g*}xA(l5$O`?Nv+Bzu@D*c+=8SU_FLQ@YuLVrx^!050j?tRUJ,79o!Ub9BG2U.ycb3YilKd@*yYLqkBkFLi_ria^%pn?,&{23hajUXL1t)cU+Ek?cO2~h,5qqH'v%q56pWn=F_+1'AGvwa6jr9g[9s3?XP0+1YAgtjpo[gT~Jx9@fU&`tsY3LEX_ov[DqP}8!)+gQwl^92Mb=.SaAQ$=uY?IGq+),16w%ig`)Ml9C`qp(4SM18,.YzCK!hz=[y4~x0[@KLe'(7b-*]L=!=3pQ+DGOitU-^Y4Thz=P[1p8n6BoH]]></value>
+                                                <value name="Complete" type="String"/>
+                                                <value name="Complete2.0.30226.2" type="String"/>
                                             </key>
                                             <key name="InstallProperties">
                                                 <value name="AuthorizedCDFPrefix" type="String"/>
@@ -330,8 +307,15 @@
                                         <key name="D80A368E0A76EBE5B99ED9B256EFEEBA">
                                             <value name="225736CE5A378244B864566A1225C97C" type="String">C:\Program Files\Microsoft Location Finder\unreg.vbs</value>
                                         </key>
+                                        <!-- {CE1F8ECF-0E25-4155-9BE1-E9DC1CADA4C2} -->
                                         <key name="FCE8F1EC52E05514B91E9ECDC1DA4A2C">
-                                            <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">C:\TEST\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
+                                            <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">c:\test\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
+                                            <value name="225736CE5A378244B864566A1225C97C" type="String">c:\test\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
+                                        </key>
+                                        <!-- {FFEE4573-F7C4-4775-8E37-1820A0893765} -->
+                                        <key name="3754EEFF4C7F5774E87381020A987356">
+                                            <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">c:\foo\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
+                                            <value name="225736CE5A378244B864566A1225C97C" type="String">c:\bar\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
                                         </key>
                                     </key>
                                     <key name="Products">
@@ -343,7 +327,7 @@
                                         </key>
                                         <key name="225736CE5A378244B864566A1225C97C">
                                             <key name="Features">
-                                                <value name="DefaultFeature" type="String"><![CDATA[5[eR&TALl$26kapM-^YP-A1h5B]dWND1Urzv~yi!M@]csM)ANFwxW$2~{%=`DNw92byW$!O2~k@mCp-v%xaQfnA$!R=7xTB1Dsya{ypSejsBYGOGCj?^W'.{.2Tlqjj?`y~Skii@be&'*5DPd_GN5+JAq^(q)zT$IA@BvH3R]TSeQaU`7f^de+Mn^FAN,HST)LGUD=GeBp7O]vZqAZ6_S,KNa=N2F4Iyr-QX!oev8CK.-uDj,O16Ex[INZss}5WJ1_}yCcO44idOe&,Bs3V}Y&^N]]></value>
+                                                <value name="DefaultFeature" type="String"/>
                                             </key>
                                             <key name="InstallProperties">
                                                 <value name="AuthorizedCDFPrefix" type="String"/>

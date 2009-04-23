@@ -60,7 +60,6 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Parameter(ParameterSetName = ParameterSet.Name, Mandatory = true)]
         public string[] Name
         {
-            get { return this.names; }
             set { this.names = value; }
         }
 

@@ -22,50 +22,37 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     /// Unit and functional tests for <see cref="GetProductCommand"/>.
     ///</summary>
     [TestClass]
-    public class GetProductCommandTest : CmdletTestBase
+    public class GetProductCommandTest : CommandTestBase
     {
-        [TestInitialize]
-        public override void Initialize()
-        {
-            base.Initialize();
-            base.AddCmdlet(typeof(GetProductCommand));
-        }
-
         /// <summary>
         /// Enumerates all machine-assigned products.
         /// </summary>
         [TestMethod]
         [Description("Enumerates all machine-assigned products")]
-        [DeploymentItem(@"data\registry.xml")]
         public void EnumerateProducts()
         {
             List<string> products = new List<string>();
-            products.Add("{0CABECAC-4E23-4928-871A-6E65CD370F9F}");
             products.Add("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}");
 
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wiproductinfo"))
             {
-                rs.Open();
-                using (Pipeline p = rs.CreatePipeline(@"get-msiproductinfo"))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
+                    // Import our registry entries.
+                    reg.Import(@"registry.xml");
+
+                    Collection<PSObject> objs = p.Invoke();
+
+                    List<string> actual = new List<string>(objs.Count);
+                    foreach (PSObject obj in objs)
                     {
-                        // Import our registry entries.
-                        reg.Import(@"registry.xml");
-
-                        Collection<PSObject> objs = p.Invoke();
-
-                        List<string> actual = new List<string>(objs.Count);
-                        foreach (PSObject obj in objs)
-                        {
-                            actual.Add(obj.Properties["ProductCode"].Value as string);
-                        }
-
-                        Assert.AreEqual<int>(products.Count, objs.Count);
-                        CollectionAssert.AreEquivalent(products, actual);
+                        actual.Add(obj.Properties["ProductCode"].Value as string);
                     }
+
+                    Assert.AreEqual<int>(products.Count, objs.Count);
+                    CollectionAssert.AreEquivalent(products, actual);
                 }
-            }
+                }
         }
 
         /// <summary>
@@ -73,35 +60,29 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [TestMethod]
         [Description("Enumerates all unmanaged, user-assigned products")]
-        [DeploymentItem(@"data\registry.xml")]
         public void EnumerateUserUnmanagedProducts()
         {
             List<string> expected = new List<string>();
             expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
             expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
 
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            string cmd = string.Format(@"get-wiproductinfo -installcontext userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
+            using (Pipeline p = TestRunspace.CreatePipeline(cmd))
             {
-                rs.Open();
-
-                string cmd = string.Format(@"get-msiproductinfo -installcontext userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
-                using (Pipeline p = rs.CreatePipeline(cmd))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
+                    reg.Import(@"registry.xml");
+
+                    Collection<PSObject> objs = p.Invoke();
+
+                    List<string> actual = new List<string>(objs.Count);
+                    foreach (PSObject obj in objs)
                     {
-                        reg.Import(@"registry.xml");
-
-                        Collection<PSObject> objs = p.Invoke();
-
-                        List<string> actual = new List<string>(objs.Count);
-                        foreach (PSObject obj in objs)
-                        {
-                            actual.Add(obj.Properties["ProductCode"].Value as string);
-                        }
-
-                        Assert.AreEqual<int>(expected.Count, objs.Count);
-                        CollectionAssert.AreEquivalent(expected, actual);
+                        actual.Add(obj.Properties["ProductCode"].Value as string);
                     }
+
+                    Assert.AreEqual<int>(expected.Count, objs.Count);
+                    CollectionAssert.AreEquivalent(expected, actual);
                 }
             }
         }
@@ -111,24 +92,18 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [TestMethod]
         [Description("Enumerates all products matching a given name")]
-        [DeploymentItem(@"data\registry.xml")]
         public void EnumerateNamedProducts()
         {
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            // Use two strings that will match the same product; make sure only one product is returned.
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wiproductinfo -name Silver*, *Light"))
             {
-                rs.Open();
-
-                // Use two strings that will match the same product; make sure only one product is returned.
-                using (Pipeline p = rs.CreatePipeline(@"get-msiproductinfo -name Silver*, *Light"))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
-                    {
-                        reg.Import(@"registry.xml");
+                    reg.Import(@"registry.xml");
 
-                        Collection<PSObject> objs = p.Invoke();
-                        Assert.AreEqual<int>(1, objs.Count);
-                        Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
-                    }
+                    Collection<PSObject> objs = p.Invoke();
+                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
                 }
             }
         }
@@ -138,46 +113,22 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [TestMethod]
         [Description("A test for GetProductCommand.ProductCode")]
-        [DeploymentItem(@"data\registry.xml")]
         public void ProductCodeTest()
         {
-            // First just set and get the ProductCode property value to increase code coverage.
-            GetProductCommand cmdlet = new GetProductCommand();
-            cmdlet.ProductCode = new string[] { "{0CABECAC-4E23-4928-871A-6E65CD370F9F}" };
-            Assert.AreEqual<int>(1, cmdlet.ProductCode.Length);
-            Assert.AreEqual<string>("{0CABECAC-4E23-4928-871A-6E65CD370F9F}", cmdlet.ProductCode[0]);
-
             // Finally invoke the cmdlet for a single product.
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wiproductinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"""))
             {
-                rs.Open();
-                using (Pipeline p = rs.CreatePipeline(@"get-msiproductinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"""))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
-                    {
-                        // Import our registry entries.
-                        reg.Import(@"registry.xml");
+                    // Import our registry entries.
+                    reg.Import(@"registry.xml");
 
-                        Collection<PSObject> objs = p.Invoke();
+                    Collection<PSObject> objs = p.Invoke();
 
-                        Assert.AreEqual<int>(1, objs.Count);
-                        Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
-                    }
+                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
                 }
             }
-        }
-
-        /// <summary>
-        /// A test for <see cref="GetProductCommand.Name"/>.
-        /// </summary>
-        [TestMethod]
-        [Description("A test for GetProductCommand.Name")]
-        public void NameTest()
-        {
-            // Mostly to increase code coverage.
-            GetProductCommand cmdlet = new GetProductCommand();
-            cmdlet.Name = new string[] { "Windows*" };
-            Assert.AreEqual<string>("Windows*", cmdlet.Name[0]);
         }
 
         /// <summary>
@@ -202,55 +153,37 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [TestMethod]
         [Description("A test for GetProductCommand.InstallContext")]
-        [DeploymentItem(@"data\registry.xml")]
         public void InstallContextTest()
         {
-            // Test that the default is Machine.
-            GetProductCommand cmdlet = new GetProductCommand();
-            Assert.AreEqual<UserContexts>(UserContexts.Machine, cmdlet.UserContext);
-
-            // Test string values as PowerShell would convert.
-            System.ComponentModel.TypeConverter converter = new System.ComponentModel.EnumConverter(typeof(UserContexts));
-            foreach (string context in new string[] { "All", "Machine", "UserManaged", "UserUnmanaged" })
-            {
-                UserContexts uc = (UserContexts)converter.ConvertFromString(context);
-                cmdlet.UserContext = uc;
-                Assert.AreEqual<UserContexts>(uc, cmdlet.UserContext);
-            }
-
             // Test that None is not supported.
+            GetProductCommand cmdlet = new GetProductCommand();
             TestProject.ExpectException(typeof(ArgumentException), null, delegate()
             {
                 cmdlet.UserContext = UserContexts.None;
             });
 
+            List<string> expected = new List<string>();
+            expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
+            expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
+
             // Test that "Context" is a supported alias.
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            string cmd = string.Format(@"get-wiproductinfo -context userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
+            using (Pipeline p = TestRunspace.CreatePipeline(cmd))
             {
-                List<string> expected = new List<string>();
-                expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
-                expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
-
-                rs.Open();
-
-                string cmd = string.Format(@"get-msiproductinfo -context userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
-                using (Pipeline p = rs.CreatePipeline(cmd))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
+                    reg.Import(@"registry.xml");
+
+                    Collection<PSObject> objs = p.Invoke();
+
+                    List<string> actual = new List<string>(objs.Count);
+                    foreach (PSObject obj in objs)
                     {
-                        reg.Import(@"registry.xml");
-
-                        Collection<PSObject> objs = p.Invoke();
-
-                        List<string> actual = new List<string>(objs.Count);
-                        foreach (PSObject obj in objs)
-                        {
-                            actual.Add(obj.Properties["ProductCode"].Value as string);
-                        }
-
-                        Assert.AreEqual<int>(expected.Count, objs.Count);
-                        CollectionAssert.AreEquivalent(expected, actual);
+                        actual.Add(obj.Properties["ProductCode"].Value as string);
                     }
+
+                    Assert.AreEqual<int>(expected.Count, objs.Count);
+                    CollectionAssert.AreEquivalent(expected, actual);
                 }
             }
         }

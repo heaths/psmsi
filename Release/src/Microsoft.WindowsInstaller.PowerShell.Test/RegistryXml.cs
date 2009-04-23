@@ -26,9 +26,9 @@ namespace Microsoft.WindowsInstaller
         static readonly Regex Variables = new Regex(@"\$\((?<var>\w+)\)",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-        RegistryKey key;
-        Stack<RegistryKey> keys;
-        Dictionary<string, string> properties;
+        private RegistryKey key;
+        private Stack<RegistryKey> keys;
+        private Dictionary<string, string> properties;
 
         /// <summary>
         /// Creates a new instance of the <see cref="RegistryKey"/> class.
@@ -212,20 +212,11 @@ namespace Microsoft.WindowsInstaller
             }
         }
 
-        /// <summary>
-        /// Exports a registry key tree to the given <see cref="XmlWriter"/>.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> that contains the keys and values to export.</param>
-        /// <exception cref="NotImplementedException">This method is not yet implemented.</exception>
-        internal void Export(XmlWriter writer)
-        {
-            throw new NotImplementedException();
-        }
-
         void InitializeProperties()
         {
             properties = new Dictionary<string, string>();
             properties.Add("CurrentSID", TestProject.CurrentSID);
+            properties.Add("CurrentUsername", TestProject.CurrentUsername);
         }
 
         string ReplaceVariables(string value)

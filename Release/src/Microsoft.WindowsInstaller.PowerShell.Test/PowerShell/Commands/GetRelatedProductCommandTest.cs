@@ -19,53 +19,28 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     /// Unit and functional tests for <see cref="GetRelatedProductCommand"/>.
     ///</summary>
     [TestClass]
-    public class GetRelatedProductCommandTest : CmdletTestBase
+    public class GetRelatedProductCommandTest : CommandTestBase
     {
-        [TestInitialize]
-        public override void Initialize()
-        {
-            base.Initialize();
-            base.AddCmdlet(typeof(GetRelatedProductCommand));
-        }
-
         /// <summary>
         /// Enumerates related products.
         /// </summary>
         [TestMethod]
         [Description("Enumerates related products")]
-        [DeploymentItem(@"data\registry.xml")]
         public void EnumerateRelatedProducts()
         {
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wirelatedproductinfo -upgradecode ""{C1482EA4-07D3-4261-9741-7CEDE6A8C25A}"""))
             {
-                rs.Open();
-                using (Pipeline p = rs.CreatePipeline(@"get-msirelatedproductinfo -upgradecode ""{C1482EA4-07D3-4261-9741-7CEDE6A8C25A}"""))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
-                    {
-                        // Import our registry entries.
-                        reg.Import(@"registry.xml");
+                    // Import our registry entries.
+                    reg.Import(@"registry.xml");
 
-                        Collection<PSObject> objs = p.Invoke();
+                    Collection<PSObject> objs = p.Invoke();
 
-                        Assert.AreEqual<int>(1, objs.Count);
-                        Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
-                    }
+                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
                 }
             }
-        }
-
-        /// <summary>
-        /// A test for <see cref="GetRelatedProductCommand.UpgradeCode"/>.
-        /// </summary>
-        [TestMethod]
-        [Description("A test for GetRelatedProductCommand.UpgradeCode")]
-        public void UpgradeCodeTest()
-        {
-            GetRelatedProductCommand cmdlet = new GetRelatedProductCommand();
-            cmdlet.UpgradeCode = new string[] { "{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}" };
-            Assert.AreEqual<int>(1, cmdlet.UpgradeCode.Length);
-            Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", cmdlet.UpgradeCode[0]);
         }
     }
 }

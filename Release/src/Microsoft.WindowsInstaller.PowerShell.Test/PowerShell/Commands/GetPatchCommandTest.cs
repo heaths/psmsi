@@ -21,38 +21,26 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     /// Unit and functional tests for <see cref="GetPatchCommand"/>.
     ///</summary>
     [TestClass]
-    public class GetPatchCommandTest : CmdletTestBase
+    public class GetPatchCommandTest : CommandTestBase
     {
-        [TestInitialize]
-        public override void Initialize()
-        {
-            base.Initialize();
-            base.AddCmdlet(typeof(GetPatchCommand), typeof(GetProductCommand));
-        }
-
         /// <summary>
         /// Enumerates all machine-assigned patches.
         /// </summary>
         [TestMethod]
         [Description("Enumerates all machine-assigned patches")]
-        [DeploymentItem(@"data\registry.xml")]
         public void EnumeratePatches()
         {
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wipatchinfo"))
             {
-                rs.Open();
-                using (Pipeline p = rs.CreatePipeline(@"get-msipatchinfo"))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
-                    {
-                        // Import our registry entries.
-                        reg.Import(@"registry.xml");
+                    // Import our registry entries.
+                    reg.Import(@"registry.xml");
 
-                        Collection<PSObject> objs = p.Invoke();
+                    Collection<PSObject> objs = p.Invoke();
 
-                        Assert.AreEqual<int>(1, objs.Count);
-                        Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
-                    }
+                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
                 }
             }
         }
@@ -62,24 +50,19 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [TestMethod]
         [Description("Enumerates patches for a specific product")]
-        [DeploymentItem(@"data\registry.xml")]
         public void EnumerateProductPatches()
         {
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wiproductinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" | get-wipatchinfo"))
             {
-                rs.Open();
-                using (Pipeline p = rs.CreatePipeline(@"get-msiproductinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" | get-msipatchinfo"))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
-                    {
-                        // Import our registry entries.
-                        reg.Import(@"registry.xml");
+                    // Import our registry entries.
+                    reg.Import(@"registry.xml");
 
-                        Collection<PSObject> objs = p.Invoke();
+                    Collection<PSObject> objs = p.Invoke();
 
-                        Assert.AreEqual<int>(1, objs.Count);
-                        Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
-                    }
+                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
                 }
             }
         }
@@ -89,52 +72,21 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [TestMethod]
         [Description("Gets a specific patch for a specific product")]
-        [DeploymentItem(@"data\registry.xml")]
         public void GetSpecificPatch()
         {
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wipatchinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" -patchcode ""{6E52C409-0D0D-4B84-AB63-463438D4D33B}"""))
             {
-                rs.Open();
-                using (Pipeline p = rs.CreatePipeline(@"get-msipatchinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" -patchcode ""{6E52C409-0D0D-4B84-AB63-463438D4D33B}"""))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
-                    {
-                        // Import our registry entries.
-                        reg.Import(@"registry.xml");
+                    // Import our registry entries.
+                    reg.Import(@"registry.xml");
 
-                        Collection<PSObject> objs = p.Invoke();
+                    Collection<PSObject> objs = p.Invoke();
 
-                        Assert.AreEqual<int>(1, objs.Count);
-                        Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
-                    }
+                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
                 }
             }
-        }
-
-        /// <summary>
-        /// A test for <see cref="GetPatchCommand.ProductCode"/>.
-        /// </summary>
-        [TestMethod]
-        [Description("A test for GetPatchCommand.ProductCode")]
-        public void ProductCodeTest()
-        {
-            GetPatchCommand cmdlet = new GetPatchCommand();
-            cmdlet.ProductCode = new string[] { "{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}" };
-            Assert.AreEqual<int>(1, cmdlet.ProductCode.Length);
-            Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", cmdlet.ProductCode[0]);
-        }
-
-        /// <summary>
-        /// A test for <see cref="GetPatchCommand.PatchCode"/>.
-        /// </summary>
-        [TestMethod]
-        [Description("A test for GetPatchCommand.PatchCode")]
-        public void PatchCodeTest()
-        {
-            GetPatchCommand cmdlet = new GetPatchCommand();
-            cmdlet.PatchCode = new string[] { "{6E52C409-0D0D-4B84-AB63-463438D4D33B}" };
-            Assert.AreEqual<int>(1, cmdlet.PatchCode.Length);
-            Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", cmdlet.PatchCode[0]);
         }
 
         /// <summary>
@@ -154,45 +106,27 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [TestMethod]
         [Description("A test for GetPatchCommand.InstallContext")]
-        [DeploymentItem(@"data\registry.xml")]
         public void InstallContextTest()
         {
-            // Test that the default is Machine.
-            GetPatchCommand cmdlet = new GetPatchCommand();
-            Assert.AreEqual<UserContexts>(UserContexts.Machine, cmdlet.UserContext);
-
-            // Test string values as PowerShell would convert.
-            System.ComponentModel.TypeConverter converter = new System.ComponentModel.EnumConverter(typeof(UserContexts));
-            foreach (string context in new string[] { "All", "Machine", "UserManaged", "UserUnmanaged" })
-            {
-                UserContexts uc = (UserContexts)converter.ConvertFromString(context);
-                cmdlet.UserContext = uc;
-                Assert.AreEqual<UserContexts>(uc, cmdlet.UserContext);
-            }
-
             // Test that None is not supported.
+            GetPatchCommand cmdlet = new GetPatchCommand();
             TestProject.ExpectException(typeof(ArgumentException), null, delegate()
             {
                 cmdlet.UserContext = UserContexts.None;
             });
 
             // Test that "Context" is a supported alias.
-            using (Runspace rs = RunspaceFactory.CreateRunspace(base.Configuration))
+            string cmd = string.Format(@"get-wipatchinfo -context ""machine""");
+            using (Pipeline p = TestRunspace.CreatePipeline(cmd))
             {
-                rs.Open();
-
-                string cmd = string.Format(@"get-msipatchinfo -context ""machine""");
-                using (Pipeline p = rs.CreatePipeline(cmd))
+                using (MockRegistry reg = new MockRegistry())
                 {
-                    using (MockRegistry reg = new MockRegistry())
-                    {
-                        reg.Import(@"registry.xml");
+                    reg.Import(@"registry.xml");
 
-                        Collection<PSObject> objs = p.Invoke();
+                    Collection<PSObject> objs = p.Invoke();
 
-                        Assert.AreEqual<int>(1, objs.Count);
-                        Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
-                    }
+                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
                 }
             }
         }
@@ -202,21 +136,12 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [TestMethod]
         [Description("A test for GetPatchCommand.Filter")]
-        [DeploymentItem(@"data\registry.xml")]
         public void FilterTest()
         {
-            // Test that the default is Applied.
             GetPatchCommand cmdlet = new GetPatchCommand();
-            Assert.AreEqual<PatchStates>(PatchStates.Applied, cmdlet.Filter);
 
-            // Test string values as PowerShell would convert.
-            System.ComponentModel.TypeConverter converter = new System.ComponentModel.EnumConverter(typeof(PatchStates));
-            foreach (string filter in new string[] { "All", "Applied", "Superseded", "Obsoleted", "Registered" })
-            {
-                PatchStates ps = (PatchStates)converter.ConvertFromString(filter);
-                cmdlet.Filter = ps;
-                Assert.AreEqual<PatchStates>(ps, cmdlet.Filter);
-            }
+            // Test the default is "Applied".
+            Assert.AreEqual<PatchStates>(PatchStates.Applied, cmdlet.Filter);
 
             // Test that Invalid is not supported.
             TestProject.ExpectException(typeof(ArgumentException), null, delegate()

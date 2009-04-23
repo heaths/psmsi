@@ -30,17 +30,13 @@ namespace Microsoft.WindowsInstaller
         /// Opens a storage file.
         /// </summary>
         /// <param name="path">Path to a storage file.</param>
-        /// <param name="readOnly">true to open the file read-only mode; otherwise, false to open the file in read-write mode.</param>
         /// <returns>An instance of the <see cref="Storage"/> class.</returns>
         internal static Storage OpenStorage(string path, bool readOnly)
         {
             NativeMethods.IStorage stg = null;
             Guid iid = NativeMethods.IID_IStorage;
 
-            NativeMethods.STGM mode = NativeMethods.STGM.STGM_DIRECT;
-            mode |= readOnly ? NativeMethods.STGM.STGM_READ | NativeMethods.STGM.STGM_SHARE_DENY_WRITE
-                : NativeMethods.STGM.STGM_READWRITE | NativeMethods.STGM.STGM_SHARE_EXCLUSIVE;
-
+            NativeMethods.STGM mode = NativeMethods.STGM.STGM_DIRECT | NativeMethods.STGM.STGM_READ | NativeMethods.STGM.STGM_SHARE_DENY_WRITE;
             int ret = NativeMethods.StgOpenStorageEx(path, mode,
                 NativeMethods.STGFMT.STGFMT_STORAGE,
                 0, IntPtr.Zero, IntPtr.Zero,
