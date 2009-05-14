@@ -282,7 +282,7 @@ namespace Microsoft.WindowsInstaller
         /// <summary>
         /// Gets the first hash part.
         /// </summary>
-        public int? WIHashPart1
+        public int? MSIHashPart1
         {
             get
             {
@@ -298,7 +298,7 @@ namespace Microsoft.WindowsInstaller
         /// <summary>
         /// Gets the second hash part.
         /// </summary>
-        public int? WIHashPart2
+        public int? MSIHashPart2
         {
             get
             {
@@ -314,7 +314,7 @@ namespace Microsoft.WindowsInstaller
         /// <summary>
         /// Gets the third hash part.
         /// </summary>
-        public int? WIHashPart3
+        public int? MSIHashPart3
         {
             get
             {
@@ -330,7 +330,7 @@ namespace Microsoft.WindowsInstaller
         /// <summary>
         /// Gets the fourth hash part.
         /// </summary>
-        public int? WIHashPart4
+        public int? MSIHashPart4
         {
             get
             {

@@ -35,7 +35,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
             // Enumerate only example.ms* files.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifiletype -path example.ms*"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifiletype -path example.ms*"))
             {
                 Collection<PSObject> objs = p.Invoke();
 
@@ -45,7 +45,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Enumerate all files without a filter.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifiletype"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifiletype"))
             {
                 Collection<PSObject> objs = p.Invoke();
 
@@ -66,7 +66,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public void PassThruTest()
         {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem -filter example.ms* | get-wifiletype -passthru"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem -filter example.ms* | get-msifiletype -passthru"))
             {
                 Collection<PSObject> objs = p.Invoke();
 
@@ -75,22 +75,22 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
 
                 foreach (PSObject obj in objs)
                 {
-                    Assert.IsNotNull(obj.Properties["WIFileType"]);
-                    Assert.IsInstanceOfType(obj.Properties["WIFileType"].Value, typeof(string));
+                    Assert.IsNotNull(obj.Properties["MSIFileType"]);
+                    Assert.IsInstanceOfType(obj.Properties["MSIFileType"].Value, typeof(string));
 
                     FileInfo file = obj.BaseObject as FileInfo;
                     switch (file.Extension)
                     {
                         case ".msi":
-                            Assert.AreEqual<string>("Package", (string)obj.Properties["WIFileType"].Value);
+                            Assert.AreEqual<string>("Package", (string)obj.Properties["MSIFileType"].Value);
                             break;
 
                         case ".msp":
-                            Assert.AreEqual<string>("Patch", (string)obj.Properties["WIFileType"].Value);
+                            Assert.AreEqual<string>("Patch", (string)obj.Properties["MSIFileType"].Value);
                             break;
 
                         case ".mst":
-                            Assert.AreEqual<string>("Transform", (string)obj.Properties["WIFileType"].Value);
+                            Assert.AreEqual<string>("Transform", (string)obj.Properties["MSIFileType"].Value);
                             break;
 
                         default:
@@ -111,7 +111,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
             // Test that a wildcard is not accepted.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifiletype -literalpath example.*"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifiletype -literalpath example.*"))
             {
                 TestProject.ExpectException(typeof(CmdletProviderInvocationException), typeof(ArgumentException), delegate()
                 {
@@ -120,14 +120,14 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Test that a registry item path is not accepted.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem hkcu:\software | get-wifiletype"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem hkcu:\software | get-msifiletype"))
             {
                 Collection<PSObject> objs = p.Invoke();
                 Assert.AreNotEqual<int>(0, p.Error.Count);
             }
 
             // Test against example.msi specifically.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifiletype -literalpath example.msi"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifiletype -literalpath example.msi"))
             {
                 Collection<PSObject> objs = p.Invoke();
 

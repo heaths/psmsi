@@ -7,10 +7,10 @@
     </Regular>
   </CodeCoverage>
   <Deployment>
-    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\WindowsInstaller.formats.ps1xml" />
-    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\WindowsInstaller.psd1" />
-    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\WindowsInstaller.psm1" />
-    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\WindowsInstaller.types.ps1xml" />
+    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\MSI.formats.ps1xml" />
+    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\MSI.psd1" />
+    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\MSI.psm1" />
+    <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell\MSI.types.ps1xml" />
     <DeploymentItem filename="Microsoft.WindowsInstaller.PowerShell.Test\Data\" />
   </Deployment>
 </TestRunConfiguration>

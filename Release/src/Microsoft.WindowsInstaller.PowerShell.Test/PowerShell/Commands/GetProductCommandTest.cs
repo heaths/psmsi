@@ -34,7 +34,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             List<string> products = new List<string>();
             products.Add("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}");
 
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wiproductinfo"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -66,7 +66,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
             expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
 
-            string cmd = string.Format(@"get-wiproductinfo -installcontext userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
+            string cmd = string.Format(@"get-msiproductinfo -installcontext userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
             using (Pipeline p = TestRunspace.CreatePipeline(cmd))
             {
                 using (MockRegistry reg = new MockRegistry())
@@ -95,7 +95,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public void EnumerateNamedProducts()
         {
             // Use two strings that will match the same product; make sure only one product is returned.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wiproductinfo -name Silver*, *Light"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo -name Silver*, *Light"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -116,7 +116,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public void ProductCodeTest()
         {
             // Finally invoke the cmdlet for a single product.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wiproductinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"""))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"""))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -167,7 +167,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
 
             // Test that "Context" is a supported alias.
-            string cmd = string.Format(@"get-wiproductinfo -context userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
+            string cmd = string.Format(@"get-msiproductinfo -context userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
             using (Pipeline p = TestRunspace.CreatePipeline(cmd))
             {
                 using (MockRegistry reg = new MockRegistry())

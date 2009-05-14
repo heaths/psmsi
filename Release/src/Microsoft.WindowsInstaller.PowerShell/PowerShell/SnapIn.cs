@@ -67,7 +67,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
         {
             get
             {
-                return new string[] { "WindowsInstaller.formats.ps1xml" };
+                return new string[] { "MSI.formats.ps1xml" };
             }
         }
 
@@ -78,7 +78,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
         {
             get
             {
-                return new string[] { "WindowsInstaller.types.ps1xml" };
+                return new string[] { "MSI.types.ps1xml" };
             }
         }
     }

@@ -30,7 +30,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Description("Enumerates all machine-assigned patches")]
         public void EnumeratePatches()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wipatchinfo"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msipatchinfo"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -52,7 +52,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Description("Enumerates patches for a specific product")]
         public void EnumerateProductPatches()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wiproductinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" | get-wipatchinfo"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" | get-msipatchinfo"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -74,7 +74,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Description("Gets a specific patch for a specific product")]
         public void GetSpecificPatch()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wipatchinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" -patchcode ""{6E52C409-0D0D-4B84-AB63-463438D4D33B}"""))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msipatchinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" -patchcode ""{6E52C409-0D0D-4B84-AB63-463438D4D33B}"""))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -116,7 +116,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             });
 
             // Test that "Context" is a supported alias.
-            string cmd = string.Format(@"get-wipatchinfo -context ""machine""");
+            string cmd = string.Format(@"get-msipatchinfo -context ""machine""");
             using (Pipeline p = TestRunspace.CreatePipeline(cmd))
             {
                 using (MockRegistry reg = new MockRegistry())

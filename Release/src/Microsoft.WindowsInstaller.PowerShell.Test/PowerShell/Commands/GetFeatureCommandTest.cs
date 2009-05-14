@@ -1,4 +1,4 @@
-﻿// Unit test class for the get-wifeatureinfo cmdlet.
+﻿// Unit test class for the get-msifeatureinfo cmdlet.
 //
 // Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
@@ -41,7 +41,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             expectedProductCodes.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
 
             // Check the number of features for a product object.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wiproductinfo -context 'all' | get-wifeatureinfo"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo -context 'all' | get-msifeatureinfo"))
             {
                 Runspace.DefaultRunspace = p.Runspace;
                 using (MockRegistry reg = new MockRegistry())
@@ -70,7 +70,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Check that a null parameter is invalid.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifeatureinfo -product $null"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo -product $null"))
             {
                 TestProject.ExpectException(typeof(ParameterBindingException), null, delegate()
                 {
@@ -79,7 +79,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Check that a collection containing null is invalid.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifeatureinfo -product @($null)"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo -product @($null)"))
             {
                 TestProject.ExpectException(typeof(ParameterBindingException), null, delegate()
                 {
@@ -93,7 +93,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public void EnumerateSpecificFeatures()
         {
             // Enumerate a single named feature.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' 'Complete'"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' 'Complete'"))
             {
                 Runspace.DefaultRunspace = p.Runspace;
                 using (MockRegistry reg = new MockRegistry())
@@ -111,7 +111,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Check that a null parameter is invalid.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifeatureinfo -productcode $null"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo -productcode $null"))
             {
                 TestProject.ExpectException(typeof(ParameterBindingException), null, delegate()
                 {
@@ -120,7 +120,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Check that a collection containing null is invalid.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' @($null)"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' @($null)"))
             {
                 TestProject.ExpectException(typeof(ParameterBindingException), null, delegate()
                 {

@@ -61,10 +61,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             // Attach NoteProperties if passing the input through.
             if (this.PassThru)
             {
-                item.Properties.Add(new PSNoteProperty("WIHashPart1", hash.WIHashPart1));
-                item.Properties.Add(new PSNoteProperty("WIHashPart2", hash.WIHashPart2));
-                item.Properties.Add(new PSNoteProperty("WIHashPart3", hash.WIHashPart3));
-                item.Properties.Add(new PSNoteProperty("WIHashPart4", hash.WIHashPart4));
+                item.Properties.Add(new PSNoteProperty("MSIHashPart1", hash.MSIHashPart1));
+                item.Properties.Add(new PSNoteProperty("MSIHashPart2", hash.MSIHashPart2));
+                item.Properties.Add(new PSNoteProperty("MSIHashPart3", hash.MSIHashPart3));
+                item.Properties.Add(new PSNoteProperty("MSIHashPart4", hash.MSIHashPart4));
 
                 this.WriteObject(item);
             }

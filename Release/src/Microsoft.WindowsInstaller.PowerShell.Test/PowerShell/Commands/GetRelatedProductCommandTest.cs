@@ -28,7 +28,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Description("Enumerates related products")]
         public void EnumerateRelatedProducts()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wirelatedproductinfo -upgradecode ""{C1482EA4-07D3-4261-9741-7CEDE6A8C25A}"""))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msirelatedproductinfo -upgradecode ""{C1482EA4-07D3-4261-9741-7CEDE6A8C25A}"""))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {

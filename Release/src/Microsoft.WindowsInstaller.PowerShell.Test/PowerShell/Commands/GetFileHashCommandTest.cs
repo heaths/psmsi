@@ -29,21 +29,21 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public void PathTest()
         {
                 // Test a file using new property names.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifilehash -path *.txt"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifilehash -path *.txt"))
             {
                 int[] hash = new int[] { 1820344194, -1963188082, -1359304639, 10459557 };
                 
                 Collection<PSObject> objs = p.Invoke();
 
                 Assert.AreEqual<int>(1, objs.Count);
-                Assert.AreEqual<int>(hash[0], (int)objs[0].Properties["WIHashPart1"].Value);
-                Assert.AreEqual<int>(hash[1], (int)objs[0].Properties["WIHashPart2"].Value);
-                Assert.AreEqual<int>(hash[2], (int)objs[0].Properties["WIHashPart3"].Value);
-                Assert.AreEqual<int>(hash[3], (int)objs[0].Properties["WIHashPart4"].Value);
+                Assert.AreEqual<int>(hash[0], (int)objs[0].Properties["MSIHashPart1"].Value);
+                Assert.AreEqual<int>(hash[1], (int)objs[0].Properties["MSIHashPart2"].Value);
+                Assert.AreEqual<int>(hash[2], (int)objs[0].Properties["MSIHashPart3"].Value);
+                Assert.AreEqual<int>(hash[3], (int)objs[0].Properties["MSIHashPart4"].Value);
             }
 
             // Test with no parameter.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifilehash"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifilehash"))
             {
                 Collection<PSObject> objs = p.Invoke();
 
@@ -52,7 +52,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Test against a directory.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifilehash -path ."))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifilehash -path ."))
             {
                 Collection<PSObject> objs = p.Invoke();
                 Assert.AreEqual<int>(0, objs.Count);
@@ -67,7 +67,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public void PassThruTest()
         {
             // Test against a file using new property names.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem -path example.txt | get-wifilehash -passthru"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem -path example.txt | get-msifilehash -passthru"))
             {
                 int[] hash = new int[] { 1820344194, -1963188082, -1359304639, 10459557 };
 
@@ -75,22 +75,22 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
 
                 Assert.AreEqual<int>(1, objs.Count);
                 Assert.IsInstanceOfType(objs[0].BaseObject, typeof(System.IO.FileInfo));
-                Assert.AreEqual<int>(hash[0], (int)objs[0].Properties["WIHashPart1"].Value);
-                Assert.AreEqual<int>(hash[1], (int)objs[0].Properties["WIHashPart2"].Value);
-                Assert.AreEqual<int>(hash[2], (int)objs[0].Properties["WIHashPart3"].Value);
-                Assert.AreEqual<int>(hash[3], (int)objs[0].Properties["WIHashPart4"].Value);
+                Assert.AreEqual<int>(hash[0], (int)objs[0].Properties["MSIHashPart1"].Value);
+                Assert.AreEqual<int>(hash[1], (int)objs[0].Properties["MSIHashPart2"].Value);
+                Assert.AreEqual<int>(hash[2], (int)objs[0].Properties["MSIHashPart3"].Value);
+                Assert.AreEqual<int>(hash[3], (int)objs[0].Properties["MSIHashPart4"].Value);
             }
 
             // Test against a directory using new property names.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifilehash -path . -passthru"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifilehash -path . -passthru"))
             {
                 Collection<PSObject> objs = p.Invoke();
 
                 Assert.AreEqual<int>(1, objs.Count);
-                Assert.IsNull(objs[0].Properties["WIHashPart1"].Value);
-                Assert.IsNull(objs[0].Properties["WIHashPart2"].Value);
-                Assert.IsNull(objs[0].Properties["WIHashPart3"].Value);
-                Assert.IsNull(objs[0].Properties["WIHashPart4"].Value);
+                Assert.IsNull(objs[0].Properties["MSIHashPart1"].Value);
+                Assert.IsNull(objs[0].Properties["MSIHashPart2"].Value);
+                Assert.IsNull(objs[0].Properties["MSIHashPart3"].Value);
+                Assert.IsNull(objs[0].Properties["MSIHashPart4"].Value);
             }
         }
 
@@ -102,7 +102,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         public void LiteralPathTest()
         {
             // Test that a wildcard is not accepted.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifilehash -literalpath *.txt"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifilehash -literalpath *.txt"))
             {
                 TestProject.ExpectException(typeof(CmdletProviderInvocationException), typeof(ArgumentException), delegate()
                 {
@@ -111,24 +111,24 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             }
 
             // Test that a registry item path is not accepted.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem hkcu:\software | get-wifilehash"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem hkcu:\software | get-msifilehash"))
             {
                 Collection<PSObject> objs = p.Invoke();
                 Assert.AreNotEqual<int>(0, p.Error.Count);
             }
 
             // Test a file using new property names.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wifilehash -path example.txt"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifilehash -path example.txt"))
             {
                 int[] hash = new int[] { 1820344194, -1963188082, -1359304639, 10459557 };
 
                 Collection<PSObject> objs = p.Invoke();
 
                 Assert.AreEqual<int>(1, objs.Count);
-                Assert.AreEqual<int>(hash[0], (int)objs[0].Properties["WIHashPart1"].Value);
-                Assert.AreEqual<int>(hash[1], (int)objs[0].Properties["WIHashPart2"].Value);
-                Assert.AreEqual<int>(hash[2], (int)objs[0].Properties["WIHashPart3"].Value);
-                Assert.AreEqual<int>(hash[3], (int)objs[0].Properties["WIHashPart4"].Value);
+                Assert.AreEqual<int>(hash[0], (int)objs[0].Properties["MSIHashPart1"].Value);
+                Assert.AreEqual<int>(hash[1], (int)objs[0].Properties["MSIHashPart2"].Value);
+                Assert.AreEqual<int>(hash[2], (int)objs[0].Properties["MSIHashPart3"].Value);
+                Assert.AreEqual<int>(hash[3], (int)objs[0].Properties["MSIHashPart4"].Value);
             }
         }
     }

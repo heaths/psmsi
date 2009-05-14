@@ -74,7 +74,7 @@ namespace Microsoft.WindowsInstaller
         {
             // Create the initial state with the module specified.
             InitialSessionState state = InitialSessionState.CreateDefault();
-            state.ImportPSModule(new string[] { Path.Combine(context.TestDeploymentDir, "WindowsInstaller.psd1") });
+            state.ImportPSModule(new string[] { Path.Combine(context.TestDeploymentDir, "MSI.psd1") });
 
             // Create and configure the runspace.
             TestProject.testRunspace = RunspaceFactory.CreateRunspace(state);

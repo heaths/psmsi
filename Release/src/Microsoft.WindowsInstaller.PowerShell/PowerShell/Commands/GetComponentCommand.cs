@@ -17,7 +17,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     /// <summary>
     /// The Get-WIComponentInfo cmdlet.
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "WIComponentInfo", DefaultParameterSetName = ParameterSet.Component)]
+    [Cmdlet(VerbsCommon.Get, "MSIComponentInfo", DefaultParameterSetName = ParameterSet.Component)]
     public sealed class GetComponentCommand : PSCmdlet
     {
         private string[] componentCodes;

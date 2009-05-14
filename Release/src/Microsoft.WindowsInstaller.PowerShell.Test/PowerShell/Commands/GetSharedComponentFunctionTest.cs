@@ -1,4 +1,4 @@
-﻿// Functional tests for the Get-WISharedComponentInfo function.
+﻿// Functional tests for the get-msisharedcomponentinfo function.
 //
 // Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
@@ -16,16 +16,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
-    /// Tests the get-wisharedcomponentinfo function.
+    /// Tests the get-msisharedcomponentinfo function.
     /// </summary>
     [TestClass]
     public class GetSharedComponentFunctionTest : CommandTestBase
     {
         [TestMethod]
-        [Description("A test for Get-WISharedComponentInfo with no parameters")]
+        [Description("A test for Get-MSISharedComponentInfo with no parameters")]
         public void NoParamsTest()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wisharedcomponentinfo"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msisharedcomponentinfo"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -38,10 +38,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         }
 
         [TestMethod]
-        [Description("A test for Get-WISharedComponentInfo with component GUID")]
+        [Description("A test for Get-MSISharedComponentInfo with component GUID")]
         public void ComponentParamTest()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wisharedcomponentinfo -component '{CE1F8ECF-0E25-4155-9BE1-E9DC1CADA4C2}'"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msisharedcomponentinfo -component '{9D8E88E9-8E05-4FC7-AFC7-87759D1D417E}'"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -55,10 +55,10 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         }
 
         [TestMethod]
-        [Description("A test for Get-WISharedComponentInfo with minimum share count")]
+        [Description("A test for Get-MSISharedComponentInfo with minimum share count")]
         public void CountParamTest()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wisharedcomponentinfo -count 3"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msisharedcomponentinfo -count 3"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {

@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="SnapIn.wxs" />
 	<Compile Include="DTF.wxs" />
-	<Compile Include="WindowsInstaller.wxs" />
+	<Compile Include="MSI.wxs" />
     <WixExtension Include="WixUIExtension">
       <HintPath>C:\Program Files\Windows Installer XML v3\bin\WixUIExtension.dll</HintPath>
     </WixExtension>

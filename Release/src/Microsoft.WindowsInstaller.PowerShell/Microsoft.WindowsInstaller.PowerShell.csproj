@@ -97,22 +97,22 @@
     <Content Include="en-US\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="WindowsInstaller.formats.ps1xml">
+    <Content Include="MSI.formats.ps1xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Sign>True</Sign>
     </Content>
-    <Content Include="WindowsInstaller.types.ps1xml">
+    <Content Include="MSI.types.ps1xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Sign>True</Sign>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="WindowsInstaller.psd1">
+    <Content Include="MSI.psd1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="WindowsInstaller.psm1">
+    <Content Include="MSI.psm1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Sign>True</Sign>
     </Content>

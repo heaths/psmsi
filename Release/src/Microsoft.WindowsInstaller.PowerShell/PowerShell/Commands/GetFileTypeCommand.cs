@@ -81,7 +81,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             // Attach NoteProperty if passing the input through.
             if (this.PassThru)
             {
-                item.Properties.Add(new PSNoteProperty("WIFileType", fileType));
+                item.Properties.Add(new PSNoteProperty("MSIFileType", fileType));
                 this.WriteObject(item);
             }
         }

@@ -20,7 +20,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
     public static class Module
     {
         private const string FeatureName = "Module";
-        private const string ModuleId = "{CE1F8ECF-0E25-4155-9BE1-E9DC1CADA4C2}";
+        private const string ModuleId = "{9D8E88E9-8E05-4FC7-AFC7-87759D1D417E}";
 
         /// <summary>
         /// Increments the use count and sets the last used date if the Module installer was installed.

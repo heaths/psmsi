@@ -1,4 +1,4 @@
-﻿// Unit test class for the get-wicomponentinfo cmdlet.
+﻿// Unit test class for the get-msicomponentinfo cmdlet.
 //
 // Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
@@ -25,7 +25,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Description("A test for GetComponentCommand.ProcessRecord")]
         public void EnumerateAllComponents()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wicomponentinfo"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msicomponentinfo"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -41,7 +41,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Description("A test for GetComponentCommand.ProcessRecord")]
         public void EnumerateClients()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}'"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}'"))
             {
                 Runspace.DefaultRunspace = p.Runspace;
                 using (MockRegistry reg = new MockRegistry())
@@ -59,7 +59,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Description("A test for GetComponentCommand.ProcessRecord")]
         public void EnumerateProductComponents()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-wicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}', '{CB473DC3-F7BA-4E5B-9721-72CF66BC5262}' '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}'"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}', '{CB473DC3-F7BA-4E5B-9721-72CF66BC5262}' '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}'"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
