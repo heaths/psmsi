@@ -48,6 +48,7 @@
     <Reference Include="Microsoft.Deployment.WindowsInstaller.Package, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LocTest.cs" />
     <Compile Include="MockRegistry.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetFeatureCommandTest.cs" />
@@ -86,6 +87,9 @@
     <Content Include="Data\Example.msp" />
     <Content Include="Data\Example.mst" />
     <Content Include="Data\Registry.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Test.psm1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

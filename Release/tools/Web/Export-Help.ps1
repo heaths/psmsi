@@ -37,40 +37,45 @@ param(
 
 process {
 
-	[xml] $doc = get-content $Path
+    $names = @()
 
-	# Select only elements and not the "command" namespace prefix.
-	$nsmgr = new-object -type System.Xml.XmlNamespaceManager $doc.NameTable
-	$nsmgr.AddNamespace("command", "http://schemas.microsoft.com/maml/dev/command/2004/10")
-
-	$names = @()
-	$doc.helpItems.SelectNodes("command:command", $nsmgr) | foreach-object -begin {
-
-		$xslt = new-object -type System.Xml.Xsl.XslCompiledTransform
-		$xargs = new-object -type System.Xml.Xsl.XsltArgumentList
-		
-		$invocation = $(get-variable MyInvocation -scope 0).Value
-		$stylesheet = join-path $(split-path $invocation.MyCommand.Path) "Help.xslt"
-
-		$xslt.Load($stylesheet);
-
-		$xargs.AddParam("version", "", [string] $Version);
-
-	} -process {
-
-		$reader = new-object -type System.Xml.XmlNodeReader -argumentlist $_
-		$writer = new-object -type System.IO.StringWriter
-
-		$xslt.Transform($reader, $xargs, $writer);
-
-		$page = join-path $OutDirectory $("{1}.v{0}.txt" -f $Version, $_.details.name)
-		$writer.ToString() | set-content -path $page -encoding "UTF8"
-		
-		$names += $_.details.name
-		$page
-
+	# Get commands from all input paths.
+	foreach ($p in $Path)
+	{
+    	[xml] $doc = get-content $p
+    
+    	# Select only elements and not the "command" namespace prefix.
+    	$nsmgr = new-object -type System.Xml.XmlNamespaceManager $doc.NameTable
+    	$nsmgr.AddNamespace("command", "http://schemas.microsoft.com/maml/dev/command/2004/10")
+    
+    	$doc.helpItems.SelectNodes("command:command", $nsmgr) | foreach-object -begin {
+    
+    		$xslt = new-object -type System.Xml.Xsl.XslCompiledTransform
+    		$xargs = new-object -type System.Xml.Xsl.XsltArgumentList
+    		
+    		$invocation = $(get-variable MyInvocation -scope 0).Value
+    		$stylesheet = join-path $(split-path $invocation.MyCommand.Path) "Help.xslt"
+    
+    		$xslt.Load($stylesheet);
+    
+    		$xargs.AddParam("version", "", [string] $Version);
+    
+    	} -process {
+    
+    		$reader = new-object -type System.Xml.XmlNodeReader -argumentlist $_
+    		$writer = new-object -type System.IO.StringWriter
+    
+    		$xslt.Transform($reader, $xargs, $writer);
+    
+    		$page = join-path $OutDirectory $("{1}.v{0}.txt" -f $Version, $_.details.name)
+    		$writer.ToString() | set-content -path $page -encoding "UTF8"
+    		
+    		$names += $_.details.name
+    		$page
+    	}
 	}
-
+    
+	# Generate the table of contents
 	$names | sort-object | foreach-object -begin {
 
 		$lines = "! Help", "!! Cmdlets"
@@ -85,6 +90,5 @@ process {
 		$lines | set-content -path $page -encoding "UTF8"
 
 		$page
-
 	}
 }

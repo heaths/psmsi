@@ -1,29 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
-        <ComponentGroup Id="Help">
-            <ComponentRef Id="Help.en_US" />
-        </ComponentGroup>   
-    </Fragment>
-    <Fragment>
         <ComponentGroup Id="MSI">
             <ComponentRef Id="MSI.Manifest" />
             <ComponentRef Id="MSI.Module" />
-        </ComponentGroup>        
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <FeatureGroup Id="Help">
+            <ComponentGroupRef Id="Help.en_US"/>
+            <?ifdef Debug?>
+            <FeatureRef Id="Help.qps_ploc"/>
+            <?endif?>
+        </FeatureGroup>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="Help.en_US">
+            <ComponentRef Id="Help.Cmdlets.en_US"/>
+            <ComponentRef Id="Help.Functions.en_US"/>
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <Feature Id="Help.qps_ploc" Absent="allow" AllowAdvertise="no" Description="!(loc.Help.qps_ploc.Description)" Level="1" Title="!(loc.Help.qps_ploc.Description)">
+            <ComponentRef Id="Help.Cmdlets.qps_ploc"/>
+            <ComponentRef Id="Help.Functions.qps_ploc"/>
+            <ComponentRef Id="MSI.Manifest.qps_ploc"/>
+        </Feature>
     </Fragment>
     <Fragment>
         <DirectoryRef Id="ModuleFolder">
-            <Directory Id="en_US" Name="en-US">
-                <Component Id="Help.en_US" Guid="7194975A-C308-4AE7-BCBD-A9471D3A0BAC">
-                    <Category Id="D5D9929D-C2C1-46ED-9E3B-7349DD57C5F5" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
-                    <File Id="Help.en_US.File" Name="Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)en-US\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" KeyPath="yes" />
-                </Component>
-            </Directory>
+            <Directory Id="qps_ploc" Name="qps-ploc"/>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="Help.Cmdlets.en_US" Guid="7194975A-C308-4AE7-BCBD-A9471D3A0BAC">
+                <Category Id="D5D9929D-C2C1-46ED-9E3B-7349DD57C5F5" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
+                <File Id="Help.Cmdlets.en_US.File" Name="Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="Help.Functions.en_US" Guid="BF4F9A67-2018-41EC-8B40-835BE3C5643E">
+                <Category Id="70C57718-E2C5-46CF-899B-997F2D1C5D1B" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
+                <File Id="Help.Functions.en_US.File" Name="MSI-Help.xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)MSI-Help.xml" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="qps_ploc">
+            <Component Id="Help.Cmdlets.qps_ploc" Guid="3F646635-520F-4EFF-9ECD-F31B8731D620">
+                <Category Id="D5D9929D-C2C1-46ED-9E3B-7349DD57C5F5" Qualifier="1281" AppData="!(loc.Help.qps_ploc.Description)" />
+                <File Id="Help.Cmdlets.qps_ploc.File" Name="Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)qps-ploc\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="qps_ploc">
+            <Component Id="Help.Functions.qps_ploc" Guid="BEF886EE-9589-4F35-A760-6627D69FDE65">
+                <Category Id="70C57718-E2C5-46CF-899B-997F2D1C5D1B" Qualifier="1281" AppData="!(loc.Help.qps_ploc.Description)" />
+                <File Id="Help.Functions.qps_ploc.File" Name="MSI-Help.xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)qps-ploc\MSI-Help.xml" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="qps_ploc">
+            <Component Id="MSI.Manifest.qps_ploc" Guid="C57567FC-6368-46A9-8D07-C27574474B0E">
+                <Category Id="82188E4E-067A-4B9A-A6D3-0F115A35DD3D" Qualifier="1281" AppData="!(loc.Help.qps_ploc.Description)" />
+                <File Id="MSI.Manifest.qps_ploc.File" Name="MSI.psd1" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)qps-ploc\MSI.psd1" KeyPath="yes" />
+            </Component>
         </DirectoryRef>
     </Fragment>
     <Fragment>
         <DirectoryRef Id="ModuleFolder">
             <Component Id="MSI.Manifest" Guid="D8BF64BF-6695-4C72-A64E-7D2B41F4CA50">
+                <Category Id="82188E4E-067A-4B9A-A6D3-0F115A35DD3D" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
                 <File Id="MSI.Manifest.File" Name="MSI.psd1" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)MSI.psd1" KeyPath="yes" />
             </Component>
         </DirectoryRef>

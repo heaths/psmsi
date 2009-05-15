@@ -15,7 +15,7 @@
 	<SuppressIces>ICE03;ICE38;ICE64;ICE91</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants>Debug;PerUser</DefineConstants>
+    <DefineConstants>Debug</DefineConstants>
     <SuppressValidation>true</SuppressValidation>
     <Cultures>en-us</Cultures>
     <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
@@ -28,7 +28,6 @@
     <Pedantic>False</Pedantic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants>PerUser</DefineConstants>
     <Cultures>en-us</Cultures>
     <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
     <LibBindFiles>False</LibBindFiles>
