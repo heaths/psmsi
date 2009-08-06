@@ -26,6 +26,7 @@ namespace Microsoft.WindowsInstaller
     {
         #region Error codes
         internal const int ERROR_SUCCESS = 0;
+        internal const int STG_E_FILEALREADYEXISTS = unchecked((int)0x80030050);
         #endregion
 
         #region Other constants

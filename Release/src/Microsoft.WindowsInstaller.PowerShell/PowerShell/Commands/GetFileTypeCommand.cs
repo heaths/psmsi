@@ -34,8 +34,8 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Processes the item enumerated by the base class.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="path"></param>
+        /// <param name="item">The <see cref="PSObject"/> to process.</param>
+        /// <param name="path">The provider path from the PSPath attached to the <paramref name="item"/>.</param>
         protected override void ProcessItem(PSObject item, string path)
         {
             string fileType = null;
@@ -43,9 +43,9 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             // Only process files.
             if (!this.SessionState.InvokeProvider.Item.IsContainer(path))
             {
+                Storage stg = Storage.OpenStorage(path);
                 try
                 {
-                    Storage stg = Storage.OpenStorage(path);
                     Guid clsid = stg.Clsid;
 
                     // Set the friendly name.
@@ -69,6 +69,11 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
 
                     // Write the error record and continue.
                     this.WriteError(psex.ErrorRecord);
+                }
+                finally
+                {
+                    IDisposable disposable = (IDisposable)stg;
+                    disposable.Dispose();
                 }
 
                 // Write only the file type if not passing the input through.

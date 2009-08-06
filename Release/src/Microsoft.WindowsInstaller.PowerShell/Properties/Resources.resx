@@ -144,4 +144,7 @@
   <data name="Error_InvalidGuid" xml:space="preserve">
     <value>The argument is not in the acceptable form of {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx} where x is a number or a letter from A-F.</value>
   </data>
+  <data name="Error_InvalidStorage" xml:space="preserve">
+    <value>The file "{0}" is not a supported format.</value>
+  </data>
 </root>

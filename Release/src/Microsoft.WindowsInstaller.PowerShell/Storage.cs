@@ -15,7 +15,7 @@ namespace Microsoft.WindowsInstaller
     /// <summary>
     /// Lightweight wrapper around OLE structure storages.
     /// </summary>
-    internal sealed class Storage
+    internal sealed class Storage : IDisposable
     {
         private NativeMethods.IStorage stg;
         private Guid clsid;
@@ -31,6 +31,8 @@ namespace Microsoft.WindowsInstaller
         /// </summary>
         /// <param name="path">Path to a storage file.</param>
         /// <returns>An instance of the <see cref="Storage"/> class.</returns>
+        /// <exception cref="System.IO.InvalidDataException">The file format is not supported.</exception>
+        /// <exception cref="System.ComponentModel.Win32Exception">Windows errors returned by OLE storage.</exception>
         internal static Storage OpenStorage(string path)
         {
             NativeMethods.IStorage stg = null;
@@ -42,7 +44,15 @@ namespace Microsoft.WindowsInstaller
                 0, IntPtr.Zero, IntPtr.Zero,
                 ref iid, out stg);
 
-            if (0 != ret)
+            if (NativeMethods.STG_E_FILEALREADYEXISTS == ret)
+            {
+                // 0x80030050 is a rather odd error string, so return something more appropriate.
+                throw new System.IO.InvalidDataException(
+                    string.Format(Properties.Resources.Error_InvalidStorage, path),
+                    new System.ComponentModel.Win32Exception(ret)
+                    );
+            }
+            else if (0 != ret)
             {
                 throw new System.ComponentModel.Win32Exception(ret);
             }
@@ -71,6 +81,15 @@ namespace Microsoft.WindowsInstaller
 
                 return clsid;
             }
+        }
+
+        /// <summary>
+        /// Disposes the object immediately.
+        /// </summary>
+        void IDisposable.Dispose()
+        {
+            this.stg = null;
+            GC.SuppressFinalize(this);
         }
     }
 }
