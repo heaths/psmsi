@@ -197,10 +197,10 @@ Whether to recurse into sub-directories of the specified path(s).
 
 	begin
 	{
-		$recurseType = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
+		$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
 		if ($Recurse)
 		{
-			$recurseType = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
+			$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
 		}
 	}
 
@@ -222,7 +222,7 @@ Whether to recurse into sub-directories of the specified path(s).
 				}
 				else
 				{
-					$_.GetPendingChanges($localPath, $recurseType, $true)
+					$_.GetPendingChanges($localPath, $recursive, $true)
 				}
 			}
 		}
@@ -284,10 +284,10 @@ Whether to recurse into sub-directories of the specified path(s).
 
 	begin
 	{
-		$recurseType = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
+		$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
 		if ($Recurse)
 		{
-			$recurseType = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
+			$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
 		}
 
 		$getOptions = [Microsoft.TeamFoundation.VersionControl.Client.GetOptions]::None
@@ -312,10 +312,10 @@ Whether to recurse into sub-directories of the specified path(s).
 		[string[]] $localPath = convert-path $Path
 		$requests = [Microsoft.TeamFoundation.VersionControl.Client.GetRequest]::FromStrings(
 			$localPath,
-			$recurseType,
+			$recursive,
 			$versionSpec)
 
-		get-tfworkspace $localPath | foreach-object { $_.Get( $requests, $getOptions ) }
+		get-tfworkspace $localPath | foreach-object { $_.Get($requests, $getOptions) }
 	}
 }
 
@@ -329,6 +329,9 @@ function Edit-TFItem
 		[string[]] $Path = $( get-location -psprovider FileSystem ),
 
 		[Parameter(ValueFromPipelineByPropertyName = $true)]
+		[string] $Encoding = $null,
+
+		[Parameter(ValueFromPipelineByPropertyName = $true)]
 		[Microsoft.TeamFoundation.VersionControl.Client.LockLevel] $LockLevel = "None",
 
 		[Parameter()]
@@ -337,17 +340,17 @@ function Edit-TFItem
 
 	begin
 	{
-		$recurseType = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
+		$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
 		if ($Recurse)
 		{
-			$recurseType = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
+			$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
 		}
 	}
 
 	process
 	{
 		[string[]] $localPath = convert-path $Path
-		get-tfworkspace $localPath | foreach-object { $_.PendEdit( $localPath, $recurseType, $null, $LockLevel ) }
+		get-tfworkspace $localPath | foreach-object { [void]$_.PendEdit($localPath, $recursive, $Encoding, $LockLevel) }
 	}
 }
 
