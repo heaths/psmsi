@@ -177,44 +177,6 @@
       <Name>Workspace</Name>
       <ViewSelectedBy>
         <TypeName>Microsoft.TeamFoundation.VersionControl.Client.Workspace</TypeName>
-      </ViewSelectedBy>
-      <TableControl>
-        <TableHeaders>
-          <TableColumnHeader>
-            <Label>Name</Label>
-            <Width>16</Width>
-            <Alignment>Left</Alignment>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>Computer</Label>
-            <Width>16</Width>
-            <Alignment>Left</Alignment>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>Comment</Label>
-            <Alignment>Left</Alignment>
-          </TableColumnHeader>
-        </TableHeaders>
-        <TableRowEntries>
-          <TableRowEntry>
-            <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>Name</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>Computer</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>Comment</PropertyName>
-              </TableColumnItem>
-            </TableColumnItems>
-          </TableRowEntry>
-        </TableRowEntries>
-      </TableControl>
-    </View>
-    <View>
-      <Name>Workspace</Name>
-      <ViewSelectedBy>
         <TypeName>Microsoft.TeamFoundation.VersionControl.Client.WorkspaceInfo</TypeName>
       </ViewSelectedBy>
       <TableControl>

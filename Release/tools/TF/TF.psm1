@@ -1,6 +1,6 @@
 #Requires -Version 2.0
 
-# PowerShell module for common TFS commands.
+# PowerShell module for common TF server commands.
 #
 
 DATA loc {
@@ -16,12 +16,12 @@ $Version = "Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 [Reflection.Assembly]::Load("Microsoft.TeamFoundation.Client, $Version")
 [Reflection.Assembly]::Load("Microsoft.TeamFoundation.VersionControl.Client, $Version")
 
-function Get-TFSServer
+function Get-TFServer
 {
 <#
 
 .Synopsis
-Gets or lists TFS servers registered to the machine.
+Gets or lists TF servers registered to the machine.
 
 .Description
 Gets Team Foundation servers registered to the machine. You can specify a URI
@@ -35,7 +35,7 @@ If specified, gets the server(s) for each URI.
 	[CmdletBinding(ConfirmImpact = "None")]
 	param
 	(
-		[Parameter(Position = 0)]
+		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
 		[string[]] $Uri = $null
 	)
 
@@ -56,7 +56,7 @@ If specified, gets the server(s) for each URI.
 	}
 }
 
-function Get-TFSWorkspace
+function Get-TFWorkspace
 {
 <#
 
@@ -77,21 +77,21 @@ The default path is the current resolved path on the file system.
 	[CmdletBinding(ConfirmImpact = "None")]
 	param
 	(
-		[Parameter(Position = 0)]
+		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
 		[ValidateNotNullOrEmpty()]
 		[string[]] $Path = $( get-location -psprovider FileSystem )
 	)
 
 	process
 	{
-		get-tfsworkspaceinfo $Path | foreach-object {
-			$tfs = get-tfsserver $_.ServerUri
+		get-tfworkspaceinfo $Path | foreach-object {
+			$tfs = get-tfserver $_.ServerUri
 			$_.GetWorkspace($tfs)
 		}
 	}
 }
 
-function Get-TFSWorkspaceInfo
+function Get-TFWorkspaceInfo
 {
 <#
 
@@ -120,7 +120,7 @@ The default will query all registered servers on the machine.
 	[CmdletBinding(ConfirmImpact = "None", DefaultParameterSetName = "Path")]
 	param
 	(
-		[Parameter(ParameterSetName = "Path", Position = 0)]
+		[Parameter(ParameterSetName = "Path", Position = 0, ValueFromPipelineByPropertyName = $true)]
 		[ValidateNotNullOrEmpty()]
 		[string[]] $Path = $( get-location -psprovider FileSystem ),
 
@@ -136,7 +136,7 @@ The default will query all registered servers on the machine.
 		$workstation = [Microsoft.TeamFoundation.VersionControl.Client.Workstation]
 
 		# Update the workspace cache for each (specified) server.
-		get-tfsserver $Server | foreach-object {
+		get-tfserver $Server | foreach-object {
 			$vcs = $_.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
 			if ($_.HasAuthenticated)
 			{
@@ -163,7 +163,7 @@ The default will query all registered servers on the machine.
 }
 
 # Command: tf status
-function Get-TFSStatus
+function Get-TFStatus
 {
 <#
 
@@ -211,7 +211,7 @@ Whether to recurse into sub-directories of the specified path(s).
 			$localPath = $_
 
 			# Get the workspace from the mapped info.
-			get-tfsworkspace $localPath | foreach-object {
+			get-tfworkspace $localPath | foreach-object {
 
 				if ( -not $_ )
 				{
@@ -230,7 +230,7 @@ Whether to recurse into sub-directories of the specified path(s).
 }
 
 # Command: tf get
-function Get-TFSItem
+function Sync-TFItem
 {
 <#
 
@@ -315,7 +315,39 @@ Whether to recurse into sub-directories of the specified path(s).
 			$recurseType,
 			$versionSpec)
 
-		get-tfsworkspace $localPath | foreach-object { $_.Get( $requests, $getOptions ) }
+		get-tfworkspace $localPath | foreach-object { $_.Get( $requests, $getOptions ) }
+	}
+}
+
+function Edit-TFItem
+{
+	[CmdletBinding(ConfirmImpact = "High")]
+	param
+	(
+		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
+		[Alias("PSPath")]
+		[string[]] $Path = $( get-location -psprovider FileSystem ),
+
+		[Parameter(ValueFromPipelineByPropertyName = $true)]
+		[Microsoft.TeamFoundation.VersionControl.Client.LockLevel] $LockLevel = "None",
+
+		[Parameter()]
+		[switch] $Recurse
+	)
+
+	begin
+	{
+		$recurseType = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
+		if ($Recurse)
+		{
+			$recurseType = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
+		}
+	}
+
+	process
+	{
+		[string[]] $localPath = convert-path $Path
+		get-tfworkspace $localPath | foreach-object { $_.PendEdit( $localPath, $recurseType, $null, $LockLevel ) }
 	}
 }
 
