@@ -23,11 +23,15 @@ function Get-TFSServer
 .Synopsis
 Gets or lists TFS servers registered to the machine.
 
+.Description
+Gets Team Foundation servers registered to the machine. You can specify a URI
+to identify the server by its source location, or pass $Null (default)
+to list all Team Foundation servers registered to the machine.
+
 .Parameter Uri
 If specified, gets the server(s) for each URI.
 
 #>
-
 	[CmdletBinding(ConfirmImpact = "None")]
 	param
 	(
@@ -52,6 +56,41 @@ If specified, gets the server(s) for each URI.
 	}
 }
 
+function Get-TFSWorkspace
+{
+<#
+
+.Synopsis
+Gets the workspace(s) for the specified path(s).
+
+.Description
+Gets each workspace for the specified paths. The default location
+is the current directory, but you can specify multiple paths belonging
+to multiple workspaces. This makes it possible to execute commands
+against all workspaces on a machine.
+
+.Parameter Path
+The mapped path for which workspace information is retrieved.
+The default path is the current resolved path on the file system.
+
+#>
+	[CmdletBinding(ConfirmImpact = "None")]
+	param
+	(
+		[Parameter(Position = 0)]
+		[ValidateNotNullOrEmpty()]
+		[string[]] $Path = $( get-location -psprovider FileSystem )
+	)
+
+	process
+	{
+		get-tfsworkspaceinfo $Path | foreach-object {
+			$tfs = get-tfsserver $_.ServerUri
+			$_.GetWorkspace($tfs)
+		}
+	}
+}
+
 function Get-TFSWorkspaceInfo
 {
 <#
@@ -59,9 +98,22 @@ function Get-TFSWorkspaceInfo
 .Synopsis
 Gets information about the workspace for the specified path(s).
 
+.Description
+Gets each workspace information for the specified paths. The default location
+is the current directory, but you can specify multiple paths belonging
+to multiple workspaces. This makes it possible to list all information
+for all workspaces on a machine.
+
 .Parameter Path
 The mapped path for which workspace information is retrieved.
 The default path is the current resolved path on the file system.
+
+.Parameter All
+Get all local workspaces.
+
+.Parameter Server
+The Team Foundation Server to which a workspace belongs.
+The default will query all registered servers on the machine.
 
 #>
 
@@ -81,14 +133,14 @@ The default path is the current resolved path on the file system.
 
 	begin
 	{
-		$workspaceType = [Microsoft.TeamFoundation.VersionControl.Client.Workstation]
+		$workstation = [Microsoft.TeamFoundation.VersionControl.Client.Workstation]
 
 		# Update the workspace cache for each (specified) server.
 		get-tfsserver $Server | foreach-object {
 			$vcs = $_.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
 			if ($_.HasAuthenticated)
 			{
-				$workspaceType::Current.EnsureUpdateWorkspaceInfoCache($vcs, $vcs.AuthenticatedUser)
+				$workstation::Current.EnsureUpdateWorkspaceInfoCache($vcs, $vcs.AuthenticatedUser)
 			}
 		}
 	}
@@ -100,12 +152,12 @@ The default path is the current resolved path on the file system.
 			get-item $Path | convert-path | foreach-object {
 
 				write-verbose "Getting workspace information for path, $_."
-				$workspaceType::Current.GetLocalWorkspaceInfo($_)
+				$workstation::Current.GetLocalWorkspaceInfo($_)
 			}
 		}
 		else
 		{
-			$workspaceType::Current.GetAllLocalWorkspaceInfo()
+			$workstation::Current.GetAllLocalWorkspaceInfo()
 		}
 	}
 }
@@ -118,6 +170,18 @@ function Get-TFSStatus
 .Synopsis
 Gets the status of pending changes.
 
+.Description
+Gets the status of all items in all workspaces specified by the given
+path(s). You can specify multiple paths in multiple workspaces to get
+status of every mapped item on the machine.
+
+.Parameter Path
+The mapped path for which workspace information is retrieved.
+The default path is the current resolved path on the file system.
+
+.Parameter Recurse
+Whether to recurse into sub-directories of the specified path(s).
+
 #>
 
 	[CmdletBinding(ConfirmImpact = "None")]
@@ -125,7 +189,7 @@ Gets the status of pending changes.
 	(
 		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
 		[Alias("PSPath")]
-		[string[]] $Path,
+		[string[]] $Path = $( get-location -psprovider FileSystem ),
 
 		[Parameter()]
 		[switch] $Recurse
@@ -147,7 +211,7 @@ Gets the status of pending changes.
 			$localPath = $_
 
 			# Get the workspace from the mapped info.
-			get-tfsworkspaceinfo $localPath | foreach-object {
+			get-tfsworkspace $localPath | foreach-object {
 
 				if ( -not $_ )
 				{
@@ -158,7 +222,7 @@ Gets the status of pending changes.
 				}
 				else
 				{
-					$_.GetPendingChanges($_, $recurseType, $true)
+					$_.GetPendingChanges($localPath, $recurseType, $true)
 				}
 			}
 		}
@@ -173,6 +237,29 @@ function Get-TFSItem
 .Synopsis
 Gets an item or items from the Team Foundation server.
 
+.Description
+Fetches items in all workspaces specified by the given path(s).
+You can specify multiple paths in multiple workspaces to get all
+items on a machine. By default this will only fetch items in the
+current directory or the specified path, so pass -Recurse to
+get all items in all sub-directories as well.
+
+.Parameter Path
+The mapped path for which workspace information is retrieved.
+The default path is the current resolved path on the file system.
+
+.Parameter Version
+The version of the item you want to get.
+
+.Parameter All
+Gets all items in the workspace.
+
+.Parameter Overwrite
+Replace writable files.
+
+.Parameter Recurse
+Whether to recurse into sub-directories of the specified path(s).
+
 #>
 
 	[CmdletBinding(ConfirmImpact = "Low", SupportsShouldProcess = $true)]
@@ -180,10 +267,10 @@ Gets an item or items from the Team Foundation server.
 	(
 		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
 		[Alias("PSPath")]
-		[string[]] $Path,
+		[string[]] $Path = $( get-location -psprovider FileSystem ),
 
-		[Parameter()]
-		[string] $Version,
+		[Parameter(Position = 1, ValueFromPipelineByPropertyName = $true)]
+		[string] $Version = [Microsoft.TeamFoundation.VersionControl.Client.LatestVersionSpec]::Identifier,
 
 		[Parameter()]
 		[switch] $All,
@@ -195,9 +282,8 @@ Gets an item or items from the Team Foundation server.
 		[switch] $Recurse
 	)
 
-	process
+	begin
 	{
-		$versionSpec = [Microsoft.TeamFoundation.VersionControl.Client.VersionSpec]::Parse($Version, $env:username)
 		$recurseType = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
 		if ($Recurse)
 		{
@@ -214,12 +300,22 @@ Gets an item or items from the Team Foundation server.
 			$getOptions = [Microsoft.TeamFoundation.VersionControl.Client.GetOptions]::Overwrite
 		}
 
-		# Get the workstation for the current file system path.
+		$requestType = [Microsoft.TeamFoundation.VersionControl.Client.GetRequest]
+	}
 
-		foreach ($p in $Path)
-		{
-			$itemSpec = new-object Microsoft.TeamFoundation.VersionControl.Client.ItemSpec $p, $recurseType
-		}
+	process
+	{
+		$versionSpec = [Microsoft.TeamFoundation.VersionControl.Client.VersionSpec]::ParseSingleSpec(
+			$Version,
+			$env:username)
+
+		[string[]] $localPath = convert-path $Path
+		$requests = [Microsoft.TeamFoundation.VersionControl.Client.GetRequest]::FromStrings(
+			$localPath,
+			$recurseType,
+			$versionSpec)
+
+		get-tfsworkspace $localPath | foreach-object { $_.Get( $requests, $getOptions ) }
 	}
 }
 
