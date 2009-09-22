@@ -6,8 +6,8 @@
 DATA loc {
 	# en-US
 	convertfrom-stringdata @'
-		Action_MapWorkspace = Map the path, {0}, to a new or existing workspace.
-		Error_NoWorkspace = No workspace is mapped to the local path, {0}.
+		FindingWorkspaceInfo = Finding workspace information for path "{0}".
+		UpdatingWorkspaceCache = Updating the workstation information cache.
 '@
 }
 
@@ -32,21 +32,21 @@ to list all Team Foundation servers registered to the machine.
 If specified, gets the server(s) for each URI.
 
 #>
-	[CmdletBinding(ConfirmImpact = "None")]
+	[CmdletBinding(ConfirmImpact="None")]
 	param
 	(
-		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
-		[string[]] $Uri = $null
+		[Parameter(Position=0, ValueFromPipelineByPropertyName=$true)]
+		[string[]] $Uri
 	)
 
 	process
 	{
-		if ($Uri)
+		if ( $Uri )
 		{
-			foreach ($i in $Uri)
+			foreach ( $i in $Uri )
 			{
-				$server = [Microsoft.TeamFoundation.Client.RegisteredServers]::GetServerForUri($i)
-				[Microsoft.TeamFoundation.Client.TeamFoundationServerFactory]::GetServer($server)
+				$server = [Microsoft.TeamFoundation.Client.RegisteredServers]::GetServerForUri( $i )
+				[Microsoft.TeamFoundation.Client.TeamFoundationServerFactory]::GetServer( $server )
 			}
 		}
 		else
@@ -72,21 +72,36 @@ against all workspaces on a machine.
 .Parameter Path
 The mapped path for which workspace information is retrieved.
 The default path is the current resolved path on the file system.
+This parameter expands wildcards.
+
+.Parameter LiteralPath
+The mapped path for which workspace information is retrieved.
+This parameter does not expand wildcards.
 
 #>
-	[CmdletBinding(ConfirmImpact = "None")]
+	[CmdletBinding(ConfirmImpact="None", DefaultParameterSetName="Path")]
 	param
 	(
-		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
+		[Parameter(ParameterSetName="Path", Position=0, ValueFromPipeline=$true)]
 		[ValidateNotNullOrEmpty()]
-		[string[]] $Path = $( get-location -psprovider FileSystem )
+		[string[]] $Path = $( get-location -psprovider FileSystem ),
+
+		[Parameter(ParameterSetName="LiteralPath", Position=0, Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
+		[Alias("PSPath")]
+		[string[]] $LiteralPath
 	)
 
 	process
 	{
-		get-tfworkspaceinfo $Path | foreach-object {
-			$tfs = get-tfserver $_.ServerUri
-			$_.GetWorkspace($tfs)
+		if ( $PSCmdlet.ParameterSetName -eq "Path" )
+		{
+			$LiteralPath = resolve-path $Path
+		}
+
+		get-tfworkspaceinfo -literalPath $LiteralPath | select-object -unique | foreach-object {
+
+			$info = $_
+			get-tfserver $_.ServerUri | foreach-object { $info.GetWorkspace( $_ ) }
 		}
 	}
 }
@@ -107,28 +122,37 @@ for all workspaces on a machine.
 .Parameter Path
 The mapped path for which workspace information is retrieved.
 The default path is the current resolved path on the file system.
+This parameter expands wildcards.
 
-.Parameter All
+.Parameter LiteralPath
+The mapped path for which workspace information is retrieved.
+This parameter does not expand wildcards.
+
+.Paramet.Parameter All
 Get all local workspaces.
 
-.Parameter Server
-The Team Foundation Server to which a workspace belongs.
+.Parameter ServerUri
+The Team Foundation Server URI to which a workspace belongs.
 The default will query all registered servers on the machine.
 
 #>
-
-	[CmdletBinding(ConfirmImpact = "None", DefaultParameterSetName = "Path")]
+	[CmdletBinding(ConfirmImpact="None", DefaultParameterSetName="Path")]
 	param
 	(
-		[Parameter(ParameterSetName = "Path", Position = 0, ValueFromPipelineByPropertyName = $true)]
+		[Parameter(ParameterSetName="Path", Position=0, ValueFromPipeline=$true)]
 		[ValidateNotNullOrEmpty()]
 		[string[]] $Path = $( get-location -psprovider FileSystem ),
 
-		[Parameter(ParameterSetName = "All")]
+		[Parameter(ParameterSetName="LiteralPath", Position=0, Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
+		[Alias("PSPath")]
+		[string[]] $LiteralPath, 
+
+		[Parameter(ParameterSetName="All")]
 		[switch] $All,
 
-		[Parameter(ValueFromPipeline = $true)]
-		[Microsoft.TeamFoundation.Client.TeamFoundationServer] $Server = $null
+		[Parameter(ValueFromPipelineByPropertyName=$true)]
+		[Alias("Uri")]
+		[string] $ServerUri
 	)
 
 	begin
@@ -136,7 +160,9 @@ The default will query all registered servers on the machine.
 		$workstation = [Microsoft.TeamFoundation.VersionControl.Client.Workstation]
 
 		# Update the workspace cache for each (specified) server.
-		get-tfserver $Server | foreach-object {
+		write-verbose $loc.UpdatingWorkspaceCache
+		get-tfserver $ServerUri | foreach-object {
+
 			$vcs = $_.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
 			if ($_.HasAuthenticated)
 			{
@@ -147,17 +173,22 @@ The default will query all registered servers on the machine.
 
 	process
 	{
-		if ($PSCmdlet.ParameterSetName -eq "Path")
+		if ( $PSCmdlet.ParameterSetName -eq "All" )
 		{
-			get-item $Path | convert-path | foreach-object {
-
-				write-verbose "Getting workspace information for path, $_."
-				$workstation::Current.GetLocalWorkspaceInfo($_)
-			}
+			$workstation::Current.GetAllLocalWorkspaceInfo()
 		}
 		else
 		{
-			$workstation::Current.GetAllLocalWorkspaceInfo()
+			if ( $PSCmdlet.ParameterSetName -eq "Path" )
+			{
+				$LiteralPath = resolve-path $Path
+			}
+			
+			convert-path -literalPath $LiteralPath | select-object -unique | foreach-object {
+			
+				write-verbose ( $loc.FindingWorkspaceInfo -f $_ )
+				$workstation::Current.GetLocalWorkspaceInfo( $_ )
+			}
 		}
 	}
 }
@@ -176,20 +207,28 @@ path(s). You can specify multiple paths in multiple workspaces to get
 status of every mapped item on the machine.
 
 .Parameter Path
-The mapped path for which workspace information is retrieved.
+The mapped path for which status is retrieved.
 The default path is the current resolved path on the file system.
+This parameter expands wildcards.
+
+.Parameter LiteralPath
+The mapped path for which status is retrieved.
+This parameter does not expand wildcards.
 
 .Parameter Recurse
 Whether to recurse into sub-directories of the specified path(s).
 
 #>
-
-	[CmdletBinding(ConfirmImpact = "None")]
+	[CmdletBinding(ConfirmImpact="None", DefaultParameterSetName="Path")]
 	param
 	(
-		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
-		[Alias("PSPath")]
+		[Parameter(ParameterSetName="Path", Position=0, ValueFromPipeline=$true)]
+		[ValidateNotNullOrEmpty()]
 		[string[]] $Path = $( get-location -psprovider FileSystem ),
+
+		[Parameter(ParameterSetName="LiteralPath", Position=0, Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
+		[Alias("PSPath")]
+		[string[]] $LiteralPath,
 
 		[Parameter()]
 		[switch] $Recurse
@@ -206,24 +245,201 @@ Whether to recurse into sub-directories of the specified path(s).
 
 	process
 	{
-		get-childitem $Path | convert-path | foreach-object {
+		if ( $PSCmdlet.ParameterSetName -eq "Path" )
+		{
+			# Status defaults to all items in the current file system directory.
+			$LiteralPath = get-childitem $Path
+		}
 
-			$localPath = $_
+		[string[]] $localPath = convert-path -literalPath $LiteralPath | select-object -unique
+		get-tfworkspace -literalPath $localPath | foreach-object {
 
-			# Get the workspace from the mapped info.
-			get-tfworkspace $localPath | foreach-object {
+			$_.GetPendingChanges( $localPath, $recursive, $true )
+		}
+	}
+}
 
-				if ( -not $_ )
-				{
-					$message = $loc.Error_NoWorkspace -f $localPath
-					$action = $loc.Action_MapWorkspace -f $localPath
+# Command: tf add
+function Add-TFItem
+{
+<#
 
-					write-error -message $message -category ResourceUnavailable -recommendedaction $action
-				}
-				else
-				{
-					$_.GetPendingChanges($localPath, $recursive, $true)
-				}
+.Synopsis
+Adds item(s) to version control.
+
+.Description
+Adds an item or items to version control. You must publish the changes
+to actually add the files to the version control server.
+
+.Parameter Path
+The item within a mapped path to add to version control.
+The default path is the current resolved path on the file system.
+This parameter expands wildcards.
+
+.Parameter LiteralPath
+The item within a mapped path to add to version control.
+This parameter does not expand wildcards.
+
+.Parameter Encoding
+The encoding for the file. The default value of $null will detect
+the encoding of the file(s).
+
+.Parameter LockLevel
+The lock type to put on the file(s). Values include locking for
+"Checkin", "Checkout", "Unchanged", or the default value of "None".
+
+.Parameter Recurse
+Whether to recurse into sub-directories of the specified path(s).
+
+.Parameter PassThru
+Whether to return status for added items. The default returns nothing.
+
+#>
+	[CmdletBinding(ConfirmImpact="Low", DefaultParameterSetName="Path")]
+	param
+	(
+		[Parameter(ParameterSetName="Path", Position=0, Mandatory=$true, ValueFromPipeline=$true)]
+		[string[]] $Path = $( get-location -psprovider FileSystem ),
+
+		[Parameter(ParameterSetName="LiteralPath", Position=0, Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
+		[Alias("PSPath")]
+		[string[]] $LiteralPath,
+
+		[Parameter(ValueFromPipelineByPropertyName=$true)]
+		[string] $Encoding,
+
+		[Parameter(ValueFromPipelineByPropertyName=$true)]
+		[Microsoft.TeamFoundation.VersionControl.Client.LockLevel] $LockLevel = "None",
+
+		[Parameter()]
+		[switch] $Recurse,
+
+		[Parameter()]
+		[switch] $PassThru
+	)
+
+	begin
+	{
+		$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
+		if ($Recurse)
+		{
+			$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
+		}
+	}
+
+	process
+	{
+		if ( $PSCmdlet.ParameterSetName -eq "Path" )
+		{
+			$LiteralPath = resolve-path $Path
+		}
+
+		[string[]] $localPath = convert-path -literalPath $LiteralPath | select-object -unique
+		get-tfworkspace -literalPath $localPath | foreach-object {
+
+			$params = @( $localPath, [bool] $Recurse, $Encoding, $LockLevel)
+			[type[]] $types = $params | foreach-object { $_.GetType() }
+
+			# Work around that passing $null results in an empty string.
+			if ( -not $Encoding ) { $params[2] = $null }
+			[void] $_.GetType().GetMethod("PendAdd", $types).Invoke($_, $params)
+
+			if ( $PassThru )
+			{
+				$_.GetPendingChanges( $localPath, $recursive, $true )
+			}
+		}
+	}
+}
+
+# Command: tf checkout
+function Edit-TFItem
+{
+<#
+
+.Synopsis
+Checks out an item or items for editing.
+
+.Description
+Checks out one or more items for editing. You can lock the files
+and change the encoding.
+
+.Parameter Path
+The mapped item(s) to edit.
+The default path is the current resolved path on the file system.
+This parameter expands wildcards.
+
+.Parameter LiteralPath
+The mapped item(s) to edit.
+This parameter does not expand wildcards.
+
+.Parameter Encoding
+The new encoding for the file. The default value of $null leaves
+the file encoding as is.
+
+.Parameter LockLevel
+The lock type to put on the file(s). Values include locking for
+"Checkin", "Checkout", "Unchanged", or the default value of "None".
+
+.Parameter Recurse
+Whether to recurse into sub-directories of the specified path(s).
+
+.Parameter PassThru
+Whether to return status for edited items. The default returns nothing.
+
+#>
+	[CmdletBinding(ConfirmImpact="Low", DefaultParameterSetName="Path")]
+	param
+	(
+		[Parameter(ParameterSetName="Path", Position=0, Mandatory=$true, ValueFromPipeline=$true)]
+		[string[]] $Path = $( get-location -psprovider FileSystem ),
+
+		[Parameter(ParameterSetName="LiteralPath", Position=0, Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
+		[Alias("PSPath")]
+		[string[]] $LiteralPath,
+
+		[Parameter(ValueFromPipelineByPropertyName=$true)]
+		[string] $Encoding,
+
+		[Parameter(ValueFromPipelineByPropertyName=$true)]
+		[Microsoft.TeamFoundation.VersionControl.Client.LockLevel] $LockLevel = "None",
+
+		[Parameter()]
+		[switch] $Recurse,
+
+		[Parameter()]
+		[switch] $PassThru
+	)
+
+	begin
+	{
+		$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
+		if ($Recurse)
+		{
+			$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
+		}
+	}
+
+	process
+	{
+		if ( $PSCmdlet.ParameterSetName -eq "Path" )
+		{
+			$LiteralPath = resolve-path $Path
+		}
+
+		[string[]] $localPath = convert-path -literalPath $LiteralPath | select-object -unique
+		get-tfworkspace -literalPath $localPath | foreach-object {
+
+			$params = @( $localPath, $recursive, $Encoding, $LockLevel)
+			[type[]] $types = $params | foreach-object { $_.GetType() }
+
+			# Work around that passing $null results in an empty string.
+			if ( -not $Encoding ) { $params[2] = $null }
+			[void] $_.GetType().GetMethod("PendEdit", $types).Invoke($_, $params)
+
+			if ( $PassThru )
+			{
+				$_.GetPendingChanges( $localPath, $recursive, $true )
 			}
 		}
 	}
@@ -245,11 +461,20 @@ current directory or the specified path, so pass -Recurse to
 get all items in all sub-directories as well.
 
 .Parameter Path
-The mapped path for which workspace information is retrieved.
+The mapped path to synchronize with the version control server.
 The default path is the current resolved path on the file system.
+This parameter expands wildcards.
+
+.Parameter LiteralPath
+The mapped path to synchronize with the version control server.
+This parameter does not expand wildcards.
 
 .Parameter Version
 The version of the item you want to get.
+
+.Parameter Owner
+Name of the owner for a workspace version specification. The default
+is the current workspace owner name.
 
 .Parameter All
 Gets all items in the workspace.
@@ -261,16 +486,22 @@ Replace writable files.
 Whether to recurse into sub-directories of the specified path(s).
 
 #>
-
-	[CmdletBinding(ConfirmImpact = "Low", SupportsShouldProcess = $true)]
+	[CmdletBinding(ConfirmImpact="Low", DefaultParameterSetName="Path")]
 	param
 	(
-		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
-		[Alias("PSPath")]
+		[Parameter(ParameterSetName="Path", Position=0, ValueFromPipeline=$true)]
+		[ValidateNotNullOrEmpty()]
 		[string[]] $Path = $( get-location -psprovider FileSystem ),
 
-		[Parameter(Position = 1, ValueFromPipelineByPropertyName = $true)]
+		[Parameter(ParameterSetName="LiteralPath", Position=0, Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
+		[Alias("PSPath")]
+		[string[]] $LiteralPath,
+
+		[Parameter(Position=1, ValueFromPipelineByPropertyName=$true)]
 		[string] $Version = [Microsoft.TeamFoundation.VersionControl.Client.LatestVersionSpec]::Identifier,
+
+		[Parameter()]
+		[string] $Owner,
 
 		[Parameter()]
 		[switch] $All,
@@ -305,34 +536,71 @@ Whether to recurse into sub-directories of the specified path(s).
 
 	process
 	{
-		$versionSpec = [Microsoft.TeamFoundation.VersionControl.Client.VersionSpec]::ParseSingleSpec(
-			$Version,
-			$env:username)
+		if ( $PSCmdlet.ParameterSetName -eq "Path" )
+		{
+			# Sync defaults to all items in the current file system directory.
+			$LiteralPath = get-childitem $Path
+		}
 
-		[string[]] $localPath = convert-path $Path
-		$requests = [Microsoft.TeamFoundation.VersionControl.Client.GetRequest]::FromStrings(
-			$localPath,
-			$recursive,
-			$versionSpec)
+		[string[]] $localPath = convert-path -literalPath $LiteralPath | select-object -unique
+		get-tfworkspace -literalPath $localPath | foreach-object {
 
-		get-tfworkspace $localPath | foreach-object { $_.Get($requests, $getOptions) }
+			# Default to the current workspace owner.
+			if ( -not $Owner )
+			{
+				$Owner = $_.OwnerName
+			}
+
+			$versionSpec = [Microsoft.TeamFoundation.VersionControl.Client.VersionSpec]::ParseSingleSpec(
+				$Version,
+				$Owner)
+
+			$requests = [Microsoft.TeamFoundation.VersionControl.Client.GetRequest]::FromStrings(
+				$localPath,
+				$recursive,
+				$versionSpec)
+
+			$_.Get( $requests, $getOptions )
+		}
 	}
 }
 
-function Edit-TFItem
+# Command: tf undo
+function Undo-TFItem
 {
-	[CmdletBinding(ConfirmImpact = "High")]
+<#
+
+.Synopsis
+Undoes the adds, branches, deletes, edits, and other current operations.
+
+.Description
+For each given path, any operations such as adds, branches, deletes,
+edits, and other operations are undone. Modified items are updated
+on disk after changes are undone. Lost changes cannot be recovered,
+so you should shelve your changes if you do not want to lose them.
+
+.Parameter Path
+The item(s) to undo current operations.
+The default path is the current resolved path on the file system.
+This parameter expands wildcards.
+
+.Parameter LiteralPath
+The item(s) to undo current operations.
+This parameter does not expand wildcards.
+
+.Parameter Recurse
+Whether to recurse into sub-directories of the specified path(s).
+
+#>
+	[CmdletBinding(ConfirmImpact="High", DefaultParameterSetName="Path")]
 	param
 	(
-		[Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
-		[Alias("PSPath")]
+		[Parameter(ParameterSetName="Path", Position=0, Mandatory=$true, ValueFromPipeline=$true)]
 		[string[]] $Path = $( get-location -psprovider FileSystem ),
 
-		[Parameter(ValueFromPipelineByPropertyName = $true)]
-		[string] $Encoding = $null,
-
-		[Parameter(ValueFromPipelineByPropertyName = $true)]
-		[Microsoft.TeamFoundation.VersionControl.Client.LockLevel] $LockLevel = "None",
+		[Parameter(ParameterSetName="LiteralPath", Position=0, Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
+		[Alias("PSPath")]
+		[string[]] $LiteralPath,
 
 		[Parameter()]
 		[switch] $Recurse
@@ -349,8 +617,83 @@ function Edit-TFItem
 
 	process
 	{
-		[string[]] $localPath = convert-path $Path
-		get-tfworkspace $localPath | foreach-object { [void]$_.PendEdit($localPath, $recursive, $Encoding, $LockLevel) }
+		if ( $PSCmdlet.ParameterSetName -eq "Path" )
+		{
+			$LiteralPath = resolve-path $Path
+		}
+
+		[string[]] $localPath = convert-path -literalPath $LiteralPath | select-object -unique
+		get-tfworkspace -literalPath $localPath | foreach-object { [void] $_.Undo( $localPath, $recursive, $true ) }
+	}
+}
+
+# Command: tf checkin
+function Publish-TFChange
+{
+<#
+.Synopsis
+Check in pending changes on this machine.
+
+.Description
+For all pending changes on the machine, changes are checked into
+each associated workspace with an optional comment.
+
+.Parameter Path
+The item(s) to undo current operations.
+The default path is the current resolved path on the file system.
+This parameter expands wildcards.
+
+.Parameter LiteralPath
+The item(s) to undo current operations.
+This parameter does not expand wildcards.
+
+.Parameter Recurse
+Whether to recurse into sub-directories of the specified path(s).
+
+.Parameter Comment
+Optional comment to add for the checkin.
+
+#>
+	[CmdletBinding(ConfirmImpact="None", DefaultParameterSetName="Path")]
+	param
+	(
+		[Parameter(ParameterSetName="Path", Position=0, Mandatory=$true, ValueFromPipeline=$true)]
+		[string[]] $Path = $( get-location -psprovider FileSystem ),
+
+		[Parameter(ParameterSetName="LiteralPath", Position=0, Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
+		[Alias("PSPath")]
+		[string[]] $LiteralPath,
+
+		[Parameter()]
+		[switch] $Recurse,
+
+		[Parameter()]
+		[string] $Comment
+	)
+	
+	begin
+	{
+		$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::None
+		if ($Recurse)
+		{
+			$recursive = [Microsoft.TeamFoundation.VersionControl.Client.RecursionType]::Full
+		}
+	}
+
+	process
+	{
+		if ( $PSCmdlet.ParameterSetName -eq "Path" )
+		{
+			# Sync defaults to all items in the current file system directory.
+			$LiteralPath = get-childitem $Path
+		}
+
+		[string[]] $localPath = convert-path -literalPath $LiteralPath | select-object -unique
+		get-tfworkspace -literalPath $localPath | foreach-object {
+
+			$changes = $_.GetPendingChanges( $localPath, $recursive, $true )
+			$_.CheckIn( $changes, $Comment )
+		}
 	}
 }
 
