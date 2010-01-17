@@ -56,7 +56,7 @@
                 </Members>
             </MemberSet>
             <PropertySet>
-                <Name>PSAdvertised</Name>
+                <Name>Advertised</Name>
                 <ReferencedProperties>
                     <Name>AdvertisedLanguage</Name>
                     <Name>AdvertisedPackageCode</Name>
@@ -69,7 +69,7 @@
                 </ReferencedProperties>
             </PropertySet>
             <PropertySet>
-                <Name>PSInstalled</Name>
+                <Name>Installed</Name>
                 <ReferencedProperties>
                     <Name>Context</Name>
                     <Name>HelpLink</Name>
@@ -101,7 +101,7 @@
             </AliasProperty>
             <!-- V1 Compatibility -->
             <PropertySet>
-                <Name>PSV1</Name>
+                <Name>V1</Name>
                 <ReferencedProperties>
                     <Name>AssignmentType</Name>
                     <Name>AuthorizedLUAApp</Name>
@@ -290,7 +290,7 @@
             </AliasProperty>
             <!-- V1 Compatibility -->
             <PropertySet>
-                <Name>PSV1</Name>
+                <Name>V1</Name>
                 <ReferencedProperties>
                     <Name>DisplayName</Name>
                     <Name>InstallContext</Name>
