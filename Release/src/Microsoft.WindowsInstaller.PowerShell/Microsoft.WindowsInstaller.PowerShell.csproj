@@ -1,135 +1,175 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EAE7D4BF-5061-4220-BE94-E268E965DCE5}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.WindowsInstaller</RootNamespace>
-    <AssemblyName>Microsoft.WindowsInstaller.PowerShell</AssemblyName>
-    <SignAssembly>true</SignAssembly>
-    <SolutionDir Condition=" '$(SolutionDir)' == '' ">..\</SolutionDir>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)KeyFile.snk</AssemblyOriginatorKeyFile>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>2.0</OldToolsVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Microsoft.WindowsInstaller.PowerShell.XML</DocumentationFile>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Microsoft.WindowsInstaller.PowerShell.XML</DocumentationFile>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.Deployment.Compression, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Deployment.Compression.Cab, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files\Windows Installer XML v3\SDK\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Deployment.WindowsInstaller.Package, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files\Windows Installer XML v3\SDK\Microsoft.Deployment.WindowsInstaller.Package.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration.Install" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Management.Automation" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="NativeMethods.cs" />
-    <Compile Include="PowerShell\Commands\GetComponentCommand.cs" />
-    <Compile Include="PowerShell\Commands\GetFeatureCommand.cs" />
-    <Compile Include="PowerShell\Commands\GetFileHashCommand.cs" />
-    <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
-    <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
-    <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
-    <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
-    <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
-    <Compile Include="PowerShell\Commands\ParameterSet.cs" />
-    <Compile Include="PowerShell\SnapIn.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="PowerShell\Module.cs" />
-    <Compile Include="PowerShell\PathConverter.cs" />
-    <Compile Include="PowerShell\SidAttribute.cs" />
-    <Compile Include="PowerShell\Utilities.cs" />
-    <Compile Include="PowerShell\ValidateGuidAttribute.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Storage.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Microsoft.WindowsInstaller.PowerShell.dll-Help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MSI.formats.ps1xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Sign>True</Sign>
-    </Content>
-    <Content Include="MSI.types.ps1xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Sign>True</Sign>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MSI.psd1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MSI.psm1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Sign>True</Sign>
-    </Content>
-    <Content Include="qps-ploc\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MSI-Help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="qps-ploc\MSI-Help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="qps-ploc\MSI.psd1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <ProjectGuid>{EAE7D4BF-5061-4220-BE94-E268E965DCE5}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>Microsoft.WindowsInstaller</RootNamespace>
+        <AssemblyName>Microsoft.WindowsInstaller.PowerShell</AssemblyName>
+        <SignAssembly>true</SignAssembly>
+        <SolutionDir Condition=" '$(SolutionDir)' == '' ">..\</SolutionDir>
+        <AssemblyOriginatorKeyFile>$(SolutionDir)KeyFile.snk</AssemblyOriginatorKeyFile>
+        <SccProjectName>SAK</SccProjectName>
+        <SccLocalPath>SAK</SccLocalPath>
+        <SccAuxPath>SAK</SccAuxPath>
+        <SccProvider>SAK</SccProvider>
+        <FileUpgradeFlags>
+        </FileUpgradeFlags>
+        <OldToolsVersion>3.5</OldToolsVersion>
+        <UpgradeBackupLocation>
+        </UpgradeBackupLocation>
+        <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+        <PublishUrl>publish\</PublishUrl>
+        <Install>true</Install>
+        <InstallFrom>Disk</InstallFrom>
+        <UpdateEnabled>false</UpdateEnabled>
+        <UpdateMode>Foreground</UpdateMode>
+        <UpdateInterval>7</UpdateInterval>
+        <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+        <UpdatePeriodically>false</UpdatePeriodically>
+        <UpdateRequired>false</UpdateRequired>
+        <MapFileExtensions>true</MapFileExtensions>
+        <ApplicationRevision>0</ApplicationRevision>
+        <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+        <IsWebBootstrapper>false</IsWebBootstrapper>
+        <UseApplicationTrust>false</UseApplicationTrust>
+        <BootstrapperEnabled>true</BootstrapperEnabled>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <DocumentationFile>bin\Debug\Microsoft.WindowsInstaller.PowerShell.XML</DocumentationFile>
+        <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+        <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <DocumentationFile>bin\Release\Microsoft.WindowsInstaller.PowerShell.XML</DocumentationFile>
+        <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+        <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Microsoft.Deployment.Compression, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+            <HintPath>C:\Program Files\Windows Installer XML v3.5\SDK\Microsoft.Deployment.Compression.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Deployment.Compression.Cab, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+            <HintPath>C:\Program Files\Windows Installer XML v3.5\SDK\Microsoft.Deployment.Compression.Cab.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+            <HintPath>C:\Program Files\Windows Installer XML v3.5\SDK\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Deployment.WindowsInstaller.Package, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+            <HintPath>C:\Program Files\Windows Installer XML v3.5\SDK\Microsoft.Deployment.WindowsInstaller.Package.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Configuration.Install" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Management.Automation" />
+        <Reference Include="System.Xml" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="GlobalSuppressions.cs" />
+        <Compile Include="NativeMethods.cs" />
+        <Compile Include="PowerShell\Commands\GetComponentCommand.cs" />
+        <Compile Include="PowerShell\Commands\GetFeatureCommand.cs" />
+        <Compile Include="PowerShell\Commands\GetFileHashCommand.cs" />
+        <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
+        <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
+        <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
+        <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
+        <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
+        <Compile Include="PowerShell\Commands\ParameterSet.cs" />
+        <Compile Include="PowerShell\SnapIn.cs">
+            <SubType>Component</SubType>
+        </Compile>
+        <Compile Include="PowerShell\Module.cs" />
+        <Compile Include="PowerShell\PathConverter.cs" />
+        <Compile Include="PowerShell\SidAttribute.cs" />
+        <Compile Include="PowerShell\Utilities.cs" />
+        <Compile Include="PowerShell\ValidateGuidAttribute.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Properties\Resources.Designer.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+        <Compile Include="Storage.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Properties\Resources.resx">
+            <SubType>Designer</SubType>
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="Microsoft.WindowsInstaller.PowerShell.dll-Help.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="MSI.formats.ps1xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Sign>True</Sign>
+        </Content>
+        <Content Include="MSI.types.ps1xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Sign>True</Sign>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="MSI.psd1">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="MSI.psm1">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Sign>True</Sign>
+        </Content>
+        <Content Include="qps-ploc\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="MSI-Help.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="qps-ploc\MSI-Help.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="qps-ploc\MSI.psd1">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+            <Visible>False</Visible>
+            <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+            <Install>false</Install>
+        </BootstrapperPackage>
+        <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+            <Visible>False</Visible>
+            <ProductName>.NET Framework 3.5 SP1</ProductName>
+            <Install>true</Install>
+        </BootstrapperPackage>
+        <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+            <Visible>False</Visible>
+            <ProductName>Windows Installer 3.1</ProductName>
+            <Install>true</Install>
+        </BootstrapperPackage>
+    </ItemGroup>
+    <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

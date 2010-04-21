@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="All" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <Cultures>en-us</Cultures>
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <OutputName>SnapIn</OutputName>
@@ -12,58 +13,44 @@
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
-	<SuppressIces>ICE03</SuppressIces>
+    <SuppressIces>ICE03</SuppressIces>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DefineConstants>Debug</DefineConstants>
     <SuppressValidation>true</SuppressValidation>
     <Cultures>en-us</Cultures>
-    <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
-    <LibBindFiles>False</LibBindFiles>
+    <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
     <OutputPath>bin\$(Configuration)\</OutputPath>
-    <SuppressPdbOutput>False</SuppressPdbOutput>
-    <SuppressSpecificWarnings>
-    </SuppressSpecificWarnings>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>obj\$(Configuration)</IntermediateOutputPath>
     <VerboseOutput>False</VerboseOutput>
-    <WixVariables>
-    </WixVariables>
-    <SuppressAllWarnings>False</SuppressAllWarnings>
-    <Pedantic>False</Pedantic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Cultures>en-us</Cultures>
     <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
-    <LibBindFiles>False</LibBindFiles>
     <OutputPath>bin\$(Configuration)\</OutputPath>
-    <SuppressPdbOutput>False</SuppressPdbOutput>
-    <SuppressSpecificWarnings>
-    </SuppressSpecificWarnings>
+    <IntermediateOutputPath>obj\$(Configuration)</IntermediateOutputPath>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <VerboseOutput>False</VerboseOutput>
-    <WixVariables>
-    </WixVariables>
-    <SuppressAllWarnings>False</SuppressAllWarnings>
-    <Pedantic>False</Pedantic>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.5\Wix2010.targets" />
   <ItemGroup>
     <Compile Include="SnapIn.wxs" />
-	<Compile Include="DTF.wxs" />
-	<Compile Include="MSI.wxs" />
+    <Compile Include="DTF.wxs" />
+    <Compile Include="MSI.wxs" />
     <WixExtension Include="WixUIExtension">
-      <HintPath>C:\Program Files\Windows Installer XML v3\bin\WixUIExtension.dll</HintPath>
+      <HintPath>C:\Program Files\Windows Installer XML v3.5\bin\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
     </WixExtension>
     <WixExtension Include="WixPSExtension">
-      <HintPath>C:\Program Files\Windows Installer XML v3\bin\WixPSExtension.dll</HintPath>
+      <HintPath>C:\Program Files\Windows Installer XML v3.5\bin\WixPSExtension.dll</HintPath>
+      <Name>WixPSExtension</Name>
     </WixExtension>
   </ItemGroup>
-  <Target Name="All" DependsOnTargets="Build" />
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.WindowsInstaller.PowerShell\Microsoft.WindowsInstaller.PowerShell.csproj">
       <Name>Microsoft.WindowsInstaller.PowerShell</Name>
       <Project>{eae7d4bf-5061-4220-be94-e268e965dce5}</Project>
       <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

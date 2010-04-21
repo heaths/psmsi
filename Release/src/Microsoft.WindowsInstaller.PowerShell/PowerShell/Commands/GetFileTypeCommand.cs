@@ -43,13 +43,14 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             // Only process files.
             if (!this.SessionState.InvokeProvider.Item.IsContainer(path))
             {
-                Storage stg = Storage.OpenStorage(path);
+                Storage stg = null;
                 try
                 {
-                    Guid clsid = stg.Clsid;
+                    stg = Storage.OpenStorage(path);
 
                     // Set the friendly name.
-                    if (clsid == NativeMethods.CLSID_MsiPackage)
+                    Guid clsid = stg.Clsid;
+                   if (clsid == NativeMethods.CLSID_MsiPackage)
                     {
                         fileType = Properties.Resources.Type_Package;
                     }
@@ -62,6 +63,14 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                         fileType = Properties.Resources.Type_Transform;
                     }
                 }
+                catch (InvalidDataException ex)
+                {
+                    // The file is not a valid OLE storage file.
+                    PSNotSupportedException psex = new PSNotSupportedException(ex.Message, ex);
+
+                    // Write the error record and continue.
+                    this.WriteError(psex.ErrorRecord);
+                }
                 catch (Win32Exception ex)
                 {
                     string message = ex.Message.Replace("%1", path);
@@ -72,8 +81,11 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                 }
                 finally
                 {
-                    IDisposable disposable = (IDisposable)stg;
-                    disposable.Dispose();
+                    IDisposable disposable = stg as IDisposable;
+                    if (null != stg)
+                    {
+                        disposable.Dispose();
+                    }
                 }
 
                 // Write only the file type if not passing the input through.

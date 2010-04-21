@@ -1,14 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.WindowsInstaller.PowerShell", "Microsoft.WindowsInstaller.PowerShell\Microsoft.WindowsInstaller.PowerShell.csproj", "{EAE7D4BF-5061-4220-BE94-E268E965DCE5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.WindowsInstaller.PowerShell.Test", "Microsoft.WindowsInstaller.PowerShell.Test\Microsoft.WindowsInstaller.PowerShell.Test.csproj", "{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Module", "Setup\Module.wixproj", "{D2630778-0547-48D1-A8CA-E93D0D7A8B02}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SnapIn", "Setup\SnapIn.wixproj", "{F9DA7492-B466-43D6-843C-40EBFAA89F34}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D84EC7AD-CF71-406E-B795-ABFCCE784076}"
 	ProjectSection(SolutionItems) = preProject
 		local.testrunconfig = local.testrunconfig
@@ -16,6 +8,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{FFCC062A-C705-4E55-A362-B206FB0B29BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.WindowsInstaller.PowerShell", "Microsoft.WindowsInstaller.PowerShell\Microsoft.WindowsInstaller.PowerShell.csproj", "{EAE7D4BF-5061-4220-BE94-E268E965DCE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.WindowsInstaller.PowerShell.Test", "Microsoft.WindowsInstaller.PowerShell.Test\Microsoft.WindowsInstaller.PowerShell.Test.csproj", "{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Module", "Setup\Module.wixproj", "{D2630778-0547-48D1-A8CA-E93D0D7A8B02}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SnapIn", "Setup\SnapIn.wixproj", "{F9DA7492-B466-43D6-843C-40EBFAA89F34}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -66,23 +66,28 @@ Global
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|Any CPU.Build.0 = Release|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}.Release|x86.ActiveCfg = Release|Any CPU
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|x86.ActiveCfg = Debug|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Debug|x86.Build.0 = Debug|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|Any CPU.ActiveCfg = Release|x86
+		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|Any CPU.Build.0 = Release|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|Mixed Platforms.Build.0 = Release|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|x86.ActiveCfg = Release|x86
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02}.Release|x86.Build.0 = Release|x86
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|x86.ActiveCfg = Debug|x86
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Debug|x86.Build.0 = Debug|x86
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Any CPU.ActiveCfg = Release|x86
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Any CPU.Build.0 = Release|x86
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|Mixed Platforms.Build.0 = Release|x86
 		{F9DA7492-B466-43D6-843C-40EBFAA89F34}.Release|x86.ActiveCfg = Release|x86
@@ -92,7 +97,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F9DA7492-B466-43D6-843C-40EBFAA89F34} = {FFCC062A-C705-4E55-A362-B206FB0B29BF}
 		{D2630778-0547-48D1-A8CA-E93D0D7A8B02} = {FFCC062A-C705-4E55-A362-B206FB0B29BF}
+		{F9DA7492-B466-43D6-843C-40EBFAA89F34} = {FFCC062A-C705-4E55-A362-B206FB0B29BF}
 	EndGlobalSection
 EndGlobal

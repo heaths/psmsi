@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<TestLists xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2006">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestLists xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <TestList name="GetRelatedProductCommand" id="113cc709-6dde-4c0b-a13c-fe1f4f77073d" parentListId="4ddc49da-9b75-4aac-a78c-9cb6e829e916">
     <TestLinks>
       <TestLink id="8f42e5e9-68db-ed64-3fff-65cbb49f2b0a" name="EnumerateRelatedProducts" storage="microsoft.windowsinstaller.powershell.test\bin\debug\microsoft.windowsinstaller.powershell.test.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
