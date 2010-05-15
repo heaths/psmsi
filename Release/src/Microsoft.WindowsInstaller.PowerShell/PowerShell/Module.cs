@@ -35,7 +35,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
                 FeatureInstallation feature = new FeatureInstallation(FeatureName, product.ProductCode);
                 if (feature.State == InstallState.Local)
                 {
-					Installer.UseFeature(product.ProductCode, FeatureName, InstallMode.NoDetection);
+                    Installer.UseFeature(product.ProductCode, FeatureName, InstallMode.NoDetection);
                 }
             }
         }

@@ -39,7 +39,7 @@ namespace Microsoft.WindowsInstaller
             Guid iid = NativeMethods.IID_IStorage;
 
             int ret = NativeMethods.StgOpenStorageEx(path,
-				NativeMethods.STGM.STGM_READ | NativeMethods.STGM.STGM_SHARE_DENY_WRITE,
+                NativeMethods.STGM.STGM_READ | NativeMethods.STGM.STGM_SHARE_DENY_WRITE,
                 NativeMethods.STGFMT.STGFMT_STORAGE,
                 0, IntPtr.Zero, IntPtr.Zero,
                 ref iid, out stg);

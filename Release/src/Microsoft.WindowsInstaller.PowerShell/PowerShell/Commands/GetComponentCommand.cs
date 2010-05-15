@@ -96,7 +96,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
-        /// Attachs additional properties to the component and writes it to the pipeline.
+        /// Attaches additional properties to the component and writes it to the pipeline.
         /// </summary>
         /// <param name="component">The <see cref="ComponentInstallation"/> object to write to the pipeline.</param>
         private void WriteComponent(ComponentInstallation component)

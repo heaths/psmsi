@@ -49,7 +49,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             set { this.productCodes = value; }
         }
 
-		/// <summary>
+        /// <summary>
         /// Gets or sets the ProductCodes to enumerate.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly", Justification = "Get accessor not required for cmdlet parameter that does not accept pipeline input.")]

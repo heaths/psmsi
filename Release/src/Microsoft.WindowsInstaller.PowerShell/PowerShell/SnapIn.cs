@@ -33,7 +33,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
         public override string Vendor { get { return Properties.Resources.SnapIn_Vendor; } }
 
         /// <summary>
-        /// Gets the localiable resource name of the vendor.
+        /// Gets the localizable resource name of the vendor.
         /// </summary>
         public override string VendorResource
         {

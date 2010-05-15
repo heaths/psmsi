@@ -20,7 +20,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
     internal static class PathConverter
     {
         /// <summary>
-        /// Convers a component key path to a provider-qualified PSPath.
+        /// Converts a component key path to a provider-qualified PSPath.
         /// </summary>
         /// <param name="session">The <see cref="SessionState"/> for the current execution context.</param>
         /// <param name="path">The component key path to convert.</param>
