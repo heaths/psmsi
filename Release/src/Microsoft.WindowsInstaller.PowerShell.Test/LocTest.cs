@@ -1,4 +1,4 @@
-﻿// Suppoort methods and properties for the test project.
+﻿// Support methods and properties for the test project.
 //
 // Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.

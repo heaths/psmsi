@@ -393,6 +393,14 @@
                         <value name="Win31FileSystem" type="DWord"/>
                         <value name="Win95TruncatedExtensions" type="DWord">1</value>
                     </key>
+                    <!-- enable pseudo-loc -->
+                    <key name="Nls">
+                        <key name="Locale">
+                            <value name="00000501" type="String">1</value>
+                            <value name="000005fe" type="String">7</value>
+                            <value name="000009ff" type="String">d</value>
+                        </key>
+                    </key>
                 </key>
             </key>
         </key>
