@@ -142,7 +142,7 @@ namespace Microsoft.WindowsInstaller
             settings.IgnoreComments = true;
             settings.IgnoreProcessingInstructions = true;
             settings.IgnoreWhitespace = true;
-            settings.ProhibitDtd = true;
+            settings.DtdProcessing = DtdProcessing.Prohibit;
 
             string absolutePath = System.IO.Path.Combine(Environment.CurrentDirectory, path);
             using (XmlReader reader = XmlReader.Create(absolutePath, settings))

@@ -86,7 +86,7 @@ namespace Microsoft.WindowsInstaller.PowerShell
                         return null;
                 }
 
-                // Not all the roots have drivers, so we have to hard code the provider-qualified root.
+                // Not all the roots have drives, so we have to hard code the provider-qualified root.
                 return string.Concat(@"Microsoft.PowerShell.Core\Registry::", root, path.Substring(pos + 1));
             }
 

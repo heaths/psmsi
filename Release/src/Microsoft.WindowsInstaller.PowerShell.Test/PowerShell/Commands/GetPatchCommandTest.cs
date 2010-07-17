@@ -90,6 +90,27 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
+        /// Gets all superseded patches.
+        /// </summary>
+        [TestMethod]
+        [Description("Gets all superseded patches")]
+        public void GetSupersededPatches()
+        {
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msipatchinfo -filter superseded"))
+            {
+                using (MockRegistry reg = new MockRegistry())
+                {
+                    // Import our registry entries.
+                    reg.Import(@"registry.xml");
+
+                    Collection<PSObject> objs = p.Invoke();
+
+                    Assert.AreEqual<int>(0, objs.Count);
+                }
+            }
+        }
+
+        /// <summary>
         /// A test for <see cref="GetPatchCommand.UserSid"/>.
         /// </summary>
         [TestMethod]
