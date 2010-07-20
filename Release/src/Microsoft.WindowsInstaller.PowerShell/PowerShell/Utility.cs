@@ -24,7 +24,9 @@ namespace Microsoft.WindowsInstaller.PowerShell
         /// </summary>
         /// <param name="value">The <see cref="String"/> to match.</param>
         /// <param name="patterns">The list of <see cref="WildcardPattern">WildcardPatterns</see> that contain the expressions to match.</param>
-        /// <returns></returns>
+        /// <returns>true if the <paramref name="value"/> matches any of the <paramref name="patterns"/>; otherwise, false. If the
+        /// <paramref name="value"/> is null, the return value is always false.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="patterns"/> is null or empty.</exception>
         internal static bool MatchesAnyWildcardPattern(string value, IList<WildcardPattern> patterns)
         {
             if (string.IsNullOrEmpty(value))
