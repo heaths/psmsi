@@ -22,43 +22,23 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     [Cmdlet(VerbsCommon.Get, "MSIProductInfo", DefaultParameterSetName = ParameterSet.Product)]
     public sealed class GetProductCommand : PSCmdlet
     {
-        private static readonly string[] Empty = new string[] { null };
+        private List<Parameters> allParameters = new List<Parameters>();
+        private UserContexts context = UserContexts.Machine;
 
-        private string[] productCodes;
-        private string[] names;
-        private UserContexts context;
-        private string userSid;
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="GetProductCommand"/> class.
-        /// </summary>
-        public GetProductCommand()
-        {
-            this.context = UserContexts.Machine;
-        }
-        
         /// <summary>
         /// Gets or sets the ProductCodes to enumerate.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, ValueFromPipelineByPropertyName = true)]
         [ValidateGuid]
-        public string[] ProductCode
-        {
-            get { return this.productCodes; }
-            set { this.productCodes = value; }
-        }
+        public string[] ProductCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the ProductCodes to enumerate.
+        /// Sets the wildcard names to enumerate.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly", Justification = "Get accessor not required for cmdlet parameter that does not accept pipeline input.")]
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Name, Mandatory = true)]
-        public string[] Name
-        {
-            set { this.names = value; }
-        }
+        public string[] Name { get; set; }
 
         /// <summary>
         /// Gets or sets the user context for products to enumerate.
@@ -85,11 +65,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Parameter(ValueFromPipelineByPropertyName = true)]
         [Alias("User")]
         [Sid]
-        public string UserSid
-        {
-            get { return this.userSid; }
-            set { this.userSid = value; }
-        }
+        public string UserSid { get; set; }
 
         /// <summary>
         /// Gets or sets whether products for everyone should be enumerated.
@@ -97,66 +73,82 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Parameter]
         public SwitchParameter Everyone
         {
-            get { return string.Compare(this.userSid, NativeMethods.World, StringComparison.OrdinalIgnoreCase) == 0; }
-            set { this.userSid = value ? NativeMethods.World : null; }
+            get { return string.Compare(this.UserSid, NativeMethods.World, StringComparison.OrdinalIgnoreCase) == 0; }
+            set { this.UserSid = value ? NativeMethods.World : null; }
         }
 
         /// <summary>
-        /// Processes the input ProductCodes and writes a product to the pipeline.
+        /// Collects the input ProductCodes for future processing.
         /// </summary>
         protected override void ProcessRecord()
         {
-            // Enumerate products by ProductCode or all products.
-            if (this.ParameterSetName == ParameterSet.Product)
-            {
-                // Enumerate a set of null if no input was provided.
-                if (this.productCodes == null || this.productCodes.Length == 0)
+            this.allParameters.Add(new Parameters
                 {
-                    this.productCodes = Empty;
-                }
-
-                // Return each product instance.
-                foreach (string productCode in this.productCodes)
-                {
-                    this.WriteProducts(productCode);
-                }
-            }
+                    ParameterSetName = this.ParameterSetName,
+                    ProductCode = this.ProductCode,
+                    Name = this.Name,
+                    UserContext = this.UserContext,
+                    UserSid = this.UserSid,
+                });
         }
 
         /// <summary>
-        /// Processes the input Names and writes a unique list of products to the pipeline.
+        /// Processes the input ProductCodes or Names and writes a list of products to the pipeline.
         /// </summary>
         protected override void EndProcessing()
         {
-            // Enumerate all products in context and match the names using regex.
-            if (this.ParameterSetName == ParameterSet.Name)
-            {
-                // Create a list of compiled patterns.
-                List<WildcardPattern> patterns = new List<WildcardPattern>(this.names.Length);
-                foreach (string name in this.names)
+            // Works around re-entrancy issues.
+            this.allParameters.ForEach((param) =>
                 {
-                    patterns.Add(new WildcardPattern(name, WildcardOptions.Compiled | WildcardOptions.IgnoreCase));
-                }
-
-                // Enumerate all products in the context and attempt a match against each pattern.
-                foreach (ProductInstallation product in ProductInstallation.GetProducts(null, this.userSid, this.context))
-                {
-                    string productName = product.ProductName;
-                    if (!string.IsNullOrEmpty(productName) && Utilities.MatchesAnyWildcardPattern(productName, patterns))
+                    // Enumerate all products by ProductCodes.
+                    if (param.ParameterSetName == ParameterSet.Product)
                     {
-                        this.WriteProduct(product);
+                        // Return each product instance.
+                        if (param.ProductCode != null && param.ProductCode.Length > 0)
+                        {
+                            foreach (string productCode in param.ProductCode)
+                            {
+                                this.WriteProducts(productCode, param.UserSid, param.UserContext);
+                            }
+                        }
+                        else
+                        {
+                            // Write all products.
+                            this.WriteProducts(null, param.UserSid, param.UserContext);
+                        }
                     }
-                }
-            }
+                    // Enumerate all products in context and match the names using regex.
+                    else if (param.ParameterSetName == ParameterSet.Name)
+                    {
+                        // Create a list of compiled patterns.
+                        List<WildcardPattern> patterns = new List<WildcardPattern>(param.Name.Length);
+                        foreach (string name in param.Name)
+                        {
+                            patterns.Add(new WildcardPattern(name, WildcardOptions.Compiled | WildcardOptions.IgnoreCase));
+                        }
+
+                        // Enumerate all products in the context and attempt a match against each pattern.
+                        foreach (ProductInstallation product in ProductInstallation.GetProducts(null, param.UserSid, param.UserContext))
+                        {
+                            string productName = product.ProductName;
+                            if (Utility.MatchesAnyWildcardPattern(productName, patterns))
+                            {
+                                this.WriteProduct(product);
+                            }
+                        }
+                    }
+                });
         }
 
         /// <summary>
         /// Enumerates products for the given ProductCode and writes them to the pipeline.
         /// </summary>
         /// <param name="productCode">The ProductCode of products to enumerate.</param>
-        private void WriteProducts(string productCode)
+        /// <param name="userSid">The user's SID for products to enumerate.</param>
+        /// <param name="context">The installation context for products to enumerate.</param>
+        private void WriteProducts(string productCode, string userSid, UserContexts context)
         {
-            foreach (ProductInstallation product in ProductInstallation.GetProducts(productCode, this.userSid, this.context))
+            foreach (ProductInstallation product in ProductInstallation.GetProducts(productCode, userSid, context))
             {
                 this.WriteProduct(product);
             }
@@ -175,6 +167,37 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             obj.Properties.Add(new PSNoteProperty("PSPath", path));
 
             this.WriteObject(obj);
+        }
+
+        /// <summary>
+        /// Collects parameters for processing.
+        /// </summary>
+        private sealed class Parameters
+        {
+            /// <summary>
+            /// Gets or sets the parameter set name.
+            /// </summary>
+            internal string ParameterSetName { get; set; }
+
+            /// <summary>
+            /// Gets or sets the ProductCodes.
+            /// </summary>
+            internal string[] ProductCode { get; set; }
+
+            /// <summary>
+            /// Gets or sets the wildcard names.
+            /// </summary>
+            internal string[] Name { get; set; }
+
+            /// <summary>
+            /// Gets or sets the installation context.
+            /// </summary>
+            internal UserContexts UserContext { get; set; }
+
+            /// <summary>
+            /// Gets or sets the user's SID.
+            /// </summary>
+            internal string UserSid { get; set; }
         }
     }
 }

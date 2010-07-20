@@ -82,5 +82,24 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                 }
             }
         }
+
+        [TestMethod]
+        [Description("Tests chained execution of get-msicomponentinfo")]
+        [WorkItem(9464)]
+        public void ChainedExecution()
+        {
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msicomponentinfo '{9D8E88E9-8E05-4FC7-AFC7-87759D1D417E}' | get-msicomponentinfo"))
+            {
+                using (MockRegistry reg = new MockRegistry())
+                {
+                    reg.Import(@"registry.xml");
+
+                    Collection<PSObject> objs = p.Invoke();
+
+                    // Two shared components piped again yield 4 (duplicated).
+                    Assert.AreEqual(4, objs.Count);
+                }
+            }
+        }
     }
 }

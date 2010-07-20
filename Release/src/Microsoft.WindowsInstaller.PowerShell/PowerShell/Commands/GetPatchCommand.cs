@@ -9,6 +9,7 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
@@ -23,20 +24,9 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     {
         private static readonly string[] Empty = new string[] { null };
 
-        private string[] productCodes;
-        private string[] patchCodes;
-        private PatchStates filter;
-        private UserContexts context;
-        private string userSid;
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="GetPatchCommand"/> class.
-        /// </summary>
-        public GetPatchCommand()
-        {
-            this.filter = PatchStates.Applied;
-            this.context = UserContexts.Machine;
-        }
+        private List<Parameters> allParameters = new List<Parameters>();
+        private PatchStates filter = PatchStates.Applied;
+        private UserContexts context = UserContexts.Machine;
 
         // Parameter positions below are to maintain backward call-compatibility.
 
@@ -46,11 +36,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Patch, Position = 0, ValueFromPipelineByPropertyName = true)]
         [ValidateGuid]
-        public string[] ProductCode
-        {
-            get { return this.productCodes; }
-            set { this.productCodes = value; }
-        }
+        public string[] ProductCode { get; set; }
 
         /// <summary>
         /// Gets or sets patch codes for which information is retrieved.
@@ -58,11 +44,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Patch, Position = 1, ValueFromPipelineByPropertyName = true)]
         [ValidateGuid]
-        public string[] PatchCode
-        {
-            get { return this.patchCodes; }
-            set { this.patchCodes = value; }
-        }
+        public string[] PatchCode { get; set; }
 
         /// <summary>
         /// Gets or sets the patch states filter for enumeration.
@@ -107,11 +89,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Parameter(ValueFromPipelineByPropertyName = true)]
         [Alias("User")]
         [Sid]
-        public string UserSid
-        {
-            get { return this.userSid; }
-            set { this.userSid = value; }
-        }
+        public string UserSid { get; set; }
 
         /// <summary>
         /// Gets or sets whether products for everyone should be enumerated.
@@ -119,34 +97,41 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         [Parameter]
         public SwitchParameter Everyone
         {
-            get { return string.Compare(this.userSid, NativeMethods.World, StringComparison.OrdinalIgnoreCase) == 0; }
-            set { this.userSid = value ? NativeMethods.World : null; }
+            get { return string.Compare(this.UserSid, NativeMethods.World, StringComparison.OrdinalIgnoreCase) == 0; }
+            set { this.UserSid = value ? NativeMethods.World : null; }
+        }
+
+        /// <summary>
+        /// Collects input ProductCodes and PatchCodes for future processing.
+        /// </summary>
+        protected override void ProcessRecord()
+        {
+            this.allParameters.Add(new Parameters
+                {
+                    ParameterSetName = this.ParameterSetName,
+                    ProductCode = this.ProductCode != null && this.ProductCode.Length > 0 ? this.ProductCode : new string[] { null},
+                    PatchCode = this.PatchCode != null && this.PatchCode.Length > 0 ? this.PatchCode : new string[] { null},
+                    Filter = this.Filter,
+                    UserContext = this.UserContext,
+                    UserSid = this.UserSid,
+                });
         }
 
         /// <summary>
         /// Processes the ProductCodes or PatchCodes and writes a patch to the pipeline.
         /// </summary>
-        protected override void ProcessRecord()
+        protected override void EndProcessing()
         {
-            // Enumerate a set of null of no input was provided.
-            if (this.productCodes == null || this.productCodes.Length == 0)
-            {
-                this.productCodes = Empty;
-            }
-
-            if (this.patchCodes == null || this.patchCodes.Length == 0)
-            {
-                this.patchCodes = Empty;
-            }
-
-            // Enumerate all given patches for all given products.
-            foreach (string productCode in this.productCodes)
-            {
-                foreach (string patchCode in this.patchCodes)
+            this.allParameters.ForEach((param) =>
                 {
-                    this.WritePatches(patchCode, productCode);
-                }
-            }
+                    foreach (string productCode in param.ProductCode)
+                    {
+                        foreach (string patchCode in param.PatchCode)
+                        {
+                            this.WritePatches(patchCode, productCode, param.UserSid, param.UserContext, param.Filter);
+                        }
+                    }
+                });
         }
 
         /// <summary>
@@ -154,18 +139,66 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
         /// </summary>
         /// <param name="patchCode">The patch code to enumerate.</param>
         /// <param name="productCode">The ProductCode having patches to enumerate.</param>
-        private void WritePatches(string patchCode, string productCode)
+        /// <param name="userSid">The user's SID for patches to enumerate.</param>
+        /// <param name="context">The installation context for patches to enumerate.</param>
+        /// <param name="filter">The patch installation state for patches to enumerate.</param>
+        private void WritePatches(string patchCode, string productCode, string userSid, UserContexts context, PatchStates filter)
         {
-            foreach (PatchInstallation patch in PatchInstallation.GetPatches(patchCode, productCode, this.userSid, this.context, this.filter))
+            foreach (PatchInstallation patch in PatchInstallation.GetPatches(patchCode, productCode, userSid, context, filter))
             {
-                PSObject obj = PSObject.AsPSObject(patch);
-
-                // Add the local package as the PSPath.
-                string path = PathConverter.ToPSPath(this.SessionState, patch.LocalPackage);
-                obj.Properties.Add(new PSNoteProperty("PSPath", path));
-
-                this.WriteObject(obj);
+                this.WritePatch(patch);
             }
+        }
+
+        /// <summary>
+        /// Adds properties to the <see cref="PatchInstallation"/> object and writes it to the pipeline.
+        /// </summary>
+        /// <param name="patch">The <see cref="PatchInstallation"/> to write to the pipeline.</param>
+        private void WritePatch(PatchInstallation patch)
+        {
+            PSObject obj = PSObject.AsPSObject(patch);
+
+            // Add the local package as the PSPath.
+            string path = PathConverter.ToPSPath(this.SessionState, patch.LocalPackage);
+            obj.Properties.Add(new PSNoteProperty("PSPath", path));
+
+            this.WriteObject(obj);
+        }
+
+        /// <summary>
+        /// Collects parameters for processing.
+        /// </summary>
+        private sealed class Parameters
+        {
+            /// <summary>
+            /// Gets or sets the parameter set name.
+            /// </summary>
+            internal string ParameterSetName;
+
+            /// <summary>
+            /// Gets or sets the ProductCodes.
+            /// </summary>
+            internal string[] ProductCode;
+
+            /// <summary>
+            /// Gets or sets the patch codes.
+            /// </summary>
+            internal string[] PatchCode;
+
+            /// <summary>
+            /// Gets or sets the filter.
+            /// </summary>
+            internal PatchStates Filter;
+
+            /// <summary>
+            /// Gets or sets the installation context.
+            /// </summary>
+            internal UserContexts UserContext;
+
+            /// <summary>
+            /// Gets or sets the user's SID.
+            /// </summary>
+            internal string UserSid;
         }
     }
 }

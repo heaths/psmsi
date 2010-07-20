@@ -211,5 +211,24 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             Assert.AreEqual<bool>(false, cmdlet.Everyone);
             Assert.AreEqual<string>(null, cmdlet.UserSid);
         }
+
+        [TestMethod]
+        [Description("Tests chained execution of get-msiproductinfo")]
+        [WorkItem(9464)]
+        public void ChainedExecution()
+        {
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msiproductinfo"))
+            {
+                using (MockRegistry reg = new MockRegistry())
+                {
+                    reg.Import(@"registry.xml");
+
+                    Collection<PSObject> objs = p.Invoke();
+
+                    Assert.AreEqual(1, objs.Count);
+                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
+                }
+            }
+        }
     }
 }

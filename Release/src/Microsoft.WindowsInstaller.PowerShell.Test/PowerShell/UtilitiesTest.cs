@@ -25,52 +25,52 @@ namespace Microsoft.WindowsInstaller.PowerShell
     public sealed class UtilitiesTest
     {
         /// <summary>
-        /// Tests the <see cref="Utilities.MatchesAnyWildcardPattern"/> method using a null "value" argument.
+        /// Tests the <see cref="Utility.MatchesAnyWildcardPattern"/> method using a null "value" argument.
         /// </summary>
         [TestMethod]
-        [Description("A test for Utilities.MatchesAnyWildcardPattern using a null \"value\" argument")]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Description("A test for Utility.MatchesAnyWildcardPattern using a null \"value\" argument")]
         public void MatchesAnyWildcardPatternTest_NullValue()
         {
             // Test a null value to match.
-            Utilities_Accessor.MatchesAnyWildcardPattern(null, null);
+            Assert.IsFalse(Utility_Accessor.MatchesAnyWildcardPattern(null, null));
+            Assert.IsFalse(Utility_Accessor.MatchesAnyWildcardPattern(string.Empty, null));
         }
 
         /// <summary>
-        /// Tests the <see cref="Utilities.MatchesAnyWildcardPattern"/> method using a null "patterns" argument.
+        /// Tests the <see cref="Utility.MatchesAnyWildcardPattern"/> method using a null "patterns" argument.
         /// </summary>
         [TestMethod]
-        [Description("A test for Utilities.MatchesAnyWildcardPattern using a null \"patterns\" argument")]
+        [Description("A test for Utility.MatchesAnyWildcardPattern using a null \"patterns\" argument")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void MatchesAnyWildcardPatternTest_NullPatterns()
         {
-            Utilities_Accessor.MatchesAnyWildcardPattern(string.Empty, null);
+            Utility_Accessor.MatchesAnyWildcardPattern("test", null);
         }
 
         /// <summary>
-        /// Tests the <see cref="Utilities.MatchesAnyWildcardPattern"/> method using an empty "patterns" list.
+        /// Tests the <see cref="Utility.MatchesAnyWildcardPattern"/> method using an empty "patterns" list.
         /// </summary>
         [TestMethod]
-        [Description("A test for Utilities.MatchesAnyWildcardPattern using an empty \"patterns\" list")]
+        [Description("A test for Utility.MatchesAnyWildcardPattern using an empty \"patterns\" list")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void MatchesAnyWildcardPatternTest_EmptyPatterns()
         {
-            Utilities_Accessor.MatchesAnyWildcardPattern(string.Empty, new WildcardPattern[] {});
+            Utility_Accessor.MatchesAnyWildcardPattern("test", new WildcardPattern[] { });
         }
 
         /// <summary>
-        /// Teste the <see cref="Utilities.MatchesAnyWildcardPattern"/> method.
+        /// Teste the <see cref="Utility.MatchesAnyWildcardPattern"/> method.
         /// </summary>
         [TestMethod]
-        [Description("A test for Utilities.MatchesAnyWildcardPattern")]
+        [Description("A test for Utility.MatchesAnyWildcardPattern")]
         public void MatchesAnyWildcardPatternTest()
         {
             List<WildcardPattern> patterns = new List<WildcardPattern>();
             patterns.Add(new WildcardPattern("Windows*"));
             patterns.Add(new WildcardPattern("*Installer"));
 
-            Assert.IsTrue(Utilities_Accessor.MatchesAnyWildcardPattern("Windows Installer", patterns));
-            Assert.IsFalse(Utilities_Accessor.MatchesAnyWildcardPattern("Microsoft Corporation", patterns));
+            Assert.IsTrue(Utility_Accessor.MatchesAnyWildcardPattern("Windows Installer", patterns));
+            Assert.IsFalse(Utility_Accessor.MatchesAnyWildcardPattern("Microsoft Corporation", patterns));
         }
     }
 }

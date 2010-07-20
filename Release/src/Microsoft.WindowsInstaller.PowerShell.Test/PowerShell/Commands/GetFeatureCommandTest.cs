@@ -128,5 +128,35 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                 });
             }
         }
+
+        [TestMethod]
+        [Description("Tests chained execution of get-msifeatureinfo")]
+        [WorkItem(9464)]
+        public void ChainedExecution()
+        {
+            Collection<string> expectedFeatures = new Collection<string>();
+            expectedFeatures.Add("Complete");
+            expectedFeatures.Add("Complete2.0.30226.2");
+
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msifeatureinfo | get-msifeatureinfo"))
+            {
+                using (MockRegistry reg = new MockRegistry())
+                {
+                    reg.Import(@"registry.xml");
+
+                    Collection<PSObject> objs = p.Invoke();
+                    Assert.AreEqual(2, objs.Count);
+
+                    Collection<string> actualFeatures = new Collection<string>();
+                    foreach (PSObject obj in objs)
+                    {
+                        Assert.IsNotNull(obj.Properties["FeatureName"]);
+                        actualFeatures.Add(obj.Properties["FeatureName"].Value.ToString());
+                    }
+
+                    CollectionAssert.AreEquivalent(expectedFeatures, actualFeatures);
+                }
+            }
+        }
     }
 }

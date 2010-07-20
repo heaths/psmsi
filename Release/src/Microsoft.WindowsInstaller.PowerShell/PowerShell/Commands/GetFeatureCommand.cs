@@ -20,41 +20,27 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     [Cmdlet(VerbsCommon.Get, "MSIFeatureInfo", DefaultParameterSetName = ParameterSet.Product)]
     public sealed class GetFeatureCommand : PSCmdlet
     {
-        private ProductInstallation[] products;
-        private string productCode;
-        private string[] featureNames;
-
         /// <summary>
         /// Gets or sets the <see cref="ProductInstallation"/> for which features are enumerated.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(ParameterSetName = ParameterSet.Product, Position = 0, Mandatory = true, ValueFromPipeline = true)]
-        public ProductInstallation[] Product
-        {
-            get { return this.products; }
-            set { this.products = value; }
-        }
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, Mandatory = true, ValueFromPipeline = true)]
+        public ProductInstallation[] Product { get; set; }
 
         /// <summary>
         /// Gets or sets the ProductCodes to enumerate.
         /// </summary>
         [Parameter(ParameterSetName = ParameterSet.Feature, Position = 0, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [ValidateGuid]
-        public string ProductCode
-        {
-            get { return this.productCode; }
-            set { this.productCode = value; }
-        }
+        public string ProductCode { get; set; }
 
         /// <summary>
         /// Gets or sets the feature names to enumerate.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(ParameterSetName = ParameterSet.Feature, Position = 1, Mandatory = true, ValueFromPipelineByPropertyName = true)]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(ParameterSetName = ParameterSet.Feature, Position = 1, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [Alias("Name")]
-        public string[] FeatureName
-        {
-            get { return this.featureNames; }
-            set { this.featureNames = value; }
-        }
+        public string[] FeatureName { get; set; }
 
         /// <summary>
         /// Enumerates the selected features and write them to the pipeline.
@@ -64,7 +50,7 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             if (this.ParameterSetName == ParameterSet.Product)
             {
                 // Enumerate the features of each product.
-                foreach (ProductInstallation product in this.products)
+                foreach (ProductInstallation product in this.Product)
                 {
                     foreach (FeatureInstallation feature in product.Features)
                     {
@@ -75,9 +61,9 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             else if (this.ParameterSetName == ParameterSet.Feature)
             {
                 // Enumerate all the features of a specific product.
-                foreach (string featureName in this.featureNames)
+                foreach (string featureName in this.FeatureName)
                 {
-                    FeatureInstallation feature = new FeatureInstallation(featureName, this.productCode);
+                    FeatureInstallation feature = new FeatureInstallation(featureName, this.ProductCode);
                     this.WriteFeature(feature);
                 }
             }

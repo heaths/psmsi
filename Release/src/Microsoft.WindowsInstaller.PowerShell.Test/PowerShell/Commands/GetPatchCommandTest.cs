@@ -194,5 +194,24 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             Assert.AreEqual<bool>(false, cmdlet.Everyone);
             Assert.AreEqual<string>(null, cmdlet.UserSid);
         }
+
+        [TestMethod]
+        [Description("Tests chained execution of get-msipatchinfo")]
+        [WorkItem(9464)]
+        public void ChainedExecution()
+        {
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msipatchinfo -productCode '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msipatchinfo"))
+            {
+                using (MockRegistry reg = new MockRegistry())
+                {
+                    reg.Import(@"registry.xml");
+
+                    Collection<PSObject> objs = p.Invoke();
+
+                    Assert.AreEqual(1, objs.Count);
+                    Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
+                }
+            }
+        }
     }
 }

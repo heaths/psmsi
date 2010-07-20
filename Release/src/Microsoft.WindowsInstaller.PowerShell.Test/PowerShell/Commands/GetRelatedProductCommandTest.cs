@@ -42,5 +42,24 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
                 }
             }
         }
+
+        [TestMethod]
+        [Description("Tests chained execution of get-msirelatedproductinfo")]
+        [WorkItem(9464)]
+        public void ChainedExecution()
+        {
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msirelatedproductinfo '{C1482EA4-07D3-4261-9741-7CEDE6A8C25A}' | add-member -name UpgradeCode -type noteproperty -value '{C1482EA4-07D3-4261-9741-7CEDE6A8C25A}' -passthru | get-msirelatedproductinfo"))
+            {
+                using (MockRegistry reg = new MockRegistry())
+                {
+                    reg.Import(@"registry.xml");
+
+                    Collection<PSObject> objs = p.Invoke();
+
+                    Assert.AreEqual(1, objs.Count);
+                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value as string);
+                }
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
@@ -20,66 +21,76 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
     [Cmdlet(VerbsCommon.Get, "MSIComponentInfo", DefaultParameterSetName = ParameterSet.Component)]
     public sealed class GetComponentCommand : PSCmdlet
     {
-        private string[] componentCodes;
-        private string productCode;
+        private List<Parameters> allParameters = new List<Parameters>();
 
         /// <summary>
         /// Gets or sets the component GUIDs to enumerate.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), Parameter(ParameterSetName = ParameterSet.Component, Position = 0, ValueFromPipelineByPropertyName = true)]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [Parameter(ParameterSetName = ParameterSet.Component, Position = 0, ValueFromPipelineByPropertyName = true)]
         [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty, ValidateGuid]
-        public string[] ComponentCode
-        {
-            get { return this.componentCodes; }
-            set { this.componentCodes = value; }
-        }
+        public string[] ComponentCode { get; set; }
 
         /// <summary>
         /// Gets or sets the ProductCodes to enumerate.
         /// </summary>
         [Parameter(ParameterSetName = ParameterSet.Product, Position = 1, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [ValidateGuid]
-        public string ProductCode
+        public string ProductCode { get; set; }
+
+        /// <summary>
+        /// Collects input ComponentCodes and ProductCodes for future processing.
+        /// </summary>
+        protected override void ProcessRecord()
         {
-            get { return this.productCode; }
-            set { this.productCode = value; }
+            // Works around re-entrancy issues.
+            this.allParameters.Add(new Parameters
+                {
+                    ParameterSetName = this.ParameterSetName,
+                    ComponentCode = this.ComponentCode,
+                    ProductCode = this.ProductCode,
+                });
         }
 
         /// <summary>
         /// Enumerates the selected components and write them to the pipeline.
         /// </summary>
-        protected override void ProcessRecord()
+        protected override void EndProcessing()
         {
-            if (this.ParameterSetName == ParameterSet.Component)
-            {
-                if (this.componentCodes == null || this.componentCodes.Length == 0)
+            this.allParameters.ForEach((param) =>
                 {
-                    // Enumerate all components.
-                    foreach (ComponentInstallation component in ComponentInstallation.AllComponents)
+                    if (param.ParameterSetName == ParameterSet.Component)
                     {
-                        this.WriteSharedComponent(component);
+                        if (param.ComponentCode != null && param.ComponentCode.Length > 0)
+                        {
+                            // Enumerate all clients for a component.
+                            foreach (string componentCode in param.ComponentCode)
+                            {
+                                ComponentInstallation component = new ComponentInstallation(componentCode);
+                                this.WriteSharedComponent(component);
+                            }
+                        }
+                        else
+                        {
+                            // Enumerate all components.
+                            foreach (ComponentInstallation component in ComponentInstallation.AllComponents)
+                            {
+                                this.WriteSharedComponent(component);
+                            }
+                        }
                     }
-                }
-                else
-                {
-                    // Enumerate all clients for a component.
-                    foreach (string componentCode in this.componentCodes)
+                    else if (param.ParameterSetName == ParameterSet.Product)
                     {
-                        ComponentInstallation component = new ComponentInstallation(componentCode);
-                        this.WriteSharedComponent(component);
+                        // Enumerate all components for the specified product.
+                        foreach (string componentCode in param.ComponentCode)
+                        {
+                            ComponentInstallation component = new ComponentInstallation(componentCode, param.ProductCode);
+                            this.WriteComponent(component);
+                        }
                     }
-                }
-            }
-            else if (this.ParameterSetName == ParameterSet.Product)
-            {
-                // Enumerate all components for the specified product.
-                foreach (string componentCode in this.componentCodes)
-                {
-                    ComponentInstallation component = new ComponentInstallation(componentCode, this.productCode);
-                    this.WriteComponent(component);
-                }
-            }
+                });
+
         }
 
         /// <summary>
@@ -111,6 +122,27 @@ namespace Microsoft.WindowsInstaller.PowerShell.Commands
             obj.Properties.Add(new PSNoteProperty("ClientProducts", null));
 
             this.WriteObject(obj);
+        }
+
+        /// <summary>
+        /// Collects parameters for processing.
+        /// </summary>
+        private sealed class Parameters
+        {
+            /// <summary>
+            /// Gets or sets the parameter set name.
+            /// </summary>
+            internal string ParameterSetName { get; set; }
+
+            /// <summary>
+            /// Gets or sets the component GUIDs.
+            /// </summary>
+            internal string[] ComponentCode { get; set; }
+
+            /// <summary>
+            /// Gets or sets the ProductCode.
+            /// </summary>
+            internal string ProductCode { get; set; }
         }
     }
 }
