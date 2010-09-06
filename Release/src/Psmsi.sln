@@ -21,7 +21,7 @@ Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs02.codeplex.com/
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = Microsoft.WindowsInstaller.PowerShell\\Microsoft.WindowsInstaller.PowerShell.csproj
 		SccProjectName1 = Microsoft.WindowsInstaller.PowerShell
@@ -29,11 +29,11 @@ Global
 		SccProjectUniqueName2 = Microsoft.WindowsInstaller.PowerShell.Test\\Microsoft.WindowsInstaller.PowerShell.Test.csproj
 		SccProjectName2 = Microsoft.WindowsInstaller.PowerShell.Test
 		SccLocalPath2 = Microsoft.WindowsInstaller.PowerShell.Test
-		SccProjectUniqueName3 = Setup\\SnapIn.wixproj
+		SccProjectUniqueName3 = Setup\\Module.wixproj
 		SccProjectTopLevelParentUniqueName3 = Psmsi.sln
 		SccProjectName3 = Setup
 		SccLocalPath3 = Setup
-		SccProjectUniqueName4 = Setup\\Module.wixproj
+		SccProjectUniqueName4 = Setup\\SnapIn.wixproj
 		SccProjectTopLevelParentUniqueName4 = Psmsi.sln
 		SccProjectName4 = Setup
 		SccLocalPath4 = Setup
