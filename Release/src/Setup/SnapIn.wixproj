@@ -35,7 +35,7 @@
     <IntermediateOutputPath>obj\$(Configuration)</IntermediateOutputPath>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.5\Wix2010.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
   <ItemGroup>
     <Compile Include="SnapIn.wxs" />
     <Compile Include="DTF.wxs" />
