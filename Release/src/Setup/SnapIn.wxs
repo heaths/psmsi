@@ -38,13 +38,13 @@
     <Fragment>
         <DirectoryRef Id="ModuleFolder">
             <Component Id="SnapIn" Guid="CE1F8ECF-0E25-4155-9BE1-E9DC1CADA4C2">
-                <File Id="SnapIn.File" Name="Microsoft.WindowsInstaller.PowerShell.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" Assembly=".net" AssemblyApplication="SnapIn.File">
-                    <ps:SnapIn Id="psmsi" RequiredPowerShellVersion="2.0" DescriptionIndirect="Microsoft.WindowsInstaller.Properties.Resources,SnapIn_Description" VendorIndirect="Microsoft.WindowsInstaller.Properties.Resources,SnapIn_Vendor" />
+                <File Id="SnapIn.File" Name="Microsoft.Tools.WindowsInstaller.PowerShell.dll" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" Assembly=".net" AssemblyApplication="SnapIn.File">
+                    <ps:SnapIn Id="psmsi" RequiredPowerShellVersion="2.0" DescriptionIndirect="Microsoft.Tools.WindowsInstaller.Properties.Resources,SnapIn_Description" VendorIndirect="Microsoft.Tools.WindowsInstaller.Properties.Resources,SnapIn_Vendor" />
                 </File>
-                <File Id="SnapIn.Formats" Name="MSI.formats.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)MSI.formats.ps1xml">
+                <File Id="SnapIn.Formats" Name="MSI.formats.ps1xml" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.formats.ps1xml">
                     <ps:FormatsFile SnapIn="psmsi" />
                 </File>
-                <File Id="SnapIn.Types" Name="MSI.types.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)MSI.types.ps1xml">
+                <File Id="SnapIn.Types" Name="MSI.types.ps1xml" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.types.ps1xml">
                     <ps:TypesFile SnapIn="psmsi" />
                 </File>
                 <Environment Id="SnapIn.ModulePath" Action="set" Name="PSMODULEPATH" Part="first" System="yes" Value="[APPROOT]"/>

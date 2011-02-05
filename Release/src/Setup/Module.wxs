@@ -36,9 +36,9 @@
     <Fragment>
         <DirectoryRef Id="ModuleFolder">
             <Component Id="Module" Guid="9D8E88E9-8E05-4FC7-AFC7-87759D1D417E">
-                <File Id="Module.File" Name="Microsoft.WindowsInstaller.PowerShell.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" />
-                <File Id="Module.Formats.File" Name="MSI.formats.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)MSI.formats.ps1xml" />
-                <File Id="Module.Types.File" Name="MSI.types.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)MSI.types.ps1xml" />
+                <File Id="Module.File" Name="Microsoft.Tools.WindowsInstaller.PowerShell.dll" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" />
+                <File Id="Module.Formats.File" Name="MSI.formats.ps1xml" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.formats.ps1xml" />
+                <File Id="Module.Types.File" Name="MSI.types.ps1xml" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.types.ps1xml" />
                 <!-- ICE64: Make sure the application directory is always removed on uninstall. -->
                 <RemoveFolder Id="Module.RemoveFolder" On="uninstall" />
             </Component>

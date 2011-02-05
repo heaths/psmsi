@@ -46,8 +46,8 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.WindowsInstaller.PowerShell\Microsoft.WindowsInstaller.PowerShell.csproj">
-      <Name>Microsoft.WindowsInstaller.PowerShell</Name>
+    <ProjectReference Include="..\Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj">
+      <Name>Microsoft.Tools.WindowsInstaller.PowerShell</Name>
       <Project>{eae7d4bf-5061-4220-be94-e268e965dce5}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
