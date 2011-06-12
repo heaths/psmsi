@@ -9,14 +9,10 @@
     <OutputType>package</OutputType>
     <ProjectGuid>{f9da7492-b466-43d6-843c-40ebfaa89f34}</ProjectGuid>
     <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
-    <SccProjectName>
-    </SccProjectName>
-    <SccProvider>
-    </SccProvider>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccLocalPath>
-    </SccLocalPath>
+    <SccProjectName>$/psmsi/Release/src/Setup</SccProjectName>
+    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
+    <SccAuxPath>https://tfs.codeplex.com/tfs/tfs02</SccAuxPath>
+    <SccLocalPath>.</SccLocalPath>
     <SuppressIces>ICE03</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -37,8 +33,8 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
   <ItemGroup>
-    <Compile Include="SnapIn.wxs" />
     <Compile Include="DTF.wxs" />
+    <Compile Include="SnapIn.wxs" />
     <Compile Include="MSI.wxs" />
     <WixExtension Include="WixUIExtension">
       <HintPath>C:\Program Files\Windows Installer XML v3.5\bin\WixUIExtension.dll</HintPath>
