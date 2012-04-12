@@ -1,0 +1,9 @@
+*.cache
+*.ncb
+*.pdb
+*.suo
+*.user
+*.vssscc
+[Bb]in/
+[Oo]bj/
+[Tt]humbs.db
