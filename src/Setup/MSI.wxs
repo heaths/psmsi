@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="MSI">
+            <ComponentRef Id="MSI.Manifest" />
+            <ComponentRef Id="MSI.Module" />
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <FeatureGroup Id="Help">
+            <ComponentGroupRef Id="Help.en_US"/>
+        </FeatureGroup>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="Help.en_US">
+            <ComponentRef Id="Help.Cmdlets.en_US"/>
+            <ComponentRef Id="Help.Functions.en_US"/>
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="Help.Cmdlets.en_US" Guid="7194975A-C308-4AE7-BCBD-A9471D3A0BAC">
+                <Category Id="D5D9929D-C2C1-46ED-9E3B-7349DD57C5F5" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
+                <File Id="Help.Cmdlets.en_US.File" Name="Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="Help.Functions.en_US" Guid="BF4F9A67-2018-41EC-8B40-835BE3C5643E">
+                <Category Id="70C57718-E2C5-46CF-899B-997F2D1C5D1B" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
+                <File Id="Help.Functions.en_US.File" Name="MSI-Help.xml" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI-Help.xml" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="MSI.Manifest" Guid="D8BF64BF-6695-4C72-A64E-7D2B41F4CA50">
+                <Category Id="82188E4E-067A-4B9A-A6D3-0F115A35DD3D" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
+                <File Id="MSI.Manifest.File" Name="MSI.psd1" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.psd1" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="MSI.Module" Guid="94C13B99-254E-41C6-9EAC-113FB41F373A">
+                <File Id="MSI.Module.File" Name="MSI.psm1" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.psm1" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+</Wix>

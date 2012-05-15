@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
-  <String Id="ProductName">Windows Installer PowerShell Extensions</String>
-  <String Id="Manufacturer">Microsoft Corporation</String>
-  <String Id="Comments">This installer database contains the logic and data required to install Windows Installer PowerShell Extensions.</String>
-  <String Id="F_PsMsi_Title">PowerShell SnapIn</String>
-  <String Id="F_PsMsi_Description">Installs the PowerShell snapin.</String>
-  <String Id="ALLUSERS_eq_1">Only per-machine installations are supported. This is the default install behavior.</String>
-</WixLocalization>

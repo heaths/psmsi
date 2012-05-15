@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="DTF">
+            <ComponentRef Id="DTF" />
+            <ComponentRef Id="DTF.Package" />
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="DTF" Guid="CD52E17E-0546-49D9-8A25-0F9105E938B8">
+                <File Id="DTF.File" Name="Microsoft.Deployment.WindowsInstaller.dll" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.WindowsInstaller.dll" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="DTF.Package" Guid="8D0A6984-4CD6-4A18-82E3-8B59F13CD92A">
+                <File Id="DTF.Package.File" Name="Microsoft.Deployment.WindowsInstaller.Package.dll" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.WindowsInstaller.Package.dll" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="DTF.Compression" Guid="85317903-0CC5-414E-9933-4183C639F8C2">
+                <File Id="DTF.Compression.File" Name="Microsoft.Deployment.Compression.dll" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.Compression.dll" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="DTF.Compression.Cab" Guid="3F77329B-1B9D-4734-9B9E-EA1392B46CED">
+                <File Id="DTF.Compression.Cab.File" Name="Microsoft.Deployment.Compression.Cab.dll" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.Compression.Cab.dll" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+</Wix>

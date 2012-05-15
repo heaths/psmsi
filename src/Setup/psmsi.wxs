@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:ps="http://schemas.microsoft.com/wix/PSExtension" ps:RequiredVersion="3.0.3829">
+    <Product Id="*" Name="!(loc.ProductName)" Language="1033" Version="!(bind.assemblyFileVersion.psmsi)" Manufacturer="!(loc.Manufacturer)" UpgradeCode="E8119A6C-7752-46FA-904B-C6019D91D0BF">
+        <Package Id="*" Description="!(loc.ProductName)" Comments="!(loc.Comments)" Manufacturer="!(loc.Manufacturer)" Platform="x86" InstallerVersion="200" Compressed="yes" />
+        <Condition Message="!(loc.ALLUSERS_eq_1)"><![CDATA[ALLUSERS=1]]></Condition>
+        <Media Id="1" Cabinet="psmsi.cab" EmbedCab="yes" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder" Name="Program Files">
+                <Directory Id="APPROOT" Name="!(loc.ProductName)" DiskId="1" />
+            </Directory>
+        </Directory>
+        <Property Id="ALLUSERS" Value="1" />
+        <Property Id="ARPHELPLINK" Value="http://www.codeplex.com/psmsi/thread/list.aspx" />
+        <Property Id="ARPURLINFOABOUT" Value="http://www.codeplex.com/psmsi/" />
+        <Property Id="WIXUI_INSTALLDIR" Value="APPROOT" />
+        <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
+        <WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
+        <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+        <UIRef Id="WixUI_InstallDir" />
+        <Feature Id="PsMsi" AllowAdvertise="no" Description="!(loc.F_PsMsi_Description)" ConfigurableDirectory="APPROOT" Level="1" Title="!(loc.F_PsMsi_Title)">
+            <ComponentRef Id="SnapIn" />
+            <ComponentGroupRef Id="Help" />
+            <ComponentGroupRef Id="Module" />
+            <ComponentGroupRef Id="DTF" />
+        </Feature>
+        <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[APPROOT]" />
+        <InstallExecuteSequence>
+            <Custom Action="SetARPINSTALLLOCATION" After="CostFinalize" />
+            <InstallExecute Before="RemoveExistingProducts" />
+            <RemoveExistingProducts Before="InstallFinalize" />
+        </InstallExecuteSequence>
+        <Upgrade Id="E8119A6C-7752-46FA-904B-C6019D91D0BF">
+            <UpgradeVersion IncludeMinimum="yes" Minimum="1.0.0.0" Maximum="!(bind.assemblyFileVersion.psmsi)" MigrateFeatures="yes" Property="OLDERVERSIONDETECTED" />
+        </Upgrade>
+    </Product>
+    <Fragment>
+        <DirectoryRef Id="APPROOT">
+            <Component Id="SnapIn" Guid="CE1F8ECF-0E25-4155-9BE1-E9DC1CADA4C2">
+                <File Id="psmsi" Name="Microsoft.WindowsInstaller.PowerShell.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" Assembly=".net" AssemblyApplication="psmsi">
+                    <ps:SnapIn Id="psmsi" DescriptionIndirect="Microsoft.WindowsInstaller.Properties.Resources,SnapIn_Description" VendorIndirect="Microsoft.WindowsInstaller.Properties.Resources,SnapIn_Vendor" />
+                </File>
+                <File Id="psmsi.Formats" Name="WindowsInstaller.formats.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.formats.ps1xml">
+                    <ps:FormatsFile SnapIn="psmsi" />
+                </File>
+                <File Id="psmsi.Types" Name="WindowsInstaller.types.ps1xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.types.ps1xml">
+                    <ps:TypesFile SnapIn="psmsi" />
+                </File>
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="APPROOT">
+            <Directory Id="en" Name="en">
+                <Component Id="Help.en" Guid="3031308C-2616-481B-B0C0-CAC6B827167B">
+                    <File Id="psmsi.Help.en" Name="Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)en\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" KeyPath="yes" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+        <ComponentGroup Id="Help">
+            <ComponentRef Id="Help.en" />
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="APPROOT">
+            <Component Id="Module" Guid="A168444F-CF48-423C-A146-60E832C8A625">
+                <File Id="psmsi.Module" Name="WindowsInstaller.psd1" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.psd1" KeyPath="yes" />
+            </Component>
+            <Component Id="ModuleScript" Guid="63B7282F-80B7-4B50-BE87-E46A068E2913">
+                <File Id="psmsi.ModuleScript" Name="WindowsInstaller.psm1" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.psm1" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+        <ComponentGroup Id="Module">
+            <ComponentRef Id="Module" />
+            <ComponentRef Id="ModuleScript" />
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="APPROOT">
+            <Component Id="DTF" Guid="7CEE4BB6-1AE8-40BD-9CD1-0DE1FB58D4A7">
+                <File Id="DTF.File" Name="Microsoft.Deployment.WindowsInstaller.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.WindowsInstaller.dll" />
+            </Component>
+            <Component Id="DTF.Package" Guid="2C6DB1B4-3DA3-4542-86BE-CE94C52A104F">
+                <File Id="DTF.Package.File" Name="Microsoft.Deployment.WindowsInstaller.Package.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.WindowsInstaller.Package.dll" />
+            </Component>
+            <Component Id="DTF.Compression" Guid="FA7623FA-270B-40E2-8955-969F3B5333DE">
+                <File Id="DTF.Compression.File" Name="Microsoft.Deployment.Compression.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.Compression.dll" />
+            </Component>
+            <Component Id="DTF.Compression.Cab" Guid="5EA7730E-DB36-4908-8F7E-43B9AB57F12F">
+                <File Id="DTF.Compression.Cab.File" Name="Microsoft.Deployment.Compression.Cab.dll" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.Compression.Cab.dll" />
+            </Component>
+        </DirectoryRef>
+        <ComponentGroup Id="DTF">
+            <ComponentRef Id="DTF" />
+            <ComponentRef Id="DTF.Package" />
+            <ComponentRef Id="DTF.Compression" />
+            <ComponentRef Id="DTF.Compression.Cab" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

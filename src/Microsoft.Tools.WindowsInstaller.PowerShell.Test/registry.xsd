@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="registry"
+    targetNamespace="http://schemas.microsoft.com/psmsi/2008/03/registry.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://schemas.microsoft.com/psmsi/2008/03/registry.xsd"
+    xmlns:mstns="http://schemas.microsoft.com/psmsi/2008/03/registry.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="registry">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="hive"/>
+        <xs:element ref="key"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hive">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="key"/>
+      </xs:choice>
+      <xs:attribute name="name" type="hiveType" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="key">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="key"/>
+        <xs:element ref="value"/>
+      </xs:choice>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="value">
+    <xs:complexType mixed="true">
+      <xs:attribute name="name" type="xs:string" use="optional"/>
+      <xs:attribute name="type" type="valueType" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="hiveType">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="HKEY_CURRENT_USER"/>
+      <xs:enumeration value="HKEY_LOCAL_MACHINE"/>
+      <xs:enumeration value="HKEY_USERS"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="valueType">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="String"/>
+      <xs:enumeration value="ExpandString"/>
+      <xs:enumeration value="Binary"/>
+      <xs:enumeration value="DWord"/>
+      <xs:enumeration value="MultiString"/>
+      <xs:enumeration value="QWord"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

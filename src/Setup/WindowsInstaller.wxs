@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="Help">
+            <ComponentRef Id="Help.en_US" />
+        </ComponentGroup>   
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="WindowsInstaller">
+            <ComponentRef Id="WindowsInstaller.Manifest" />
+            <ComponentRef Id="WindowsInstaller.Module" />
+        </ComponentGroup>        
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Directory Id="en_US" Name="en-US">
+                <Component Id="Help.en_US" Guid="7194975A-C308-4AE7-BCBD-A9471D3A0BAC">
+                    <Category Id="D5D9929D-C2C1-46ED-9E3B-7349DD57C5F5" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
+                    <File Id="Help.en_US.File" Name="Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)en-US\Microsoft.WindowsInstaller.PowerShell.dll-Help.xml" KeyPath="yes" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="WindowsInstaller.Manifest" Guid="D1373A77-FACD-4DC7-B5E0-5FCF71AE8A8F">
+                <File Id="WindowsInstaller.Manifest.File" Name="WindowsInstaller.psd1" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.psd1" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="ModuleFolder">
+            <Component Id="WindowsInstaller.Module" Guid="646BD81D-CC98-4AA2-888B-DCD721D40A00">
+                <File Id="WindowsInstaller.Module.File" Name="WindowsInstaller.psm1" Source="$(var.Microsoft.WindowsInstaller.PowerShell.TargetDir)WindowsInstaller.psm1" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+</Wix>
