@@ -18,26 +18,6 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SnapIn", "Setup\SnapIn.wixproj", "{F9DA7492-B466-43D6-843C-40EBFAA89F34}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Microsoft.Tools.WindowsInstaller.PowerShell\\Microsoft.Tools.WindowsInstaller.PowerShell.csproj
-		SccProjectName1 = Microsoft.Tools.WindowsInstaller.PowerShell
-		SccLocalPath1 = Microsoft.Tools.WindowsInstaller.PowerShell
-		SccProjectUniqueName2 = Microsoft.Tools.WindowsInstaller.PowerShell.Test\\Microsoft.Tools.WindowsInstaller.PowerShell.Test.csproj
-		SccProjectName2 = Microsoft.Tools.WindowsInstaller.PowerShell.Test
-		SccLocalPath2 = Microsoft.Tools.WindowsInstaller.PowerShell.Test
-		SccProjectUniqueName3 = Setup\\Module.wixproj
-		SccProjectTopLevelParentUniqueName3 = Psmsi.sln
-		SccProjectName3 = Setup
-		SccLocalPath3 = Setup
-		SccProjectUniqueName4 = Setup\\SnapIn.wixproj
-		SccProjectTopLevelParentUniqueName4 = Psmsi.sln
-		SccProjectName4 = Setup
-		SccLocalPath4 = Setup
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Psmsi.vsmdi
 	EndGlobalSection
