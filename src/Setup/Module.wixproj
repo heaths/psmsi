@@ -9,10 +9,6 @@
     <OutputType>package</OutputType>
     <ProjectGuid>{d2630778-0547-48d1-a8ca-e93d0d7a8b02}</ProjectGuid>
     <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
-    <SccProjectName>$/psmsi/Release/src/Setup</SccProjectName>
-    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
-    <SccAuxPath>https://tfs.codeplex.com/tfs/tfs02</SccAuxPath>
-    <SccLocalPath>.</SccLocalPath>
     <SuppressIces>ICE03;ICE38;ICE64;ICE91</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
