@@ -8,7 +8,6 @@
     </CodeCoverage>
     <Deployment>
         <DeploymentItem filename="Microsoft.Tools.WindowsInstaller.PowerShell.Test\Data\" />
-        <DeploymentItem filename="Microsoft.Tools.WindowsInstaller.PowerShell\qps-ploc\" outputDirectory="qps-ploc\" />
         <DeploymentItem filename="Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml" />
         <DeploymentItem filename="Microsoft.Tools.WindowsInstaller.PowerShell\MSI-Help.xml" />
         <DeploymentItem filename="Microsoft.Tools.WindowsInstaller.PowerShell\MSI.formats.ps1xml" />
