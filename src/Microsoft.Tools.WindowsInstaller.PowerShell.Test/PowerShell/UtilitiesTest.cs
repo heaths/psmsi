@@ -32,8 +32,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         public void MatchesAnyWildcardPatternTest_NullValue()
         {
             // Test a null value to match.
-            Assert.IsFalse(Utility_Accessor.MatchesAnyWildcardPattern(null, null));
-            Assert.IsFalse(Utility_Accessor.MatchesAnyWildcardPattern(string.Empty, null));
+            Assert.IsFalse(Utility.MatchesAnyWildcardPattern(null, null));
+            Assert.IsFalse(Utility.MatchesAnyWildcardPattern(string.Empty, null));
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [ExpectedException(typeof(ArgumentNullException))]
         public void MatchesAnyWildcardPatternTest_NullPatterns()
         {
-            Utility_Accessor.MatchesAnyWildcardPattern("test", null);
+            Utility.MatchesAnyWildcardPattern("test", null);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [ExpectedException(typeof(ArgumentNullException))]
         public void MatchesAnyWildcardPatternTest_EmptyPatterns()
         {
-            Utility_Accessor.MatchesAnyWildcardPattern("test", new WildcardPattern[] { });
+            Utility.MatchesAnyWildcardPattern("test", new WildcardPattern[] { });
         }
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             patterns.Add(new WildcardPattern("Windows*"));
             patterns.Add(new WildcardPattern("*Installer"));
 
-            Assert.IsTrue(Utility_Accessor.MatchesAnyWildcardPattern("Windows Installer", patterns));
-            Assert.IsFalse(Utility_Accessor.MatchesAnyWildcardPattern("Microsoft Corporation", patterns));
+            Assert.IsTrue(Utility.MatchesAnyWildcardPattern("Windows Installer", patterns));
+            Assert.IsFalse(Utility.MatchesAnyWildcardPattern("Microsoft Corporation", patterns));
         }
     }
 }

@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// <param name="sddl">The SDDL format of a SID to return.</param>
         /// <returns>Returns true if the string was parsed as a username and an SDDL was returned; otherwise, false.</returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Return false on any failure like a typical TryParse.")]
-        private static bool TryParseUsername(string username, out string sddl)
+        internal static bool TryParseUsername(string username, out string sddl)
         {
             if (username.IndexOf("\\", StringComparison.Ordinal) >= 0)
             {

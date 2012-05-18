@@ -101,15 +101,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             string param = null;
 
             // Test a string without backslashes.
-            Assert.IsFalse(SidAttribute_Accessor.TryParseUsername(@"foo", out param));
+            Assert.IsFalse(SidAttribute.TryParseUsername(@"foo", out param));
             Assert.IsNull(param);
 
             // Test a string with backslashes but not a valid username.
-            Assert.IsFalse(SidAttribute_Accessor.TryParseUsername(@"foo\bar\baz", out param));
+            Assert.IsFalse(SidAttribute.TryParseUsername(@"foo\bar\baz", out param));
             Assert.IsNull(param);
 
             // Test a valid username.
-            Assert.IsTrue(SidAttribute_Accessor.TryParseUsername(TestProject.CurrentUsername, out param));
+            Assert.IsTrue(SidAttribute.TryParseUsername(TestProject.CurrentUsername, out param));
             Assert.AreEqual<string>(TestProject.CurrentSID, param);
         }
 

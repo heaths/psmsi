@@ -204,7 +204,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Test that we can set it to true.
             cmdlet.Everyone = true;
             Assert.AreEqual<bool>(true, cmdlet.Everyone);
-            Assert.AreEqual<string>(NativeMethods_Accessor.World, cmdlet.UserSid);
+            Assert.AreEqual<string>(NativeMethods.World, cmdlet.UserSid);
 
             // Test that explicitly setting it to false nullifies the UserSid.
             cmdlet.Everyone = false;

@@ -97,9 +97,6 @@
     <Content Include="Data\Example.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Shadow Include="Test References\Microsoft.Tools.WindowsInstaller.PowerShell.accessor" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Data\Example.jpn.mst" />
     <Content Include="Data\Example.msi" />
     <Content Include="Data\Example.msp" />

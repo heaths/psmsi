@@ -62,7 +62,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 // Test null session.
                 TestProject.ExpectException(typeof(ArgumentNullException), null, delegate()
                 {
-                    PathConverter_Accessor.ToPSPath(null, null);
+                    PathConverter.ToPSPath(null, null);
                 });
 
                 rs.Open();
@@ -70,7 +70,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 // Test null session.
                 TestProject.ExpectException(typeof(ArgumentNullException), null, delegate()
                 {
-                    PathConverter_Accessor.FromKeyPathToPSPath(null, null);
+                    PathConverter.FromKeyPathToPSPath(null, null);
                 });
 
                 // Define all the possible translations.
@@ -129,7 +129,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 // Test null session.
                 TestProject.ExpectException(typeof(ArgumentNullException), null, delegate()
                 {
-                    PathConverter_Accessor.ToPSPath(null, null);
+                    PathConverter.ToPSPath(null, null);
                 });
 
                 // Test using a null path.
@@ -188,7 +188,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 // Test null session.
                 TestProject.ExpectException(typeof(ArgumentNullException), null, delegate()
                 {
-                    PathConverter_Accessor.ToProviderPath(null, null);
+                    PathConverter.ToProviderPath(null, null);
                 });
                 
                 // Test null path.
@@ -252,15 +252,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             {
                 if (this.ParameterSetName == "FromKeyPathToPSPath")
                 {
-                    this.WriteObject(PathConverter_Accessor.FromKeyPathToPSPath(this.SessionState, this.path));
+                    this.WriteObject(PathConverter.FromKeyPathToPSPath(this.SessionState, this.path));
                 }
                 else if (this.ParameterSetName == "ToPSPath")
                 {
-                    this.WriteObject(PathConverter_Accessor.ToPSPath(this.SessionState, this.path));
+                    this.WriteObject(PathConverter.ToPSPath(this.SessionState, this.path));
                 }
                 else if (this.ParameterSetName == "ToProviderPath")
                 {
-                    this.WriteObject(PathConverter_Accessor.ToProviderPath(this.SessionState, this.path));
+                    this.WriteObject(PathConverter.ToProviderPath(this.SessionState, this.path));
                 }
             }
         }
