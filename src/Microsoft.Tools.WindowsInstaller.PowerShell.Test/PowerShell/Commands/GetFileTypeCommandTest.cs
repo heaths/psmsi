@@ -113,10 +113,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Test that a wildcard is not accepted.
             using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifiletype -literalpath example.*"))
             {
-                TestProject.ExpectException(typeof(CmdletProviderInvocationException), typeof(ArgumentException), delegate()
+                Collection<PSObject> objs = null;
+                try
                 {
-                    Collection<PSObject> objs = p.Invoke();
-                });
+                    // Wrapped in a try-catch since the behavior changedin PSv3.
+                    objs = p.Invoke();
+                }
+                catch { }
+
+                Assert.AreEqual<int>(0, objs.Count);
             }
 
             // Test that a registry item path is not accepted.
