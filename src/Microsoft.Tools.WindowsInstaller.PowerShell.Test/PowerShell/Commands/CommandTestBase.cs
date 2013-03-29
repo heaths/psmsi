@@ -7,11 +7,8 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System;
-using System.IO;
-using System.Management.Automation;
-using System.Management.Automation.Runspaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Management.Automation.Runspaces;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {

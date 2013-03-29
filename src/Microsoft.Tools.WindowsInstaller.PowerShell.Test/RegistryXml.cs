@@ -1,6 +1,5 @@
 ﻿// Imports and exports registry keys from or to XML.
 //
-// Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -8,22 +7,21 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.Win32;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
     /// <summary>
     /// Imports and exports a registry key tree from or to XML.
     /// </summary>
-    internal class RegistryXml
+    internal sealed class RegistryXml
     {
-        static readonly Regex Variables = new Regex(@"\$\((?<var>\w+)\)",
+        private static readonly Regex Variables = new Regex(@"\$\((?<var>\w+)\)",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
         private RegistryKey key;
@@ -212,14 +210,14 @@ namespace Microsoft.Tools.WindowsInstaller
             }
         }
 
-        void InitializeProperties()
+        private void InitializeProperties()
         {
             properties = new Dictionary<string, string>();
             properties.Add("CurrentSID", TestProject.CurrentSID);
             properties.Add("CurrentUsername", TestProject.CurrentUsername);
         }
 
-        string ReplaceVariables(string value)
+        private string ReplaceVariables(string value)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -237,6 +235,7 @@ namespace Microsoft.Tools.WindowsInstaller
 
                 return properties[var];
             });
+
             return replacement;
         }
     }

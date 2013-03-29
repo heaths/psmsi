@@ -1,6 +1,5 @@
 ﻿// Other utility methods for the project.
 //
-// Created: Thu, 26 Mar 2009 23:37:19 GMT
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY

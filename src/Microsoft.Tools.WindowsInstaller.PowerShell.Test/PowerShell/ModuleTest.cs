@@ -7,7 +7,6 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

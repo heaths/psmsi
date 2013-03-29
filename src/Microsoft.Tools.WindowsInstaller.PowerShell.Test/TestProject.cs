@@ -1,6 +1,5 @@
 ﻿// Suppoort methods and properties for the test project.
 //
-// Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -8,12 +7,12 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using Microsoft.Deployment.WindowsInstaller.Package;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Management.Automation.Runspaces;
 using System.Security.Principal;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Deployment.WindowsInstaller.Package;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -23,9 +22,6 @@ namespace Microsoft.Tools.WindowsInstaller
     [TestClass]
     public static class TestProject
     {
-        // Reference the Package assembly to make sure it's copied.
-        private static InstallPackage package;
-
         private static Runspace testRunspace;
 
         /// <summary>
@@ -127,5 +123,8 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
             }
         }
+
+        // Need a strong assembly reference to make sure the assembly is copied.
+        private static InstallPackage Package { get; set; }
     }
 }

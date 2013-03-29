@@ -1,6 +1,5 @@
 ﻿// Native methods.
 //
-// Created: Sat, 01 Mar 2008 22:58:00 GMT
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -10,7 +9,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using Microsoft.Deployment.WindowsInstaller;
 
 using ComTypes = System.Runtime.InteropServices.ComTypes;
 

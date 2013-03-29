@@ -1,6 +1,5 @@
 ﻿// Cmdlet to get or enumerator Windows Installer products.
 //
-// Created: Tue, 10 Mar 2009 06:14:57 GMT
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -8,9 +7,9 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using Microsoft.Deployment.WindowsInstaller;
 using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
-using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {

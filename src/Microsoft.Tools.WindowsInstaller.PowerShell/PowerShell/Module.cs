@@ -1,6 +1,5 @@
 ﻿// Static methods specific to the WindowsInstaller module.
 //
-// Created: Sat, 14 Mar 2009 22:59:16 GMT
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -8,8 +7,8 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Deployment.WindowsInstaller;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {

@@ -7,14 +7,13 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Xml;
-using Microsoft.Win32;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -39,24 +38,24 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </remarks>
     internal sealed class MockRegistry : IDisposable
     {
-        static readonly IntPtr HKEY_CURRENT_USER = new IntPtr(unchecked((int)0x80000001));
-        static readonly IntPtr HKEY_LOCAL_MACHINE = new IntPtr(unchecked((int)0x80000002));
-        static readonly IntPtr HKEY_USERS = new IntPtr(unchecked((int)0x80000003));
+        private static readonly IntPtr HKEY_CURRENT_USER = new IntPtr(unchecked((int)0x80000001));
+        private static readonly IntPtr HKEY_LOCAL_MACHINE = new IntPtr(unchecked((int)0x80000002));
+        private static readonly IntPtr HKEY_USERS = new IntPtr(unchecked((int)0x80000003));
 
-        static object syncRoot = new object();
-        static int count = 0;
+        private static volatile object syncRoot = new object();
+        private static int count = 0;
 
-        string baseKeyPath;
-        RegistryKey currentUser;
-        RegistryKey localMachine;
-        RegistryKey users;
+        private string baseKeyPath;
+        private RegistryKey currentUser;
+        private RegistryKey localMachine;
+        private RegistryKey users;
 
         [DllImport("advapi32.dll")]
-        internal static extern int RegOverridePredefKey(
+        private static extern int RegOverridePredefKey(
             IntPtr hKey,
             IntPtr hNewHKey);
 
-        static SafeHandle GetRegistryHandle(RegistryKey key)
+        private SafeHandle GetRegistryHandle(RegistryKey key)
         {
             FieldInfo hkey = key.GetType().GetField("hkey", BindingFlags.Instance | BindingFlags.NonPublic);
             if (null != hkey)
@@ -75,43 +74,40 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <exception cref="InvalidOperationException">Another instance of this class is already active.</exception>
         internal MockRegistry()
         {
-            lock (syncRoot)
+            // Treat this disposable object as a singleton.
+            if (0 == count)
             {
-                if (0 == count)
+                lock (syncRoot)
                 {
-                    // Redirect registry access to a user location.
-                    Assembly asm = GetType().Assembly;
-                    AssemblyName name = asm.GetName();
+                    if (0 == count)
+                    {
+                        // Redirect registry access to a user location.
+                        AssemblyName name = this.GetType().Assembly.GetName();
 
-                    baseKeyPath = string.Format(@"Software\{0}\{1:B}", name.Name, Guid.NewGuid());
+                        this.baseKeyPath = string.Format(@"Software\{0}\{1:B}", name.Name, Guid.NewGuid());
 
-                    currentUser = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKCU");
-                    localMachine = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKLM");
-                    users = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKU");
+                        this.currentUser = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKCU");
+                        this.localMachine = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKLM");
+                        this.users = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKU");
 
-                    int ret;
-                    SafeHandle handle;
+                        int ret;
+                        SafeHandle handle;
 
-                    handle = GetRegistryHandle(currentUser);
-                    ret = RegOverridePredefKey(HKEY_CURRENT_USER, handle.DangerousGetHandle());
-                    if (0 != ret) { throw new Win32Exception(ret); }
+                        handle = GetRegistryHandle(currentUser);
+                        ret = RegOverridePredefKey(HKEY_CURRENT_USER, handle.DangerousGetHandle());
+                        if (0 != ret) { throw new Win32Exception(ret); }
 
-                    handle = GetRegistryHandle(localMachine);
-                    ret = RegOverridePredefKey(HKEY_LOCAL_MACHINE, handle.DangerousGetHandle());
-                    if (0 != ret) { throw new Win32Exception(ret); }
+                        handle = GetRegistryHandle(localMachine);
+                        ret = RegOverridePredefKey(HKEY_LOCAL_MACHINE, handle.DangerousGetHandle());
+                        if (0 != ret) { throw new Win32Exception(ret); }
 
-                    handle = GetRegistryHandle(users);
-                    ret = RegOverridePredefKey(HKEY_USERS, handle.DangerousGetHandle());
-                    if (0 != ret) { throw new Win32Exception(ret); }
+                        handle = GetRegistryHandle(users);
+                        ret = RegOverridePredefKey(HKEY_USERS, handle.DangerousGetHandle());
+                        if (0 != ret) { throw new Win32Exception(ret); }
 
-                    // Finally increment the count if we got this far.
-                    count++;
-                }
-                else
-                {
-                    // Throw from the constructor to disposing.
-                    GC.SuppressFinalize(this);
-                    throw new InvalidOperationException();
+                        // Finally increment the count if we got this far.
+                        count++;
+                    }
                 }
             }
         }
@@ -127,7 +123,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <param name="path">Path to the registry XML file to import.</param>
         internal void Import(string path)
         {
-            Import(path, null);
+            this.Import(path, null);
         }
 
         /// <summary>
@@ -172,28 +168,27 @@ namespace Microsoft.Tools.WindowsInstaller
 
         void Dispose(bool disposing)
         {
-            if (disposing)
+            // Decrement the ref count and dispose if needed.
+            lock (syncRoot)
             {
-                // Restore hives, close the redirected keys, and delete them.
-                using (currentUser)
+                if (0 == --count)
                 {
+                    // Restore the redirected keys to their original hives.
                     RegOverridePredefKey(HKEY_CURRENT_USER, IntPtr.Zero);
-                }
-
-                using (localMachine)
-                {
                     RegOverridePredefKey(HKEY_LOCAL_MACHINE, IntPtr.Zero);
-                }
-
-                using (users)
-                {
                     RegOverridePredefKey(HKEY_USERS, IntPtr.Zero);
+
+                    if (disposing)
+                    {
+                        // Close the redirected keys and delete the parent.
+                        this.currentUser.Dispose();
+                        this.localMachine.Dispose();
+                        this.users.Dispose();
+
+                        Registry.CurrentUser.DeleteSubKeyTree(this.baseKeyPath);
+                    }
                 }
-
-                Registry.CurrentUser.DeleteSubKeyTree(baseKeyPath);
             }
-
-            count--;
         }
     }
 }

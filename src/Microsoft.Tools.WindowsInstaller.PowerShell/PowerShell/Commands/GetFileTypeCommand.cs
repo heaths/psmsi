@@ -1,9 +1,6 @@
 ﻿// Cmdlet to get the storage class type for a file, optionally passing
 // the PSObject back through the pipeline with a new NoteProperty.
 //
-// Author: Heath Stewart <heaths@microsoft.com>
-// Created: Sat, 12 Jan 2008 17:09:56 GMT
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY

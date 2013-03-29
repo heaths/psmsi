@@ -1,6 +1,5 @@
 ﻿// Validates that the argument or collection of arguments are all GUIDs.
 //
-// Created: Sun, 08 Mar 2009 22:02:15 GMT
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -10,8 +9,8 @@
 
 using System;
 using System.Collections;
-using System.Text.RegularExpressions;
 using System.Management.Automation;
+using System.Text.RegularExpressions;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {

@@ -1,6 +1,5 @@
 ﻿// Unit test class for the get-msicomponentinfo cmdlet.
 //
-// Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -8,10 +7,10 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -86,7 +85,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         [Description("Tests chained execution of get-msicomponentinfo")]
         [WorkItem(9464)]
-        public void ChainedExecution()
+        public void GetComponentChainedExecution()
         {
             using (Pipeline p = TestRunspace.CreatePipeline(@"get-msicomponentinfo '{9D8E88E9-8E05-4FC7-AFC7-87759D1D417E}' | get-msicomponentinfo"))
             {

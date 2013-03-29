@@ -1,6 +1,5 @@
 // Installs Cmdlets into PowerShell.
 //
-// Created: Thu, 01 Feb 2007 08:14:04 GMT
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY

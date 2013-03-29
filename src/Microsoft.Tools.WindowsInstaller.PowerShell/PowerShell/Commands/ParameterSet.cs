@@ -1,6 +1,5 @@
 ﻿// Parameter set name constants.
 //
-// Created: Wed, 12 Mar 2008 20:59:23 GMT
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -8,7 +7,6 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {

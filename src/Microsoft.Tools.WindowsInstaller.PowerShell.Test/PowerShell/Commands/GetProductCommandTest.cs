@@ -1,6 +1,5 @@
 ﻿// Unit test class for the get-msiproductinfo cmdlet.
 //
-// Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -215,7 +214,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         [Description("Tests chained execution of get-msiproductinfo")]
         [WorkItem(9464)]
-        public void ChainedExecution()
+        public void GetProductChainedExecution()
         {
             using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msiproductinfo"))
             {

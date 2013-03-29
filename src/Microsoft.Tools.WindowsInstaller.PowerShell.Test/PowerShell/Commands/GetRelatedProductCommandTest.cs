@@ -1,6 +1,5 @@
 ﻿// Unit test class for the get-msirelatedproductinfo cmdlet.
 //
-// Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -46,7 +45,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         [Description("Tests chained execution of get-msirelatedproductinfo")]
         [WorkItem(9464)]
-        public void ChainedExecution()
+        public void GetRelatedProductChainedExecution()
         {
             using (Pipeline p = TestRunspace.CreatePipeline(@"get-msirelatedproductinfo '{C1482EA4-07D3-4261-9741-7CEDE6A8C25A}' | add-member -name UpgradeCode -type noteproperty -value '{C1482EA4-07D3-4261-9741-7CEDE6A8C25A}' -passthru | get-msirelatedproductinfo"))
             {

@@ -1,6 +1,5 @@
 ﻿// Unit test class for the get-msigetpatch cmdlet.
 //
-// Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -8,12 +7,12 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -198,7 +197,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         [Description("Tests chained execution of get-msipatchinfo")]
         [WorkItem(9464)]
-        public void ChainedExecution()
+        public void GetPatchChainedExecution()
         {
             using (Pipeline p = TestRunspace.CreatePipeline(@"get-msipatchinfo -productCode '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msipatchinfo"))
             {

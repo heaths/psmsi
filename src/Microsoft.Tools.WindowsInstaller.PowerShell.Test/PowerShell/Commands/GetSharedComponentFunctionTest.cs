@@ -1,6 +1,5 @@
 ﻿// Functional tests for the get-msisharedcomponentinfo function.
 //
-// Author: Heath Stewart
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY

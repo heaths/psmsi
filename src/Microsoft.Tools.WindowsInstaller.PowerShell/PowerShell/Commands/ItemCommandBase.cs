@@ -1,6 +1,5 @@
 ﻿// Base class for cmdlets which process items (files).
 //
-// Created: Sun, 01 Mar 2009 08:40:54 GMT
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
