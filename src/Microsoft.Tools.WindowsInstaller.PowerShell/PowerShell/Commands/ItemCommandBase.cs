@@ -20,19 +20,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     {
         private static readonly string[] All = new string[] { "*" };
 
-        private string[] paths;
-        private bool passThru;
-
         /// <summary>
         /// Gets or sets the path supporting wildcards to enumerate files.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Path, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        public string[] Path
-        {
-            get { return this.paths; }
-            set { this.paths = value; }
-        }
+        public string[] Path { get; set; }
 
         /// <summary>
         /// Gets or sets the literal path for one or more files.
@@ -43,34 +36,30 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [Alias("PSPath")]
         public string[] LiteralPath
         {
-            get { return this.paths; }
-            set { this.paths = value; }
+            get { return this.Path; }
+            set { this.Path = value; }
         }
 
         /// <summary>
         /// Gets or sets whether the file objects are returned.
         /// </summary>
         [Parameter]
-        public SwitchParameter PassThru
-        {
-            get { return this.passThru; }
-            set { this.passThru = value; }
-        }
+        public SwitchParameter PassThru { get; set; }
 
         /// <summary>
         /// Processes the input paths and writes the file hashes to the pipeline.
         /// </summary>
         protected override void ProcessRecord()
         {
-            // If no path was provided, enumerate a set of null.
-            if (this.paths == null || this.paths.Length == 0)
+            // If no path was provided, enumerate all child items.
+            if (this.Path == null || this.Path.Length == 0)
             {
-                this.paths = All;
+                this.Path = All;
             }
 
             // Get all the items.
             bool literal = this.ParameterSetName == ParameterSet.LiteralPath;
-            Collection<PSObject> items = this.InvokeProvider.Item.Get(this.paths, true, literal);
+            Collection<PSObject> items = this.InvokeProvider.Item.Get(this.Path, true, literal);
 
             foreach (PSObject item in items)
             {
@@ -79,10 +68,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 {
                     // Get the provider path.
                     string path = PathConverter.ToProviderPath(this.SessionState, property.Value as string);
-                    if (!string.IsNullOrEmpty(path))
+                    if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
                     {
                         // Process the item.
-                        this.ProcessItem(item, path);
+                        this.ProcessItem(item);
+                    }
+                    else
+                    {
+                        string message = string.Format(Properties.Resources.Error_InvalidFile, path);
+                        PSNotSupportedException ex = new PSNotSupportedException(message);
+
+                        this.WriteError(ex.ErrorRecord);
                     }
                 }
             }
@@ -92,7 +88,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// Processes the item in the inheriting class.
         /// </summary>
         /// <param name="item">The <see cref="PSObject"/> to process.</param>
-        /// <param name="path">The provider path from the PSPath attached to the <paramref name="item"/>.</param>
-        protected abstract void ProcessItem(PSObject item, string path);
+        protected abstract void ProcessItem(PSObject item);
     }
 }

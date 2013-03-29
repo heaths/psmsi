@@ -70,14 +70,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Collection<PSObject> objs = p.Invoke();
 
                 Assert.AreNotEqual<int>(0, objs.Count);
-                Assert.IsInstanceOfType(objs[0].BaseObject, typeof(FileInfo));
+                Assert.IsInstanceOfType(objs[0].BaseObject, typeof(System.IO.FileInfo));
 
                 foreach (PSObject obj in objs)
                 {
                     Assert.IsNotNull(obj.Properties["MSIFileType"]);
                     Assert.IsInstanceOfType(obj.Properties["MSIFileType"].Value, typeof(string));
 
-                    FileInfo file = obj.BaseObject as FileInfo;
+                    System.IO.FileInfo file = obj.BaseObject as System.IO.FileInfo;
                     switch (file.Extension)
                     {
                         case ".msi":

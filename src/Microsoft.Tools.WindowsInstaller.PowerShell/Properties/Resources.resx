@@ -147,4 +147,7 @@
   <data name="Error_InvalidStorage" xml:space="preserve">
     <value>The file "{0}" is not a supported format.</value>
   </data>
+  <data name="Error_InvalidFile" xml:space="preserve">
+    <value>The path "{0}" is not a file or does not exist.</value>
+  </data>
 </root>

@@ -22,8 +22,6 @@ namespace Microsoft.Tools.WindowsInstaller
     [TestClass]
     public static class TestProject
     {
-        private static Runspace testRunspace;
-
         /// <summary>
         /// A delegate that takes no parameters and returns no value.
         /// </summary>
@@ -47,10 +45,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <summary>
         /// Gets the <see cref="Runspace"/> for all the cmdlet tests.
         /// </summary>
-        internal static Runspace TestRunspace
-        {
-            get { return TestProject.testRunspace; }
-        }
+        internal static Runspace TestRunspace { get; private set; }
 
         /// <summary>
         /// Gets the username for the current user.
@@ -80,10 +75,13 @@ namespace Microsoft.Tools.WindowsInstaller
             });
 
             // Create and configure the runspace.
-            TestProject.testRunspace = RunspaceFactory.CreateRunspace(state);
-            TestProject.testRunspace.ThreadOptions = PSThreadOptions.UseNewThread;
+            TestProject.TestRunspace = RunspaceFactory.CreateRunspace(state);
+            TestProject.TestRunspace.ThreadOptions = PSThreadOptions.UseNewThread;
 
-            TestProject.testRunspace.Open();
+            // Set the default runspace.
+            Runspace.DefaultRunspace = TestProject.TestRunspace;
+
+            TestProject.TestRunspace.Open();
         }
 
         /// <summary>
@@ -93,9 +91,9 @@ namespace Microsoft.Tools.WindowsInstaller
         public static void Cleanup()
         {
             // Close and dispose of the pool.
-            using (TestProject.testRunspace)
+            using (TestProject.TestRunspace)
             {
-                TestProject.testRunspace.Close();
+                TestProject.TestRunspace.Close();
             }
         }
 
