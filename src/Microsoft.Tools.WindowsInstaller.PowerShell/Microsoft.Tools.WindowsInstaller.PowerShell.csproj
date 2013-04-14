@@ -88,9 +88,6 @@
     <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />
-    <Compile Include="PowerShell\SnapIn.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="PowerShell\Module.cs" />
     <Compile Include="PowerShell\PathConverter.cs" />
     <Compile Include="PowerShell\SidAttribute.cs" />

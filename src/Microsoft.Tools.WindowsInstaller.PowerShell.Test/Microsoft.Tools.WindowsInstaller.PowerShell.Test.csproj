@@ -85,7 +85,6 @@
     <Compile Include="PowerShell\SidAttributeTest.cs" />
     <Compile Include="PowerShell\UtilitiesTest.cs" />
     <Compile Include="PowerShell\ValidateGuidAttributeTest.cs" />
-    <Compile Include="PowerShell\SnapInTest.cs" />
     <Compile Include="RegistryXml.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommandTest.cs" />
