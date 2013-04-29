@@ -61,6 +61,33 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generating script....
+        /// </summary>
+        internal static string Action_GeneratingScript {
+            get {
+                return ResourceManager.GetString("Action_GeneratingScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing {0}.
+        /// </summary>
+        internal static string Action_Install {
+            get {
+                return ResourceManager.GetString("Action_Install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait....
+        /// </summary>
+        internal static string Action_Wait {
+            get {
+                return ResourceManager.GetString("Action_Wait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The user context &quot;None&quot; is not valid for this operation..
         /// </summary>
         internal static string Error_InvalidContext {

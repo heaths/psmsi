@@ -150,4 +150,13 @@
   <data name="Error_InvalidFile" xml:space="preserve">
     <value>The path "{0}" is not a file or does not exist.</value>
   </data>
+  <data name="Action_Install" xml:space="preserve">
+    <value>Installing {0}</value>
+  </data>
+  <data name="Action_GeneratingScript" xml:space="preserve">
+    <value>Generating script...</value>
+  </data>
+  <data name="Action_Wait" xml:space="preserve">
+    <value>Please wait...</value>
+  </data>
 </root>
