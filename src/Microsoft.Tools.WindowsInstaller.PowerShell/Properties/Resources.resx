@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SnapIn_Description" xml:space="preserve">
-    <value>Windows Installer PowerShell Snap-In</value>
-  </data>
-  <data name="SnapIn_Vendor" xml:space="preserve">
-    <value>Microsoft Corporation</value>
-  </data>
   <data name="Error_InvalidSid" xml:space="preserve">
     <value>The security identifier is invalid.</value>
   </data>

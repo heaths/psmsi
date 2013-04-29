@@ -115,24 +115,6 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Windows Installer PowerShell Snap-In.
-        /// </summary>
-        internal static string SnapIn_Description {
-            get {
-                return ResourceManager.GetString("SnapIn_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Microsoft Corporation.
-        /// </summary>
-        internal static string SnapIn_Vendor {
-            get {
-                return ResourceManager.GetString("SnapIn_Vendor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Package.
         /// </summary>
         internal static string Type_Package {
