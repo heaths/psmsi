@@ -61,7 +61,7 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The user context &quot;None&quot; is not validation for this operation..
+        ///   Looks up a localized string similar to The user context &quot;None&quot; is not valid for this operation..
         /// </summary>
         internal static string Error_InvalidContext {
             get {

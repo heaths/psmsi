@@ -136,7 +136,7 @@
     <value>Transform</value>
   </data>
   <data name="Error_InvalidContext" xml:space="preserve">
-    <value>The user context "None" is not validation for this operation.</value>
+    <value>The user context "None" is not valid for this operation.</value>
   </data>
   <data name="Error_InvalidFilter" xml:space="preserve">
     <value>The patch state filter "None" is not valid for this operation.</value>
