@@ -35,7 +35,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             this.previousInternalUI = InstallUIOptions.Default;
             this.previousExternalUI = null;
 
-            this.Actions = new List<T>();
+            this.Actions = new ActionQueue();
             this.progress = new ProgressDataCollection();
         }
 
@@ -75,7 +75,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// The queued actions to perform for installation.
         /// </summary>
-        protected List<T> Actions { get; private set; }
+        protected ActionQueue Actions { get; private set; }
 
         /// <summary>
         /// Gets the activity being performed.
@@ -109,7 +109,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     data.CommandLine = string.Join(" ", this.Properties);
                 }
 
-                this.Actions.Add(data);
+                this.Actions.Enqueue(data);
             }
         }
 
@@ -266,11 +266,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 var current = this.progress.Current;
                 if (current.Forward)
                 {
-                    current.Completed += current.Step;
+                    current.Complete += current.Step;
                 }
                 else
                 {
-                    current.Completed -= current.Step;
+                    current.Complete -= current.Step;
                 }
 
                 // Set the current action message.
@@ -380,7 +380,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                     current.Forward = 0 == record.GetInteger(3);
                     current.Total = record.GetInteger(2);
-                    current.Completed = current.Forward ? 0 : current.Total;
+                    current.Complete = current.Forward ? 0 : current.Total;
                     current.EnableActionData = false;
                     current.InScript = 0 == record.GetInteger(4);
 
@@ -426,11 +426,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     // Adjust the current progress.
                     if (this.progress.Current.Forward)
                     {
-                        this.progress.Current.Completed += record.GetInteger(2);
+                        this.progress.Current.Complete += record.GetInteger(2);
                     }
                     else
                     {
-                        this.progress.Current.Completed -= record.GetInteger(2);
+                        this.progress.Current.Complete -= record.GetInteger(2);
                     }
                     break;
 
@@ -472,42 +472,37 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         private void ExecuteActions()
         {
+            // Keep track of how many actions were queued.
+            this.Actions.OriginalCount = this.Actions.Count;
+
             // Execute the actions.
-            this.Actions.ForEach(data =>
+            while (0 < this.Actions.Count)
+            {
+                try
                 {
-                    try
+                    T data = this.Actions.Dequeue();
+                    this.ExecuteAction(data);
+                }
+                catch (InstallerException ex)
+                {
+                    var psiex = new PSInstallerException(ex);
+                    if (null != psiex.ErrorRecord)
                     {
-                        this.ExecuteAction(data);
+                        this.WriteError(psiex.ErrorRecord);
                     }
-                    catch (InstallerException ex)
+                    else
                     {
-                        var psiex = new PSInstallerException(ex);
-                        if (null != psiex.ErrorRecord)
-                        {
-                            this.WriteError(psiex.ErrorRecord);
-                        }
-                        else
-                        {
-                            // Unexpected not to have an ErrorRecord.
-                            throw;
-                        }
+                        // Unexpected not to have an ErrorRecord.
+                        throw;
                     }
                 }
-            );
-
-            // Clear the actions after processing.
-            this.Actions.Clear();
+            }
         }
 
         private void Reset()
         {
             // Reset progress.
-            this.progress.Clear();
-            this.progress.CurrentAction = Resources.Action_Wait;
-            this.progress.CurrentActionDetail = null;
-
-            // Default to empty name so "(null)" doesn't show for activity.
-            this.progress.CurrentProductName = string.Empty;
+            this.progress.Reset();
         }
 
         [Conditional("DEBUG")]
@@ -561,25 +556,38 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     record.CurrentOperation = this.progress.CurrentActionDetail;
                 }
 
-                // Show percent completed.
+                // Calculate progress for all completed actions. Current action was already dequeued.
+                int completed = this.Actions.OriginalCount - (this.Actions.Count + 1);
+                int percent = 100 / this.Actions.OriginalCount * completed;
+
+                // Calculate the remaining progress for the current action.
                 if (this.progress.IsValid)
                 {
-                    var current = this.progress.Current;
-                    if (0 < current.Total)
-                    {
-                        record.PercentComplete = (int)Math.Min(100f, (float)current.Completed / current.Total * 100);
-                    }
+                    percent += this.progress.PercentComplete / this.Actions.OriginalCount;
                 }
+
+                record.PercentComplete = Math.Min(100, percent);
             }
 
             this.WriteProgress(record);
+        }
+
+        /// <summary>
+        /// Action queue.
+        /// </summary>
+        public sealed class ActionQueue : Queue<T>
+        {
+            /// <summary>
+            /// Gets the original queue count before processing.
+            /// </summary>
+            public int OriginalCount { get; internal set; }
         }
 
         private sealed class ProgressData
         {
             internal int Total = 0;
             internal int Step = 0;
-            internal int Completed = 0;
+            internal int Complete = 0;
             internal bool Forward = true;
             internal bool InScript = false;
             internal bool EnableActionData = true;
@@ -587,6 +595,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         private sealed class ProgressDataCollection : List<ProgressData>
         {
+            private static readonly int[] Weights = { 15, 80, 5 };
+
             internal ProgressData Add()
             {
                 var data = new ProgressData();
@@ -613,6 +623,40 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             internal bool IsValid
             {
                 get { return 0 < this.Count; }
+            }
+
+            internal int PercentComplete
+            {
+                get
+                {
+                    int percent = 0;
+
+                    for (int i = 0; i < this.Count && i < ProgressDataCollection.Weights.Length; ++i)
+                    {
+                        if (i < this.CurrentIndex)
+                        {
+                            // If the phase is completed use the entire weight.
+                            percent += ProgressDataCollection.Weights[i];
+                        }
+                        else if (i == this.CurrentIndex && 0 < this.Current.Total)
+                        {
+                            // Calculate the remaining progress for this phase.
+                            percent += this.Current.Complete * ProgressDataCollection.Weights[i] / this.Current.Total;
+                        }
+                    }
+
+                    return Math.Min(100, percent);
+                }
+            }
+
+            internal void Reset()
+            {
+                this.Clear();
+                this.CurrentAction = Resources.Action_Wait;
+                this.CurrentActionDetail = null;
+
+                // Default to empty name so "(null)" doesn't show for activity.
+                this.CurrentProductName = string.Empty;
             }
         }
     }

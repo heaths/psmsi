@@ -166,26 +166,26 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     }
                 }
                 Assert.AreEqual<int>(0, ps.Streams.Progress[1].PercentComplete, "The phase 2 step 1 % complete is incorrect.");
-                Assert.AreEqual<int>(50, ps.Streams.Progress[2].PercentComplete, "The phase 2 step 2 % complete is incorrect.");
-                Assert.AreEqual<int>(33, ps.Streams.Progress[3].PercentComplete, "the phase 2 step 3 % complete is incorrect.");
+                Assert.AreEqual<int>(7, ps.Streams.Progress[2].PercentComplete, "The phase 2 step 2 % complete is incorrect.");
+                Assert.AreEqual<int>(5, ps.Streams.Progress[3].PercentComplete, "the phase 2 step 3 % complete is incorrect.");
 
                 // Phase 3: With product name, estimated tick count, executing script.
                 progress = ps.Streams.Progress[4];
                 Assert.AreEqual("Testing INSTALL", progress.Activity, "The phase 3 step 1 activity is incorrect.");
                 Assert.AreEqual("Generating script...", progress.StatusDescription, "The phase 3 step 1 status description is incorrect.");
-                Assert.AreEqual<int>(0, progress.PercentComplete, "The phase 3 step 1 % complete is incorrect.");
+                Assert.AreEqual<int>(15, progress.PercentComplete, "The phase 3 step 1 % complete is incorrect.");
                 Assert.IsNull(progress.CurrentOperation, "The phase 3 step 1 operation is incorrect.");
 
                 progress = ps.Streams.Progress[5];
                 Assert.AreEqual("Testing INSTALL", progress.Activity, "The phase 3 step 2 activity is incorrect.");
                 Assert.AreEqual("Testing", progress.StatusDescription, "The phase 3 step 2 status description is incorrect.");
-                Assert.AreEqual<int>(0, progress.PercentComplete, "The phase 3 step 2 % complete is incorrect.");
+                Assert.AreEqual<int>(15, progress.PercentComplete, "The phase 3 step 2 % complete is incorrect.");
                 Assert.IsNull(progress.CurrentOperation, "The phase 3 step 2 operation is incorrect.");
 
                 progress = ps.Streams.Progress[6];
                 Assert.AreEqual("Testing INSTALL", progress.Activity, "The phase 3 step 3 activity is incorrect.");
                 Assert.AreEqual("Testing", progress.StatusDescription, "The phase 3 step 3 status description is incorrect.");
-                Assert.AreEqual<int>(50, progress.PercentComplete, "The phase 3 step 3 % complete is incorrect.");
+                Assert.AreEqual<int>(55, progress.PercentComplete, "The phase 3 step 3 % complete is incorrect.");
                 Assert.AreEqual("Testing: ActionData", progress.CurrentOperation, "The phase 3 step 2 operation is incorrect.");
 
                 // Make sure progress was completed.
@@ -220,7 +220,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             protected override void ExecuteAction(ActionData data)
             {
                 this.ExecuteCount++;
-                this.QueueCountMax = Math.Max(this.QueueCountMax, this.Actions.Count);
+
+                // The action data was already dequeued so add 1 to the max count.
+                this.QueueCountMax = Math.Max(this.QueueCountMax, this.Actions.Count + 1);
 
                 switch (data.Action.ToLowerInvariant())
                 {
@@ -261,7 +263,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     };
 
                     this.QueueCount++;
-                    this.Actions.Add(data);
+                    this.Actions.Enqueue(data);
                 }
             }
 
