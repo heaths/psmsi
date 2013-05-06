@@ -19,7 +19,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// <summary>
     /// Base class for product and patch install commands.
     /// </summary>
-    public abstract class InstallCommandBase<T> : PSCmdlet where T : InstallCommandActionData, new()
+    public abstract class InstallCommandBase<T> : PSCmdlet where T : InstallPackageActionData, new()
     {
         private InstallUIOptions previousInternalUI;
         private ExternalUIRecordHandler previousExternalUI;
@@ -85,11 +85,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Called to allow child classes to execute based on the given <paramref name="data"/>.
         /// </summary>
-        /// <param name="data">The <see cref="InstallCommandActionData"/> on which to execute.</param>
+        /// <param name="data">The <see cref="InstallPackageActionData"/> on which to execute.</param>
         protected abstract void ExecuteAction(T data);
 
         /// <summary>
-        /// Called to allow child classes to queue <see cref="InstallCommandActionData"/> into <see cref="Actions"/>.
+        /// Called to allow child classes to queue <see cref="InstallPackageActionData"/> into <see cref="Actions"/>.
         /// </summary>
         /// <remarks>
         /// The default implementation gets the fully qualified path(s) of file(s) specified as arguments or piped into the command.
@@ -99,15 +99,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var paths = this.InvokeProvider.Item.Get(this.Path, true, ParameterSet.LiteralPath == this.ParameterSetName);
             foreach (var path in paths)
             {
-                var data = new T()
-                {
-                    Path = this.GetUnresolvedProviderPathFromPSPath(path.Properties["PSPath"].Value as string),
-                };
-
-                if (null != this.Properties && 0 < this.Properties.Length)
-                {
-                    data.CommandLine = string.Join(" ", this.Properties);
-                }
+                var data = InstallPackageActionData.CreateActionData<T>(this.SessionState.Path, path);
+                data.ParseCommandLine(this.Properties);
 
                 this.Actions.Enqueue(data);
             }
@@ -659,21 +652,5 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 this.CurrentProductName = string.Empty;
             }
         }
-    }
-
-    /// <summary>
-    /// The data for actions to perform for installation.
-    /// </summary>
-    public class InstallCommandActionData
-    {
-        /// <summary>
-        /// Gets or sets the package path for which the action is performed.
-        /// </summary>
-        public string Path { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fully expanded command line to process when performing the action.
-        /// </summary>
-        public string CommandLine { get; set; }
     }
 }

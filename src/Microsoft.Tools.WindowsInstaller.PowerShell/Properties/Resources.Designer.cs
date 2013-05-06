@@ -79,6 +79,24 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Repairing {0}.
+        /// </summary>
+        internal static string Action_Repair {
+            get {
+                return ResourceManager.GetString("Action_Repair", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstalling {0}.
+        /// </summary>
+        internal static string Action_Uninstall {
+            get {
+                return ResourceManager.GetString("Action_Uninstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please wait....
         /// </summary>
         internal static string Action_Wait {

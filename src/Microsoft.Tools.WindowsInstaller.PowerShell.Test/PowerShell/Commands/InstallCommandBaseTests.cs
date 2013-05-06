@@ -390,7 +390,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
             }
 
-            internal sealed class ActionData : InstallCommandActionData
+            internal sealed class ActionData : InstallPackageActionData
             {
                 internal string Action { get; set; }
             }

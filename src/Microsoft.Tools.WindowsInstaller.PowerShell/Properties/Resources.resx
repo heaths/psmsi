@@ -159,4 +159,10 @@
   <data name="Action_Wait" xml:space="preserve">
     <value>Please wait...</value>
   </data>
+  <data name="Action_Repair" xml:space="preserve">
+    <value>Repairing {0}</value>
+  </data>
+  <data name="Action_Uninstall" xml:space="preserve">
+    <value>Uninstalling {0}</value>
+  </data>
 </root>

@@ -15,7 +15,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Install-MSIProduct cmdlet.
     /// </summary>
     [Cmdlet(VerbsLifecycle.Install, "MSIProduct", DefaultParameterSetName = ParameterSet.Path)]
-    public sealed class InstallProductCommand : InstallCommandBase<InstallCommandActionData>
+    public sealed class InstallProductCommand : InstallCommandBase<InstallPackageActionData>
     {
         /// <summary>
         /// Gets a generic description of the activity performed by this cmdlet.
@@ -28,8 +28,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Installs a product given the provided <paramref name="data"/>.
         /// </summary>
-        /// <param name="data">An <see cref="InstallCommandActionData"/> with information about the package to install.</param>
-        protected override void ExecuteAction(InstallCommandActionData data)
+        /// <param name="data">An <see cref="InstallPackageActionData"/> with information about the package to install.</param>
+        protected override void ExecuteAction(InstallPackageActionData data)
         {
             Installer.InstallProduct(data.Path, data.CommandLine);
         }
