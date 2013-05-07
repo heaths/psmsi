@@ -142,6 +142,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The ReinstallMode contains an invalid character: {0}..
+        /// </summary>
+        internal static string Error_InvalidReinstallMode {
+            get {
+                return ResourceManager.GetString("Error_InvalidReinstallMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The security identifier is invalid..
         /// </summary>
         internal static string Error_InvalidSid {

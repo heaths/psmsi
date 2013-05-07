@@ -87,6 +87,7 @@
     <Compile Include="PowerShell\ModuleTest.cs" />
     <Compile Include="PowerShell\PathConverterTest.cs" />
     <Compile Include="PowerShell\PSInstallerExceptionTests.cs" />
+    <Compile Include="PowerShell\ReinstallModeAttributeTests.cs" />
     <Compile Include="PowerShell\SidAttributeTest.cs" />
     <Compile Include="PowerShell\UtilitiesTest.cs" />
     <Compile Include="PowerShell\ValidateGuidAttributeTest.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="PowerShell\Commands\GetFileTypeCommandTest.cs" />
     <Compile Include="PowerShell\Commands\CommandTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReinstallModesConverterTests.cs" />
     <Compile Include="TestProject.cs" />
   </ItemGroup>
   <ItemGroup>

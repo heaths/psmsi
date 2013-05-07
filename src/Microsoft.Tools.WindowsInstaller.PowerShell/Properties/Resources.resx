@@ -165,4 +165,7 @@
   <data name="Action_Uninstall" xml:space="preserve">
     <value>Uninstalling {0}</value>
   </data>
+  <data name="Error_InvalidReinstallMode" xml:space="preserve">
+    <value>The ReinstallMode contains an invalid character: {0}.</value>
+  </data>
 </root>

@@ -96,6 +96,7 @@
     <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />
     <Compile Include="PowerShell\PSInstallerException.cs" />
+    <Compile Include="PowerShell\ReinstallModeAttribute.cs" />
     <Compile Include="PowerShell\SnapIn.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -110,6 +111,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ReinstallModesConverter.cs" />
     <Compile Include="Storage.cs" />
   </ItemGroup>
   <ItemGroup>

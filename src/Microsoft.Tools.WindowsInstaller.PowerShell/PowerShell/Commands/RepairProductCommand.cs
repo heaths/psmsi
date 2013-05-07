@@ -36,6 +36,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         /// <value>The default value is <see cref="RepairProductActionData.Default"/>.</value>
         [Parameter(ValueFromPipelineByPropertyName = true)]
+        [ReinstallMode]
         public ReinstallModes ReinstallMode { get; set; }
 
         /// <summary>
