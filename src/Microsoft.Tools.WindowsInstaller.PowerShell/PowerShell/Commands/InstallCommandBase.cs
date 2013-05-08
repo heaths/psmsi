@@ -73,6 +73,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public SwitchParameter Chain { get; set; }
 
         /// <summary>
+        /// Gets or sets whether any prompts should be suppressed.
+        /// </summary>
+        [Parameter]
+        public SwitchParameter Force { get; set; }
+
+        /// <summary>
         /// The queued actions to perform for installation.
         /// </summary>
         protected ActionQueue Actions { get; private set; }
@@ -111,7 +117,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         protected override void BeginProcessing()
         {
-            var internalUI = InstallUIOptions.Silent | InstallUIOptions.SourceResolutionOnly | InstallUIOptions.UacOnly;
+            var internalUI = InstallUIOptions.Silent;
+            if (!this.Force)
+            {
+                internalUI |= InstallUIOptions.SourceResolutionOnly | InstallUIOptions.UacOnly;
+            }
+
             var externalUI = InstallLogModes.ActionStart | InstallLogModes.ActionData | InstallLogModes.CommonData | InstallLogModes.Error
                            | InstallLogModes.FatalExit | InstallLogModes.Info | InstallLogModes.Initialize | InstallLogModes.Progress
                            | InstallLogModes.User | InstallLogModes.Verbose | InstallLogModes.Warning;
