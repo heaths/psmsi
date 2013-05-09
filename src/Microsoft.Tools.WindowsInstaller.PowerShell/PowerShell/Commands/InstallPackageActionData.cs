@@ -26,6 +26,24 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public string CommandLine { get; set; }
 
         /// <summary>
+        /// Gets an identifying name used for logging.
+        /// </summary>
+        internal virtual string LogName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.Path))
+                {
+                    return System.IO.Path.GetFileNameWithoutExtension(this.Path);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+        /// <summary>
         /// Creates an instance of an <see cref="InstallPackageActionData"/> class from the given file path.
         /// </summary>
         /// <typeparam name="T">The specific type of <see cref="InstallPackageActionData"/> to create.</typeparam>

@@ -20,6 +20,24 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public string ProductCode { get; set; }
 
         /// <summary>
+        /// Gets the <see cref="ProductCode"/> if set; otherwise, returns the package path.
+        /// </summary>
+        internal override string LogName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.ProductCode))
+                {
+                    return this.ProductCode;
+                }
+                else
+                {
+                    return base.LogName;
+                }
+            }
+        }
+
+        /// <summary>
         /// Opens the package read-only and sets the <see cref="ProductCode"/> property.
         /// </summary>
         public void SetProductCode()

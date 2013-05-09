@@ -1,0 +1,64 @@
+﻿// Copyright (C) Microsoft Corporation. All rights reserved.
+//
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
+
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Globalization;
+using System.IO;
+
+namespace Microsoft.Tools.WindowsInstaller
+{
+    /// <summary>
+    /// Tests for the <see cref="Log"/> class.
+    /// </summary>
+    [TestClass]
+    public sealed class LogTests
+    {
+        [TestMethod]
+        public void LoggingDefaultPath()
+        {
+            DateTime start = DateTime.Now;
+
+            var log = new Log(null, start);
+            Assert.AreEqual<InstallLogModes>(InstallLogModes.Verbose | InstallLogModes.OutOfDiskSpace | InstallLogModes.Info | InstallLogModes.CommonData
+                | InstallLogModes.Error | InstallLogModes.Warning | InstallLogModes.ActionStart | InstallLogModes.ActionData
+                | InstallLogModes.FatalExit | InstallLogModes.User | InstallLogModes.PropertyDump, log.Mode, "The default logging mode is incorrect.");
+
+            string name = Path.Combine(Path.GetTempPath(), string.Format(CultureInfo.InvariantCulture, "MSI_{0:yyyyMMddhhmmss}", start));
+
+            string extra = null;
+            string path = log.Next(extra);
+            Assert.AreEqual(name + "_000.log", path, true, "The first default log path is incorrect.");
+
+            extra = "test";
+            path = log.Next(extra);
+            Assert.AreEqual(name + "_001_test.log", path, true, "The second default log path is incorrect.");
+        }
+
+        [TestMethod]
+        public void LoggingCustomPath()
+        {
+            DateTime start = DateTime.Now;
+
+            var log = new Log(@"C:\test.txt", start);
+            Assert.AreEqual<InstallLogModes>(InstallLogModes.Verbose | InstallLogModes.OutOfDiskSpace | InstallLogModes.Info | InstallLogModes.CommonData
+                | InstallLogModes.Error | InstallLogModes.Warning | InstallLogModes.ActionStart | InstallLogModes.ActionData
+                | InstallLogModes.FatalExit | InstallLogModes.User | InstallLogModes.PropertyDump | InstallLogModes.ExtraDebug, log.Mode, "The default logging mode is incorrect.");
+
+            string name = string.Format(CultureInfo.InvariantCulture, @"C:\test_{0:yyyyMMddhhmmss}", start);
+
+            string extra = null;
+            string path = log.Next(extra);
+            Assert.AreEqual(name + "_000.txt", path, true, "The first custom log path is incorrect.");
+
+            extra = "test";
+            path = log.Next(extra);
+            Assert.AreEqual(name + "_001_test.txt", path, true, "The second custom log path is incorrect.");
+        }
+    }
+}

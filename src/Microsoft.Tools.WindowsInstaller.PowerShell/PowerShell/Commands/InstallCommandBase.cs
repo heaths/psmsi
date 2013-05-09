@@ -23,6 +23,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     {
         private InstallUIOptions previousInternalUI;
         private ExternalUIRecordHandler previousExternalUI;
+        private Log log;
 
         // Record each phase of progress.
         private ProgressDataCollection progress;
@@ -34,6 +35,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             this.previousInternalUI = InstallUIOptions.Default;
             this.previousExternalUI = null;
+            this.log = null;
 
             this.Actions = new ActionQueue();
             this.progress = new ProgressDataCollection();
@@ -55,6 +57,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             get { return this.Path; }
             set { this.Path = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the logging path.
+        /// </summary>
+        [Parameter]
+        [ValidateNotNullOrEmpty]
+        public string Log { get; set; }
 
         /// <summary>
         /// Gets or sets the remaining arguments as strings.
@@ -130,6 +139,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Set up the internal and external UI handling.
             this.previousInternalUI = Installer.SetInternalUI(internalUI);
             this.previousExternalUI = Installer.SetExternalUI(this.OnMessage, externalUI);
+
+            // Resolve the requested log path, if specified.
+            string path = this.Log;
+            if (!string.IsNullOrEmpty(path))
+            {
+                string pwd = this.SessionState.Path.CurrentFileSystemLocation.ProviderPath;
+                path = System.IO.Path.Combine(pwd, path);
+            }
+
+            // Initialize logging.
+            this.log = new Log(path);
 
             base.BeginProcessing();
         }
@@ -485,6 +505,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 try
                 {
                     T data = this.Actions.Dequeue();
+
+                    string extra = null != data ? data.LogName : null;
+                    Installer.EnableLog(this.log.Mode, this.log.Next(extra));
+
                     this.ExecuteAction(data);
                 }
                 catch (InstallerException ex)

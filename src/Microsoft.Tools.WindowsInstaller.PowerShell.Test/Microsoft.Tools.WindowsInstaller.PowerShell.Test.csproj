@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LocTest.cs" />
+    <Compile Include="LogTests.cs" />
     <Compile Include="MockRegistry.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetFeatureCommandTest.cs" />
