@@ -6,6 +6,7 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Win32;
 using System;
 using System.Globalization;
 using System.IO;
@@ -26,6 +27,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private string extension;
         private int index;
         private DateTime start;
+        private bool initialized;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Log"/> class.
@@ -49,6 +51,7 @@ namespace Microsoft.Tools.WindowsInstaller
             this.extension = null;
             this.index = 0;
             this.start = start;
+            this.initialized = false;
 
             // Default is "voicewarmup".
             this.Mode = InstallLogModes.Verbose | InstallLogModes.OutOfDiskSpace | InstallLogModes.Info | InstallLogModes.CommonData
@@ -63,7 +66,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Gets the <see cref="InsatllLogModes"/> to log.
+        /// Gets the <see cref="InstallLogModes"/> to log.
         /// </summary>
         /// <value>The default is equivalent to "voicewarmup". Providing a path to the constructor will add the equivalent of "x".</value>
         internal InstallLogModes Mode { get; private set; }
@@ -91,6 +94,11 @@ namespace Microsoft.Tools.WindowsInstaller
 
         private void Initialize()
         {
+            if (this.initialized)
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(this.path))
             {
                 string temp = Path.GetTempPath();
@@ -111,6 +119,32 @@ namespace Microsoft.Tools.WindowsInstaller
             {
                 this.extension = Path.GetExtension(this.path);
             }
+
+            // If the log mode is not already set up for debugging, check the system policy.
+            if (InstallLogModes.ExtraDebug != (InstallLogModes.ExtraDebug & this.Mode))
+            {
+                string policy = GetLoggingPolicy();
+                if (!string.IsNullOrEmpty(policy) && 0 <= policy.IndexOf("x", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    this.Mode |= InstallLogModes.ExtraDebug;
+                }
+            }
+
+            this.initialized = true;
+        }
+
+        private static string GetLoggingPolicy()
+        {
+            var key = Registry.LocalMachine.OpenSubKey(@"Software\Policies\Microsoft\Windows\Installer");
+            if (null != key)
+            {
+                using (key)
+                {
+                    return key.GetValue("Logging") as string;
+                }
+            }
+
+            return null;
         }
     }
 }
