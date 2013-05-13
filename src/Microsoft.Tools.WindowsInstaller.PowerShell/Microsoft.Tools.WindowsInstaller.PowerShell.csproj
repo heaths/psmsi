@@ -84,10 +84,12 @@
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetRecordCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
     <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />
+    <Compile Include="PowerShell\RecordPropertyAdapter.cs" />
     <Compile Include="PowerShell\SnapIn.cs">
       <SubType>Component</SubType>
     </Compile>
