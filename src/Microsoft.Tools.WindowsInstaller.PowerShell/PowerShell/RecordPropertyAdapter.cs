@@ -7,7 +7,9 @@
 
 using Microsoft.Deployment.WindowsInstaller;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Management.Automation;
 using System.Reflection;
@@ -19,6 +21,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     /// </summary>
     public sealed class RecordPropertyAdapter : PSPropertyAdapter
     {
+        private Cache<View, PropertySet> cache = new Cache<View, PropertySet>();
+
         /// <summary>
         /// Gets a collection of properties for a <see cref="Record"/>.
         /// </summary>
@@ -29,16 +33,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             var record = baseObject as Record;
             if (null != record)
             {
-                var view = GetView(record);
-                if (null != view)
+                var properties = this.EnsurePropertyCache(record);
+                if (null != properties)
                 {
-                    var properties = new Collection<PSAdaptedProperty>();
-                    foreach (var column in view.Columns)
-                    {
-                        properties.Add(GetProperty(view, record, column.Name));
-                    }
-
-                    return properties;
+                    return properties.ToCollection();
                 }
             }
 
@@ -56,10 +54,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             var record = baseObject as Record;
             if (null != record)
             {
-                var view = GetView(record);
-                if (null != view)
+                var properties = this.EnsurePropertyCache(record);
+                if (null != properties && properties.Contains(propertyName))
                 {
-                    return GetProperty(view, record, propertyName);
+                    return properties[propertyName];
                 }
             }
 
@@ -77,14 +75,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             var field = adaptedProperty.Tag as FieldInfo;
             if (null != field)
             {
-                var type = field.GetColumn().Type;
-                if (typeof(Stream) == type)
-                {
-                    // Will return a byte array instead.
-                    type = typeof(byte[]);
-                }
-
-                return type.FullName;
+                return field.ColumnType.FullName;
             }
 
             throw new InvalidOperationException();
@@ -98,22 +89,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// <exception cref="InvalidOperationException">The property did not contain enough information to complete this operation.</exception>
         public override object GetPropertyValue(PSAdaptedProperty adaptedProperty)
         {
-            var field = adaptedProperty.Tag as FieldInfo;
-            if (null != field)
+            if (null != adaptedProperty)
             {
-                var type = field.GetColumn().Type;
-                if (typeof(string) == type)
-                {
-                    return field.GetStringValue();
-                }
-                else if (typeof(Stream) == type)
-                {
-                    return field.GetBinaryValue();
-                }
-                else
-                {
-                    return field.GetIntegerValue();
-                }
+                return GetPropertyValue(adaptedProperty, adaptedProperty.BaseObject as Record);
             }
 
             throw new InvalidOperationException();
@@ -150,6 +128,30 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             throw new NotSupportedException();
         }
 
+        private PropertySet EnsurePropertyCache(Record record)
+        {
+            var view = GetView(record);
+            if (view != null)
+            {
+                PropertySet properties;
+                if (!this.cache.TryGetValue(view, out properties))
+                {
+                    properties = new PropertySet();
+                    for (int i = 0; i < view.Columns.Count; ++i)
+                    {
+                        var column = view.Columns[i];
+                        properties.Add(new PSAdaptedProperty(column.Name, new FieldInfo() { View = view, Index = i }));
+                    }
+
+                    this.cache.Add(view, properties);
+                }
+
+                return properties;
+            }
+
+            return null;
+        }
+
         private static View GetView(Record record)
         {
             var field = typeof(Record).GetField("view", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -161,35 +163,102 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             return null;
         }
 
-        private static PSAdaptedProperty GetProperty(View view, Record record, string name)
+        internal static object GetPropertyValue(PSAdaptedProperty adaptedProperty, Record record)
         {
-            return new PSAdaptedProperty(name, new FieldInfo() { View = view, Record = record, Name = name });
+            // Caller will check, so simply assert for testing.
+            Debug.Assert(null != adaptedProperty);
+
+            var field = adaptedProperty.Tag as FieldInfo;
+            if (null != field && null != record)
+            {
+                return field.GetValue(record);
+            }
+
+            throw new InvalidOperationException();
         }
 
         private class FieldInfo
         {
             internal View View;
-            internal Record Record;
-            internal string Name;
+            internal int Index;
 
-            internal ColumnInfo GetColumn()
+            internal ColumnInfo Column
             {
-                return this.View.Columns[this.Name];
+                get { return this.View.Columns[this.Index]; }
             }
 
-            internal byte[] GetBinaryValue()
+            internal Type ColumnType
             {
-                throw new NotImplementedException();
+                get
+                {
+                    var column = this.Column;
+                    var type = column.Type;
+
+                    if (typeof(string) == type)
+                    {
+                        return typeof(string);
+                    }
+                    else if (typeof(Stream) == type)
+                    {
+                        return typeof(byte[]);
+                    }
+                    else if (column.IsRequired)
+                    {
+                        return type;
+                    }
+                    else if (typeof(short) == type)
+                    {
+                        return typeof(Nullable<short>);
+                    }
+                    else
+                    {
+                        return typeof(Nullable<int>);
+                    }
+                }
             }
 
-            internal int GetIntegerValue()
+            internal object GetValue(Record record)
             {
-                return this.Record.GetInteger(this.Name);
+                var type = this.Column.Type;
+
+                // Windows Installer records use 1-based indices.
+                var index = this.Index + 1;
+
+                if (null == record)
+                {
+                    return null;
+                }
+                else if (typeof(string) == type)
+                {
+                    return record.GetString(index);
+                }
+                else if (typeof(Stream) == type)
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    return record.GetNullableInteger(index);
+                }
+            }
+        }
+
+        private class PropertySet : KeyedCollection<string, PSAdaptedProperty>
+        {
+            protected override string GetKeyForItem(PSAdaptedProperty item)
+            {
+                if (null == item)
+                {
+                    throw new ArgumentNullException("item");
+                }
+
+                return item.Name;
             }
 
-            internal string GetStringValue()
+            internal Collection<PSAdaptedProperty> ToCollection()
             {
-                return this.Record.GetString(this.Name);
+                var properties = new List<PSAdaptedProperty>(this.Dictionary.Values);
+                return new Collection<PSAdaptedProperty>(properties);
             }
         }
     }

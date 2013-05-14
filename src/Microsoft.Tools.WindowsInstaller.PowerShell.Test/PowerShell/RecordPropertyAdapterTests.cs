@@ -32,29 +32,34 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                     view.Execute();
 
                     // Fetch and test a single record.
-                    var record = view.Fetch();
-                    Assert.IsNotNull(record, "No record was found.");
+                    using (var record = view.Fetch())
+                    {
+                        Assert.IsNotNull(record, "No record was found.");
 
-                    var adapter = new RecordPropertyAdapter();
-                    var properties = adapter.GetProperties(record);
-                    Assert.IsNotNull(properties, "The properties were not adapted.");
-                    Assert.AreEqual<int>(8, properties.Count, "The number of columns are incorrect.");
+                        var adapter = new RecordPropertyAdapter();
+                        var properties = adapter.GetProperties(record);
+                        Assert.IsNotNull(properties, "The properties were not adapted.");
+                        Assert.AreEqual<int>(8, properties.Count, "The number of columns are incorrect.");
 
-                    var property = adapter.GetProperty(record, "FileName");
-                    Assert.IsNotNull(property, "The FileName property was not adapted.");
-                    Assert.IsTrue(adapter.IsGettable(property), "The FileName property is not gettable.");
-                    Assert.AreEqual("System.String", adapter.GetPropertyTypeName(property), true, "The FileName property type is incorrect.");
-                    Assert.AreEqual("product.wxs", adapter.GetPropertyValue(property) as string, "The FileName propert value is incorrect.");
+                        var property = adapter.GetProperty(record, "FileName");
+                        var type = typeof(string).FullName;
+                        Assert.IsNotNull(property, "The FileName property was not adapted.");
+                        Assert.IsTrue(adapter.IsGettable(property), "The FileName property is not gettable.");
+                        Assert.AreEqual(type, adapter.GetPropertyTypeName(property), true, "The FileName property type is incorrect.");
+                        Assert.AreEqual("product.wxs", RecordPropertyAdapter.GetPropertyValue(property, record) as string, "The FileName propert value is incorrect.");
 
-                    property = adapter.GetProperty(record, "Attributes");
-                    Assert.IsNotNull(property, "The Attributes property was not adapted.");
-                    Assert.AreEqual("System.Int16", adapter.GetPropertyTypeName(property), true, "The Attributes property type is incorrect.");
-                    Assert.AreEqual<short>(0, Convert.ToInt16(adapter.GetPropertyValue(property)), "The Attributes propert value is incorrect.");
+                        property = adapter.GetProperty(record, "Attributes");
+                        type = typeof(Nullable<short>).FullName;
+                        Assert.IsNotNull(property, "The Attributes property was not adapted.");
+                        Assert.AreEqual(type, adapter.GetPropertyTypeName(property), true, "The Attributes property type is incorrect.");
+                        Assert.AreEqual<short>(0, Convert.ToInt16(RecordPropertyAdapter.GetPropertyValue(property, record)), "The Attributes propert value is incorrect.");
 
-                    property = adapter.GetProperty(record, "Sequence");
-                    Assert.IsNotNull(property, "The Sequence property was not adapted.");
-                    Assert.AreEqual("System.Int32", adapter.GetPropertyTypeName(property), true, "The Sequence property type is incorrect.");
-                    Assert.AreEqual<int>(1, Convert.ToInt32(adapter.GetPropertyValue(property)), "The Sequence propert value is incorrect.");
+                        property = adapter.GetProperty(record, "Sequence");
+                        type = typeof(int).FullName;
+                        Assert.IsNotNull(property, "The Sequence property was not adapted.");
+                        Assert.AreEqual("System.Int32", adapter.GetPropertyTypeName(property), true, "The Sequence property type is incorrect.");
+                        Assert.AreEqual<int>(1, Convert.ToInt32(RecordPropertyAdapter.GetPropertyValue(property, record)), "The Sequence propert value is incorrect.");
+                    }
                 }
             }
         }
@@ -72,15 +77,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                     view.Execute();
 
                     // Fetch and test a single record.
-                    var record = view.Fetch();
-                    Assert.IsNotNull(record, "No record was found.");
+                    using (var record = view.Fetch())
+                    {
+                        Assert.IsNotNull(record, "No record was found.");
 
-                    var adapter = new RecordPropertyAdapter();
-                    var property = adapter.GetProperty(record, "FileName");
-                    Assert.IsFalse(adapter.IsSettable(property), "The FileName property is settable.");
+                        var adapter = new RecordPropertyAdapter();
+                        var property = adapter.GetProperty(record, "FileName");
+                        Assert.IsFalse(adapter.IsSettable(property), "The FileName property is settable.");
 
-                    // Throws NotSupportedException.
-                    adapter.SetPropertyValue(property, "test.wxs");
+                        // Throws NotSupportedException.
+                        adapter.SetPropertyValue(property, "test.wxs");
+                    }
                 }
             }
         }

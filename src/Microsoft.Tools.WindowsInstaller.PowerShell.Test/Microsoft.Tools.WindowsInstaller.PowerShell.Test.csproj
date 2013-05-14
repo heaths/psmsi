@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheTests.cs" />
     <Compile Include="LocTest.cs" />
     <Compile Include="MockRegistry.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommandTest.cs" />
