@@ -7,7 +7,6 @@
 
 using Microsoft.Deployment.WindowsInstaller;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -57,7 +56,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 var properties = this.EnsurePropertyCache(record);
                 if (null != properties && properties.Contains(propertyName))
                 {
-                    return properties[propertyName];
+                    // Clone the property so the right value is retrieved.
+                    var property = properties[propertyName];
+                    return new PSAdaptedProperty(propertyName, property.Tag);
                 }
             }
 
@@ -262,8 +263,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
 
             internal Collection<PSAdaptedProperty> ToCollection()
             {
-                var properties = new List<PSAdaptedProperty>(this.Dictionary.Values);
-                return new Collection<PSAdaptedProperty>(properties);
+                return new Collection<PSAdaptedProperty>(this.Items);
             }
         }
     }
