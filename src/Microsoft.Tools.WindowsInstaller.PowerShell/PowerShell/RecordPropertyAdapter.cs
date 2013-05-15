@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     /// </summary>
     public sealed class RecordPropertyAdapter : PSPropertyAdapter
     {
-        private Cache<View, PropertySet> cache = new Cache<View, PropertySet>();
+        private Cache<string, PropertySet> cache = new Cache<string, PropertySet>();
 
         /// <summary>
         /// Gets a collection of properties for a <see cref="Record"/>.
@@ -134,16 +134,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             if (view != null)
             {
                 PropertySet properties;
-                if (!this.cache.TryGetValue(view, out properties))
+                if (!this.cache.TryGetValue(view.QueryString, out properties))
                 {
                     properties = new PropertySet();
                     for (int i = 0; i < view.Columns.Count; ++i)
                     {
                         var column = view.Columns[i];
-                        properties.Add(new PSAdaptedProperty(column.Name, new FieldInfo() { View = view, Index = i }));
+                        properties.Add(new PSAdaptedProperty(column.Name, new FieldInfo(view, i)));
                     }
 
-                    this.cache.Add(view, properties);
+                    this.cache.Add(view.QueryString, properties);
                 }
 
                 return properties;
@@ -179,48 +179,48 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
 
         private class FieldInfo
         {
-            internal View View;
-            internal int Index;
+            private bool required;
 
-            internal ColumnInfo Column
+            internal FieldInfo(View view, int index)
             {
-                get { return this.View.Columns[this.Index]; }
-            }
+                this.Index = index;
+                this.required = false;
 
-            internal Type ColumnType
-            {
-                get
+                // Remember the column type.
+                var column = view.Columns[index];
+                var type = column.Type;
+
+                this.SimpleType = type;
+
+                if (typeof(string) == type)
                 {
-                    var column = this.Column;
-                    var type = column.Type;
-
-                    if (typeof(string) == type)
-                    {
-                        return typeof(string);
-                    }
-                    else if (typeof(Stream) == type)
-                    {
-                        return typeof(byte[]);
-                    }
-                    else if (column.IsRequired)
-                    {
-                        return type;
-                    }
-                    else if (typeof(short) == type)
-                    {
-                        return typeof(Nullable<short>);
-                    }
-                    else
-                    {
-                        return typeof(Nullable<int>);
-                    }
+                    this.ColumnType = typeof(string);
+                }
+                else if (typeof(Stream) == type)
+                {
+                    this.ColumnType = typeof(byte[]);
+                }
+                else if (column.IsRequired)
+                {
+                    this.required = true;
+                    this.ColumnType = type;
+                }
+                else if (typeof(short) == type)
+                {
+                    this.ColumnType = typeof(Nullable<short>);
+                }
+                else
+                {
+                    this.ColumnType = typeof(Nullable<int>);
                 }
             }
 
+            internal int Index { get; private set; }
+            internal Type SimpleType { get; private set; }
+            internal Type ColumnType { get; private set; }
+
             internal object GetValue(Record record)
             {
-                var type = this.Column.Type;
-
                 // Windows Installer records use 1-based indices.
                 var index = this.Index + 1;
 
@@ -228,13 +228,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 {
                     return null;
                 }
-                else if (typeof(string) == type)
+                else if (typeof(string) == this.SimpleType)
                 {
                     return record.GetString(index);
                 }
-                else if (typeof(Stream) == type)
+                else if (typeof(Stream) == this.SimpleType)
                 {
-                    throw new NotImplementedException();
+                    // TODO: Return byte array for stream.
+                    return new byte[] { };
+                }
+                else if (this.required)
+                {
+                    return record.GetInteger(index);
                 }
                 else
                 {
