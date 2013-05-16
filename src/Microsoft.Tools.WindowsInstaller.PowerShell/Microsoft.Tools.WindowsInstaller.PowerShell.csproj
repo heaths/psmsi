@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NativeMethods.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetTableCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
     <Compile Include="PowerShell\Commands\InstallCommandBase.cs" />
     <Compile Include="PowerShell\Commands\InstallPackageActionData.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="PowerShell\FileInfo.cs" />
     <Compile Include="PowerShell\PSInstallerException.cs" />
     <Compile Include="PowerShell\ReinstallModeAttribute.cs" />
+    <Compile Include="PowerShell\RecordPropertyAdapter.cs" />
     <Compile Include="PowerShell\SnapIn.cs">
       <SubType>Component</SubType>
     </Compile>
