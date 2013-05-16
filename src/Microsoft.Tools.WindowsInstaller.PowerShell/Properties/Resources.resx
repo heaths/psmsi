@@ -150,4 +150,7 @@
   <data name="Error_InvalidFile" xml:space="preserve">
     <value>The path "{0}" is not a file or does not exist.</value>
   </data>
+  <data name="Error_TableNotFound" xml:space="preserve">
+    <value>The table "{0}" was not found in the database "{1}".</value>
+  </data>
 </root>

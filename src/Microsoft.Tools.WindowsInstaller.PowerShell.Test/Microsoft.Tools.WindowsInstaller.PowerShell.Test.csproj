@@ -81,6 +81,7 @@
     <Compile Include="PowerShell\Commands\GetProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetSharedComponentFunctionTest.cs" />
+    <Compile Include="PowerShell\Commands\GetTableCommandTests.cs" />
     <Compile Include="PowerShell\ModuleTest.cs" />
     <Compile Include="PowerShell\PathConverterTest.cs" />
     <Compile Include="PowerShell\RecordPropertyAdapterTests.cs" />

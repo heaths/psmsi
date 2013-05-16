@@ -85,7 +85,7 @@
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
-    <Compile Include="PowerShell\Commands\GetRecordCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetTableCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
     <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />

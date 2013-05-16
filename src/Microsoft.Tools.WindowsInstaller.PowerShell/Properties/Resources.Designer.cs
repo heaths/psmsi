@@ -115,6 +115,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The table &quot;{0}&quot; was not found in the database &quot;{1}&quot;..
+        /// </summary>
+        internal static string Error_TableNotFound {
+            get {
+                return ResourceManager.GetString("Error_TableNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Windows Installer PowerShell Snap-In.
         /// </summary>
         internal static string SnapIn_Description {
