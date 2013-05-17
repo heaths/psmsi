@@ -136,6 +136,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     };
 
                     data.ParseCommandLine(this.Properties);
+                    this.UpdateAction(data);
 
                     this.Actions.Enqueue(data);
                 }
@@ -150,6 +151,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     };
 
                     data.ParseCommandLine(this.Properties);
+                    this.UpdateAction(data);
 
                     this.Actions.Enqueue(data);
                 }
@@ -163,6 +165,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                     data.SetProductCode();
                     data.ParseCommandLine(this.Properties);
+                    this.UpdateAction(data);
 
                     this.Actions.Enqueue(data);
                 }

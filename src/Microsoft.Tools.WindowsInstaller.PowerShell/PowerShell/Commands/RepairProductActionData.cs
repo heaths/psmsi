@@ -12,7 +12,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// <summary>
     /// The data for actions to repair a package or product.
     /// </summary>
-    public class RepairCommandActionData : InstallCommandActionData
+    public class RepairProductActionData : InstallCommandActionData
     {
         /// <summary>
         /// The default <see cref="ReinstallMode"/> (equivalent to "omus").
@@ -20,11 +20,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public const ReinstallModes Default = ReinstallModes.FileOlderVersion | ReinstallModes.MachineData | ReinstallModes.UserData | ReinstallModes.Shortcut;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="RepairCommandActionData"/> with the <see cref="Default"/> <see cref="ReinstallMode"/>.
+        /// Creates a new instance of the <see cref="RepairProductActionData"/> with the <see cref="Default"/> <see cref="ReinstallMode"/>.
         /// </summary>
-        public RepairCommandActionData()
+        public RepairProductActionData()
         {
-            this.ReinstallMode = RepairCommandActionData.Default;
+            this.ReinstallMode = RepairProductActionData.Default;
         }
 
         /// <summary>

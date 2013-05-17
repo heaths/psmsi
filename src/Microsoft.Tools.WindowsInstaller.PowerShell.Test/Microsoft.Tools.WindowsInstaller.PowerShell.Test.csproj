@@ -85,7 +85,7 @@
     <Compile Include="PowerShell\Commands\InstallCommandBaseTests.cs" />
     <Compile Include="PowerShell\Commands\InstallCommandActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\InstallScenarioTests.cs" />
-    <Compile Include="PowerShell\Commands\RepairCommandActionDataTests.cs" />
+    <Compile Include="PowerShell\Commands\RepairProductActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommandTests.cs" />
     <Compile Include="PowerShell\ModuleTest.cs" />
     <Compile Include="PowerShell\PathConverterTest.cs" />

@@ -7,6 +7,7 @@
 
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Tools.WindowsInstaller.Properties;
+using System.Globalization;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -15,8 +16,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Install-MSIProduct cmdlet.
     /// </summary>
     [Cmdlet(VerbsLifecycle.Install, "MSIProduct", DefaultParameterSetName = ParameterSet.Path)]
-    public sealed class InstallProductCommand : InstallCommandBase<InstallCommandActionData>
+    public sealed class InstallProductCommand : InstallCommandBase<InstallProductActionData>
     {
+        /// <summary>
+        /// Gets or sets the target directory for the initial product install.
+        /// </summary>
+        [Parameter(ParameterSetName = ParameterSet.Path, ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = ParameterSet.LiteralPath, ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty]
+        public string Destination { get; set; }
+
         /// <summary>
         /// Gets a generic description of the activity performed by this cmdlet.
         /// </summary>
@@ -28,9 +37,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Installs a product given the provided <paramref name="data"/>.
         /// </summary>
-        /// <param name="data">An <see cref="InstallCommandActionData"/> with information about the package to install.</param>
-        protected override void ExecuteAction(InstallCommandActionData data)
+        /// <param name="data">An <see cref="InstallProductActionData"/> with information about the package to install.</param>
+        protected override void ExecuteAction(InstallProductActionData data)
         {
+            if (!string.IsNullOrEmpty(data.TargetDirectory))
+            {
+                data.CommandLine += string.Format(CultureInfo.InvariantCulture, @" TARGETDIR=""{0}""", data.TargetDirectory);
+            }
+
             if (!string.IsNullOrEmpty(data.Path))
             {
                 Installer.InstallProduct(data.Path, data.CommandLine);
@@ -39,6 +53,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 Installer.ConfigureProduct(data.ProductCode, INSTALLLEVEL_DEFAULT, InstallState.Default, data.CommandLine);
             }
+        }
+
+        /// <summary>
+        /// Updates the <see cref="InstallProductActionData"/> with additional information.
+        /// </summary>
+        /// <param name="data">The <see cref="InstallProductActionData"/> to update.</param>
+        protected override void UpdateAction(InstallProductActionData data)
+        {
+            base.UpdateAction(data);
+
+            data.TargetDirectory = this.Destination;
         }
     }
 }
