@@ -110,14 +110,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 return null;
             }
 
-            ProviderInfo provider = null;
-            PSDriveInfo drive = null;
-
-            // Get the unresolved path information.
-            string unresolvedPath = session.Path.GetUnresolvedProviderPathFromPSPath(path, out provider, out drive);
-
-            // Return the fully-qualified PSPath.
-            return string.Concat(provider.ModuleName, @"\", provider.Name, "::", unresolvedPath);
+            // TODO: Replace all instances of containing method with callee.
+            return session.Path.GetUnresolvedPSPathFromProviderPath(path);
         }
 
         /// <summary>

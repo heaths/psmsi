@@ -77,6 +77,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache.cs" />
+    <Compile Include="ExtensionAttribute.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NativeMethods.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="PowerShell\Commands\RepairProductActionData.cs" />
     <Compile Include="PowerShell\Commands\RepairProductCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />
+    <Compile Include="PowerShell\ExtensionMethods.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />
     <Compile Include="PowerShell\PSInstallerException.cs" />
     <Compile Include="PowerShell\ReinstallModeAttribute.cs" />
