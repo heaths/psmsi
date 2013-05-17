@@ -5,6 +5,7 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Management.Automation;
 
@@ -13,12 +14,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// <summary>
     /// The data for actions to install a package.
     /// </summary>
-    public class InstallPackageActionData
+    public class InstallCommandActionData
     {
         /// <summary>
         /// Gets or sets the package path for which the action is performed.
         /// </summary>
         public string Path { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ProductCode for which the action is performed.
+        /// </summary>
+        public string ProductCode { get; set; }
 
         /// <summary>
         /// Gets or sets the fully expanded command line to process when performing the action.
@@ -36,6 +42,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 {
                     return System.IO.Path.GetFileNameWithoutExtension(this.Path);
                 }
+                else if (!string.IsNullOrEmpty(this.ProductCode))
+                {
+                    return this.ProductCode;
+                }
                 else
                 {
                     return string.Empty;
@@ -44,13 +54,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
-        /// Creates an instance of an <see cref="InstallPackageActionData"/> class from the given file path.
+        /// Creates an instance of an <see cref="InstallCommandActionData"/> class from the given file path.
         /// </summary>
-        /// <typeparam name="T">The specific type of <see cref="InstallPackageActionData"/> to create.</typeparam>
+        /// <typeparam name="T">The specific type of <see cref="InstallCommandActionData"/> to create.</typeparam>
         /// <param name="resolver">A <see cref="PathIntrinsics"/> object to resolve the file path.</param>
         /// <param name="file">A <see cref="PSObject"/> wrapping a file path.</param>
-        /// <returns>An instance of an <see cref="InstallPackageActionData"/> class.</returns>
-        public static T CreateActionData<T>(PathIntrinsics resolver, PSObject file) where T : InstallPackageActionData, new()
+        /// <returns>An instance of an <see cref="InstallCommandActionData"/> class.</returns>
+        public static T CreateActionData<T>(PathIntrinsics resolver, PSObject file) where T : InstallCommandActionData, new()
         {
             if (null == resolver)
             {
@@ -78,6 +88,20 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             if (null != args && 0 < args.Length)
             {
                 this.CommandLine = string.Join(" ", args);
+            }
+        }
+
+        /// <summary>
+        /// Opens the package read-only and sets the <see cref="ProductCode"/> property.
+        /// </summary>
+        public void SetProductCode()
+        {
+            using (var db = new Database(this.Path, DatabaseOpenMode.ReadOnly))
+            {
+                using (var msi = Installer.OpenPackage(db, false))
+                {
+                    this.ProductCode = msi.GetProductProperty("ProductCode");
+                }
             }
         }
     }

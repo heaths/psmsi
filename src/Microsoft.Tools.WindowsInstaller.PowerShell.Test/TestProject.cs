@@ -9,6 +9,7 @@ using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Security.Principal;
 
@@ -67,6 +68,9 @@ namespace Microsoft.Tools.WindowsInstaller
         {
             // Create the initial state with the module to test and the test module.
             InitialSessionState state = InitialSessionState.CreateDefault();
+            state.Variables.Add(new SessionStateVariableEntry("TestDeploymentDirectory", context.DeploymentDirectory, "Gets the directory for files deployed for the test run.", ScopedItemOptions.AllScope | ScopedItemOptions.Constant));
+            state.Variables.Add(new SessionStateVariableEntry("TestRunDirectory", context.TestRunDirectory, "Gets the top-level directory for the test run that contains deployed files and result files.", ScopedItemOptions.AllScope | ScopedItemOptions.Constant));
+
             state.ImportPSModule(new string[] {
                 Path.Combine(context.TestDeploymentDir, "MSI.psd1"),
                 Path.Combine(context.TestDeploymentDir, "Test.psm1")

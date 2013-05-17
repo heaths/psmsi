@@ -19,8 +19,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// <summary>
     /// Base class for product and patch install commands.
     /// </summary>
-    public abstract class InstallCommandBase<T> : PSCmdlet where T : InstallPackageActionData, new()
+    public abstract class InstallCommandBase<T> : PSCmdlet where T : InstallCommandActionData, new()
     {
+        protected const int INSTALLLEVEL_DEFAULT = 0;
+
         private InstallUIOptions previousInternalUI;
         private ExternalUIRecordHandler previousExternalUI;
         private Log log;
@@ -57,6 +59,19 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             get { return this.Path; }
             set { this.Path = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the ProductCode to install.
+        /// </summary>
+        [Parameter(ParameterSetName = ParameterSet.Product, Mandatory = true, ValueFromPipelineByPropertyName = true)]
+        [ValidateGuid]
+        public string[] ProductCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="ProductInstallation"/> to install.
+        /// </summary>
+        [Parameter(ParameterSetName = ParameterSet.Installation, Mandatory = true, ValueFromPipeline = true)]
+        public ProductInstallation[] Product { get; set; }
 
         /// <summary>
         /// Gets or sets the logging path.
@@ -100,25 +115,66 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Called to allow child classes to execute based on the given <paramref name="data"/>.
         /// </summary>
-        /// <param name="data">The <see cref="InstallPackageActionData"/> on which to execute.</param>
+        /// <param name="data">The <see cref="InstallCommandActionData"/> on which to execute.</param>
         protected abstract void ExecuteAction(T data);
 
         /// <summary>
-        /// Called to allow child classes to queue <see cref="InstallPackageActionData"/> into <see cref="Actions"/>.
+        /// Called to allow child classes to queue <see cref="InstallCommandActionData"/> into <see cref="Actions"/>.
         /// </summary>
         /// <remarks>
         /// The default implementation gets the fully qualified path(s) of file(s) specified as arguments or piped into the command.
         /// </remarks>
-        protected virtual void QueueAction()
+        protected virtual void QueueActions()
         {
-            var paths = this.InvokeProvider.Item.Get(this.Path, true, ParameterSet.LiteralPath == this.ParameterSetName);
-            foreach (var path in paths)
+            if (ParameterSet.Product == this.ParameterSetName)
             {
-                var data = InstallPackageActionData.CreateActionData<T>(this.SessionState.Path, path);
-                data.ParseCommandLine(this.Properties);
+                foreach (string productCode in this.ProductCode)
+                {
+                    var data = new T()
+                    {
+                        ProductCode = productCode,
+                    };
 
-                this.Actions.Enqueue(data);
+                    data.ParseCommandLine(this.Properties);
+
+                    this.Actions.Enqueue(data);
+                }
             }
+            else if (ParameterSet.Installation == this.ParameterSetName)
+            {
+                foreach (var product in this.Product)
+                {
+                    var data = new T()
+                    {
+                        ProductCode = product.ProductCode,
+                    };
+
+                    data.ParseCommandLine(this.Properties);
+
+                    this.Actions.Enqueue(data);
+                }
+            }
+            else
+            {
+                var paths = this.InvokeProvider.Item.Get(this.Path, true, ParameterSet.LiteralPath == this.ParameterSetName);
+                foreach (var path in paths)
+                {
+                    var data = InstallCommandActionData.CreateActionData<T>(this.SessionState.Path, path);
+
+                    data.SetProductCode();
+                    data.ParseCommandLine(this.Properties);
+
+                    this.Actions.Enqueue(data);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Allows child classes to update the action data without changing the default action queueing.
+        /// </summary>
+        /// <param name="data">The <see cref="InstallCommandActionData"/> to update.</param>
+        protected virtual void UpdateAction(T data)
+        {
         }
 
         /// <summary>
@@ -160,7 +216,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected override void ProcessRecord()
         {
             // Queue the action.
-            this.QueueAction();
+            this.QueueActions();
 
             // Execute the action if Chain is not set.
             if (!this.Chain)

@@ -87,12 +87,11 @@
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
     <Compile Include="PowerShell\Commands\InstallCommandBase.cs" />
-    <Compile Include="PowerShell\Commands\InstallPackageActionData.cs" />
-    <Compile Include="PowerShell\Commands\InstallProductActionData.cs" />
+    <Compile Include="PowerShell\Commands\InstallCommandActionData.cs" />
     <Compile Include="PowerShell\Commands\InstallProductCommand.cs" />
     <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
-    <Compile Include="PowerShell\Commands\RepairProductActionData.cs" />
+    <Compile Include="PowerShell\Commands\RepairCommandActionData.cs" />
     <Compile Include="PowerShell\Commands\RepairProductCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />

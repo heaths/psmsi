@@ -11,15 +11,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
-    /// Tests for the <see cref="RepairProductActionData"/> class.
+    /// Tests for the <see cref="RepairCommandActionData"/> class.
     /// </summary>
     [TestClass]
-    public sealed class RepairProductActionDataTests
+    public sealed class RepairCommandActionDataTests
     {
         [TestMethod]
         public void AssertDefaultReinstallMode()
         {
-            var data = new RepairProductActionData();
+            var data = new RepairCommandActionData();
             Assert.AreEqual<ReinstallModes>(ReinstallModes.FileOlderVersion | ReinstallModes.MachineData | ReinstallModes.UserData | ReinstallModes.Shortcut, data.ReinstallMode, "The default ReinstallMode is incorrect.");
         }
     }

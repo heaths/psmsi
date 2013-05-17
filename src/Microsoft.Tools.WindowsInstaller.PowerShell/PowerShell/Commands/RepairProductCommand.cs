@@ -14,27 +14,24 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// <summary>
     /// The Repair-MSIProduct cmdlet.
     /// </summary>
-    [Cmdlet(VerbsDiagnostic.Repair, "MSIProduct", DefaultParameterSetName = ParameterSet.Product)]
-    public sealed class RepairProductCommand : InstallCommandBase<RepairProductActionData>
+    [Cmdlet(VerbsDiagnostic.Repair, "MSIProduct", DefaultParameterSetName = ParameterSet.Path)]
+    public sealed class RepairProductCommand : InstallCommandBase<RepairCommandActionData>
     {
+        private ReinstallModesConverter converter;
+
         /// <summary>
         /// Creates a new instance of the <see cref="RepairProductCommand"/> with the default <see cref="ReinstallMode"/>.
         /// </summary>
         public RepairProductCommand()
         {
-            this.ReinstallMode = RepairProductActionData.Default;
+            this.ReinstallMode = RepairCommandActionData.Default;
+            this.converter = new ReinstallModesConverter();
         }
-
-        /// <summary>
-        /// Gets or sets the ProductCode to repair.
-        /// </summary>
-        [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, Mandatory = true, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        public string[] ProductCode { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="ReinstallModes"/> to use for repairing the product.
         /// </summary>
-        /// <value>The default value is <see cref="RepairProductActionData.Default"/>.</value>
+        /// <value>The default value is <see cref="RepairCommandActionData.Default"/>.</value>
         [Parameter(ValueFromPipelineByPropertyName = true)]
         [ReinstallMode]
         public ReinstallModes ReinstallMode { get; set; }
@@ -50,45 +47,31 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Repairs a product given the provided <paramref name="data"/>.
         /// </summary>
-        /// <param name="data">An <see cref="RepairProductActionData"/> with information about the package to install.</param>
-        protected override void ExecuteAction(RepairProductActionData data)
+        /// <param name="data">An <see cref="RepairCommandActionData"/> with information about the package to install.</param>
+        protected override void ExecuteAction(RepairCommandActionData data)
         {
-            Installer.ReinstallProduct(data.ProductCode, data.ReinstallMode);
+            string mode = this.converter.ConvertToString(data.ReinstallMode);
+            data.CommandLine += " REINSTALL=ALL REINSTALLMODE=" + mode;
+
+            if (!string.IsNullOrEmpty(data.Path))
+            {
+                Installer.InstallProduct(data.Path, data.CommandLine);
+            }
+            else if (!string.IsNullOrEmpty(data.ProductCode))
+            {
+                Installer.ConfigureProduct(data.ProductCode, INSTALLLEVEL_DEFAULT, InstallState.Default, data.CommandLine);
+            }
         }
 
         /// <summary>
-        /// Sets the ProductCode and <see cref="ReinstallModes"/> and queues the <see cref="RepairProductActionData"/>.
+        /// Updates the <see cref="RepairCommandActionData"/> to include the current <see cref="ReinstallMode"/> flags.
         /// </summary>
-        protected override void QueueAction()
+        /// <param name="data">The <see cref="RepairCommandActionData"/> to update.</param>
+        protected override void UpdateAction(RepairCommandActionData data)
         {
-            if (ParameterSet.Product == this.ParameterSetName)
-            {
-                foreach (string productCode in this.ProductCode)
-                {
-                    var data = new RepairProductActionData()
-                    {
-                        ProductCode = productCode,
-                        ReinstallMode = this.ReinstallMode,
-                    };
+            base.UpdateAction(data);
 
-                    data.ParseCommandLine(this.Properties);
-
-                    this.Actions.Enqueue(data);
-                }
-            }
-            else
-            {
-                var paths = this.InvokeProvider.Item.Get(this.Path, true, ParameterSet.LiteralPath == this.ParameterSetName);
-                foreach (var path in paths)
-                {
-                    var data = InstallPackageActionData.CreateActionData<RepairProductActionData>(this.SessionState.Path, path);
-
-                    data.SetProductCode();
-                    data.ParseCommandLine(this.Properties);
-
-                    this.Actions.Enqueue(data);
-                }
-            }
+            data.ReinstallMode = this.ReinstallMode;
         }
     }
 }

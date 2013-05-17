@@ -250,7 +250,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
             }
 
-            protected override void QueueAction()
+            protected override void QueueActions()
             {
                 Assert.AreEqual("Action", this.ParameterSetName, "The resolved parameter set name is incorrect.");
 
@@ -390,7 +390,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
             }
 
-            internal sealed class ActionData : InstallPackageActionData
+            internal sealed class ActionData : InstallCommandActionData
             {
                 internal string Action { get; set; }
             }
