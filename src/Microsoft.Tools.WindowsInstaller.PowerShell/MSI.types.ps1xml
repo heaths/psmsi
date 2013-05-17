@@ -494,4 +494,10 @@
             </ScriptProperty>
         </Members>
     </Type>
+    <Type>
+        <Name>Microsoft.Deployment.WindowsInstaller.Record</Name>
+        <TypeAdapter>
+            <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
+        </TypeAdapter>
+    </Type>
 </Types>
