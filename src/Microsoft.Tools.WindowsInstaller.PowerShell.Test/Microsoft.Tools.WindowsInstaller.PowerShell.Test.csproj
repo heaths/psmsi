@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheTests.cs" />
+    <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="LocTest.cs" />
     <Compile Include="LogTests.cs" />
     <Compile Include="MockRegistry.cs" />
@@ -87,13 +88,12 @@
     <Compile Include="PowerShell\Commands\InstallScenarioTests.cs" />
     <Compile Include="PowerShell\Commands\RepairProductActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommandTests.cs" />
+    <Compile Include="PowerShell\ExtensionMethodsTests.cs" />
     <Compile Include="PowerShell\ModuleTest.cs" />
-    <Compile Include="PowerShell\PathConverterTest.cs" />
     <Compile Include="PowerShell\PSInstallerExceptionTests.cs" />
     <Compile Include="PowerShell\ReinstallModeAttributeTests.cs" />
     <Compile Include="PowerShell\RecordPropertyAdapterTests.cs" />
     <Compile Include="PowerShell\SidAttributeTest.cs" />
-    <Compile Include="PowerShell\UtilitiesTest.cs" />
     <Compile Include="PowerShell\ValidateGuidAttributeTest.cs" />
     <Compile Include="PowerShell\SnapInTest.cs" />
     <Compile Include="RegistryXml.cs" />

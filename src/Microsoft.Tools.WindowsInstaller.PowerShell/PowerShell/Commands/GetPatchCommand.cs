@@ -153,12 +153,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <param name="patch">The <see cref="PatchInstallation"/> to write to the pipeline.</param>
         private void WritePatch(PatchInstallation patch)
         {
-            PSObject obj = PSObject.AsPSObject(patch);
-
-            // Add the local package as the PSPath.
-            string path = PathConverter.ToPSPath(this.SessionState, patch.LocalPackage);
-            obj.Properties.Add(new PSNoteProperty("PSPath", path));
-
+            var obj = patch.ToPSObject(this.SessionState.Path);
             this.WriteObject(obj);
         }
 

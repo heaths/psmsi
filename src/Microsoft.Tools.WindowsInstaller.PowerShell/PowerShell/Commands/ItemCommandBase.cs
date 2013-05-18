@@ -65,7 +65,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 if (property != null && property.Value is string)
                 {
                     // Get the provider path.
-                    string path = PathConverter.ToProviderPath(this.SessionState, property.Value as string);
+                    string path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(property.Value as string);
                     if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
                     {
                         // Process the item.
