@@ -88,5 +88,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
             }
         }
+
+        [TestMethod]
+        [TestCategory("Impactful")]
+        public void PassThruInstall()
+        {
+            using (var p = TestRunspace.CreatePipeline(@"install-msiproduct ""$TestDeploymentDirectory\example.msi"" -destination ""$TestRunDirectory\PassThruInstall"" -passthru | repair-msiproduct -passthru | uninstall-msiproduct"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
+                Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
+            }
+        }
     }
 }

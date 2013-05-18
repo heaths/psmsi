@@ -37,6 +37,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public ReinstallModes ReinstallMode { get; set; }
 
         /// <summary>
+        /// Gets or sets whether installed product information should be returned.
+        /// </summary>
+        [Parameter]
+        public SwitchParameter PassThru { get; set; }
+
+        /// <summary>
         /// Gets a generic description of the activity performed by this cmdlet.
         /// </summary>
         protected override string Activity
@@ -60,6 +66,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             else if (!string.IsNullOrEmpty(data.ProductCode))
             {
                 Installer.ConfigureProduct(data.ProductCode, INSTALLLEVEL_DEFAULT, InstallState.Default, data.CommandLine);
+            }
+
+            if (this.PassThru)
+            {
+                var product = new ProductInstallation(data.ProductCode, null, UserContexts.All);
+                if (null != product && product.IsInstalled)
+                {
+                    this.WriteObject(product.ToPSObject(this.SessionState.Path));
+                }
             }
         }
 
