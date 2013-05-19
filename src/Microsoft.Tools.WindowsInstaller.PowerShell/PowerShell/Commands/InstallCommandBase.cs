@@ -21,6 +21,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// </summary>
     public abstract class InstallCommandBase<T> : PSCmdlet where T : InstallCommandActionData, new()
     {
+        /// <summary>
+        /// The default install level.
+        /// </summary>
         protected const int INSTALLLEVEL_DEFAULT = 0;
 
         private InstallUIOptions previousInternalUI;
@@ -395,10 +398,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
             }
 
-            var ex = new PSInstallerException(record);
-            if (null != ex.ErrorRecord)
+            using (var ex = new PSInstallerException(record))
             {
-                this.WriteError(ex.ErrorRecord);
+                if (null != ex.ErrorRecord)
+                {
+                    this.WriteError(ex.ErrorRecord);
+                }
             }
             
             return MessageResult.OK;
@@ -572,15 +577,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
                 catch (InstallerException ex)
                 {
-                    var psiex = new PSInstallerException(ex);
-                    if (null != psiex.ErrorRecord)
+                    using (var psiex = new PSInstallerException(ex))
                     {
-                        this.WriteError(psiex.ErrorRecord);
-                    }
-                    else
-                    {
-                        // Unexpected not to have an ErrorRecord.
-                        throw;
+                        if (null != psiex.ErrorRecord)
+                        {
+                            this.WriteError(psiex.ErrorRecord);
+                        }
+                        else
+                        {
+                            // Unexpected not to have an ErrorRecord.
+                            throw;
+                        }
                     }
                 }
             }

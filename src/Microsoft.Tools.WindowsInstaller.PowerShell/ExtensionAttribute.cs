@@ -15,7 +15,7 @@ namespace System.Runtime.CompilerServices
     /// I have it on good authority that, in general, the compiler does not verify the full type declaration.
     /// </remarks>
     [AttributeUsageAttribute(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class ExtensionAttribute : Attribute
+    internal sealed class ExtensionAttribute : Attribute
     {
     }
 }

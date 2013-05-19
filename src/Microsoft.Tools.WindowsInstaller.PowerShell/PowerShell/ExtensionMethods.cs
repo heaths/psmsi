@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// Matches a string using any of the wildcard <paramref name="patterns"/>.
         /// </summary>
         /// <param name="source">The <see cref="String"/> to be matched.</param>
-        /// <param name="patterns">A list of <see cref="WilcardPattern"/> objects to match.</param>
+        /// <param name="patterns">A list of <see cref="WildcardPattern"/> objects to match.</param>
         /// <returns>True if the string matches any of the <paramref name="patterns"/>; otherwise, false if the string or patterns are null, empty, or not match is found.</returns>
         internal static bool Match(this string source, IList<WildcardPattern> patterns)
         {

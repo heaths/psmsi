@@ -11,7 +11,7 @@ using System.Management.Automation;
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {
     /// <summary>
-    /// Supports conversion between the short form REINSTALLMODE and the <see cref="ReinstallModes"/> enumeration.
+    /// Supports conversion between the short form REINSTALLMODE and the <see cref="Microsoft.Deployment.WindowsInstaller.ReinstallModes"/> enumeration.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public sealed class ReinstallModeAttribute : ArgumentTransformationAttribute
