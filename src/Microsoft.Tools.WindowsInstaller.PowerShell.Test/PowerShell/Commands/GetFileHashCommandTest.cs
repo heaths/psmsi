@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [Description("A test for GetFileHashCommand.Path")]
         public void PathTest()
         {
-                // Test a file using new property names.
+            // Test a file using new property names.
             using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifilehash -path *.txt"))
             {
                 int[] hash = new int[] { 1820344194, -1963188082, -1359304639, 10459557 };
@@ -48,13 +48,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 Assert.AreNotEqual<int>(0, objs.Count);
                 CollectionAssert.AllItemsAreUnique(objs);
-            }
-
-            // Test against a directory.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifilehash -path ."))
-            {
-                Collection<PSObject> objs = p.Invoke();
-                Assert.AreEqual<int>(0, objs.Count);
             }
         }
 
@@ -124,20 +117,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 Collection<PSObject> objs = p.Invoke();
                 Assert.AreNotEqual<int>(0, p.Error.Count);
-            }
-
-            // Test a file using new property names.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifilehash -path example.txt"))
-            {
-                int[] hash = new int[] { 1820344194, -1963188082, -1359304639, 10459557 };
-
-                Collection<PSObject> objs = p.Invoke();
-
-                Assert.AreEqual<int>(1, objs.Count);
-                Assert.AreEqual<int>(hash[0], (int)objs[0].Properties["MSIHashPart1"].Value);
-                Assert.AreEqual<int>(hash[1], (int)objs[0].Properties["MSIHashPart2"].Value);
-                Assert.AreEqual<int>(hash[2], (int)objs[0].Properties["MSIHashPart3"].Value);
-                Assert.AreEqual<int>(hash[3], (int)objs[0].Properties["MSIHashPart4"].Value);
             }
         }
     }

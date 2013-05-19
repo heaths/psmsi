@@ -89,6 +89,7 @@
     <Compile Include="PowerShell\Commands\RepairProductActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommandTests.cs" />
     <Compile Include="PowerShell\ExtensionMethodsTests.cs" />
+    <Compile Include="PowerShell\FileInfoTests.cs" />
     <Compile Include="PowerShell\ModuleTest.cs" />
     <Compile Include="PowerShell\PSInstallerExceptionTests.cs" />
     <Compile Include="PowerShell\ReinstallModeAttributeTests.cs" />

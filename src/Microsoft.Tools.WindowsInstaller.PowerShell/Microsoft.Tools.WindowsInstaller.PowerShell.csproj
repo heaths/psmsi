@@ -79,6 +79,7 @@
     <Compile Include="Cache.cs" />
     <Compile Include="ExtensionAttribute.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="FileHash.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NativeMethods.cs" />

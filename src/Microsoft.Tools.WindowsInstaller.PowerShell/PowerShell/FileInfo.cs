@@ -90,22 +90,21 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// <returns>The first 32 bits of the file hash.</returns>
         public static FileHash GetFileHash(PSObject obj)
         {
-            FileHash hash = new FileHash();
-
             // Return null if not a valid FileInfo object.
             if (null == obj)
             {
-                return hash;
+                return null;
             }
 
             System.IO.FileInfo fileInfo = obj.BaseObject as System.IO.FileInfo;
             if (null == fileInfo)
             {
-                return hash;
+                return null;
             }
 
             // Get the hash of the file.
             string path = fileInfo.FullName;
+            FileHash hash = new FileHash();
 
             int ret = NativeMethods.MsiGetFileHash(path, 0, hash);
             if (ret != NativeMethods.ERROR_SUCCESS)
