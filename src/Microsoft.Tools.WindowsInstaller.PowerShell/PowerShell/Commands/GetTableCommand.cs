@@ -60,7 +60,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var items = this.InvokeProvider.Item.Get(paths, true, isliteral);
             foreach (var obj in items)
             {
-                string path = GetPSPath(obj);
+                string path = obj.GetPropertyValue<string>("PSPath");
                 if (!string.IsNullOrEmpty(path))
                 {
                     path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
@@ -103,33 +103,24 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         private void ProcessFile(string path)
         {
-            using (var db = new Database(path, DatabaseOpenMode.ReadOnly))
-            {
-                string query = this.GetQuery(db);
-                if (!string.IsNullOrEmpty(query))
-                {
-                    var view = db.OpenView(query);
-                    view.Execute();
+            // No handles are disposed or the property adapter will throw.
+            var db = new Database(path, DatabaseOpenMode.ReadOnly);
 
-                    var record = view.Fetch();
-                    while (null != record)
-                    {
-                        this.WriteObject(record);
-                        record = view.Fetch();
-                    }
+            string query = this.GetQuery(db);
+            if (!string.IsNullOrEmpty(query))
+            {
+                var view = db.OpenView(query);
+                view.Execute();
+
+                var record = view.Fetch();
+                while (null != record)
+                {
+                    var obj = PSObject.AsPSObject(record);
+                    this.WriteObject(obj);
+
+                    record = view.Fetch();
                 }
             }
-        }
-
-        private static string GetPSPath(PSObject obj)
-        {
-            var properties = obj.Properties.Match("PSPath", PSMemberTypes.Properties);
-            if (null != properties && 0 < properties.Count)
-            {
-                return properties[0].Value as string;
-            }
-
-            return null;
         }
     }
 }

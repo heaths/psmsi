@@ -27,11 +27,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(1, output.Count, "The output is incorrect.");
 
                 var item = output[0];
-                var properties = item.Properties.Match("File", PSMemberTypes.Properties);
+                Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record#File", item.TypeNames[0], "The first type name is incorrect.");
 
-                Assert.IsNotNull(properties, "The File property was not found.");
-                Assert.AreEqual<int>(1, properties.Count, "The properties are incorrect.");
-                Assert.AreEqual<string>("F_Source", properties[0].Value as string, "The File property is incorrect.");
+                string value = item.GetPropertyValue<string>("File");
+                Assert.AreEqual<string>("F_Source", value, "The File property is incorrect.");
             }
         }
 
@@ -46,18 +45,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(1, output.Count, "The output is incorrect.");
 
                 var item = output[0];
-                var properties = item.Properties.Match("File", PSMemberTypes.Properties);
+                Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record#File", item.TypeNames[0], "The first type name is incorrect.");
 
-                Assert.IsNotNull(properties, "The File property was not found.");
-                Assert.AreEqual<int>(1, properties.Count, "The properties are incorrect.");
-                Assert.AreEqual<string>("F_Source", properties[0].Value as string, "The File property is incorrect.");
+                string value = item.GetPropertyValue<string>("File");
+                Assert.AreEqual<string>("F_Source", value, "The File property is incorrect.");
             }
         }
 
         [TestMethod]
         public void GetQueryFromPath()
         {
-            using (var p = TestRunspace.CreatePipeline("get-msitable example.msi -query 'SELECT File FROM File'"))
+            using (var p = TestRunspace.CreatePipeline("get-msitable example.msi -query 'SELECT File, ComponentId FROM File, Component WHERE Component_ = Component'"))
             {
                 var output = p.Invoke();
 
@@ -65,18 +63,20 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(1, output.Count, "The output is incorrect.");
 
                 var item = output[0];
-                var properties = item.Properties.Match("File", PSMemberTypes.Properties);
+                Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
 
-                Assert.IsNotNull(properties, "The File property was not found.");
-                Assert.AreEqual<int>(1, properties.Count, "The properties are incorrect.");
-                Assert.AreEqual<string>("F_Source", properties[0].Value as string, "The File property is incorrect.");
+                string value = item.GetPropertyValue<string>("File");
+                Assert.AreEqual<string>("F_Source", value, "The File property is incorrect.");
+
+                value = item.GetPropertyValue<string>("ComponentId");
+                Assert.AreEqual<string>("{49DD49AB-0AEE-48F9-BDED-CE2A1CDB8C16}", value, "The ComponentId property is incorrect.");
             }
         }
 
         [TestMethod]
         public void GetQueryFromLiteralPath()
         {
-            using (var p = TestRunspace.CreatePipeline("get-item example.msi | get-msitable -query 'SELECT File FROM File'"))
+            using (var p = TestRunspace.CreatePipeline("get-item example.msi | get-msitable -query 'SELECT File, ComponentId FROM File, Component WHERE Component_ = Component'"))
             {
                 var output = p.Invoke();
 
@@ -84,11 +84,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(1, output.Count, "The output is incorrect.");
 
                 var item = output[0];
-                var properties = item.Properties.Match("File", PSMemberTypes.Properties);
+                Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
 
-                Assert.IsNotNull(properties, "The File property was not found.");
-                Assert.AreEqual<int>(1, properties.Count, "The properties are incorrect.");
-                Assert.AreEqual<string>("F_Source", properties[0].Value as string, "The File property is incorrect.");
+                string value = item.GetPropertyValue<string>("File");
+                Assert.AreEqual<string>("F_Source", value, "The File property is incorrect.");
+
+                value = item.GetPropertyValue<string>("ComponentId");
+                Assert.AreEqual<string>("{49DD49AB-0AEE-48F9-BDED-CE2A1CDB8C16}", value, "The ComponentId property is incorrect.");
             }
         }
 

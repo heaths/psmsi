@@ -167,17 +167,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             if (null != provider)
             {
                 var path = provider.GetUnresolvedPSPathFromProviderPath(source.LocalPackage);
-
-                var property = obj.Properties.Match("PSPath", PSMemberTypes.Properties).FirstOrDefault();
-                if (null != property)
-                {
-                    property.Value = path;
-                }
-                else
-                {
-                    property = new PSNoteProperty("PSPath", path);
-                    obj.Properties.Add(property);
-                }
+                obj.SetPropertyValue<string>("PSPath", path);
             }
 
             return obj;
@@ -202,19 +192,91 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             if (null != provider)
             {
                 var path = provider.GetUnresolvedPSPathFromProviderPath(source.LocalPackage);
-                var property = obj.Properties.Match("PSPath", PSMemberTypes.Properties).FirstOrDefault();
-                if (null != property)
-                {
-                    property.Value = path;
-                }
-                else
-                {
-                    property = new PSNoteProperty("PSPath", path);
-                    obj.Properties.Add(property);
-                }
+                obj.SetPropertyValue<string>("PSPath", path);
             }
 
             return obj;
+        }
+
+        /// <summary>
+        /// Gets the named property value of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the property value to get.</typeparam>
+        /// <param name="source">The <see cref="PSObject"/> that may contain the named property.</param>
+        /// <param name="propertyName">The name of the property to get.</param>
+        /// <returns>The named property value of type <typeparamref name="T"/>,
+        /// or the default value for <typeparamref name="T"/> if the property is not found or cannot be converted..</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyName"/> is null or empty.</exception>
+        /// <exception cref="PSInvalidCastException">The property value type cannot be converted to type <typeparamref name="T"/>.</exception>
+        internal static T GetPropertyValue<T>(this PSObject source, string propertyName)
+        {
+            if (null == source)
+            {
+                throw new ArgumentNullException("source");
+            }
+            else if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new ArgumentNullException("propertyName");
+            }
+
+            var property = source.Properties.Match(propertyName, PSMemberTypes.Properties).FirstOrDefault();
+            if (null != property)
+            {
+                if (property.Value is T)
+                {
+                    return (T)property.Value;
+                }
+                else
+                {
+                    return (T)LanguagePrimitives.ConvertTo(property.Value, typeof(T));
+                }
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
+        /// Sets or adds the named property value of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the property value to set.</typeparam>
+        /// <param name="source">The <see cref="PSObject"/> that may contain the named property.</param>
+        /// <param name="propertyName">The name of the property to set; if not found, the a <see cref="PSNoteProperty"/> is added.</param>
+        /// <param name="propertyValue">The value of the property to set.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyName"/> is null or empty.</exception>
+        /// <exception cref="PSInvalidCastException">The property value type cannot be converted to type <typeparamref name="T"/>.</exception>
+        internal static void SetPropertyValue<T>(this PSObject source, string propertyName, T propertyValue)
+        {
+            if (null == source)
+            {
+                throw new ArgumentNullException("source");
+            }
+            else if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new ArgumentNullException("propertyName");
+            }
+
+            var property = source.Properties.Match(propertyName, PSMemberTypes.Properties).FirstOrDefault();
+            if (null != property)
+            {
+                if (property.Value is T)
+                {
+                    property.Value = propertyValue;
+                }
+                else if (null != property.Value)
+                {
+                    property.Value = LanguagePrimitives.ConvertTo(propertyValue, property.Value.GetType());
+                }
+                else
+                {
+                    // Best effort may throw.
+                    property.Value = propertyValue;
+                }
+            }
+            else
+            {
+                property = new PSNoteProperty(propertyName, propertyValue);
+                source.Properties.Add(property);
+            }
         }
     }
 }

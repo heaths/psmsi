@@ -99,6 +99,28 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         }
 
         /// <summary>
+        /// Adds the table name, if available, to the beginning of the type name hierarchy.
+        /// </summary>
+        /// <param name="baseObject">The <see cref="Record"/> to process.</param>
+        /// <returns>The adapted type name hierarchy.</returns>
+        public override Collection<string> GetTypeNameHierarchy(object baseObject)
+        {
+            var typeNames = base.GetTypeNameHierarchy(baseObject);
+
+            var record = baseObject as Record;
+            if (null != record)
+            {
+                var properties = this.EnsurePropertyCache(record);
+                if (!string.IsNullOrEmpty(properties.TypeName))
+                {
+                    typeNames.Insert(0, properties.TypeName);
+                }
+            }
+
+            return typeNames;
+        }
+
+        /// <summary>
         /// Gets whether the property is gettable.
         /// </summary>
         /// <param name="adaptedProperty">The property to check.</param>
@@ -142,6 +164,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                     {
                         var column = view.Columns[i];
                         properties.Add(new PSAdaptedProperty(column.Name, new FieldInfo(view, i)));
+                    }
+
+                    try
+                    {
+                        if (null != view.Tables && 1 == view.Tables.Count)
+                        {
+                            string typeName = typeof(Record).FullName + "#" + view.Tables[0].Name;
+                            properties.TypeName = typeName;
+                        }
+                    }
+                    catch (InvalidHandleException)
+                    {
                     }
 
                     this.cache.Add(view.QueryString, properties);
@@ -251,6 +285,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
 
         private class PropertySet : KeyedCollection<string, PSAdaptedProperty>
         {
+            internal string TypeName { get; set; }
+
             protected override string GetKeyForItem(PSAdaptedProperty item)
             {
                 if (null == item)

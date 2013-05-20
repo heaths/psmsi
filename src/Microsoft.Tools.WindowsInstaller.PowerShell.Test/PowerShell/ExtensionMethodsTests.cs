@@ -19,6 +19,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     [TestClass]
     public sealed class ExtensionMethodsTests
     {
+        public string StringProperty { get; set; }
+        public int IntegerProperty { get; set; }
+
         #region Match
         [TestMethod]
         public void NullOrEmptyStringMatch()
@@ -80,6 +83,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 {
                     Assert.AreEqual(item.Value, ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(item.Key));
                 }
+
+                // A null key path is also valid.
+                Assert.IsNull(ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(null));
             }
         }
 
@@ -138,6 +144,103 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             {
                 Assert.AreEqual(path, ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromProviderPath(@"C:\foo"));
             }
+        }
+        #endregion
+
+        #region GetPropertyValue
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void GetPropertyValueWithNullSource()
+        {
+            PSObject obj = null;
+            string value = obj.GetPropertyValue<string>("A");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void GetPropertyValueWithEmptyName()
+        {
+            PSObject obj = PSObject.AsPSObject("TEST");
+            string value = obj.GetPropertyValue<string>(string.Empty);
+        }
+
+        [TestMethod]
+        public void GetPropertyValues()
+        {
+            PSObject obj = PSObject.AsPSObject("TEST");
+            obj.Properties.Add(new PSNoteProperty("A", "FOO"));
+            obj.Properties.Add(new PSNoteProperty("B", "1"));
+
+            string a = obj.GetPropertyValue<string>("A");
+            Assert.AreEqual<string>("FOO", a, "The property value for A is incorrect.");
+
+            int b = obj.GetPropertyValue<int>("B");
+            Assert.AreEqual<int>(1, b, "The converted property value for B is incorrect.");
+
+            int c = obj.GetPropertyValue<int>("C");
+            Assert.AreEqual<int>(0, c, "The default property value for missing C is incorrect.");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(PSInvalidCastException))]
+        public void GetPropertyValueWrongType()
+        {
+            PSObject obj = PSObject.AsPSObject("TEST");
+            obj.Properties.Add(new PSNoteProperty("A", "FOO"));
+
+            // Should throw a PSInvalidCastException.
+            int a = obj.GetPropertyValue<int>("A");
+        }
+        #endregion
+
+        #region SetPropertyValue
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SetPropertyValueWithNullSource()
+        {
+            PSObject obj = null;
+            obj.SetPropertyValue<string>("A", "FOO");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SetPropertyValueWithEmptyName()
+        {
+            PSObject obj = PSObject.AsPSObject(this);
+            obj.SetPropertyValue<string>(string.Empty, null);
+        }
+
+        [TestMethod]
+        public void SetPropertyValues()
+        {
+            // Use concrete class since PSNoteProperty.Value allows type changes.
+            PSObject obj = PSObject.AsPSObject(this);
+
+            obj.SetPropertyValue<string>("StringProperty", "FOO");
+            string a = obj.GetPropertyValue<string>("StringProperty");
+            Assert.AreEqual<string>("FOO", a, "The property value for A is incorrect.");
+
+            obj.SetPropertyValue<string>("StringProperty", "BAR");
+            a = obj.GetPropertyValue<string>("StringProperty");
+            Assert.AreEqual<string>("BAR", a, "The property value for A is incorrect.");
+
+            obj.SetPropertyValue<string>("IntegerProperty", "1");
+            int b = obj.GetPropertyValue<int>("IntegerProperty");
+            Assert.AreEqual<int>(1, b, "The converted property value for B is incorrect.");
+
+            obj.SetPropertyValue<int>("MissingProperty", 1);
+            int c = obj.GetPropertyValue<int>("MissingProperty");
+            Assert.AreEqual<int>(1, c, "The property value for added C is incorrect.");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(PSInvalidCastException))]
+        public void SetPropertyValueWrongType()
+        {
+            PSObject obj = PSObject.AsPSObject(this);
+
+            // Should throw a PSInvalidCastException.
+            obj.SetPropertyValue<string>("IntegerProperty", "FOO");
         }
         #endregion
     }
