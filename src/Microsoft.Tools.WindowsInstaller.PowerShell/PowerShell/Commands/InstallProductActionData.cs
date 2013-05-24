@@ -6,6 +6,7 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Deployment.WindowsInstaller.Package;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -18,5 +19,23 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// Gets or sets the target directory where to install the product.
         /// </summary>
         public string TargetDirectory { get; set; }
+
+        /// <summary>
+        /// Opens the package read-only and sets the <see cref="InstallCommandActionData.ProductCode"/> property.
+        /// </summary>
+        public void SetProductCode()
+        {
+            using (var db = new InstallPackage(this.Path, DatabaseOpenMode.ReadOnly))
+            {
+                if (db.Tables.Contains("Property"))
+                {
+                    this.ProductCode = db.Property["ProductCode"];
+                }
+                else
+                {
+                    this.ProductCode = null;
+                }
+            }
+        }
     }
 }

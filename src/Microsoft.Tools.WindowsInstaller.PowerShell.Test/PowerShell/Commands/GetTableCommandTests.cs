@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record#File", item.TypeNames[0], "The first type name is incorrect.");
 
                 string value = item.GetPropertyValue<string>("File");
-                Assert.AreEqual<string>("F_Source", value, "The File property is incorrect.");
+                Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");
             }
         }
 
@@ -48,7 +48,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record#File", item.TypeNames[0], "The first type name is incorrect.");
 
                 string value = item.GetPropertyValue<string>("File");
-                Assert.AreEqual<string>("F_Source", value, "The File property is incorrect.");
+                Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");
             }
         }
 
@@ -66,10 +66,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
 
                 string value = item.GetPropertyValue<string>("File");
-                Assert.AreEqual<string>("F_Source", value, "The File property is incorrect.");
+                Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");
 
                 value = item.GetPropertyValue<string>("ComponentId");
-                Assert.AreEqual<string>("{49DD49AB-0AEE-48F9-BDED-CE2A1CDB8C16}", value, "The ComponentId property is incorrect.");
+                Assert.AreEqual<string>("{B88B6441-D16B-4308-B03A-A4BBC0F8F022}", value, "The ComponentId property is incorrect.");
             }
         }
 
@@ -87,10 +87,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
 
                 string value = item.GetPropertyValue<string>("File");
-                Assert.AreEqual<string>("F_Source", value, "The File property is incorrect.");
+                Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");
 
                 value = item.GetPropertyValue<string>("ComponentId");
-                Assert.AreEqual<string>("{49DD49AB-0AEE-48F9-BDED-CE2A1CDB8C16}", value, "The ComponentId property is incorrect.");
+                Assert.AreEqual<string>("{B88B6441-D16B-4308-B03A-A4BBC0F8F022}", value, "The ComponentId property is incorrect.");
             }
         }
 

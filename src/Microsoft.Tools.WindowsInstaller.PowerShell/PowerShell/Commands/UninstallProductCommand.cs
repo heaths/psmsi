@@ -15,7 +15,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Uninstall-MSIProduct cmdlet.
     /// </summary>
     [Cmdlet(VerbsLifecycle.Uninstall, "MSIProduct", DefaultParameterSetName = ParameterSet.Path)]
-    public sealed class UninstallProductCommand : InstallCommandBase<InstallCommandActionData>
+    public sealed class UninstallProductCommand : InstallProductCommandBase<InstallProductActionData>
     {
         /// <summary>
         /// Gets a generic description of the activity performed by this cmdlet.
@@ -28,8 +28,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Uninstalls a product given the provided <paramref name="data"/>.
         /// </summary>
-        /// <param name="data">An <see cref="InstallCommandActionData"/> with information about the package to install.</param>
-        protected override void ExecuteAction(InstallCommandActionData data)
+        /// <param name="data">An <see cref="InstallProductActionData"/> with information about the package to install.</param>
+        protected override void ExecuteAction(InstallProductActionData data)
         {
             data.CommandLine += " REMOVE=ALL";
 

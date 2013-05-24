@@ -15,7 +15,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Repair-MSIProduct cmdlet.
     /// </summary>
     [Cmdlet(VerbsDiagnostic.Repair, "MSIProduct", DefaultParameterSetName = ParameterSet.Path)]
-    public sealed class RepairProductCommand : InstallCommandBase<RepairProductActionData>
+    [OutputType(typeof(ProductInstallation))]
+    public sealed class RepairProductCommand : InstallProductCommandBase<RepairProductActionData>
     {
         private ReinstallModesConverter converter;
 
@@ -70,7 +71,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             if (this.PassThru)
             {
-                var product = new ProductInstallation(data.ProductCode, null, UserContexts.All);
+                var product = ProductInstallation.GetProducts(data.ProductCode, null, UserContexts.All).FirstOrDefault();
                 if (null != product && product.IsInstalled)
                 {
                     this.WriteObject(product.ToPSObject(this.SessionState.Path));

@@ -22,6 +22,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// </summary>
         /// <param name="obj">The wrapped <see cref="System.IO.FileInfo">FileInfo</see> to check.</param>
         /// <returns>The storage class type.</returns>
+        /// <exception cref="PSNotSupportedException">The file is missing or is not a valid Windows Installer file.</exception>
         public static string GetFileType(PSObject obj)
         {
             // Return null if not a valid FileInfo object.
@@ -36,50 +37,21 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 return null;
             }
 
-            // Get the storage class identifier.
-            Storage stg = null;
-            string path = fileInfo.FullName;
-
-            try
+            // Get the Windows Installer file type.
+            var type = GetFileTypeInternal(fileInfo.FullName);
+            switch (type)
             {
-                stg = Storage.OpenStorage(path);
-
-                // Set the friendly name.
-                Guid clsid = stg.Clsid;
-                if (clsid == NativeMethods.CLSID_MsiPackage)
-                {
+                case FileType.Package:
                     return Properties.Resources.Type_Package;
-                }
-                else if (clsid == NativeMethods.CLSID_MsiPatch)
-                {
+
+                case FileType.Patch:
                     return Properties.Resources.Type_Patch;
-                }
-                else if (clsid == NativeMethods.CLSID_MsiTransform)
-                {
+
+                case FileType.Transform:
                     return Properties.Resources.Type_Transform;
-                }
-                else
-                {
+
+                default:
                     return null;
-                }
-            }
-            catch (InvalidDataException ex)
-            {
-                // The file is not a valid OLE storage file.
-                throw new PSNotSupportedException(ex.Message, ex);
-            }
-            catch (Win32Exception ex)
-            {
-                string message = ex.Message.Replace("%1", path);
-                throw new PSNotSupportedException(message, ex);
-            }
-            finally
-            {
-                IDisposable disposable = stg as IDisposable;
-                if (null != stg)
-                {
-                    disposable.Dispose();
-                }
             }
         }
 
@@ -120,5 +92,84 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 return hash;
             }
         }
+
+        /// <summary>
+        /// Gets the <see cref="FileType"/> of the file referenced by the given <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">The path to the file to check.</param>
+        /// <returns>The <see cref="FileType"/> of the file referenced by the given <paramref name="path"/>.</returns>
+        /// <exception cref="PSNotSupportedException">The file is missing or is not a valid Windows Installer file.</exception>
+        internal static FileType GetFileTypeInternal(string path)
+        {
+            Storage stg = null;
+
+            try
+            {
+                stg = Storage.OpenStorage(path);
+
+                // Set the friendly name.
+                Guid clsid = stg.Clsid;
+                if (clsid == NativeMethods.CLSID_MsiPackage)
+                {
+                    return FileType.Package;
+                }
+                else if (clsid == NativeMethods.CLSID_MsiPatch)
+                {
+                    return FileType.Patch;
+                }
+                else if (clsid == NativeMethods.CLSID_MsiTransform)
+                {
+                    return FileType.Transform;
+                }
+                else
+                {
+                    return FileType.Other;
+                }
+            }
+            catch (InvalidDataException ex)
+            {
+                // The file is not a valid OLE storage file.
+                throw new PSNotSupportedException(ex.Message, ex);
+            }
+            catch (Win32Exception ex)
+            {
+                string message = ex.Message.Replace("%1", path);
+                throw new PSNotSupportedException(message, ex);
+            }
+            finally
+            {
+                IDisposable disposable = stg as IDisposable;
+                if (null != stg)
+                {
+                    disposable.Dispose();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// The type of Windows Installer file.
+    /// </summary>
+    internal enum FileType
+    {
+        /// <summary>
+        /// An MSI package.
+        /// </summary>
+        Package,
+
+        /// <summary>
+        /// An MSP patch.
+        /// </summary>
+        Patch,
+
+        /// <summary>
+        /// An MST transform.
+        /// </summary>
+        Transform,
+
+        /// <summary>
+        /// Not a valid Windows Installer file.
+        /// </summary>
+        Other,
     }
 }

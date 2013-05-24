@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestCategory("Impactful")]
         public void Cleanup()
         {
-            var product = new ProductInstallation("{5F45B2AD-6B18-40EF-AA07-083876579689}", null, UserContexts.All);
+            var product = new ProductInstallation("{877EF582-78AF-4D84-888B-167FDC3BCC11}", null, UserContexts.All);
             if (null != product && product.IsInstalled)
             {
                 Installer.ConfigureProduct(product.ProductCode, 0, InstallState.Absent, "REMOVE=ALL");
@@ -41,6 +41,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             using (var p = TestRunspace.CreatePipeline(@"repair-msiproduct ""$TestDeploymentDirectory\example.msi"""))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
+                Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
+            }
+
+            using (var p = TestRunspace.CreatePipeline(@"install-msipatch ""$TestDeploymentDirectory\example.msp"" -context userunmanaged"))
             {
                 var output = p.Invoke();
                 Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
@@ -67,21 +74,35 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.IsTrue(File.Exists(Path.Combine(this.TestContext.TestRunDirectory, @"PipelineInstall\product.wxs")), "The product was not installed to the correct location.");
             }
 
-            using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{5F45B2AD-6B18-40EF-AA07-083876579689}' -context all | install-msiproduct -properties A=1"))
+            using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' -context all | install-msiproduct -properties A=1"))
             {
                 var output = p.Invoke();
                 Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
                 Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
             }
 
-            using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{5F45B2AD-6B18-40EF-AA07-083876579689}' -context all | repair-msiproduct"))
+            using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' -context all | install-msipatch ""$TestDeploymentDirectory\example.msp"""))
             {
                 var output = p.Invoke();
                 Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
                 Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
             }
 
-            using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{5F45B2AD-6B18-40EF-AA07-083876579689}' -context all | uninstall-msiproduct"))
+            using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' -context all | repair-msiproduct"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
+                Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
+            }
+
+            using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' -context all | uninstall-msipatch ""$TestDeploymentDirectory\example.msp"""))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
+                Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
+            }
+
+            using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' -context all | uninstall-msiproduct"))
             {
                 var output = p.Invoke();
                 Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
@@ -93,7 +114,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestCategory("Impactful")]
         public void PassThruInstall()
         {
-            using (var p = TestRunspace.CreatePipeline(@"install-msiproduct ""$TestDeploymentDirectory\example.msi"" -destination ""$TestRunDirectory\PassThruInstall"" -passthru | repair-msiproduct -passthru | uninstall-msiproduct"))
+            using (var p = TestRunspace.CreatePipeline(@"install-msiproduct ""$TestDeploymentDirectory\example.msi"" -destination ""$TestRunDirectory\PassThruInstall"" -passthru | repair-msiproduct -passthru | install-msipatch ""$TestDeploymentDirectory\example.msp"" -passthru | uninstall-msiproduct"))
             {
                 var output = p.Invoke();
                 Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");

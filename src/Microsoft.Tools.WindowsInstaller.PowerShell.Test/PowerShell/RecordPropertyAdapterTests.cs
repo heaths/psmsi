@@ -52,7 +52,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                         type = typeof(Nullable<short>).FullName;
                         Assert.IsNotNull(property, "The Attributes property was not adapted.");
                         Assert.AreEqual(type, adapter.GetPropertyTypeName(property), true, "The Attributes property type is incorrect.");
-                        Assert.AreEqual<short>(0, Convert.ToInt16(RecordPropertyAdapter.GetPropertyValue(property, record)), "The Attributes propert value is incorrect.");
+                        Assert.AreEqual<short>(512, Convert.ToInt16(RecordPropertyAdapter.GetPropertyValue(property, record)), "The Attributes propert value is incorrect.");
 
                         property = adapter.GetProperty(record, "Sequence");
                         type = typeof(int).FullName;

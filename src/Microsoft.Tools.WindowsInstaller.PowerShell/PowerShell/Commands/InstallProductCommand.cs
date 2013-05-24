@@ -16,13 +16,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Install-MSIProduct cmdlet.
     /// </summary>
     [Cmdlet(VerbsLifecycle.Install, "MSIProduct", DefaultParameterSetName = ParameterSet.Path)]
-    public sealed class InstallProductCommand : InstallCommandBase<InstallProductActionData>
+    [OutputType(typeof(ProductInstallation))]
+    public sealed class InstallProductCommand : InstallProductCommandBase<InstallProductActionData>
     {
         /// <summary>
         /// Gets or sets the target directory for the initial product install.
         /// </summary>
         [Parameter(ParameterSetName = ParameterSet.Path, ValueFromPipelineByPropertyName = true)]
         [Parameter(ParameterSetName = ParameterSet.LiteralPath, ValueFromPipelineByPropertyName = true)]
+        [Alias("TargetDirectory")]
         [ValidateNotNullOrEmpty]
         public string Destination { get; set; }
 
@@ -62,7 +64,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             if (this.PassThru)
             {
-                var product = new ProductInstallation(data.ProductCode, null, UserContexts.All);
+                var product = ProductInstallation.GetProducts(data.ProductCode, null, UserContexts.All).FirstOrDefault();
                 if (null != product && product.IsInstalled)
                 {
                     this.WriteObject(product.ToPSObject(this.SessionState.Path));

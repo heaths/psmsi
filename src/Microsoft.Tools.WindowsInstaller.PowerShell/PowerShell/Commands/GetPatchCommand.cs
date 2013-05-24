@@ -73,7 +73,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 if (value == UserContexts.None)
                 {
-                    throw new ArgumentException(Properties.Resources.Error_InvalidContext);
+                    string message = string.Format(Properties.Resources.Error_InvalidContext, UserContexts.None);
+                    throw new ArgumentException(message, "UserContext");
                 }
 
                 this.context = value;

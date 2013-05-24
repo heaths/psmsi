@@ -5,7 +5,6 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
@@ -77,74 +76,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var ps = PS.Create())
             {
                 var data = InstallCommandActionData.CreateActionData<InstallCommandActionData>(ps.Runspace.SessionStateProxy.Path, null);
-            }
-        }
-        [TestMethod]
-        public void SetProductCodeFromMsi()
-        {
-            using (var ps = PS.Create())
-            {
-                var file = ps.AddCommand("get-item").AddArgument("example.msi").Invoke().SingleOrDefault();
-                Assert.IsNotNull(file, "The file item is null.");
-
-                // Suppress any Windows Installer dialogs.
-                var internalUI = Installer.SetInternalUI(InstallUIOptions.Silent);
-                try
-                {
-                    var data = InstallCommandActionData.CreateActionData<InstallCommandActionData>(ps.Runspace.SessionStateProxy.Path, file);
-                    data.SetProductCode();
-                    Assert.AreEqual("{5F45B2AD-6B18-40EF-AA07-083876579689}", data.ProductCode, "The ProductCode is incorrect.");
-                }
-                finally
-                {
-                    Installer.SetInternalUI(internalUI);
-                }
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InstallerException))]
-        public void SetProductCodeFromMsp()
-        {
-            using (var ps = PS.Create())
-            {
-                var file = ps.AddCommand("get-item").AddArgument("example.msp").Invoke().SingleOrDefault();
-                Assert.IsNotNull(file, "The file item is null.");
-
-                // Suppress any Windows Installer dialogs.
-                var internalUI = Installer.SetInternalUI(InstallUIOptions.Silent);
-                try
-                {
-                    var data = InstallCommandActionData.CreateActionData<InstallCommandActionData>(ps.Runspace.SessionStateProxy.Path, file);
-                    data.SetProductCode();
-                }
-                finally
-                {
-                    Installer.SetInternalUI(internalUI);
-                }
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InstallerException))]
-        public void SetProductCodeFromTxt()
-        {
-            using (var ps = PS.Create())
-            {
-                var file = ps.AddCommand("get-item").AddArgument("example.txt").Invoke().SingleOrDefault();
-                Assert.IsNotNull(file, "The file item is null.");
-
-                // Suppress any Windows Installer dialogs.
-                var internalUI = Installer.SetInternalUI(InstallUIOptions.Silent);
-                try
-                {
-                    var data = InstallCommandActionData.CreateActionData<InstallCommandActionData>(ps.Runspace.SessionStateProxy.Path, file);
-                    data.SetProductCode();
-                }
-                finally
-                {
-                    Installer.SetInternalUI(internalUI);
-                }
             }
         }
     }

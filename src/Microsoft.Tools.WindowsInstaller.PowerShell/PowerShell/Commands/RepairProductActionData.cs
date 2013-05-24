@@ -12,7 +12,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// <summary>
     /// The data for actions to repair a package or product.
     /// </summary>
-    public class RepairProductActionData : InstallCommandActionData
+    public class RepairProductActionData : InstallProductActionData
     {
         /// <summary>
         /// The default <see cref="ReinstallMode"/> (equivalent to "omus").

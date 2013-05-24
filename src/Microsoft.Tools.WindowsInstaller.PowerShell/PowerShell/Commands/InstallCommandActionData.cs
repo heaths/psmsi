@@ -5,7 +5,6 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Management.Automation;
 
@@ -88,20 +87,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             if (null != args && 0 < args.Length)
             {
                 this.CommandLine = string.Join(" ", args);
-            }
-        }
-
-        /// <summary>
-        /// Opens the package read-only and sets the <see cref="ProductCode"/> property.
-        /// </summary>
-        public void SetProductCode()
-        {
-            using (var db = new Database(this.Path, DatabaseOpenMode.ReadOnly))
-            {
-                using (var msi = Installer.OpenPackage(db, false))
-                {
-                    this.ProductCode = msi.GetProductProperty("ProductCode");
-                }
             }
         }
     }
