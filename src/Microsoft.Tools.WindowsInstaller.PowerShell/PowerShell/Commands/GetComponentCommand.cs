@@ -1,6 +1,4 @@
-﻿// Cmdlet to get or enumerator Windows Installer products.
-//
-// Copyright (C) Microsoft Corporation. All rights reserved.
+﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 // KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -114,7 +112,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             PSObject obj = PSObject.AsPSObject(component);
 
             // Add the component key path as the PSPath.
-            string path = PathConverter.FromKeyPathToPSPath(this.SessionState, component.Path);
+            string path = this.SessionState.Path.GetUnresolvedPSPathFromKeyPath(component.Path);
             obj.Properties.Add(new PSNoteProperty("PSPath", path));
 
             // Must hide the ClientProducts property or exceptions will be thrown.

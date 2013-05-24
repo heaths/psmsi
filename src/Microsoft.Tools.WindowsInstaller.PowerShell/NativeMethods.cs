@@ -1,6 +1,4 @@
-﻿// Native methods.
-//
-// Copyright (C) Microsoft Corporation. All rights reserved.
+﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 // KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -9,7 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-
 using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 // Default CharSet for any DllImportAttribute that does not declare CharSet.
@@ -255,91 +252,5 @@ namespace Microsoft.Tools.WindowsInstaller
             STGTY_PROPERTY = 4
         }
         #endregion
-    }
-
-
-    /// <summary>
-    /// Represents a nullable file hash.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public class FileHash
-    {
-        [MarshalAs(UnmanagedType.U4)] private int dwFileHashInfoSie;
-        [MarshalAs(UnmanagedType.U4)] private int dwData0;
-        [MarshalAs(UnmanagedType.U4)] private int dwData1;
-        [MarshalAs(UnmanagedType.U4)] private int dwData2;
-        [MarshalAs(UnmanagedType.U4)] private int dwData3;
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="FileHash"/> class.
-        /// </summary>
-        internal FileHash()
-        {
-            this.dwFileHashInfoSie = Marshal.SizeOf(this);
-        }
-
-        /// <summary>
-        /// Gets the first hash part.
-        /// </summary>
-        public int? MSIHashPart1
-        {
-            get
-            {
-                if (this.dwData0 == 0)
-                {
-                    return null;
-                }
-
-                return this.dwData0;
-            }
-        }
-
-        /// <summary>
-        /// Gets the second hash part.
-        /// </summary>
-        public int? MSIHashPart2
-        {
-            get
-            {
-                if (this.dwData1 == 0)
-                {
-                    return null;
-                }
-
-                return this.dwData1;
-            }
-        }
-
-        /// <summary>
-        /// Gets the third hash part.
-        /// </summary>
-        public int? MSIHashPart3
-        {
-            get
-            {
-                if (this.dwData2 == 0)
-                {
-                    return null;
-                }
-
-                return this.dwData2;
-            }
-        }
-
-        /// <summary>
-        /// Gets the fourth hash part.
-        /// </summary>
-        public int? MSIHashPart4
-        {
-            get
-            {
-                if (this.dwData3 == 0)
-                {
-                    return null;
-                }
-
-                return this.dwData3;
-            }
-        }
     }
 }

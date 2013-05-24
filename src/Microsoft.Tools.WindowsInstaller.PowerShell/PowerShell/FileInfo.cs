@@ -1,6 +1,4 @@
-﻿// Provides file type and hash information for ETS.
-//
-// Copyright (C) Microsoft Corporation. All rights reserved.
+﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 // KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -24,6 +22,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// </summary>
         /// <param name="obj">The wrapped <see cref="System.IO.FileInfo">FileInfo</see> to check.</param>
         /// <returns>The storage class type.</returns>
+        /// <exception cref="PSNotSupportedException">The file is missing or is not a valid Windows Installer file.</exception>
         public static string GetFileType(PSObject obj)
         {
             // Return null if not a valid FileInfo object.
@@ -38,9 +37,71 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 return null;
             }
 
-            // Get the storage class identifier.
-            Storage stg = null;
+            // Get the Windows Installer file type.
+            var type = GetFileTypeInternal(fileInfo.FullName);
+            switch (type)
+            {
+                case FileType.Package:
+                    return Properties.Resources.Type_Package;
+
+                case FileType.Patch:
+                    return Properties.Resources.Type_Patch;
+
+                case FileType.Transform:
+                    return Properties.Resources.Type_Transform;
+
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the first 32 bits of the file hash.
+        /// </summary>
+        /// <param name="obj">The wrapped <see cref="System.IO.FileInfo">FileInfo</see> to check.</param>
+        /// <returns>The first 32 bits of the file hash.</returns>
+        public static FileHash GetFileHash(PSObject obj)
+        {
+            // Return null if not a valid FileInfo object.
+            if (null == obj)
+            {
+                return null;
+            }
+
+            System.IO.FileInfo fileInfo = obj.BaseObject as System.IO.FileInfo;
+            if (null == fileInfo)
+            {
+                return null;
+            }
+
+            // Get the hash of the file.
             string path = fileInfo.FullName;
+            FileHash hash = new FileHash();
+
+            int ret = NativeMethods.MsiGetFileHash(path, 0, hash);
+            if (ret != NativeMethods.ERROR_SUCCESS)
+            {
+                // Write the error record and continue enumerating files.
+                Win32Exception ex = new Win32Exception(ret);
+
+                string message = ex.Message.Replace("%1", path);
+                throw new PSNotSupportedException(message, ex);
+            }
+            else
+            {
+                return hash;
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="FileType"/> of the file referenced by the given <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">The path to the file to check.</param>
+        /// <returns>The <see cref="FileType"/> of the file referenced by the given <paramref name="path"/>.</returns>
+        /// <exception cref="PSNotSupportedException">The file is missing or is not a valid Windows Installer file.</exception>
+        internal static FileType GetFileTypeInternal(string path)
+        {
+            Storage stg = null;
 
             try
             {
@@ -50,19 +111,19 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 Guid clsid = stg.Clsid;
                 if (clsid == NativeMethods.CLSID_MsiPackage)
                 {
-                    return Properties.Resources.Type_Package;
+                    return FileType.Package;
                 }
                 else if (clsid == NativeMethods.CLSID_MsiPatch)
                 {
-                    return Properties.Resources.Type_Patch;
+                    return FileType.Patch;
                 }
                 else if (clsid == NativeMethods.CLSID_MsiTransform)
                 {
-                    return Properties.Resources.Type_Transform;
+                    return FileType.Transform;
                 }
                 else
                 {
-                    return null;
+                    return FileType.Other;
                 }
             }
             catch (InvalidDataException ex)
@@ -84,44 +145,31 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// The type of Windows Installer file.
+    /// </summary>
+    internal enum FileType
+    {
+        /// <summary>
+        /// An MSI package.
+        /// </summary>
+        Package,
 
         /// <summary>
-        /// Gets the first 32 bits of the file hash.
+        /// An MSP patch.
         /// </summary>
-        /// <param name="obj">The wrapped <see cref="System.IO.FileInfo">FileInfo</see> to check.</param>
-        /// <returns>The first 32 bits of the file hash.</returns>
-        public static FileHash GetFileHash(PSObject obj)
-        {
-            FileHash hash = new FileHash();
+        Patch,
 
-            // Return null if not a valid FileInfo object.
-            if (null == obj)
-            {
-                return hash;
-            }
+        /// <summary>
+        /// An MST transform.
+        /// </summary>
+        Transform,
 
-            System.IO.FileInfo fileInfo = obj.BaseObject as System.IO.FileInfo;
-            if (null == fileInfo)
-            {
-                return hash;
-            }
-
-            // Get the hash of the file.
-            string path = fileInfo.FullName;
-
-            int ret = NativeMethods.MsiGetFileHash(path, 0, hash);
-            if (ret != NativeMethods.ERROR_SUCCESS)
-            {
-                // Write the error record and continue enumerating files.
-                Win32Exception ex = new Win32Exception(ret);
-
-                string message = ex.Message.Replace("%1", path);
-                throw new PSNotSupportedException(message, ex);
-            }
-            else
-            {
-                return hash;
-            }
-        }
+        /// <summary>
+        /// Not a valid Windows Installer file.
+        /// </summary>
+        Other,
     }
 }

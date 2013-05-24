@@ -1,5 +1,3 @@
-// Cmdlet to get or enumerator Windows Installer products.
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -51,7 +49,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 if (value == UserContexts.None)
                 {
-                    throw new ArgumentException(Properties.Resources.Error_InvalidContext);
+                    string message = string.Format(Properties.Resources.Error_InvalidContext, UserContexts.None);
+                    throw new ArgumentException(message, "UserContext");
                 }
 
                 this.context = value;
@@ -129,8 +128,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         // Enumerate all products in the context and attempt a match against each pattern.
                         foreach (ProductInstallation product in ProductInstallation.GetProducts(null, param.UserSid, param.UserContext))
                         {
-                            string productName = product.ProductName;
-                            if (Utility.MatchesAnyWildcardPattern(productName, patterns))
+                            if (product.ProductName.Match(patterns))
                             {
                                 this.WriteProduct(product);
                             }
@@ -159,12 +157,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <param name="product">The <see cref="ProductInstallation"/> to write to the pipeline.</param>
         private void WriteProduct(ProductInstallation product)
         {
-            PSObject obj = PSObject.AsPSObject(product);
-
-            // Add the local package as the PSPath.
-            string path = PathConverter.ToPSPath(this.SessionState, product.LocalPackage);
-            obj.Properties.Add(new PSNoteProperty("PSPath", path));
-
+            var obj = product.ToPSObject(this.SessionState.Path);
             this.WriteObject(obj);
         }
 

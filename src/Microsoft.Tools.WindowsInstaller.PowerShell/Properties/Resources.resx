@@ -130,7 +130,7 @@
     <value>Transform</value>
   </data>
   <data name="Error_InvalidContext" xml:space="preserve">
-    <value>The user context "None" is not validation for this operation.</value>
+    <value>The user context "{0}" is not valid for this operation.</value>
   </data>
   <data name="Error_InvalidFilter" xml:space="preserve">
     <value>The patch state filter "None" is not valid for this operation.</value>
@@ -143,5 +143,32 @@
   </data>
   <data name="Error_InvalidFile" xml:space="preserve">
     <value>The path "{0}" is not a file or does not exist.</value>
+  </data>
+  <data name="Action_Install" xml:space="preserve">
+    <value>Installing {0}</value>
+  </data>
+  <data name="Action_GeneratingScript" xml:space="preserve">
+    <value>Generating script...</value>
+  </data>
+  <data name="Action_Wait" xml:space="preserve">
+    <value>Please wait...</value>
+  </data>
+  <data name="Action_Repair" xml:space="preserve">
+    <value>Repairing {0}</value>
+  </data>
+  <data name="Action_Uninstall" xml:space="preserve">
+    <value>Uninstalling {0}</value>
+  </data>
+  <data name="Error_InvalidReinstallMode" xml:space="preserve">
+    <value>The ReinstallMode contains an invalid character: {0}.</value>
+  </data>
+  <data name="Error_TableNotFound" xml:space="preserve">
+    <value>The table "{0}" was not found in the database "{1}".</value>
+  </data>
+  <data name="Action_Configure" xml:space="preserve">
+    <value>Configuring {0}</value>
+  </data>
+  <data name="Error_InapplicablePatch" xml:space="preserve">
+    <value>The patch "{0}" does not apply to product "{1}".</value>
   </data>
 </root>

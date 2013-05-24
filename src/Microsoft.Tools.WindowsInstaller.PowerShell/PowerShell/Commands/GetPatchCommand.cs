@@ -1,5 +1,3 @@
-// Cmdlet to get or enumerator Windows Installer patches.
-//
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -75,7 +73,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 if (value == UserContexts.None)
                 {
-                    throw new ArgumentException(Properties.Resources.Error_InvalidContext);
+                    string message = string.Format(Properties.Resources.Error_InvalidContext, UserContexts.None);
+                    throw new ArgumentException(message, "UserContext");
                 }
 
                 this.context = value;
@@ -155,12 +154,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <param name="patch">The <see cref="PatchInstallation"/> to write to the pipeline.</param>
         private void WritePatch(PatchInstallation patch)
         {
-            PSObject obj = PSObject.AsPSObject(patch);
-
-            // Add the local package as the PSPath.
-            string path = PathConverter.ToPSPath(this.SessionState, patch.LocalPackage);
-            obj.Properties.Add(new PSNoteProperty("PSPath", path));
-
+            var obj = patch.ToPSObject(this.SessionState.Path);
             this.WriteObject(obj);
         }
 

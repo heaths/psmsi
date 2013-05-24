@@ -76,22 +76,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache.cs" />
+    <Compile Include="ExtensionAttribute.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="FileHash.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="PatchSequencer.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFeatureCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetTableCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\InstallCommandBase.cs" />
+    <Compile Include="PowerShell\Commands\InstallCommandActionData.cs" />
+    <Compile Include="PowerShell\Commands\InstallPatchActionData.cs" />
+    <Compile Include="PowerShell\Commands\InstallPatchCommand.cs" />
+    <Compile Include="PowerShell\Commands\InstallPatchCommandBase.cs" />
+    <Compile Include="PowerShell\Commands\InstallProductActionData.cs" />
+    <Compile Include="PowerShell\Commands\InstallProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\InstallProductCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
+    <Compile Include="PowerShell\Commands\RepairProductActionData.cs" />
+    <Compile Include="PowerShell\Commands\RepairProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\UninstallPatchCommand.cs" />
+    <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />
+    <Compile Include="PowerShell\ExtensionMethods.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />
+    <Compile Include="PowerShell\PSInstallerException.cs" />
+    <Compile Include="PowerShell\ReinstallModeAttribute.cs" />
+    <Compile Include="PowerShell\RecordPropertyAdapter.cs" />
     <Compile Include="PowerShell\Module.cs" />
-    <Compile Include="PowerShell\PathConverter.cs" />
     <Compile Include="PowerShell\SidAttribute.cs" />
-    <Compile Include="PowerShell\Utility.cs" />
     <Compile Include="PowerShell\ValidateGuidAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -99,6 +120,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ReinstallModesConverter.cs" />
+    <Compile Include="Set.cs" />
     <Compile Include="Storage.cs" />
   </ItemGroup>
   <ItemGroup>

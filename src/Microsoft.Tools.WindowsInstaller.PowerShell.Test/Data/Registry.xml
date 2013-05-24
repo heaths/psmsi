@@ -367,6 +367,16 @@
                     </key>
                 </key>
             </key>
+            <key name="Policies">
+                <key name="Microsoft">
+                    <key name="Windows">
+                        <key name="Installer">
+                            <value name="Debug" type="DWord">7</value>
+                            <value name="Logging" type="String">voicewarmup</value>
+                        </key>
+                    </key>
+                </key>
+            </key>
         </key>
         <key name="System">
             <key name="CurrentControlSet">

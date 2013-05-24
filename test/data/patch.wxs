@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) Microsoft Corporation. All rights reserved.
+
+    THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+    PARTICULAR PURPOSE.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Patch Id="*" AllowRemoval="yes" Classification="Update" ClientPatchId="Example" Description="TEST" DisplayName="TEST" Manufacturer="Microsoft Corporation" MinorUpdateTargetRTM="yes">
+        <Media Id="100" Cabinet="Patch" EmbedCab="yes">
+            <PatchBaseline Id="MSP" />
+        </Media>
+
+        <PatchFamily Id="Version" Version="1.0.1.0" Supersede="no">
+            <PropertyRef Id="ProductVersion" />
+        </PatchFamily>
+        <PatchFamily Id="Registry" Version="1.0.1.0" Supersede="no">
+            <ComponentRef Id="Registry" />
+        </PatchFamily>
+    </Patch>
+</Wix>

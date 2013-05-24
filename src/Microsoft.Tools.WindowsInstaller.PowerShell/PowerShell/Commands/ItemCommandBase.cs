@@ -1,6 +1,4 @@
-﻿// Base class for cmdlets which process items (files).
-//
-// Copyright (C) Microsoft Corporation. All rights reserved.
+﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 //
 // THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 // KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -67,7 +65,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 if (property != null && property.Value is string)
                 {
                     // Get the provider path.
-                    string path = PathConverter.ToProviderPath(this.SessionState, property.Value as string);
+                    string path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(property.Value as string);
                     if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
                     {
                         // Process the item.

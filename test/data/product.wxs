@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) Microsoft Corporation. All rights reserved.
+
+    THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+    PARTICULAR PURPOSE.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*" Name="TEST" Language="1033" Version="!(wix.Version)" Manufacturer="Microsoft Corporation" UpgradeCode="AC460ECB-9287-45F3-BF66-E464EDE4AAF2">
+        <Package Compressed="yes" InstallerVersion="301" InstallScope="perUser" />
+        <WixVariable Id="Version" Value="1.0.0" Overridable="yes" />
+        <MediaTemplate EmbedCab="yes" />
+
+        <Directory Id="TARGETDIR" Name="SourceDir" />
+        <Feature Id="TEST" Level="1">
+            <Component Id="File" Guid="B88B6441-D16B-4308-B03A-A4BBC0F8F022" Directory="TARGETDIR">
+                <File Source="$(sys.SOURCEFILEPATH)" />
+            </Component>
+            <Component Id="Registry" Guid="69CE8679-2CD6-4711-8133-D778D2A47967" Directory="TARGETDIR">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\TEST">
+                    <RegistryValue Name="Version" Type="string" Value="!(wix.Version)" />
+                </RegistryKey>
+            </Component>
+        </Feature>
+    </Product>
+</Wix>
