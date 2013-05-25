@@ -5,13 +5,14 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -21,6 +22,35 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     [TestClass]
     public class GetProductCommandTest : CommandTestBase
     {
+        [TestMethod]
+        public void EnumerateProductsInDefaultContext()
+        {
+            var expected = new List<string>();
+            expected.Add("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}");
+            expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
+            expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
+
+            using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo"))
+            {
+                using (var reg = new MockRegistry())
+                {
+                    string path = Path.Combine(this.TestContext.DeploymentDirectory, "Registry.xml");
+                    reg.Import(path);
+
+                    var objs = p.Invoke();
+
+                    var actual = new List<string>(objs.Count);
+                    foreach (var obj in objs)
+                    {
+                        actual.Add(obj.GetPropertyValue<string>("ProductCode"));
+                    }
+
+                    Assert.AreEqual<int>(expected.Count, objs.Count);
+                    CollectionAssert.AreEquivalent(expected, actual);
+                }
+            }
+        }
+
         /// <summary>
         /// Enumerates all machine-assigned products.
         /// </summary>
@@ -31,7 +61,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             List<string> products = new List<string>();
             products.Add("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}");
 
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo"))
+            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo -context Machine"))
             {
                 using (MockRegistry reg = new MockRegistry())
                 {
@@ -49,7 +79,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     Assert.AreEqual<int>(products.Count, objs.Count);
                     CollectionAssert.AreEquivalent(products, actual);
                 }
-                }
+            }
         }
 
         /// <summary>

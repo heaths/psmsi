@@ -20,7 +20,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     public sealed class GetProductCommand : PSCmdlet
     {
         private List<Parameters> allParameters = new List<Parameters>();
-        private UserContexts context = UserContexts.Machine;
+        private UserContexts context = UserContexts.All;
 
         /// <summary>
         /// Gets or sets the ProductCodes to enumerate.

@@ -23,7 +23,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         private List<Parameters> allParameters = new List<Parameters>();
         private PatchStates filter = PatchStates.Applied;
-        private UserContexts context = UserContexts.Machine;
+        private UserContexts context = UserContexts.All;
 
         // Parameter positions below are to maintain backward call-compatibility.
 
