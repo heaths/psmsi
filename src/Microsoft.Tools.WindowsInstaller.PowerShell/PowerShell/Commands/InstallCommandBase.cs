@@ -26,11 +26,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         protected const int INSTALLLEVEL_DEFAULT = 0;
 
-        private InstallUIOptions previousInternalUI;
-        private ExternalUIRecordHandler previousExternalUI;
         private Log log;
-
-        // Record each phase of progress.
         private ProgressDataCollection progress;
 
         /// <summary>
@@ -38,8 +34,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         protected InstallCommandBase()
         {
-            this.previousInternalUI = InstallUIOptions.Default;
-            this.previousExternalUI = null;
             this.log = null;
 
             this.Actions = new ActionQueue();
@@ -129,20 +123,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         protected override void BeginProcessing()
         {
-            var internalUI = InstallUIOptions.Silent;
-            if (!this.Force)
-            {
-                internalUI |= InstallUIOptions.SourceResolutionOnly | InstallUIOptions.UacOnly;
-            }
-
-            var externalUI = InstallLogModes.ActionStart | InstallLogModes.ActionData | InstallLogModes.CommonData | InstallLogModes.Error
-                           | InstallLogModes.FatalExit | InstallLogModes.Info | InstallLogModes.Initialize | InstallLogModes.Progress
-                           | InstallLogModes.User | InstallLogModes.Verbose | InstallLogModes.Warning;
-
-            // Set up the internal and external UI handling.
-            this.previousInternalUI = Installer.SetInternalUI(internalUI);
-            this.previousExternalUI = Installer.SetExternalUI(this.OnMessage, externalUI);
-
             // Resolve the requested log path, if specified.
             string path = this.Log;
             if (!string.IsNullOrEmpty(path))
@@ -184,13 +164,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 this.ExecuteActions();
             }
-
-            // Make sure progress is completed.
-            this.WriteProgress(true);
-
-            // Restore previous handlers.
-            Installer.SetInternalUI(this.previousInternalUI);
-            Installer.SetExternalUI(this.previousExternalUI, InstallLogModes.None);
 
             base.EndProcessing();
         }
@@ -501,36 +474,42 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         private void ExecuteActions()
         {
-            // Keep track of how many actions were queued.
-            this.Actions.OriginalCount = this.Actions.Count;
-
-            // Execute the actions.
-            while (0 < this.Actions.Count)
+            using (new UserInterfaceHandler(this.OnMessage, this.Force))
             {
-                try
-                {
-                    T data = this.Actions.Dequeue();
+                // Keep track of how many actions were queued.
+                this.Actions.OriginalCount = this.Actions.Count;
 
-                    string extra = null != data ? data.LogName : null;
-                    Installer.EnableLog(this.log.Mode, this.log.Next(extra));
-
-                    this.ExecuteAction(data);
-                }
-                catch (InstallerException ex)
+                // Execute the actions.
+                while (0 < this.Actions.Count)
                 {
-                    using (var psiex = new PSInstallerException(ex))
+                    try
                     {
-                        if (null != psiex.ErrorRecord)
+                        T data = this.Actions.Dequeue();
+
+                        string extra = null != data ? data.LogName : null;
+                        Installer.EnableLog(this.log.Mode, this.log.Next(extra));
+
+                        this.ExecuteAction(data);
+                    }
+                    catch (InstallerException ex)
+                    {
+                        using (var psiex = new PSInstallerException(ex))
                         {
-                            this.WriteError(psiex.ErrorRecord);
-                        }
-                        else
-                        {
-                            // Unexpected not to have an ErrorRecord.
-                            throw;
+                            if (null != psiex.ErrorRecord)
+                            {
+                                this.WriteError(psiex.ErrorRecord);
+                            }
+                            else
+                            {
+                                // Unexpected not to have an ErrorRecord.
+                                throw;
+                            }
                         }
                     }
                 }
+
+                // Make sure progress is completed.
+                this.WriteProgress(true);
             }
         }
 
@@ -576,7 +555,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 this.progress.CurrentAction = Resources.Action_Wait;
             }
 
-            var record = new ProgressRecord(0, activity, this.progress.CurrentAction);
+            var record = new ProgressRecord(this.GetHashCode(), activity, this.progress.CurrentAction);
             if (complete)
             {
                 record.RecordType = ProgressRecordType.Completed;
@@ -692,6 +671,36 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 // Default to empty name so "(null)" doesn't show for activity.
                 this.CurrentProductName = string.Empty;
+            }
+        }
+
+        private sealed class UserInterfaceHandler : IDisposable
+        {
+            private InstallUIOptions previousInternalUI;
+            private ExternalUIRecordHandler previousExternalUI;
+
+            internal UserInterfaceHandler(ExternalUIRecordHandler handler, bool force)
+            {
+                var internalUI = InstallUIOptions.Silent;
+                if (force)
+                {
+                    internalUI |= InstallUIOptions.SourceResolutionOnly | InstallUIOptions.UacOnly;
+                }
+
+                var externalUI = InstallLogModes.ActionStart | InstallLogModes.ActionData | InstallLogModes.CommonData | InstallLogModes.Error
+                               | InstallLogModes.FatalExit | InstallLogModes.Info | InstallLogModes.Initialize | InstallLogModes.Progress
+                               | InstallLogModes.User | InstallLogModes.Verbose | InstallLogModes.Warning;
+
+                // Set up the internal and external UI handling.
+                this.previousInternalUI = Installer.SetInternalUI(internalUI);
+                this.previousExternalUI = Installer.SetExternalUI(handler, externalUI);
+            }
+
+            public void Dispose()
+            {
+                // Restore previous handlers.
+                Installer.SetInternalUI(this.previousInternalUI);
+                Installer.SetExternalUI(this.previousExternalUI, InstallLogModes.None);
             }
         }
     }
