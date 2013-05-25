@@ -92,18 +92,22 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 switch (path.Substring(0, pos))
                 {
                     case "00":
+                    case "20":
                         root = "HKEY_CLASSES_ROOT";
                         break;
 
                     case "01":
+                    case "21":
                         root = "HKEY_CURRENT_USER";
                         break;
 
                     case "02":
+                    case "22":
                         root = "HKEY_LOCAL_MACHINE";
                         break;
 
                     case "03":
+                    case "23":
                         root = "HKEY_USERS";
                         break;
 
