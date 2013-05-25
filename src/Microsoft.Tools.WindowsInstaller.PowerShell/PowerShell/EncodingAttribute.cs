@@ -11,32 +11,28 @@ using System.Management.Automation;
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {
     /// <summary>
-    /// Supports conversion between the short form REINSTALLMODE and the <see cref="Microsoft.Deployment.WindowsInstaller.ReinstallModes"/> enumeration.
+    /// Transforms string and integer representations of encodings to an <see cref="System.Text.Encoding"/>-type parameter.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public sealed class ReinstallModeAttribute : ArgumentTransformationAttribute
+    public sealed class EncodingAttribute : ArgumentTransformationAttribute
     {
         /// <summary>
-        /// Transforms a string in the short form of REINSTALLMODE to a <see cref="Microsoft.Deployment.WindowsInstaller.ReinstallModes"/> enumeration.
+        /// Transforms a string or integer to an <see cref="System.Text.Encoding"/>.
         /// </summary>
         /// <param name="engineIntrinsics">Provides access to the APIs for managing the transformation context.</param>
         /// <param name="inputData">The parameter argument that is to be transformed.</param>
         /// <returns>The transformed object.</returns>
         public override object Transform(EngineIntrinsics engineIntrinsics, object inputData)
         {
-            if (null == inputData)
+            if (null != inputData)
             {
-                return null;
+                var converter = new EncodingConverter();
+                if (converter.CanConvertFrom(inputData.GetType()))
+                {
+                    return converter.ConvertFrom(inputData);
+                }
             }
 
-            var converter = new ReinstallModesConverter();
-            if (converter.CanConvertFrom(inputData.GetType()))
-            {
-                var mode = converter.ConvertFrom(inputData);
-                return mode;
-            }
-
-            // Return the source data for other transformations in the chain.
             return inputData;
         }
     }

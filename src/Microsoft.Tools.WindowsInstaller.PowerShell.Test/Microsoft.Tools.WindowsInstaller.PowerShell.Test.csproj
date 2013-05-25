@@ -75,11 +75,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheTests.cs" />
+    <Compile Include="EncodingConverterTests.cs" />
     <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="LocTest.cs" />
     <Compile Include="LogTests.cs" />
     <Compile Include="MockRegistry.cs" />
     <Compile Include="PatchSequencerTests.cs" />
+    <Compile Include="PowerShell\Commands\ExportPatchXmlCommandTests.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetFeatureCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommandTest.cs" />
