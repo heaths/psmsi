@@ -84,6 +84,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="PatchApplicator.cs" />
     <Compile Include="PatchSequencer.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommand.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommand.cs" />

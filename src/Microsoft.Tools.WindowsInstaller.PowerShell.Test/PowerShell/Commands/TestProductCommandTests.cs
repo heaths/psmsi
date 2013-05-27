@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void TestProductDefaultIceCube()
         {
-            using (var rs = this.TestRunspace.CreatePipeline(@"get-item ""$TestDeploymentDirectory\Example.msi"" | test-msiproduct -include ICE0* -exclude ICE03 -v"))
+            using (var rs = this.TestRunspace.CreatePipeline(@"get-item ""$TestDeploymentDirectory\Example.msi"" | test-msiproduct -include ICE0* -exclude ICE03 -patch ""$TestDeploymentDirectory\Example.msp"" -transform ""$TestDeploymentDirectory\Example.mst"" -v"))
             {
                 using (var reg = new MockRegistry())
                 {

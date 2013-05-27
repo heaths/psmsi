@@ -6,6 +6,7 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets additional ICE .cub files to use for validation.
         /// </summary>
-        [Parameter, Alias("Cubes", "Cubs"), ValidateNotNullOrEmpty]
-        public string[] AdditionalCubes { get; set; }
+        [Parameter, Alias("Cube"), ValidateNotNullOrEmpty]
+        public string[] AdditionalCube { get; set; }
 
         /// <summary>
         /// Gets or sets whether to include the default ICE .cub file installed by Orca or MsiVal2.
@@ -50,6 +51,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [Parameter, ValidateNotNullOrEmpty]
         public string[] Exclude { get; set; }
+
+        /// <summary>
+        /// Gets or sets patch packages to apply before validation.
+        /// </summary>
+        [Parameter, ValidateNotNullOrEmpty]
+        public string[] Patch { get; set; }
+
+        /// <summary>
+        /// Gets or sets transforms to apply before validation.
+        /// </summary>
+        [Parameter, ValidateNotNullOrEmpty]
+        public string[] Transform { get; set; }
 
         /// <summary>
         /// Gets whether the standard Verbose parameter was set.
@@ -86,11 +99,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
             this.CurrentPath = path;
 
-            // Copy the database to a writable location.
+            // Copy the database to a writable location and open.
             string copy = this.Copy(path);
-
-            using (var db = new Database(copy, DatabaseOpenMode.Direct))
+            using (var db = new InstallPackage(copy, DatabaseOpenMode.Direct))
             {
+                // Apply any patches or transforms before otherwise modifying.
+                this.ApplyTransforms(db);
+
                 // Copy the ProductCode and drop the Property table to avoid opening an installed product.
                 bool hasProperty = db.IsTablePersistent("Property");
                 string productCode = null;
@@ -100,31 +115,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     productCode = db.ExecutePropertyQuery("ProductCode");
                 }
 
-                // Add the ICE cubes...
-                var cubes = new List<string>();
-                if (!this.NoDefault)
-                {
-                    string darice = GetDefaultCubePath();
-                    if (!string.IsNullOrEmpty(darice))
-                    {
-                        cubes.Add(darice);
-                    }
-                    else
-                    {
-                        this.WriteWarning(Resources.Error_DefaultCubNotFound);
-                    }
-                }
-
-                if (null != this.AdditionalCubes && 0 < this.AdditionalCubes.Length)
-                {
-                    cubes.AddRange(this.AdditionalCubes);
-                }
-
-                // ...and mix.
-                cubes.ForEach(cube => this.MergeCube(db, cube));
-                db.Commit();
-
-                // Drop the Property table in case any ICE cubes added entries.
+                // Merge the ICE cubes and fix up the database if needed.
+                this.MergeCubes(db);
                 if (!hasProperty)
                 {
                     db.Execute("DROP TABLE `Property`");
@@ -218,6 +210,50 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             return null;
         }
 
+        private void ApplyTransforms(InstallPackage db)
+        {
+            // Apply transforms first since they likely apply to the unpatched product.
+            if (null != this.Transform)
+            {
+                foreach (string path in this.GetFiles(this.Transform))
+                {
+                    try
+                    {
+                        db.ApplyTransform(path, PatchApplicator.IgnoreErrors);
+                    }
+                    catch (InstallerException ex)
+                    {
+                        var psex = new PSInstallerException(ex);
+                        if (null != psex.ErrorRecord)
+                        {
+                            this.WriteError(psex.ErrorRecord);
+                        }
+                    }
+                }
+
+                db.Commit();
+            }
+
+            // Apply applicable patch transforms.
+            if (null != this.Patch)
+            {
+                var applicator = new PatchApplicator(db);
+                foreach (string path in this.GetFiles(this.Patch))
+                {
+                    applicator.Add(path);
+                }
+
+                applicator.InapplicablePatch += (source, args) =>
+                    {
+                        string message = string.Format(Resources.Error_InapplicablePatch, args.Patch, args.Product);
+                        this.WriteVerbose(message);
+                    };
+
+                // The applicator will commit the changes.
+                applicator.Apply();
+            }
+        }
+
         private string Copy(string path)
         {
             string temp = System.IO.Path.GetTempPath();
@@ -235,25 +271,56 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             return copy;
         }
 
+        private IEnumerable<string> GetFiles(IEnumerable<string> paths)
+        {
+            ProviderInfo provider;
+            foreach (string path in paths)
+            {
+                foreach (string resolvedPath in this.SessionState.Path.GetResolvedProviderPathFromPSPath(path, out provider))
+                {
+                    yield return resolvedPath;
+                }
+            }
+        }
+
         private void MergeCube(Database db, string path)
         {
-            var items = this.SessionState.InvokeProvider.Item.Get(path);
-            foreach (var item in items)
+            using (var cube = new Database(path, DatabaseOpenMode.ReadOnly))
             {
-                path = item.GetPropertyValue<string>("PSPath");
-                path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
-
-                using (var cube = new Database(path, DatabaseOpenMode.ReadOnly))
+                try
                 {
-                    try
-                    {
-                        this.WriteVerbose(string.Format(Resources.Action_Merge, path, db.FilePath));
-                        db.Merge(cube, "MergeConflicts");
-                    }
-                    catch
-                    {
-                    }
+                    this.WriteVerbose(string.Format(Resources.Action_Merge, path, db.FilePath));
+                    db.Merge(cube, "MergeConflicts");
                 }
+                catch
+                {
+                }
+            }
+        }
+
+        private void MergeCubes(InstallPackage db)
+        {
+            if (!this.NoDefault)
+            {
+                string darice = GetDefaultCubePath();
+                if (!string.IsNullOrEmpty(darice))
+                {
+                    this.MergeCube(db, darice);
+                }
+                else
+                {
+                    this.WriteWarning(Resources.Error_DefaultCubNotFound);
+                }
+            }
+
+            if (null != this.AdditionalCube)
+            {
+                foreach (string cube in this.GetFiles(this.AdditionalCube))
+                {
+                    this.MergeCube(db, cube);
+                }
+
+                db.Commit();
             }
         }
 
