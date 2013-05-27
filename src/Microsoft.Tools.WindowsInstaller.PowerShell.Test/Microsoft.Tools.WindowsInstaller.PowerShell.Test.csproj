@@ -77,6 +77,7 @@
     <Compile Include="CacheTests.cs" />
     <Compile Include="EncodingConverterTests.cs" />
     <Compile Include="ExtensionMethodsTests.cs" />
+    <Compile Include="IceMessageTests.cs" />
     <Compile Include="LocTest.cs" />
     <Compile Include="LogTests.cs" />
     <Compile Include="MockRegistry.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="PowerShell\Commands\InstallScenarioTests.cs" />
     <Compile Include="PowerShell\Commands\RepairProductActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommandTests.cs" />
+    <Compile Include="PowerShell\Commands\TestProductCommandTests.cs" />
     <Compile Include="PowerShell\ExtensionMethodsTests.cs" />
     <Compile Include="PowerShell\FileInfoTests.cs" />
     <Compile Include="PowerShell\ModuleTest.cs" />
@@ -139,6 +141,8 @@
     <Content Include="Data\qps-ploc\MSI.psd1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Data\darice.cub" />
+    <None Include="Data\test.cub" />
     <None Include="Data\Test.psm1" />
   </ItemGroup>
   <ItemGroup>

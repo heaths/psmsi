@@ -226,12 +226,12 @@ namespace Microsoft.Tools.WindowsInstaller
             string replacement = Variables.Replace(value, delegate(Match m)
             {
                 string var = m.Groups["var"].Value;
-                if (!properties.ContainsKey(var))
+                if (properties.ContainsKey(var))
                 {
-                    throw new NotSupportedException(string.Format("The variable {0} is not supported.", var));
+                    return properties[var];
                 }
 
-                return properties[var];
+                return string.Format("$({0})", var);
             });
 
             return replacement;

@@ -19,11 +19,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     public sealed class GetFileTypeCommand : ItemCommandBase
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="GetFileTypeCommand"/> class.
+        /// Gets or sets whether the file objects are returned.
         /// </summary>
-        public GetFileTypeCommand() : base()
-        {
-        }
+        [Parameter]
+        public SwitchParameter PassThru { get; set; }
 
         /// <summary>
         /// Processes the item enumerated by the base class.

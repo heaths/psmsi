@@ -317,6 +317,9 @@
                                             <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">c:\foo\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
                                             <value name="225736CE5A378244B864566A1225C97C" type="String">c:\bar\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
                                         </key>
+                                        <key name="E5AC568D64B9543B3B6A345CAE2F900E">
+                                            <value name="00000000000000000000000000000000" type="String">$(TestDeploymentDirectory)\darice.cub</value>
+                                        </key>
                                     </key>
                                     <key name="Products">
                                         <key name="1287AE4B1CA15B1408122ACF771D7B7B">
@@ -402,6 +405,16 @@
                         <value name="UdfsSoftwareDefectManagement" type="DWord"/>
                         <value name="Win31FileSystem" type="DWord"/>
                         <value name="Win95TruncatedExtensions" type="DWord">1</value>
+                    </key>
+                    <!-- support copying files -->
+                    <key name="LSA">
+                        <key name="AccessProviders">
+                            <key name="Windows NT Access Provider">
+                                <value name="ProviderPath" type="String">%SystemRoot%\system32\ntmarta.dll</value>
+                            </key>
+                            <value name="MartaExtension" type="String">ntmarta.dll</value>
+                            <value name="ProviderOrder" type="MultiString">Windows NT Access Provider</value>
+                        </key>
                     </key>
                     <!-- enable pseudo-loc -->
                     <key name="Nls">

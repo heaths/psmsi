@@ -17,11 +17,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     public sealed class GetFileHashCommand : ItemCommandBase
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="GetFileHashCommand"/> class.
+        /// Gets or sets whether the file objects are returned.
         /// </summary>
-        public GetFileHashCommand() : base()
-        {
-        }
+        [Parameter]
+        public SwitchParameter PassThru { get; set; }
 
         /// <summary>
         /// Processes the item enumerated by the base class.

@@ -5,8 +5,8 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
+using System;
+using System.IO;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -21,17 +21,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the path supporting wildcards to enumerate files.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [Parameter(ParameterSetName = ParameterSet.Path, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
         public string[] Path { get; set; }
 
         /// <summary>
         /// Gets or sets the literal path for one or more files.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [Parameter(ParameterSetName = ParameterSet.LiteralPath, Position = 0, Mandatory = true, ValueFromPipelineByPropertyName = true)]
-        [ValidateNotNullOrEmpty]
-        [Alias("PSPath")]
+        [Parameter(ParameterSetName = ParameterSet.LiteralPath, Mandatory = true, ValueFromPipelineByPropertyName = true)]
+        [Alias("PSPath"), ValidateNotNullOrEmpty]
         public string[] LiteralPath
         {
             get { return this.Path; }
@@ -39,45 +36,35 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
-        /// Gets or sets whether the file objects are returned.
-        /// </summary>
-        [Parameter]
-        public SwitchParameter PassThru { get; set; }
-
-        /// <summary>
         /// Processes the input paths and writes the file hashes to the pipeline.
         /// </summary>
         protected override void ProcessRecord()
         {
             // If no path was provided, enumerate all child items.
-            if (this.Path == null || this.Path.Length == 0)
+            if (null == this.Path || 0 == this.Path.Length)
             {
                 this.Path = All;
             }
 
             // Get all the items.
-            bool literal = this.ParameterSetName == ParameterSet.LiteralPath;
-            Collection<PSObject> items = this.InvokeProvider.Item.Get(this.Path, true, literal);
-
-            foreach (PSObject item in items)
+            var items = this.InvokeProvider.Item.Get(this.Path, true, this.ParameterSetName == ParameterSet.LiteralPath);
+            foreach (var item in items)
             {
-                PSPropertyInfo property = item.Properties["PSPath"];
-                if (property != null && property.Value is string)
-                {
-                    // Get the provider path.
-                    string path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(property.Value as string);
-                    if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
-                    {
-                        // Process the item.
-                        this.ProcessItem(item);
-                    }
-                    else
-                    {
-                        string message = string.Format(Properties.Resources.Error_InvalidFile, path);
-                        PSNotSupportedException ex = new PSNotSupportedException(message);
+                // Get the provider path.
+                string path = item.GetPropertyValue<string>("PSPath");
+                path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
 
-                        this.WriteError(ex.ErrorRecord);
-                    }
+                if (File.Exists(path) || Directory.Exists(path))
+                {
+                    this.ProcessItem(item);
+                }
+                else
+                {
+                    string message = string.Format(Properties.Resources.Error_InvalidFile, path);
+                    var ex = new NotSupportedException(message);
+                    var error = new ErrorRecord(ex, "UnsupportedItemType", ErrorCategory.InvalidType, path);
+
+                    this.WriteError(error);
                 }
             }
         }

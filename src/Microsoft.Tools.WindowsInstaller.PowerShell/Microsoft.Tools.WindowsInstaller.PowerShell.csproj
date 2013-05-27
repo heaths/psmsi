@@ -94,6 +94,7 @@
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
+    <Compile Include="IceMessage.cs" />
     <Compile Include="PowerShell\Commands\InstallCommandBase.cs" />
     <Compile Include="PowerShell\Commands\InstallCommandActionData.cs" />
     <Compile Include="PowerShell\Commands\InstallPatchActionData.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
     <Compile Include="PowerShell\Commands\RepairProductActionData.cs" />
     <Compile Include="PowerShell\Commands\RepairProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\TestProductCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />
     <Compile Include="PowerShell\EncodingAttribute.cs" />

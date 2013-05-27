@@ -1,0 +1,34 @@
+Function ICE1000()
+On Error Resume Next
+
+	Set rec = Installer.CreateRecord(1)
+	If Err <> 0 Then
+		ICE1000 = 1
+		Exit Function
+	End If
+
+	'Give description of test
+	rec.StringData(0) = "ICE1000" & Chr(9) & "3" & Chr(9) & "ICE1000 - Tests ICE functionality."
+	Message &h03000000, rec
+
+		'Send an ICE error.
+		rec.StringData(0) = "ICE1000" & Chr(9) & "1" & Chr(9) & "Test ICE error"
+		Message &h03000000, rec
+
+		'Send an ICE warning
+		rec.StringData(0) = "ICE1000" & Chr(9) & "2" & Chr(9) & "Test ICE warning"
+		Message &h03000000, rec
+
+		'Send an error
+		rec.StringData(0) = "Test error"
+		Message &h01000000, rec
+
+		'Send a warning
+		rec.StringData(0) = "Test warning"
+		Message &h02000000, rec
+
+	'Return success
+	ICE1000 = 1
+	Exit Function
+
+End Function

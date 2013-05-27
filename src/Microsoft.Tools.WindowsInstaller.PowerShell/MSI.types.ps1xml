@@ -500,4 +500,26 @@
             <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
         </TypeAdapter>
     </Type>
+    <Type>
+        <Name>Microsoft.Tools.WindowsInstaller.IceMessageType</Name>
+        <Members>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <NoteProperty>
+                        <Name>DefaultDisplayProperty</Name>
+                        <Value>Description</Value>
+                    </NoteProperty>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Name</Name>
+                            <Name>Type</Name>
+                            <Name>Description</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
 </Types>

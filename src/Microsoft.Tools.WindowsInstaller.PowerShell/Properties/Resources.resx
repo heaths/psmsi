@@ -171,4 +171,13 @@
   <data name="Error_InapplicablePatch" xml:space="preserve">
     <value>The patch "{0}" does not apply to product "{1}".</value>
   </data>
+  <data name="Error_DefaultCubNotFound" xml:space="preserve">
+    <value>The default ICE .cub file was not found and will not be loaded.</value>
+  </data>
+  <data name="Action_Copy" xml:space="preserve">
+    <value>Copying "{0}" to "{1}".</value>
+  </data>
+  <data name="Action_Merge" xml:space="preserve">
+    <value>Merging "{0}" into "{1}".</value>
+  </data>
 </root>

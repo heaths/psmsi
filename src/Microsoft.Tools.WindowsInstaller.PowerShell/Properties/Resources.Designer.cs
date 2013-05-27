@@ -70,6 +70,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copying &quot;{0}&quot; to &quot;{1}&quot;..
+        /// </summary>
+        internal static string Action_Copy {
+            get {
+                return ResourceManager.GetString("Action_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generating script....
         /// </summary>
         internal static string Action_GeneratingScript {
@@ -84,6 +93,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         internal static string Action_Install {
             get {
                 return ResourceManager.GetString("Action_Install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merging &quot;{0}&quot; into &quot;{1}&quot;..
+        /// </summary>
+        internal static string Action_Merge {
+            get {
+                return ResourceManager.GetString("Action_Merge", resourceCulture);
             }
         }
         
@@ -111,6 +129,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         internal static string Action_Wait {
             get {
                 return ResourceManager.GetString("Action_Wait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The default ICE .cub file was not found and will not be loaded..
+        /// </summary>
+        internal static string Error_DefaultCubNotFound {
+            get {
+                return ResourceManager.GetString("Error_DefaultCubNotFound", resourceCulture);
             }
         }
         
@@ -195,7 +222,6 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
             }
         }
         
-
         /// <summary>
         ///   Looks up a localized string similar to Package.
         /// </summary>
