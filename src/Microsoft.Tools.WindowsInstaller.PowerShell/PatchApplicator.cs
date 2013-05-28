@@ -70,10 +70,11 @@ namespace Microsoft.Tools.WindowsInstaller
         internal void Apply(bool throwOnError = false)
         {
             // Need to make a copy of the database since exclusivity is required.
-            IList<string> applicable = null;
+            IEnumerable<string> applicable = null;
             using (var copy = Copy(this.db))
             {
-                applicable = this.sequencer.GetApplicablePatches(copy.FilePath);
+                // Copy the items to a list so they are enumerated immediately and the temporary database can be closed.
+                applicable = this.sequencer.GetApplicablePatches(copy.FilePath).Select(patch => patch.Patch).ToList();
             }
 
             foreach (string path in applicable)
@@ -89,7 +90,7 @@ namespace Microsoft.Tools.WindowsInstaller
                             continue;
                         }
 
-                        string temp = Path.GetTempFileName();
+                        string temp = Path.ChangeExtension(Path.GetTempFileName(), ".mst");
                         patch.ExtractTransform(transform, temp);
 
                         // Apply and commit the authored transform so further transforms may apply.
@@ -105,7 +106,7 @@ namespace Microsoft.Tools.WindowsInstaller
 
         private static InstallPackage Copy(InstallPackage db)
         {
-            string temp = Path.GetTempFileName();
+            string temp = Path.ChangeExtension(Path.GetTempFileName(), ".msi");
             File.Copy(db.FilePath, temp, true);
 
             // Open a copy and schedule delete it when closed.

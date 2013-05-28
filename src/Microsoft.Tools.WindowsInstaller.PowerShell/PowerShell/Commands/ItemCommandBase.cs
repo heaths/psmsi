@@ -22,17 +22,29 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// Gets or sets the path supporting wildcards to enumerate files.
         /// </summary>
         [Parameter(ParameterSetName = ParameterSet.Path, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        public string[] Path { get; set; }
+        public virtual string[] Path { get; set; }
 
         /// <summary>
         /// Gets or sets the literal path for one or more files.
         /// </summary>
         [Parameter(ParameterSetName = ParameterSet.LiteralPath, Mandatory = true, ValueFromPipelineByPropertyName = true)]
-        [Alias("PSPath"), ValidateNotNullOrEmpty]
-        public string[] LiteralPath
+        [Alias("PSPath")]
+        public virtual string[] LiteralPath
         {
             get { return this.Path; }
             set { this.Path = value; }
+        }
+
+        /// <summary>
+        /// Gets whether the parameter set name contains "LiteralPath".
+        /// </summary>
+        protected bool IsLiteralPath
+        {
+            get
+            {
+                return null != this.ParameterSetName
+                    && 0 <= this.ParameterSetName.IndexOf(ParameterSet.LiteralPath, StringComparison.InvariantCultureIgnoreCase);
+            }
         }
 
         /// <summary>
@@ -46,8 +58,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 this.Path = All;
             }
 
-            // Get all the items.
-            var items = this.InvokeProvider.Item.Get(this.Path, true, this.ParameterSetName == ParameterSet.LiteralPath);
+            // Enumerate all the file system items.
+            var items = this.InvokeProvider.Item.Get(this.Path, true, this.IsLiteralPath);
             foreach (var item in items)
             {
                 // Get the provider path.

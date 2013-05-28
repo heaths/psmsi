@@ -86,6 +86,7 @@
     <Compile Include="PowerShell\Commands\GetComponentCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetFeatureCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommandTest.cs" />
+    <Compile Include="PowerShell\Commands\GetPatchSequenceCommandTests.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetSharedComponentFunctionTest.cs" />

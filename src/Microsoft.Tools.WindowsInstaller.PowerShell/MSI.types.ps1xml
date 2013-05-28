@@ -522,4 +522,33 @@
             </MemberSet>
         </Members>
     </Type>
+    <Type>
+        <Name>Microsoft.Tools.WindowsInstaller.PatchSequence</Name>
+        <Members>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <NoteProperty>
+                        <Name>DefaultDisplayProperty</Name>
+                        <Value>Patch</Value>
+                    </NoteProperty>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Sequence</Name>
+                            <Name>Patch</Name>
+                            <Name>Product</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                    <PropertySet>
+                        <Name>DefaultKeyPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Patch</Name>
+                            <Name>Product</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
 </Types>

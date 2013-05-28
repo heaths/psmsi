@@ -5,8 +5,6 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System;
-using System.ComponentModel;
 using System.IO;
 using System.Management.Automation;
 
@@ -16,6 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIFileType cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIFileType", DefaultParameterSetName = ParameterSet.Path)]
+    [OutputType(typeof(string), typeof(FileSystemInfo))]
     public sealed class GetFileTypeCommand : ItemCommandBase
     {
         /// <summary>

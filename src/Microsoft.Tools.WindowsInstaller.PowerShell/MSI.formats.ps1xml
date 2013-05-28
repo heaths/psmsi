@@ -663,7 +663,7 @@
         </View>
         <!-- IceMessage -->
         <View>
-            <Name>Basic</Name>
+            <Name>Default</Name>
             <ViewSelectedBy>
                 <TypeName>Microsoft.Tools.WindowsInstaller.IceMessage</TypeName>
             </ViewSelectedBy>
@@ -700,6 +700,71 @@
                     </TableRowEntry>
                 </TableRowEntries>
             </TableControl>
+        </View>
+        <!-- PatchSequence -->
+        <View>
+            <Name>Default</Name>
+            <ViewSelectedBy>
+                <TypeName>Microsoft.Tools.WindowsInstaller.PatchSequence</TypeName>
+            </ViewSelectedBy>
+            <GroupBy>
+                <Label>Product</Label>
+                <PropertyName>Product</PropertyName>
+            </GroupBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Label>Sequence</Label>
+                        <Width>8</Width>
+                        <Alignment>Left</Alignment>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Patch</Label>
+                        <Alignment>Left</Alignment>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Sequence</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Patch</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+        <View>
+            <Name>Default</Name>
+            <ViewSelectedBy>
+                <TypeName>Microsoft.Tools.WindowsInstaller.PatchSequence</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <PropertyName>Sequence</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>Patch</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>Product</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>UserSid</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>UserContext</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
         </View>
     </ViewDefinitions>
 </Configuration>

@@ -5,7 +5,7 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System.ComponentModel;
+using System.IO;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -14,6 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIFileHash cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIFileHash", DefaultParameterSetName = ParameterSet.Path)]
+    [OutputType(typeof(FileHash), typeof(FileSystemInfo))]
     public sealed class GetFileHashCommand : ItemCommandBase
     {
         /// <summary>

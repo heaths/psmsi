@@ -8,7 +8,6 @@
 using System;
 using System.Collections;
 using System.Management.Automation;
-using System.Text.RegularExpressions;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {
@@ -23,10 +22,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public sealed class ValidateGuidAttribute : ValidateArgumentsAttribute
     {
-        // Define and compile the regular expression to validate GUIDs in a format Windows Installer understands.
-        private static readonly Regex re = new Regex(@"\{[A-F0-9]{8}-([A-F0-9]{4}-){3}[A-F0-9]{12}\}",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-
         /// <summary>
         /// Creates a new instance of the <see cref="ValidateGuidAttribute"/> class.
         /// </summary>
@@ -67,12 +62,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         private static void ValidateElement(object element)
         {
             // Let other validators check for null elements.
-            if (element != null)
+            if (null != element)
             {
-                string input = element as string;
-
-                // Validate simple checks before performing a more exhaustive regex match.
-                if (input == null || input.Length != 38 || !re.IsMatch(input))
+                if (!Microsoft.Tools.WindowsInstaller.Validate.IsGuid(element as string))
                 {
                     throw new ValidationMetadataException(Properties.Resources.Error_InvalidGuid);
                 }

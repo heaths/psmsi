@@ -41,7 +41,10 @@ namespace Microsoft.Tools.WindowsInstaller
 
             // Sequence the patch.
             path = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
-            var list = sequencer.GetApplicablePatches(path);
+            var e = sequencer.GetApplicablePatches(path).Select(patch => patch.Patch);
+            Assert.IsNotNull(e, "The list of applicable patches is null.");
+
+            var list = e.ToList();
             Assert.AreEqual<int>(1, list.Count, "The number of applicable patches is incorrect.");
             CollectionAssert.AreEqual(sequencer.Patches, list.ToArray(), "The list of applicable patches is incorrect.");
         }
@@ -62,7 +65,10 @@ namespace Microsoft.Tools.WindowsInstaller
 
             // Sequence the patch.
             path = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
-            var list = sequencer.GetApplicablePatches(path);
+            var e = sequencer.GetApplicablePatches(path).Select(patch => patch.Patch);
+            Assert.IsNotNull(e, "The list of applicable patches is null.");
+
+            var list = e.ToList();
             Assert.AreEqual<int>(1, list.Count, "The number of applicable patches is incorrect.");
             CollectionAssert.AreEqual(sequencer.Patches, list.ToArray(), "The list of applicable patches is incorrect.");
         }
@@ -83,7 +89,10 @@ namespace Microsoft.Tools.WindowsInstaller
                     inapplicable.Add(args.Patch);
                 };
 
-            var applicable = sequencer.GetApplicablePatches(path);
+            var e = sequencer.GetApplicablePatches(path).Select(patch => patch.Patch);
+            Assert.IsNotNull(e, "The list of applicable patches is null.");
+
+            var applicable = e.ToList();
             Assert.AreEqual<int>(0, applicable.Count, "The number of applicable patches is incorrect.");
             Assert.AreEqual<int>(1, inapplicable.Count, "The number of inapplicable patches is incorrect.");
         }

@@ -105,5 +105,25 @@ namespace Microsoft.Tools.WindowsInstaller
             CollectionAssert.AreEqual(source, array, "The arrays are not equivalent.");
         }
         #endregion
+
+        #region ToList
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ToListWithNullSource()
+        {
+            string[] source = null;
+            var list = source.ToList();
+        }
+
+        [TestMethod]
+        public void ToListPassThrough()
+        {
+            string[] source = { "A", "B" };
+            var list = source.ToList();
+
+            // IList<T> doesn't implement ICollection, so we convert back to an array.
+            CollectionAssert.AreEqual(source, list.ToArray(), "The arrays are not equivalent.");
+        }
+        #endregion
     }
 }

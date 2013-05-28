@@ -6,11 +6,9 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.Deployment.WindowsInstaller;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Management.Automation;
 using Microsoft.Tools.WindowsInstaller.Properties;
+using System;
+using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -18,14 +16,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIRecord cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSITable", DefaultParameterSetName = "Path,Table")]
-    public sealed class GetTableCommand : PSCmdlet
+    [OutputType(typeof(Record))]
+    public sealed class GetTableCommand : ItemCommandBase
     {
         /// <summary>
         /// Gets or sets the path supporting wildcards to enumerate files.
         /// </summary>
         [Parameter(ParameterSetName = "Path,Table", Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
         [Parameter(ParameterSetName = "Path,Query", Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        public string[] Path { get; set; }
+        public override string[] Path { get; set; }
 
         /// <summary>
         /// Gets or sets the literal path for one or more files.
@@ -33,7 +32,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [Alias("PSPath")]
         [Parameter(ParameterSetName = "LiteralPath,Table", Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [Parameter(ParameterSetName = "LiteralPath,Query", Mandatory = true, ValueFromPipelineByPropertyName = true)]
-        public string[] LiteralPath { get; set; }
+        public override string[] LiteralPath
+        {
+            get { return this.Path; }
+            set { this.Path = value; }
+        }
 
         /// <summary>
         /// Gets or sets the table name from which all <see cref="Record"/> objects are selected.
@@ -50,29 +53,30 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public string Query { get; set; }
 
         /// <summary>
-        /// Processes each file item in the pipeline to select table records.
+        /// Opens the database specified by the <paramref name="item"/> and executes the specified query.
         /// </summary>
-        protected override void ProcessRecord()
+        /// <param name="item">A file item that references a package database.</param>
+        protected override void ProcessItem(PSObject item)
         {
-            bool isliteral = 0 <= this.ParameterSetName.IndexOf("LiteralPath", StringComparison.InvariantCultureIgnoreCase);
-            var paths = isliteral ? this.LiteralPath : this.Path;
+            string path = item.GetPropertyValue<string>("PSPath");
+            path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
 
-            var items = this.InvokeProvider.Item.Get(paths, true, isliteral);
-            foreach (var obj in items)
+            // No handles are disposed or the property adapter will throw.
+            var db = new Database(path, DatabaseOpenMode.ReadOnly);
+
+            string query = this.GetQuery(db);
+            if (!string.IsNullOrEmpty(query))
             {
-                string path = obj.GetPropertyValue<string>("PSPath");
-                if (!string.IsNullOrEmpty(path))
-                {
-                    path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
-                }
-                else if (obj.BaseObject is System.IO.FileInfo)
-                {
-                    path = ((System.IO.FileInfo)obj.BaseObject).FullName;
-                }
+                var view = db.OpenView(query);
+                view.Execute();
 
-                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                var record = view.Fetch();
+                while (null != record)
                 {
-                    this.ProcessFile(path);
+                    var obj = PSObject.AsPSObject(record);
+                    this.WriteObject(obj);
+
+                    record = view.Fetch();
                 }
             }
         }
@@ -99,28 +103,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             return null;
-        }
-
-        private void ProcessFile(string path)
-        {
-            // No handles are disposed or the property adapter will throw.
-            var db = new Database(path, DatabaseOpenMode.ReadOnly);
-
-            string query = this.GetQuery(db);
-            if (!string.IsNullOrEmpty(query))
-            {
-                var view = db.OpenView(query);
-                view.Execute();
-
-                var record = view.Fetch();
-                while (null != record)
-                {
-                    var obj = PSObject.AsPSObject(record);
-                    this.WriteObject(obj);
-
-                    record = view.Fetch();
-                }
-            }
         }
     }
 }

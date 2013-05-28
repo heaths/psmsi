@@ -93,14 +93,29 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <param name="product">The ProductCode for which applicability is determined.</param>
         /// <param name="userSid">The SID of the user for which the product is installed. The default is null.</param>
         /// <param name="context">The <see cref="UserContexts"/> into which the product is installed. This must be <see cref="UserContexts.None"/> for a package path. The default is <see cref="UserContexts.None"/>.</param>
-        /// <returns>An ordered list of paths to applicable patch or patch XML files.</returns>
+        /// <returns>An ordered list of applicable patch or patch XML files.</returns>
         /// <exception cref="ArgumentException">The parameters are not correct for the given package path or installed ProductCode (ex: cannot use <see cref="UserContexts.All"/> in any case).</exception>
-        internal IList<string> GetApplicablePatches(string product, string userSid = null, UserContexts context = UserContexts.None)
+        internal IEnumerable<PatchSequence> GetApplicablePatches(string product, string userSid = null, UserContexts context = UserContexts.None)
         {
             var patches = this.Patches.ToArray();
             InapplicablePatchHandler handler = (patch, ex) => this.OnInapplicablePatch(new InapplicablePatchEventArgs(patch, product, ex));
 
-            return Installer.DetermineApplicablePatches(product, patches, handler, userSid, context);
+            // Keep track of the sequence.
+            int i = 0;
+
+            // The current implementation does not return an null list.
+            var applicable = Installer.DetermineApplicablePatches(product, patches, handler, userSid, context);
+            foreach (var path in applicable)
+            {
+                yield return new PatchSequence()
+                {
+                    Patch = path,
+                    Sequence = i++,
+                    Product = product,
+                    UserSid = userSid,
+                    UserContext = context,
+                };
+            }
         }
 
         private void OnInapplicablePatch(InapplicablePatchEventArgs args)

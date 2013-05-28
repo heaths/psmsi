@@ -98,6 +98,22 @@ namespace Microsoft.Tools.WindowsInstaller
             return list.ToArray();
         }
 
+        /// <summary>
+        /// Createsa new list from the enumerable <paramref name="source"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An enumerable from which the array is created.</param>
+        /// <returns>A list that contains the elements from the input <paramref name="source"/>.</returns>
+        internal static IList<T> ToList<T>(this IEnumerable<T> source)
+        {
+            if (null == source)
+            {
+                throw new ArgumentNullException("source");
+            }
+
+            return new List<T>(source);
+        }
+
         private static IEnumerable<TResult> ForEach<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, TResult> selector)
         {
             foreach (var item in source)

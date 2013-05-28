@@ -85,6 +85,7 @@
     <Compile Include="Log.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="PatchApplicator.cs" />
+    <Compile Include="PatchSequence.cs" />
     <Compile Include="PatchSequencer.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommand.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommand.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="PowerShell\Commands\GetFileHashCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetPatchSequenceCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="ReinstallModesConverter.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="Storage.cs" />
+    <Compile Include="Validate.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
