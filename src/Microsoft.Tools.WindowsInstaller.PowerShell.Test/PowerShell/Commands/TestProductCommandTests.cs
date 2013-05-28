@@ -21,6 +21,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void TestProductDefaultIceCube()
         {
+            string package = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
             using (var rs = this.TestRunspace.CreatePipeline(@"get-item ""$TestDeploymentDirectory\Example.msi"" | test-msiproduct -include ICE0* -exclude ICE03 -patch ""$TestDeploymentDirectory\Example.msp"" -transform ""$TestDeploymentDirectory\Example.mst"" -v"))
             {
                 using (var reg = new MockRegistry())
@@ -36,6 +37,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                         int num = Convert.ToInt32(ice.Name.Substring(3));
                         Assert.IsTrue(0 < num && num < 10 && num != 3, "The ICE number is incorrect.");
+                        Assert.AreEqual(package, ice.Path, true, "The path to the database is incorrect.");
                     }
                 }
             }
@@ -44,6 +46,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void TestProductCustomIceCube()
         {
+            string package = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
+            var keys = new string[] { "Key1", "Key2" };
+
             using (var rs = this.TestRunspace.CreatePipeline(@"test-msiproduct ""$TestDeploymentDirectory\Example.msi"" -nodefault -add ""$TestDeploymentDirectory\test.cub"""))
             {
                 using (var reg = new MockRegistry())
@@ -58,6 +63,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         var ice = (IceMessage)item.BaseObject;
 
                         Assert.AreEqual<string>("ICE1000", ice.Name, "The ICE name is incorrect.");
+                        Assert.AreEqual(package, ice.Path, true, "The path to the database is incorrect.");
+
+                        if (IceMessageType.Error == ice.Type || IceMessageType.Warning == ice.Type)
+                        {
+                            Assert.AreEqual<string>("http://psmsi.codeplex.com", ice.Url, "The ICE URL is incorrect.");
+                            Assert.AreEqual<string>("Table", ice.Table, "The ICE table is incorrect.");
+                            Assert.AreEqual<string>("Column", ice.Column, "The ICE column is incorrect.");
+                            CollectionAssert.AreEqual(keys, ice.PrimaryKeys, "The ICE primary keys are incorrect.");
+                        }
                     }
                 }
             }

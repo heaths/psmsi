@@ -385,6 +385,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                     if (!string.IsNullOrEmpty(this.CurrentPath))
                     {
+                        ice.Path = this.CurrentPath;
+
+                        // Set the PSPath for cmdlets that would use it.
                         string path = this.SessionState.Path.GetUnresolvedPSPathFromProviderPath(this.CurrentPath);
                         obj.SetPropertyValue<string>("PSPath", path);
                     }

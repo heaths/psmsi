@@ -11,21 +11,21 @@ On Error Resume Next
 	rec.StringData(0) = "ICE1000" & Chr(9) & "3" & Chr(9) & "ICE1000 - Tests ICE functionality."
 	Message &h03000000, rec
 
-		'Send an ICE error.
-		rec.StringData(0) = "ICE1000" & Chr(9) & "1" & Chr(9) & "Test ICE error"
-		Message &h03000000, rec
+	'Send an ICE error.
+	rec.StringData(0) = "ICE1000" & Chr(9) & "1" & Chr(9) & "Test ICE error" & Chr(9) & "http://psmsi.codeplex.com" & Chr(9) & "Table" & Chr(9) & "Column" & Chr(9) & "Key1" & Chr(9) & "Key2"
+	Message &h03000000, rec
 
-		'Send an ICE warning
-		rec.StringData(0) = "ICE1000" & Chr(9) & "2" & Chr(9) & "Test ICE warning"
-		Message &h03000000, rec
+	'Send an ICE warning
+	rec.StringData(0) = "ICE1000" & Chr(9) & "2" & Chr(9) & "Test ICE warning" & Chr(9) & "http://psmsi.codeplex.com" & Chr(9) & "Table" & Chr(9) & "Column" & Chr(9) & "Key1" & Chr(9) & "Key2"
+	Message &h03000000, rec
 
-		'Send an error
-		rec.StringData(0) = "Test error"
-		Message &h01000000, rec
+	'Send an error
+	rec.StringData(0) = "Test error"
+	Message &h01000000, rec
 
-		'Send a warning
-		rec.StringData(0) = "Test warning"
-		Message &h02000000, rec
+	'Send a warning
+	rec.StringData(0) = "Test warning"
+	Message &h02000000, rec
 
 	'Return success
 	ICE1000 = 1

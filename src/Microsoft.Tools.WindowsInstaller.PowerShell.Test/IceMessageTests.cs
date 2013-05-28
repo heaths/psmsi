@@ -35,12 +35,13 @@ namespace Microsoft.Tools.WindowsInstaller
         [TestMethod]
         public void MaximumIceMessage()
         {
-            var ice = new IceMessage("ICE00\t3\tTest description.\thttp://psmsi.codeplex.com\tTable\tKey1\tKey2");
+            var ice = new IceMessage("ICE00\t3\tTest description.\thttp://psmsi.codeplex.com\tTable\tColumn\tKey1\tKey2");
             Assert.AreEqual<string>("ICE00", ice.Name, "The ICE name is incorrect.");
             Assert.AreEqual<IceMessageType>(IceMessageType.Information, ice.Type, "The ICE type is incorrect.");
             Assert.AreEqual<string>("Test description.", ice.Description, "The ICE description is incorrect.");
             Assert.AreEqual<string>("http://psmsi.codeplex.com", ice.Url, "The ICE URL is incorrect.");
             Assert.AreEqual<string>("Table", ice.Table, "The ICE table is incorrect.");
+            Assert.AreEqual<string>("Column", ice.Column, "The ICE column is incorrect.");
             CollectionAssert.AreEqual(new string[] { "Key1", "Key2" }, ice.PrimaryKeys, "The ICE primary keys are incorrect.");
         }
     }

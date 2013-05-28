@@ -40,10 +40,20 @@ namespace Microsoft.Tools.WindowsInstaller
 
             if (5 < parts.Length)
             {
-                this.PrimaryKeys = new string[parts.Length - 5];
-                Array.Copy(parts, 5, this.PrimaryKeys, 0, parts.Length - 5);
+                this.Column = parts[5];
+            }
+
+            if (6 < parts.Length)
+            {
+                this.PrimaryKeys = new string[parts.Length - 6];
+                Array.Copy(parts, 6, this.PrimaryKeys, 0, this.PrimaryKeys.Length);
             }
         }
+
+        /// <summary>
+        /// Gets the path to the database for which the ICE was reported.
+        /// </summary>
+        public string Path { get; internal set; }
 
         /// <summary>
         /// Gets the name of the ICE.
@@ -69,6 +79,11 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Gets the name of the table where the ICE was found.
         /// </summary>
         public string Table { get; private set; }
+
+        /// <summary>
+        /// Gets the name of the column where the ICE was found.
+        /// </summary>
+        public string Column { get; private set; }
 
         /// <summary>
         /// Gets the primary keys of the table row where the ICE was found.
