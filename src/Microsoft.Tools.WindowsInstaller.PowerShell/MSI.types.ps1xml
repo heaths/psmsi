@@ -501,6 +501,59 @@
         </TypeAdapter>
     </Type>
     <Type>
+        <Name>Microsoft.Deployment.WindowsInstaller.Package.TransformInfo</Name>
+        <Members>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <NoteProperty>
+                        <Name>DefaultDisplayProperty</Name>
+                        <Value>Name</Value>
+                    </NoteProperty>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Name</Name>
+                            <Name>TargetLanguage</Name>
+                            <Name>TargetPlatform</Name>
+                            <Name>TargetProductCode</Name>
+                            <Name>TargetProductVersion</Name>
+                            <Name>UpgradeCode</Name>
+                            <Name>UpgradeProductCode</Name>
+                            <Name>UpgradeProductVersion</Name>
+                            <Name>Validations</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                    <PropertySet>
+                        <Name>DefaultKeyPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Patch</Name>
+                            <Name>Name</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+            <ScriptProperty>
+                <Name>IsTransform</Name>
+                <GetScriptBlock>
+                    $true
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Transform</Name>
+                <GetScriptBlock>
+                    $this.Patch + ":" + $this.Name
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Validations</Name>
+                <GetScriptBlock>
+                    [Microsoft.Deployment.WindowsInstaller.TransformValidations] ([int] $this.PSBase.Validations -shr 16)
+                </GetScriptBlock>
+            </ScriptProperty>
+        </Members>
+    </Type>
+    <Type>
         <Name>Microsoft.Tools.WindowsInstaller.IceMessageType</Name>
         <Members>
             <MemberSet>
@@ -520,6 +573,293 @@
                     </PropertySet>
                 </Members>
             </MemberSet>
+        </Members>
+    </Type>
+    <Type>
+        <Name>Microsoft.Tools.WindowsInstaller.SummaryInfo</Name>
+        <Members>
+            <ScriptProperty>
+                <Name>ReadOnly</Name>
+                <GetScriptBlock>
+                    $ro = [Microsoft.Tools.WindowsInstaller.ReadOnly]
+                    switch ($this.Security)
+                    {
+                        0 { $ro::Unrestricted }
+                        2 { $ro::Recommended }
+                        4 { $ro::Enforced }
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
+        </Members>
+    </Type>
+    <Type>
+        <Name>Microsoft.Tools.WindowsInstaller.SummaryInfo#Package</Name>
+        <Members>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Author</Name>
+                            <Name>CodePage</Name>
+                            <Name>Comments</Name>
+                            <Name>CreateTime</Name>
+                            <Name>CreatingApp</Name>
+                            <Name>Keywords</Name>
+                            <Name>Language</Name>
+                            <Name>LastPrintTime</Name>
+                            <Name>LastSavedBy</Name>
+                            <Name>LastSaveTime</Name>
+                            <Name>MinimumVersion</Name>
+                            <Name>PackageCode</Name>
+                            <Name>Platform</Name>
+                            <Name>ReadOnly</Name>
+                            <Name>Subject</Name>
+                            <Name>Title</Name>
+                            <Name>WordCount</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                    <PropertySet>
+                        <Name>DefaultKeyPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>PackageCode</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+            <ScriptProperty>
+                <Name>IsPackage</Name>
+                <GetScriptBlock>
+                    $true
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Platform</Name>
+                <GetScriptBlock>
+                    ($this.Template -split ";")[0]
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Language</Name>
+                <GetScriptBlock>
+                    ($this.Template -split ";")[1] -split ","
+                </GetScriptBlock>
+            </ScriptProperty>
+            <AliasProperty>
+                <Name>PackageCode</Name>
+                <ReferencedMemberName>RevisionNumber</ReferencedMemberName>
+            </AliasProperty>
+            <ScriptProperty>
+                <Name>MinimumVersion</Name>
+                <GetScriptBlock>
+                    [Version] ("{0:0.00}" -f ($this.PageCount / 100))
+                </GetScriptBlock>
+            </ScriptProperty>
+        </Members>
+    </Type>
+    <Type>
+        <Name>Microsoft.Tools.WindowsInstaller.SummaryInfo#Patch</Name>
+        <Members>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Author</Name>
+                            <Name>CodePage</Name>
+                            <Name>Comments</Name>
+                            <Name>CreateTime</Name>
+                            <Name>CreatingApp</Name>
+                            <Name>LastSaveTime</Name>
+                            <Name>MinimumVersion</Name>
+                            <Name>PackageCode</Name>
+                            <Name>ReadOnly</Name>
+                            <Name>ReplacedPatchCodes</Name>
+                            <Name>Sources</Name>
+                            <Name>Subject</Name>
+                            <Name>TargetProductCodes</Name>
+                            <Name>Transforms</Name>
+                            <Name>Title</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                    <PropertySet>
+                        <Name>DefaultKeyPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>PackageCode</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+            <ScriptProperty>
+                <Name>IsPatch</Name>
+                <GetScriptBlock>
+                    $true
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Sources</Name>
+                <GetScriptBlock>
+                    $this.Keywords -split ";"
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Transforms</Name>
+                <GetScriptBlock>
+                    $this.LastSavedBy -split ";"
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>PackageCode</Name>
+                <GetScriptBlock>
+                    $this.RevisionNumber.Substring(0, 38)
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>ReplacedPatchCodes</Name>
+                <GetScriptBlock>
+                    $length = $this.RevisionNumber.Length
+                    if ($length -gt 38)
+                    {
+                        $this.RevisionNumber.Substring(38, $length - 38) -split "(})"
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>TargetProductCodes</Name>
+                <GetScriptBlock>
+                    $this.Template -split ";"
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>MinimumVersion</Name>
+                <GetScriptBlock>
+                    switch ($this.WordCount)
+                    {
+                        2 { [Version] 1.2 }
+                        3 { [Version] 2.0 }
+                        4 { [Version] 3.0 }
+                        5 { [Version] 3.1 }
+                        default { [Version] 1.0 }
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
+        </Members>
+    </Type>
+    <Type>
+        <Name>Microsoft.Tools.WindowsInstaller.SummaryInfo#Transform</Name>
+        <Members>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Author</Name>
+                            <Name>CodePage</Name>
+                            <Name>Comments</Name>
+                            <Name>CreateTime</Name>
+                            <Name>CreatingApp</Name>
+                            <Name>ErrorConditions</Name>
+                            <Name>Keywords</Name>
+                            <Name>LastSaveTime</Name>
+                            <Name>MinimumVersion</Name>
+                            <Name>ReadOnly</Name>
+                            <Name>Subject</Name>
+                            <Name>TargetPlatform</Name>
+                            <Name>TargetLanguage</Name>
+                            <Name>TargetProductCode</Name>
+                            <Name>TargetProductVersion</Name>
+                            <Name>Title</Name>
+                            <Name>UpgradeCode</Name>
+                            <Name>UpgradeLanguage</Name>
+                            <Name>UpgradePlatform</Name>
+                            <Name>UpgradeProductCode</Name>
+                            <Name>UpgradeProductVersion</Name>
+                            <Name>Validations</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+            <ScriptProperty>
+                <Name>IsTransform</Name>
+                <GetScriptBlock>
+                    $true
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Validations</Name>
+                <GetScriptBlock>
+                    [Microsoft.Deployment.WindowsInstaller.TransformValidations] ($this.CharacterCount -shr 16)
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>ErrorConditions</Name>
+                <GetScriptBlock>
+                    [Microsoft.Deployment.WindowsInstaller.TransformErrors] ($this.CharacterCount -band 0xffff)
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>TargetPlatform</Name>
+                <GetScriptBlock>
+                    ($this.Template -split ";")[0]
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>TargetLanguage</Name>
+                <GetScriptBlock>
+                    ($this.Template -split ";")[1] -split ","
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>TargetProductCode</Name>
+                <GetScriptBlock>
+                    ($this.RevisionNumber -split ";")[0].Substring(0, 38)
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>TargetProductVersion</Name>
+                <GetScriptBlock>
+                    [Version] ($this.RevisionNumber -split ";")[0].Substring(38)
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>UpgradeCode</Name>
+                <GetScriptBlock>
+                    ($this.RevisionNumber -split ";")[2]
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>UpgradePlatform</Name>
+                <GetScriptBlock>
+                    ($this.LastSavedBy -split ";")[0]
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>UpgradeLanguage</Name>
+                <GetScriptBlock>
+                    ($this.LastSavedBy -split ";")[1] -split ","
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>UpgradeProductCode</Name>
+                <GetScriptBlock>
+                    ($this.RevisionNumber -split ";")[1].Substring(0, 38)
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>UpgradeProductVersion</Name>
+                <GetScriptBlock>
+                    ($this.RevisionNumber -split ";")[1].Substring(38)
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>MinimumVersion</Name>
+                <GetScriptBlock>
+                    [Version] ("{0:0.00}" -f ($this.PageCount / 100))
+                </GetScriptBlock>
+            </ScriptProperty>
         </Members>
     </Type>
     <Type>

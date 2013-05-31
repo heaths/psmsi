@@ -5,7 +5,6 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using System;
 using System.ComponentModel;
 using System.IO;
 using System.Management.Automation;
@@ -18,27 +17,22 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     public static class FileInfo
     {
         /// <summary>
-        /// Gets the Windows Installer storage class type.
+        /// Gets the Windows Installer file type.
         /// </summary>
         /// <param name="obj">The wrapped <see cref="System.IO.FileInfo">FileInfo</see> to check.</param>
-        /// <returns>The storage class type.</returns>
-        /// <exception cref="PSNotSupportedException">The file is missing or is not a valid Windows Installer file.</exception>
+        /// <returns>The Windows Installer file type.</returns>
+        /// <exception cref="PSNotSupportedException">An error occured when getting the file type.</exception>
         public static string GetFileType(PSObject obj)
         {
-            // Return null if not a valid FileInfo object.
-            if (null == obj)
-            {
-                return null;
-            }
-
-            System.IO.FileInfo fileInfo = obj.BaseObject as System.IO.FileInfo;
-            if (null == fileInfo)
+            // Make sure the path exists.
+            var path = GetFilePath(obj);
+            if (!File.Exists(path))
             {
                 return null;
             }
 
             // Get the Windows Installer file type.
-            var type = GetFileTypeInternal(fileInfo.FullName);
+            var type = GetFileTypeInternal(path);
             switch (type)
             {
                 case FileType.Package:
@@ -60,31 +54,24 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// </summary>
         /// <param name="obj">The wrapped <see cref="System.IO.FileInfo">FileInfo</see> to check.</param>
         /// <returns>The first 32 bits of the file hash.</returns>
+        /// <exception cref="PSNotSupportedException">An error occured when hashing the file.</exception>
         public static FileHash GetFileHash(PSObject obj)
         {
-            // Return null if not a valid FileInfo object.
-            if (null == obj)
-            {
-                return null;
-            }
-
-            System.IO.FileInfo fileInfo = obj.BaseObject as System.IO.FileInfo;
-            if (null == fileInfo)
+            var path = GetFilePath(obj);
+            if (!File.Exists(path))
             {
                 return null;
             }
 
             // Get the hash of the file.
-            string path = fileInfo.FullName;
-            FileHash hash = new FileHash();
-
+            var hash = new FileHash();
             int ret = NativeMethods.MsiGetFileHash(path, 0, hash);
-            if (ret != NativeMethods.ERROR_SUCCESS)
-            {
-                // Write the error record and continue enumerating files.
-                Win32Exception ex = new Win32Exception(ret);
 
-                string message = ex.Message.Replace("%1", path);
+            if (NativeMethods.ERROR_SUCCESS != ret)
+            {
+                var ex = new Win32Exception(ret);
+                var message = ex.Message.Replace("%1", path);
+
                 throw new PSNotSupportedException(message, ex);
             }
             else
@@ -98,52 +85,70 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// </summary>
         /// <param name="path">The path to the file to check.</param>
         /// <returns>The <see cref="FileType"/> of the file referenced by the given <paramref name="path"/>.</returns>
-        /// <exception cref="PSNotSupportedException">The file is missing or is not a valid Windows Installer file.</exception>
+        /// <exception cref="PSNotSupportedException">An error occured when getting the file type.</exception>
         internal static FileType GetFileTypeInternal(string path)
         {
-            Storage stg = null;
+            // Make sure the file exists.
+            if (!File.Exists(path))
+            {
+                return FileType.None;
+            }
+
+            // Get the class identity from the OLE storage file.
+            Storage storage = null;
 
             try
             {
-                stg = Storage.OpenStorage(path);
+                storage = Storage.OpenStorage(path);
+                var classId = storage.ClassIdentity;
 
-                // Set the friendly name.
-                Guid clsid = stg.Clsid;
-                if (clsid == NativeMethods.CLSID_MsiPackage)
+                if (NativeMethods.CLSID_MsiPackage == classId)
                 {
                     return FileType.Package;
                 }
-                else if (clsid == NativeMethods.CLSID_MsiPatch)
+                else if (NativeMethods.CLSID_MsiPatch == classId)
                 {
                     return FileType.Patch;
                 }
-                else if (clsid == NativeMethods.CLSID_MsiTransform)
+                else if (NativeMethods.CLSID_MsiTransform == classId)
                 {
                     return FileType.Transform;
                 }
-                else
-                {
-                    return FileType.Other;
-                }
-            }
-            catch (InvalidDataException ex)
-            {
-                // The file is not a valid OLE storage file.
-                throw new PSNotSupportedException(ex.Message, ex);
             }
             catch (Win32Exception ex)
             {
-                string message = ex.Message.Replace("%1", path);
+                // Only truly exceptional errors should be thrown.
+                var message = ex.Message.Replace("%1", path);
                 throw new PSNotSupportedException(message, ex);
+            }
+            catch
+            {
+                // Ignore all other exceptions.
             }
             finally
             {
-                IDisposable disposable = stg as IDisposable;
-                if (null != stg)
+                if (null != storage)
                 {
-                    disposable.Dispose();
+                    storage.Dispose();
                 }
             }
+
+            return FileType.Other;
+        }
+
+        private static string GetFilePath(PSObject obj)
+        {
+            // No SessionState is passed, so make sure we're dealing with a valid file.
+            if (null != obj)
+            {
+                var file = obj.BaseObject as System.IO.FileInfo;
+                if (null != file)
+                {
+                    return file.FullName;
+                }
+            }
+
+            return null;
         }
     }
 
@@ -152,6 +157,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     /// </summary>
     internal enum FileType
     {
+        /// <summary>
+        /// A file path was not specified or does not exist.
+        /// </summary>
+        None,
+
         /// <summary>
         /// An MSI package.
         /// </summary>

@@ -73,23 +73,25 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         }
 
         [TestMethod]
-        [ExpectedException(typeof(PSNotSupportedException))]
         public void GetFileTypeTxt()
         {
             var path = Path.Combine(this.TestContext.DeploymentDirectory, "example.txt");
             var file = new System.IO.FileInfo(path);
             var obj = PSObject.AsPSObject(file);
             var type = FileInfo.GetFileType(obj);
+
+            Assert.IsNull(type, "The file type is incorrect.");
         }
 
         [TestMethod]
-        [ExpectedException(typeof(PSNotSupportedException))]
         public void GetFileTypeMissing()
         {
             var path = Path.Combine(this.TestContext.DeploymentDirectory, "doesnotexist.txt");
             var file = new System.IO.FileInfo(path);
             var obj = PSObject.AsPSObject(file);
             var type = FileInfo.GetFileType(obj);
+
+            Assert.IsNull(type, "The file type is incorrect.");
         }
 
         [TestMethod]
@@ -123,13 +125,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         }
 
         [TestMethod]
-        [ExpectedException(typeof(PSNotSupportedException))]
         public void GetFileHashMissing()
         {
             var path = Path.Combine(this.TestContext.DeploymentDirectory, "doesnotexist.txt");
             var file = new System.IO.FileInfo(path);
             var obj = PSObject.AsPSObject(file);
             var hash = FileInfo.GetFileHash(obj);
+
+            Assert.IsNull(hash, "The file hash is incorrect.");
         }
 
         [TestMethod]

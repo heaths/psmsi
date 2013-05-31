@@ -46,9 +46,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 Collection<PSObject> objs = p.Invoke();
 
-                // Should have encountered errors copying the whole directory.
-                Assert.AreNotEqual<int>(0, p.Error.Count);
-
                 CollectionAssert.Contains(objs, PSObject.AsPSObject("Package"));
                 CollectionAssert.Contains(objs, PSObject.AsPSObject("Patch"));
                 CollectionAssert.Contains(objs, PSObject.AsPSObject("Transform"));

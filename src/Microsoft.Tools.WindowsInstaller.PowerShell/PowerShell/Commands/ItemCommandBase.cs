@@ -63,7 +63,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             foreach (var item in items)
             {
                 // Get the provider path.
-                string path = item.GetPropertyValue<string>("PSPath");
+                var path = item.GetPropertyValue<string>("PSPath");
                 path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
 
                 if (File.Exists(path) || Directory.Exists(path))
@@ -72,7 +72,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
                 else
                 {
-                    string message = string.Format(Properties.Resources.Error_InvalidFile, path);
+                    var message = string.Format(Properties.Resources.Error_InvalidFile, path);
                     var ex = new NotSupportedException(message);
                     var error = new ErrorRecord(ex, "UnsupportedItemType", ErrorCategory.InvalidType, path);
 
