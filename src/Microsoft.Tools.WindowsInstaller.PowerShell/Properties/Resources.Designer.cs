@@ -196,15 +196,6 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The security identifier is invalid..
-        /// </summary>
-        internal static string Error_InvalidSid {
-            get {
-                return ResourceManager.GetString("Error_InvalidSid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The file &quot;{0}&quot; is not a supported format..
         /// </summary>
         internal static string Error_InvalidStorage {
