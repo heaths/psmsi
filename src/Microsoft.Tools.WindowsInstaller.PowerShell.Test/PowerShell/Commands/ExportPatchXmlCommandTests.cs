@@ -7,6 +7,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using System.Text;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -25,13 +26,19 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 string path = Path.Combine(this.TestContext.TestRunDirectory, "patchfilexml.xml");
                 Assert.IsTrue(File.Exists(path), "The output file does not exist.");
+
+                // Check that the default encoding is correct.
+                using (var file = File.OpenText(path))
+                {
+                    Assert.AreEqual<Encoding>(Encoding.UTF8, file.CurrentEncoding, "The encoding is incorreect.");
+                }
             }
         }
 
         [TestMethod]
         public void ExtractPatchFileFormattedXml()
         {
-            using (var rs = this.TestRunspace.CreatePipeline(@"export-msipatchxml ""$TestDeploymentDirectory\example.msp"" ""$TestRunDirectory\patchfileformattedxml.xml"" -formatted"))
+            using (var rs = this.TestRunspace.CreatePipeline(@"export-msipatchxml ""$TestDeploymentDirectory\example.msp"" ""$TestRunDirectory\patchfileformattedxml.xml"" -encoding Unicode -formatted"))
             {
                 rs.Invoke();
 
@@ -43,6 +50,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 {
                     string xml = file.ReadToEnd();
                     StringAssert.Contains(xml, "\t", "The file does not contain tabs.");
+                    Assert.AreEqual<Encoding>(Encoding.Unicode, file.CurrentEncoding, "The encoding is incorrect.");
                 }
             }
         }
