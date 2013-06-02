@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// Enumerates all machine-assigned patches.
         /// </summary>
         [TestMethod]
-        [Description("Enumerates all machine-assigned patches")]
+        [Description("Enumerates all patches")]
         public void EnumeratePatches()
         {
             using (Pipeline p = TestRunspace.CreatePipeline(@"get-msipatchinfo"))
@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                     Collection<PSObject> objs = p.Invoke();
 
-                    Assert.AreEqual<int>(1, objs.Count);
+                    Assert.AreEqual<int>(2, objs.Count);
                     Assert.AreEqual<string>("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", objs[0].Properties["PatchCode"].Value as string);
                 }
             }

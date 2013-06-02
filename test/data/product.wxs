@@ -8,8 +8,8 @@
     PARTICULAR PURPOSE.
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="*" Name="TEST" Language="1033" Version="!(wix.Version)" Manufacturer="Microsoft Corporation" UpgradeCode="AC460ECB-9287-45F3-BF66-E464EDE4AAF2">
-        <Package Compressed="yes" InstallerVersion="301" InstallScope="perUser" />
+    <Product Id="878E49D1-EDAB-4B6C-965B-25A0A7D65392" Name="TEST" Language="1033" Version="!(wix.Version)" Manufacturer="Microsoft Corporation" UpgradeCode="AC460ECB-9287-45F3-BF66-E464EDE4AAF2">
+        <Package Id="BB960DDA-CC6E-4B2C-8A89-F0344814A5B2" Compressed="yes" InstallerVersion="301" InstallScope="perUser" />
         <WixVariable Id="Version" Value="1.0.0" Overridable="yes" />
         <MediaTemplate EmbedCab="yes" />
 

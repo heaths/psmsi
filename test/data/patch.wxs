@@ -8,7 +8,7 @@
     PARTICULAR PURPOSE.
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Patch Id="*" AllowRemoval="yes" Classification="Update" ClientPatchId="Example" Description="TEST" DisplayName="TEST" Manufacturer="Microsoft Corporation" MinorUpdateTargetRTM="yes">
+    <Patch Id="FF63D787-26E2-49CA-8FAA-28B5106ABD3A" AllowRemoval="yes" Classification="Update" ClientPatchId="Example" Description="TEST" DisplayName="TEST" Manufacturer="Microsoft Corporation" MinorUpdateTargetRTM="yes">
         <Media Id="100" Cabinet="Patch" EmbedCab="yes">
             <PatchBaseline Id="MSP" />
         </Media>

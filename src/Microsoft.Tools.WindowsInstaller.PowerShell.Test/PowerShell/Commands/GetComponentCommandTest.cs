@@ -29,7 +29,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     reg.Import(@"registry.xml");
 
                     Collection<PSObject> objs = p.Invoke();
-                    Assert.AreEqual<int>(47, objs.Count);
+                    Assert.AreEqual<int>(35, objs.Count);
                 }
             }
         }

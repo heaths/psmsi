@@ -6,6 +6,7 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -36,17 +37,21 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        [Ignore, TestMethod]
+        [TestMethod]
         public void SequencePatchesForProduct()
         {
-            // TODO: Need to replace registered products and patches in Registry.xml with Data\Example.* to make this work.
-
             // Tests piping to the cmdlet.
-            using (var p = this.TestRunspace.CreatePipeline(@"get-msipatchinfo -product '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msipatchsequence -product '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}'"))
+            using (var p = this.TestRunspace.CreatePipeline(@"get-msipatchinfo -product '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msipatchsequence -product '{877EF582-78AF-4D84-888B-167FDC3BCC11}'"))
             {
                 using (var reg = new MockRegistry())
                 {
-                    reg.Import(Path.Combine(this.TestContext.DeploymentDirectory, "Registry.xml"));
+                    var properties = new Dictionary<string, string>()
+                    {
+                        { "TestDeploymentDirectory", this.TestContext.DeploymentDirectory },
+                        { "TestRunDirectory", this.TestContext.TestRunDirectory },
+                    };
+
+                    reg.Import(Path.Combine(this.TestContext.DeploymentDirectory, "Registry.xml"), properties);
 
                     var items = p.Invoke();
 
@@ -55,10 +60,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                     var patch = items[0].BaseObject as PatchSequence;
                     Assert.IsNotNull(patch, "The output type is incorrect.");
-                    Assert.AreEqual(@"c:\Windows\Installer\16ca0c.msp", patch.Patch, true, "The Patch property is incorrect.");
+                    Assert.AreEqual(Path.Combine(this.TestContext.DeploymentDirectory, "Example.msp"), patch.Patch, true, "The Patch property is incorrect.");
                     Assert.AreEqual<int>(0, patch.Sequence, "The Sequence property is incorrect.");
-                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", patch.Product, "The Product property is incorrect.");
-                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", patch.ProductCode, "The ProductCode property is incorrect.");
+                    Assert.AreEqual<string>("{877EF582-78AF-4D84-888B-167FDC3BCC11}", patch.Product, "The Product property is incorrect.");
+                    Assert.AreEqual<string>("{877EF582-78AF-4D84-888B-167FDC3BCC11}", patch.ProductCode, "The ProductCode property is incorrect.");
                 }
             }
         }

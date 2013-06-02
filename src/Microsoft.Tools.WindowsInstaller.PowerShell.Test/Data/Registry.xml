@@ -118,6 +118,9 @@
                                 <key name="4AE2841C3D7016247914C7DE6E8A2CA5">
                                     <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String"/>
                                 </key>
+                                <key name="BCE064CA78293F54FB664E46DE4EAA2F">
+                                    <value name="285FE778FA8748D488B861F7CDB3CC11" type="String"/>
+                                </key>
                             </key>
                             <key name="UserData">
                                 <key name="S-1-5-18">
@@ -265,47 +268,11 @@
                                 </key>
                                 <key name="$(CurrentSID)">
                                     <key name="Components">
-                                        <key name="053A4373A42BAF7780807BEF149A0620">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\LocationFinder.bmp</value>
+                                        <key name="1446B88BB61D80340BA34ABB0C8F0F22">
+                                            <value name="285FE778FA8748D488B861F7CDB3CC11" type="String">$(TestRunDirectory)\product.wxs</value>
                                         </key>
-                                        <key name="0592316EDB0A1D9D37575ED66277C4BC">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\LocationFinder.exe</value>
-                                        </key>
-                                        <key name="15FC5EA053D549509ADDCFED942C54E7">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\Help.htm</value>
-                                        </key>
-                                        <key name="51B3A80F50DB2DA8D20B41E87FBF989B">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C:\Program Files\Microsoft Location Finder\iphlpapi.dll</value>
-                                        </key>
-                                        <key name="731BC5C2D28AE000331302D498B79FFE">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\msvcp71.dll</value>
-                                        </key>
-                                        <key name="7A52277A65529E360E226C16E8E04DBB">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C:\Program Files\Microsoft Location Finder\EULA.htm</value>
-                                        </key>
-                                        <key name="7D8125FB5D9EDA282B68A825B92E231B">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C:\Program Files\Microsoft Location Finder\reg.vbs</value>
-                                        </key>
-                                        <key name="7F99A33A6A0348C9B1A4F3D6088D5FC2">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\Help.ico</value>
-                                        </key>
-                                        <key name="89035EA5756B9FC9399E4E290A639FBF">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\LocationFinder.gif</value>
-                                        </key>
-                                        <key name="BB58C09BC3EA7891DF637811CB5C1C40">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\msvcr71.dll</value>
-                                        </key>
-                                        <key name="C480E72E03B7FEAFDCC3089CCEFD49C0">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\MapPointWiFiLocator.ico</value>
-                                        </key>
-                                        <key name="CE99262352E2C8B06D894BF8A9EBC287">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\WiFiScannerLibrary.dll</value>
-                                        </key>
-                                        <key name="CF9F94CB9633242698A04F945951A8FF">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C?\Program Files\Microsoft Location Finder\EULA.rtf</value>
-                                        </key>
-                                        <key name="D80A368E0A76EBE5B99ED9B256EFEEBA">
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">C:\Program Files\Microsoft Location Finder\unreg.vbs</value>
+                                        <key name="9768EC966DC2117418337D872D4A9776">
+                                            <value name="285FE778FA8748D488B861F7CDB3CC11" type="String">01:\Software\Microsoft\TEST\Version</value>
                                         </key>
                                         <!-- {9D8E88E9-8E05-4FC7-AFC7-87759D1D417E} -->
                                         <key name="9E88E8D950E87CF4FA7C7857D9D114E7">
@@ -321,6 +288,11 @@
                                             <value name="00000000000000000000000000000000" type="String">$(TestDeploymentDirectory)\darice.cub</value>
                                         </key>
                                     </key>
+                                    <key name="Patches">
+                                        <key name="787D36FF2E62AC94F8AA825B01A6DBA3">
+                                            <value name="LocalPackage" type="String">$(TestDeploymentDirectory)\Example.msp</value>
+                                        </key>
+                                    </key>
                                     <key name="Products">
                                         <key name="1287AE4B1CA15B1408122ACF771D7B7B">
                                             <key name="Features">
@@ -328,9 +300,9 @@
                                             </key>
                                             <key name="Usage"/>
                                         </key>
-                                        <key name="225736CE5A378244B864566A1225C97C">
+                                        <key name="285FE778FA8748D488B861F7CDB3CC11">
                                             <key name="Features">
-                                                <value name="DefaultFeature" type="String"/>
+                                                <value name="TEST" type="String"/>
                                             </key>
                                             <key name="InstallProperties">
                                                 <value name="AuthorizedCDFPrefix" type="String"/>
@@ -343,14 +315,14 @@
                                                 <value name="HelpTelephone" type="String"/>
                                                 <value name="InstallDate" type="String">20061119</value>
                                                 <value name="InstallLocation" type="String"/>
-                                                <value name="InstallSource" type="String">C:\Users\heaths\AppData\Local\Temp\WZSE0.TMP\</value>
+                                                <value name="InstallSource" type="String">D:\</value>
                                                 <value name="Language" type="DWord">1033</value>
-                                                <value name="LocalPackage" type="String">C:\Windows\Installer\82d0e40.msi</value>
-                                                <value name="ModifyPath" type="ExpandString">MsiExec.exe /I{EC637522-73A5-4428-8B46-65A621529CC7}</value>
+                                                <value name="LocalPackage" type="String">$(TestDeploymentDirectory)\Example.msi</value>
+                                                <value name="ModifyPath" type="ExpandString">MsiExec.exe /I{877EF582-78AF-4D84-888B-167FDC3BCC11}</value>
                                                 <value name="Publisher" type="String">Microsoft Corporation</value>
                                                 <value name="Readme" type="String"/>
                                                 <value name="Size" type="String"/>
-                                                <value name="UninstallString" type="ExpandString">MsiExec.exe /I{EC637522-73A5-4428-8B46-65A621529CC7}</value>
+                                                <value name="UninstallString" type="ExpandString">MsiExec.exe /I{877EF582-78AF-4D84-888B-167FDC3BCC11}</value>
                                                 <value name="URLInfoAbout" type="String">http://www.microsoft.com</value>
                                                 <value name="URLUpdateInfo" type="String"/>
                                                 <value name="Version" type="DWord">50331648</value>
@@ -359,7 +331,17 @@
                                                 <value name="WindowsInstaller" type="DWord">1</value>
                                             </key>
                                             <key name="Patches">
-                                                <value name="AllPatches" type="String"/>
+                                                <key name="787D36FF2E62AC94F8AA825B01A6DBA3">
+                                                    <value name="DisplayName" type="String">TEST</value>
+                                                    <value name="Installed" type="String">20130601</value>
+                                                    <value name="LUAEnabled" type="DWord">0</value>
+                                                    <value name="MoreInfoURL" type="String"/>
+                                                    <value name="MSI3" type="DWord">1</value>
+                                                    <value name="PatchType" type="DWord">1</value>
+                                                    <value name="State" type="DWord">1</value>
+                                                    <value name="Uninstallable" type="DWord">1</value>
+                                                </key>
+                                                <value name="AllPatches" type="MultiString">787D36FF2E62AC94F8AA825B01A6DBA3</value>
                                             </key>
                                             <key name="Usage"/>
                                         </key>
@@ -439,45 +421,64 @@
                             <key name="1287AE4B1CA15B1408122ACF771D7B7B">
                                 <value name="Module" type="String"/>
                             </key>
-                            <key name="225736CE5A378244B864566A1225C97C">
-                                <value name="DefaultFeature" type="String"/>
+                            <key name="285FE778FA8748D488B861F7CDB3CC11">
+                                <value name="TEST" type="String"/>
                             </key>
                         </key>
-                        <key name="Patches"/>
+                        <key name="Patches">
+                            <key name="787D36FF2E62AC94F8AA825B01A6DBA3">
+                                <key name="SourceList">
+                                    <key name="Media">
+                                        <value name="100" type="String">;</value>
+                                    </key>
+                                    <key name="Net">
+                                        <value name="1" type="ExpandString">D:\</value>
+                                    </key>
+                                    <value name="LastUsedSource" type="ExpandString">n;1;D:\</value>
+                                    <value name="PackageName" type="String">Example.msp</value>
+                                </key>
+                            </key>
+                        </key>
                         <key name="Products">
                             <key name="1287AE4B1CA15B1408122ACF771D7B7B">
                                 <!-- Just enough is registered for ModuleTest -->
                                 <value name="ProductName" type="String">Windows Installer PowerShell Module</value>
                             </key>
-                            <key name="225736CE5A378244B864566A1225C97C">
+                            <key name="285FE778FA8748D488B861F7CDB3CC11">
+                                <key name="Patches">
+                                    <value name="787D36FF2E62AC94F8AA825B01A6DBA3" type="String">:MSP.1;:#MSP.1</value>
+                                    <value name="Patches" type="MultiString">787D36FF2E62AC94F8AA825B01A6DBA3</value>
+                                </key>
                                 <key name="SourceList">
                                     <key name="Media">
                                         <value name="1" type="String">;</value>
                                     </key>
                                     <key name="Net">
-                                        <value name="1" type="ExpandString">C:\Users\heaths\AppData\Local\Temp\WZSE0.TMP\</value>
+                                        <value name="1" type="ExpandString">D:\</value>
                                     </key>
-                                    <value name="LastUsedSource" type="ExpandString">n;1;C:\Users\heaths\AppData\Local\Temp\WZSE0.TMP\</value>
-                                    <value name="PackageName" type="String">Setup.msi</value>
+                                    <value name="LastUsedSource" type="ExpandString">D:\</value>
+                                    <value name="PackageName" type="String">Example.msi</value>
                                 </key>
                                 <value name="AdvertiseFlags" type="DWord">388</value>
                                 <value name="Assignment" type="DWord">0</value>
                                 <value name="AuthorizedLUAApp" type="DWord">0</value>
                                 <value name="Clients" type="MultiString" xml:space="preserve">:</value>
-                                <value name="DeploymentFlags" type="DWord">3</value>
+                                <value name="DeploymentFlags" type="DWord">2</value>
                                 <value name="InstanceType" type="DWord">0</value>
                                 <value name="Language" type="DWord">1033</value>
-                                <value name="PackageCode" type="String">37251FD7E0E5E5D43B7442FF18658A5D</value>
-                                <value name="ProductIcon" type="ExpandString">%APPDATA%\Microsoft\Installer\{EC637522-73A5-4428-8B46-65A621529CC7}\_6FEFF9B68218417F98F549.exe</value>
-                                <value name="ProductName" type="String">Microsoft Location Finder</value>
-                                <value name="Version" type="DWord">50331648</value>
+                                <value name="PackageCode" type="String">ADD069BBE6CCC2B4A8980F4384415A2B</value>
+                                <value name="ProductName" type="String">TEST</value>
+                                <value name="Version" type="DWord">16777216</value>
                             </key>
                         </key>
                         <key name="UpgradeCodes">
-                            <key name="496D710A98BB73F469C17F60C0253874">
-                                <value name="225736CE5A378244B864566A1225C97C" type="String"/>
+                            <key name="BCE064CA78293F54FB664E46DE4EAA2F">
+                                <value name="285FE778FA8748D488B861F7CDB3CC11" type="String"/>
                             </key>
                         </key>
+                    </key>
+                    <key name="TEST">
+                        <value name="Version" type="String">1.0.1</value>
                     </key>
                 </key>
             </key>

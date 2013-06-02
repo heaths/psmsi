@@ -28,13 +28,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Populate expected features.
             expectedFeatures.Add("Complete");
             expectedFeatures.Add("Complete2.0.30226.2");
-            expectedFeatures.Add("DefaultFeature");
+            expectedFeatures.Add("TEST");
             expectedFeatures.Add("Module");
 
             // Populate expected ProductCodes.
             expectedProductCodes.Add("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}");
             expectedProductCodes.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
-            expectedProductCodes.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
+            expectedProductCodes.Add("{877EF582-78AF-4D84-888B-167FDC3BCC11}");
 
             // Check the number of features for a product object.
             using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo -context 'all' | get-msifeatureinfo"))

@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             var expected = new List<string>();
             expected.Add("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}");
-            expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
+            expected.Add("{877EF582-78AF-4D84-888B-167FDC3BCC11}");
             expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
 
             using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo"))
@@ -90,7 +90,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public void EnumerateUserUnmanagedProducts()
         {
             List<string> expected = new List<string>();
-            expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
+            expected.Add("{877EF582-78AF-4D84-888B-167FDC3BCC11}");
             expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
 
             string cmd = string.Format(@"get-msiproductinfo -installcontext userunmanaged -usersid ""{0}""", TestProject.CurrentSID);
@@ -190,7 +190,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             });
 
             List<string> expected = new List<string>();
-            expected.Add("{EC637522-73A5-4428-8B46-65A621529CC7}");
+            expected.Add("{877EF582-78AF-4D84-888B-167FDC3BCC11}");
             expected.Add("{B4EA7821-1AC1-41B5-8021-A2FC77D1B7B7}");
 
             // Test that "Context" is a supported alias.

@@ -32,12 +32,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestCategory("Impactful")]
         public void BasicInstall()
         {
-            using (var p = TestRunspace.CreatePipeline(@"install-msiproduct ""$TestDeploymentDirectory\example.msi"" TARGETDIR=`""$TestRunDirectory\BasicInstall`"""))
+            using (var p = TestRunspace.CreatePipeline(@"install-msiproduct ""$TestDeploymentDirectory\example.msi"" TARGETDIR=`""$TestRunDirectory`"""))
             {
                 var output = p.Invoke();
                 Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
                 Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
-                Assert.IsTrue(File.Exists(Path.Combine(this.TestContext.TestRunDirectory, @"BasicInstall\product.wxs")), "The product was not installed to the correct location.");
+                Assert.IsTrue(File.Exists(Path.Combine(this.TestContext.TestRunDirectory, @"product.wxs")), "The product was not installed to the correct location.");
             }
 
             using (var p = TestRunspace.CreatePipeline(@"repair-msiproduct ""$TestDeploymentDirectory\example.msi"""))
@@ -66,12 +66,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestCategory("Impactful")]
         public void PipelineInstall()
         {
-            using (var p = TestRunspace.CreatePipeline(@"install-msiproduct ""$TestDeploymentDirectory\example.msi"" -destination ""$TestRunDirectory\PipelineInstall"""))
+            using (var p = TestRunspace.CreatePipeline(@"install-msiproduct ""$TestDeploymentDirectory\example.msi"" -destination ""$TestRunDirectory"""))
             {
                 var output = p.Invoke();
                 Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
                 Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
-                Assert.IsTrue(File.Exists(Path.Combine(this.TestContext.TestRunDirectory, @"PipelineInstall\product.wxs")), "The product was not installed to the correct location.");
+                Assert.IsTrue(File.Exists(Path.Combine(this.TestContext.TestRunDirectory, @"product.wxs")), "The product was not installed to the correct location.");
             }
 
             using (var p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' -context all | install-msiproduct -properties A=1"))
@@ -114,7 +114,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestCategory("Impactful")]
         public void PassThruInstall()
         {
-            using (var p = TestRunspace.CreatePipeline(@"install-msiproduct ""$TestDeploymentDirectory\example.msi"" -destination ""$TestRunDirectory\PassThruInstall"" -passthru | repair-msiproduct -passthru | install-msipatch ""$TestDeploymentDirectory\example.msp"" -passthru | uninstall-msiproduct"))
+            using (var p = TestRunspace.CreatePipeline(@"install-msiproduct ""$TestDeploymentDirectory\example.msi"" -destination ""$TestRunDirectory"" -passthru | repair-msiproduct -passthru | install-msipatch ""$TestDeploymentDirectory\example.msp"" -passthru | uninstall-msiproduct"))
             {
                 var output = p.Invoke();
                 Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
