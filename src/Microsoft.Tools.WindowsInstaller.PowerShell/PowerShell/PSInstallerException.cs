@@ -183,48 +183,42 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 int code = record.GetInteger(1);
                 if (1000 <= code && code < 25000)
                 {
-                    // Almost all common error messages use [2] as the resource with a few notable exceptions.
-                    if (1935 <= code && code <= 1938 && 6 <= record.FieldCount)
-                    {
-                        resource = record.GetString(6);
-                        return ErrorCategory.InvalidData;
-                    }
-                    else if (2 <= record.FieldCount)
-                    {
-                        resource = record.GetString(2);
-                    }
-
+                    // Specifically handle common errors.
                     switch (code)
                     {
-                        case 1101:
-                        case 1309:
-                        case 1319:
-                            return ErrorCategory.OpenError;
-
                         case 1301:
                         case 1304:
-                        case 1306:
-                        case 1310:
-                        case 1312:
-                        case 1315:
-                        case 1317:
-                        case 1318:
+                            resource = record.GetString(2);
                             return ErrorCategory.WriteError;
 
                         case 1303:
+                        case 1306:
+                        case 1718:
+                            resource = record.GetString(2);
                             return ErrorCategory.PermissionDenied;
 
                         case 1305:
-                        case 1316:
+                            resource = record.GetString(2);
                             return ErrorCategory.ReadError;
 
                         case 1308:
-                        case 1311:
-                        case 1313:
-                        case 1314:
-                            return ErrorCategory.ObjectNotFound;
+                        case 1334:
+                            resource = record.GetString(2);
+                            return ErrorCategory.ResourceUnavailable;
 
-                        case 1320:
+                        case 1706:
+                            resource = record.GetString(2);
+                            return ErrorCategory.ResourceUnavailable;
+
+                        case 1715:
+                        case 1716:
+                        case 1717:
+                            resource = record.GetString(2);
+                            return ErrorCategory.NotSpecified;
+
+                        case 1935:
+                        case 1937:
+                            resource = record.GetString(6);
                             return ErrorCategory.InvalidData;
                     }
                 }

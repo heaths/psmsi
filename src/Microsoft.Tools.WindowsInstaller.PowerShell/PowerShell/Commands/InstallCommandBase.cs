@@ -9,6 +9,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Management.Automation;
@@ -510,6 +511,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 // Make sure progress is completed.
                 this.WriteProgress(true);
+
+                // Warn the user if a restart is required.
+                if (Installer.RebootRequired)
+                {
+                    var ex = new Win32Exception(3010);
+                    this.WriteWarning(ex.Message);
+                }
             }
         }
 

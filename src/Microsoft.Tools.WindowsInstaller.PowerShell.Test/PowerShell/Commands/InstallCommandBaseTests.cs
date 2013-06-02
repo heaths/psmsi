@@ -79,7 +79,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(1, ps.Streams.Error.Count, "The number of errors returned is incorrect.");
 
                 var error = ps.Streams.Error[0];
-                Assert.AreEqual<ErrorCategory>(ErrorCategory.OpenError, error.CategoryInfo.Category, "The error category is incorrect.");
+                Assert.AreEqual<ErrorCategory>(ErrorCategory.WriteError, error.CategoryInfo.Category, "The error category is incorrect.");
                 Assert.AreEqual("error", error.TargetObject as string, "The error target is incorrect.");
             }
         }
@@ -260,7 +260,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 using (var error = new Record(2))
                 {
-                    error.SetInteger(1, 1101);
+                    error.SetInteger(1, 1301);
                     error.SetString(2, "error");
                     this.OnMessage(InstallMessage.Error, error);
                 }

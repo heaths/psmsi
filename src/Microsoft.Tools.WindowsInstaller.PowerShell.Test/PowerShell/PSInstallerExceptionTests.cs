@@ -80,7 +80,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         {
             using (var record = new Record(2))
             {
-                record.SetInteger(1, 1101);
+                record.SetInteger(1, 1301);
                 record.SetString(2, @"C:\test.txt");
 
                 using (var ex = new PSInstallerException(record))
@@ -91,7 +91,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
 
                     var info = error.CategoryInfo;
                     Assert.IsNotNull(info);
-                    Assert.AreEqual(ErrorCategory.OpenError, info.Category);
+                    Assert.AreEqual(ErrorCategory.WriteError, info.Category);
                 }
             }
         }
