@@ -18,11 +18,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Tests for the <see cref="InstallCommandBase"/> class.
     /// </summary>
     [TestClass]
-    public sealed class InstallCommandBaseTests : CommandTestBase
+    public sealed class InstallCommandBaseTests : TestBase
     {
-        /// <summary>
-        /// Tests that, by default, actions are executed as they come in through the pipeline.
-        /// </summary>
         [TestMethod]
         public void ExecuteQueuedActions()
         {
@@ -38,9 +35,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
   
-        /// <summary>
-        /// Tests that actions are chained at the end of pipeline processing.
-        /// </summary>
         [TestMethod]
         public void ExecuteQueuedActionsAsChain()
         {
@@ -56,9 +50,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        /// <summary>
-        /// Tests a simulated install that fails.
-        /// </summary>
         [TestMethod]
         public void ExecuteInstallFailure()
         {
@@ -76,9 +67,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        /// <summary>
-        /// Tests that install errors are written to the pipeline as errors.
-        /// </summary>
         [TestMethod]
         public void ExecuteErrorMessage()
         {
@@ -96,9 +84,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        /// <summary>
-        /// Tests that install warnings are written to the pipeline as warnings.
-        /// </summary>
         [TestMethod]
         public void ExecuteWarningMessage()
         {
@@ -113,9 +98,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        /// <summary>
-        /// Tests the verbose install messages are written to the pipeline as verbose messages.
-        /// </summary>
         [TestMethod]
         public void ExecuteVerboseMessage()
         {
@@ -130,9 +112,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        /// <summary>
-        /// Tests a simulated progress bar.
-        /// </summary>
         [TestMethod]
         public void ExecuteSimulatedProgress()
         {
@@ -193,9 +172,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
         
-        /// <summary>
-        /// Command for testing within this class.
-        /// </summary>
         [Cmdlet(VerbsDiagnostic.Test, "Install", DefaultParameterSetName = "Action")]
         internal sealed class TestInstallCommand : InstallCommandBase<TestInstallCommand.ActionData>
         {

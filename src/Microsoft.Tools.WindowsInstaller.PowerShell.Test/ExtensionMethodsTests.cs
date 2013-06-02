@@ -19,7 +19,7 @@ namespace Microsoft.Tools.WindowsInstaller
     /// use extension methods from System.Core that did not exist in .NET 2.0 assemblies.
     /// </remarks>
     [TestClass]
-    public sealed class ExtensionMethodsTests
+    public sealed class ExtensionMethodsTests : TestBase
     {
         #region FirstOrDefault
         [TestMethod]

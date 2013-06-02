@@ -55,7 +55,7 @@ namespace Microsoft.Tools.WindowsInstaller
 
         private SafeHandle GetRegistryHandle(RegistryKey key)
         {
-            FieldInfo hkey = key.GetType().GetField("hkey", BindingFlags.Instance | BindingFlags.NonPublic);
+            var hkey = key.GetType().GetField("hkey", BindingFlags.Instance | BindingFlags.NonPublic);
             if (null != hkey)
             {
                 return (SafeHandle)hkey.GetValue(key);
@@ -80,7 +80,7 @@ namespace Microsoft.Tools.WindowsInstaller
                     if (0 == count)
                     {
                         // Redirect registry access to a user location.
-                        AssemblyName name = this.GetType().Assembly.GetName();
+                        var name = this.GetType().Assembly.GetName();
 
                         this.baseKeyPath = string.Format(@"Software\{0}\{1:B}", name.Name, Guid.NewGuid());
 
@@ -119,33 +119,24 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Imports a registry XML file.
         /// </summary>
         /// <param name="path">Path to the registry XML file to import.</param>
-        internal void Import(string path)
-        {
-            this.Import(path, null);
-        }
-
-        /// <summary>
-        /// Imports a registry XML file.
-        /// </summary>
-        /// <param name="path">Path to the registry XML file to import.</param>
         /// <param name="properties">Optional properties to replace during import.</param>
-        internal void Import(string path, Dictionary<string, string> properties)
+        internal void Import(string path, Dictionary<string, string> properties = null)
         {
-            XmlReaderSettings settings = new XmlReaderSettings();
+            var settings = new XmlReaderSettings();
             settings.CloseInput = true;
             settings.IgnoreComments = true;
             settings.IgnoreProcessingInstructions = true;
             settings.IgnoreWhitespace = true;
             settings.DtdProcessing = DtdProcessing.Prohibit;
 
-            string absolutePath = System.IO.Path.Combine(Environment.CurrentDirectory, path);
-            using (XmlReader reader = XmlReader.Create(absolutePath, settings))
+            var absolutePath = System.IO.Path.Combine(Environment.CurrentDirectory, path);
+            using (var reader = XmlReader.Create(absolutePath, settings))
             {
-                RegistryXml importer = new RegistryXml();
+                var importer = new RegistryXml();
                 if (null != properties)
                 {
                     // Overwrite or add whatever is there by default.
-                    foreach (KeyValuePair<string, string> pair in properties)
+                    foreach (var pair in properties)
                     {
                         importer.Properties[pair.Key] = pair.Value;
                     }

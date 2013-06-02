@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     /// Tests for the <see cref="ReinstallModeAttribute"/> class.
     /// </summary>
     [TestClass]
-    public sealed class ReinstallModeAttributeTests
+    public sealed class ReinstallModeAttributeTests : TestBase
     {
         private const ReinstallModes Default = ReinstallModes.FileOlderVersion | ReinstallModes.MachineData | ReinstallModes.UserData | ReinstallModes.Shortcut;
 

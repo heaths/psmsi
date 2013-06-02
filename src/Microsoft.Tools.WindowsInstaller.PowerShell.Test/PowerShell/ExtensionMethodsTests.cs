@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
-using PS = System.Management.Automation.PowerShell;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {
@@ -17,7 +16,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     /// Tests for the <see cref="ExtensionMethods"/> class.
     /// </summary>
     [TestClass]
-    public sealed class ExtensionMethodsTests
+    public sealed class ExtensionMethodsTests : TestBase
     {
         public string StringProperty { get; set; }
         public int IntegerProperty { get; set; }
@@ -77,34 +76,25 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             paths[@"02:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE";
             paths[@"03:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_USERS\SOFTWARE";
 
-            using (var ps = PS.Create())
+            foreach (var item in paths)
             {
-                foreach (var item in paths)
-                {
-                    Assert.AreEqual(item.Value, ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(item.Key));
-                }
-
-                // A null key path is also valid.
-                Assert.IsNull(ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(null));
+                Assert.AreEqual(item.Value, TestRunspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(item.Key));
             }
+
+            // A null key path is also valid.
+            Assert.IsNull(TestRunspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(null));
         }
 
         [TestMethod]
         public void ConvertInvalidRegistryKeyPathToPSPath()
         {
-            using (var ps = PS.Create())
-            {
-                Assert.IsNull(ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(@"04:\SOFTWARE"));
-            }
+            Assert.IsNull(TestRunspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(@"04:\SOFTWARE"));
         }
 
         [TestMethod]
         public void ConvertUnsupportedKeyPathToPSPath()
         {
-            using (var ps = PS.Create())
-            {
-                Assert.IsNull(ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(@"FOO:\BAR"));
-            }
+            Assert.IsNull(TestRunspace.SessionStateProxy.Path.GetUnresolvedPSPathFromKeyPath(@"FOO:\BAR"));
         }
         #endregion
 
@@ -120,30 +110,21 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [TestMethod]
         public void ConvertNullProviderPathToPSPath()
         {
-            using (var ps = PS.Create())
-            {
-                Assert.IsNull(ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromProviderPath(null));
-            }
+            Assert.IsNull(TestRunspace.SessionStateProxy.Path.GetUnresolvedPSPathFromProviderPath(null));
         }
 
         [TestMethod]
         public void ConvertQualifiedProviderPathToPSPath()
         {
             const string path = @"Microsoft.PowerShell.Core\FileSystem::C:\foo";
-            using (var ps = PS.Create())
-            {
-                Assert.AreEqual(path, ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromProviderPath(path));
-            }
+            Assert.AreEqual(path, TestRunspace.SessionStateProxy.Path.GetUnresolvedPSPathFromProviderPath(path));
         }
 
         [TestMethod]
         public void ConvertProviderPathToPSPath()
         {
             const string path = @"Microsoft.PowerShell.Core\FileSystem::C:\foo";
-            using (var ps = PS.Create())
-            {
-                Assert.AreEqual(path, ps.Runspace.SessionStateProxy.Path.GetUnresolvedPSPathFromProviderPath(@"C:\foo"));
-            }
+            Assert.AreEqual(path, TestRunspace.SessionStateProxy.Path.GetUnresolvedPSPathFromProviderPath(@"C:\foo"));
         }
         #endregion
 
@@ -153,31 +134,31 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         public void GetPropertyValueWithNullSource()
         {
             PSObject obj = null;
-            string value = obj.GetPropertyValue<string>("A");
+            var value = obj.GetPropertyValue<string>("A");
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void GetPropertyValueWithEmptyName()
         {
-            PSObject obj = PSObject.AsPSObject("TEST");
-            string value = obj.GetPropertyValue<string>(string.Empty);
+            var obj = PSObject.AsPSObject("TEST");
+            var value = obj.GetPropertyValue<string>(string.Empty);
         }
 
         [TestMethod]
         public void GetPropertyValues()
         {
-            PSObject obj = PSObject.AsPSObject("TEST");
+            var obj = PSObject.AsPSObject("TEST");
             obj.Properties.Add(new PSNoteProperty("A", "FOO"));
             obj.Properties.Add(new PSNoteProperty("B", "1"));
 
-            string a = obj.GetPropertyValue<string>("A");
+            var a = obj.GetPropertyValue<string>("A");
             Assert.AreEqual<string>("FOO", a, "The property value for A is incorrect.");
 
-            int b = obj.GetPropertyValue<int>("B");
+            var b = obj.GetPropertyValue<int>("B");
             Assert.AreEqual<int>(1, b, "The converted property value for B is incorrect.");
 
-            int c = obj.GetPropertyValue<int>("C");
+            var c = obj.GetPropertyValue<int>("C");
             Assert.AreEqual<int>(0, c, "The default property value for missing C is incorrect.");
         }
 
@@ -185,11 +166,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [ExpectedException(typeof(PSInvalidCastException))]
         public void GetPropertyValueWrongType()
         {
-            PSObject obj = PSObject.AsPSObject("TEST");
+            var obj = PSObject.AsPSObject("TEST");
             obj.Properties.Add(new PSNoteProperty("A", "FOO"));
 
             // Should throw a PSInvalidCastException.
-            int a = obj.GetPropertyValue<int>("A");
+            var a = obj.GetPropertyValue<int>("A");
         }
         #endregion
 
@@ -206,7 +187,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [ExpectedException(typeof(ArgumentNullException))]
         public void SetPropertyValueWithEmptyName()
         {
-            PSObject obj = PSObject.AsPSObject(this);
+            var obj = PSObject.AsPSObject(this);
             obj.SetPropertyValue<string>(string.Empty, null);
         }
 
@@ -214,10 +195,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         public void SetPropertyValues()
         {
             // Use concrete class since PSNoteProperty.Value allows type changes.
-            PSObject obj = PSObject.AsPSObject(this);
+            var obj = PSObject.AsPSObject(this);
 
             obj.SetPropertyValue<string>("StringProperty", "FOO");
-            string a = obj.GetPropertyValue<string>("StringProperty");
+            var a = obj.GetPropertyValue<string>("StringProperty");
             Assert.AreEqual<string>("FOO", a, "The property value for A is incorrect.");
 
             obj.SetPropertyValue<string>("StringProperty", "BAR");
@@ -225,11 +206,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             Assert.AreEqual<string>("BAR", a, "The property value for A is incorrect.");
 
             obj.SetPropertyValue<string>("IntegerProperty", "1");
-            int b = obj.GetPropertyValue<int>("IntegerProperty");
+            var b = obj.GetPropertyValue<int>("IntegerProperty");
             Assert.AreEqual<int>(1, b, "The converted property value for B is incorrect.");
 
             obj.SetPropertyValue<int>("MissingProperty", 1);
-            int c = obj.GetPropertyValue<int>("MissingProperty");
+            var c = obj.GetPropertyValue<int>("MissingProperty");
             Assert.AreEqual<int>(1, c, "The property value for added C is incorrect.");
         }
 
@@ -237,7 +218,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [ExpectedException(typeof(PSInvalidCastException))]
         public void SetPropertyValueWrongType()
         {
-            PSObject obj = PSObject.AsPSObject(this);
+            var obj = PSObject.AsPSObject(this);
 
             // Should throw a PSInvalidCastException.
             obj.SetPropertyValue<string>("IntegerProperty", "FOO");

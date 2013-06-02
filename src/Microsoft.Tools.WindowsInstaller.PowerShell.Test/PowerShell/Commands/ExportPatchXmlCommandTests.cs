@@ -15,16 +15,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Tests for the <see cref="ExportPatchXmlCommand"/> class.
     /// </summary>
     [TestClass]
-    public sealed class ExportPatchXmlCommandTests : CommandTestBase
+    public sealed class ExportPatchXmlCommandTests : TestBase
     {
         [TestMethod]
         public void ExtractPatchFileXml()
         {
-            using (var rs = this.TestRunspace.CreatePipeline(@"export-msipatchxml ""$TestDeploymentDirectory\example.msp"" ""$TestRunDirectory\patchfilexml.xml"""))
+            using (var p = CreatePipeline(@"export-msipatchxml example.msp ""$TestRunDirectory\patchfilexml.xml"""))
             {
-                rs.Invoke();
+                p.Invoke();
 
-                string path = Path.Combine(this.TestContext.TestRunDirectory, "patchfilexml.xml");
+                var path = Path.Combine(this.TestContext.TestRunDirectory, "patchfilexml.xml");
                 Assert.IsTrue(File.Exists(path), "The output file does not exist.");
 
                 // Check that the default encoding is correct.
@@ -38,17 +38,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void ExtractPatchFileFormattedXml()
         {
-            using (var rs = this.TestRunspace.CreatePipeline(@"export-msipatchxml ""$TestDeploymentDirectory\example.msp"" ""$TestRunDirectory\patchfileformattedxml.xml"" -encoding Unicode -formatted"))
+            using (var p = CreatePipeline(@"export-msipatchxml example.msp ""$TestRunDirectory\patchfileformattedxml.xml"" -encoding Unicode -formatted"))
             {
-                rs.Invoke();
+                p.Invoke();
 
-                string path = Path.Combine(this.TestContext.TestRunDirectory, "patchfileformattedxml.xml");
+                var path = Path.Combine(this.TestContext.TestRunDirectory, "patchfileformattedxml.xml");
                 Assert.IsTrue(File.Exists(path), "The output file does not exist.");
 
                 // Make sure the file contains tabs.
                 using (var file = File.OpenText(path))
                 {
-                    string xml = file.ReadToEnd();
+                    var xml = file.ReadToEnd();
                     StringAssert.Contains(xml, "\t", "The file does not contain tabs.");
                     Assert.AreEqual<Encoding>(Encoding.Unicode, file.CurrentEncoding, "The encoding is incorrect.");
                 }

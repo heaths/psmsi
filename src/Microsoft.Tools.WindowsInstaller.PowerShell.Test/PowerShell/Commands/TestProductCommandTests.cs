@@ -7,7 +7,6 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -16,20 +15,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Tests for the <see cref="TestProductCommand"/> class.
     /// </summary>
     [TestClass]
-    public sealed class TestProductCommandTests : CommandTestBase
+    public sealed class TestProductCommandTests : TestBase
     {
         [TestMethod]
         public void TestProductDefaultIceCube()
         {
-            string package = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
-            using (var rs = this.TestRunspace.CreatePipeline(@"get-item ""$TestDeploymentDirectory\Example.msi"" | test-msiproduct -include ICE0* -exclude ICE03 -patch ""$TestDeploymentDirectory\Example.msp"" -transform ""$TestDeploymentDirectory\Example.mst"" -v"))
+            var package = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
+            using (var p = CreatePipeline(@"get-item Example.msi | test-msiproduct -include ICE0* -exclude ICE03 -patch Example.msp -transform Example.mst -v"))
             {
-                using (var reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    string path = Path.Combine(this.TestContext.DeploymentDirectory, "Registry.xml");
-                    reg.Import(path, new Dictionary<string, string>() { { "TestDeploymentDirectory", this.TestContext.DeploymentDirectory } });
-
-                    var items = rs.Invoke();
+                    var items = p.Invoke();
                     foreach (var item in items)
                     {
                         Assert.IsInstanceOfType(item.BaseObject, typeof(IceMessage), "The output object is not an IceMessage.");
@@ -46,17 +42,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void TestProductCustomIceCube()
         {
-            string package = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
+            var package = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
             var keys = new string[] { "Key1", "Key2" };
 
-            using (var rs = this.TestRunspace.CreatePipeline(@"test-msiproduct ""$TestDeploymentDirectory\Example.msi"" -nodefault -add ""$TestDeploymentDirectory\test.cub"""))
+            using (var p = CreatePipeline(@"test-msiproduct Example.msi -nodefault -add test.cub"))
             {
-                using (var reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    string path = Path.Combine(this.TestContext.DeploymentDirectory, "Registry.xml");
-                    reg.Import(path, new Dictionary<string, string>() { { "TestDeploymentDirectory", this.TestContext.DeploymentDirectory } });
-
-                    var items = rs.Invoke();
+                    var items = p.Invoke();
                     foreach (var item in items)
                     {
                         Assert.IsInstanceOfType(item.BaseObject, typeof(IceMessage), "The output object is not an IceMessage.");

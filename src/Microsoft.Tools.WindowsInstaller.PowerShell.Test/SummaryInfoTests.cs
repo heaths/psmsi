@@ -17,10 +17,8 @@ namespace Microsoft.Tools.WindowsInstaller
     /// Tests for the <see cref="SummaryInfo"/> class.
     /// </summary>
     [TestClass]
-    public sealed class SummaryInfoTests
+    public sealed class SummaryInfoTests : TestBase
     {
-        public TestContext TestContext { get; set; }
-
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void SummaryInfoThrows()

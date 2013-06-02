@@ -16,10 +16,8 @@ namespace Microsoft.Tools.WindowsInstaller
     /// Tests for the <see cref="PatchSequencer"/> class.
     /// </summary>
     [TestClass]
-    public sealed class PatchSequencerTests
+    public sealed class PatchSequencerTests : TestBase
     {
-        public TestContext TestContext { get; set; }
-
         [TestMethod]
         public void SequenceValidPatchOnly()
         {

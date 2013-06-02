@@ -8,9 +8,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.IO;
 using System.Management.Automation;
-using System.Management.Automation.Runspaces;
 using System.Threading;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -19,22 +17,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Unit and functional tests for <see cref="GetFileTypeCommand"/>.
     ///</summary>
     [TestClass]
-    public class GetFileTypeCommandTest : CommandTestBase
+    public class GetFileTypeCommandTest : TestBase
     {
-        /// <summary>
-        /// A test for <see cref="GetFileTypeCommand.Path"/>.
-        ///</summary>
         [TestMethod]
-        [Description("A test for GetFileTypeCommand.Path")]
         public void PathTest()
         {
             // Now invoke the cmdlet and check the file type property.
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
             // Enumerate only example.ms* files.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifiletype -path example.ms*"))
+            using (var p = CreatePipeline(@"get-msifiletype -path example.ms*"))
             {
-                Collection<PSObject> objs = p.Invoke();
+                var objs = p.Invoke();
 
                 CollectionAssert.Contains(objs, PSObject.AsPSObject("Package"));
                 CollectionAssert.Contains(objs, PSObject.AsPSObject("Patch"));
@@ -42,9 +36,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             // Enumerate all files without a filter.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifiletype"))
+            using (var p = CreatePipeline(@"get-msifiletype"))
             {
-                Collection<PSObject> objs = p.Invoke();
+                var objs = p.Invoke();
 
                 CollectionAssert.Contains(objs, PSObject.AsPSObject("Package"));
                 CollectionAssert.Contains(objs, PSObject.AsPSObject("Patch"));
@@ -52,39 +46,34 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        /// <summary>
-        /// A test for <see cref="GetFileTypeCommand.PassThru"/>.
-        ///</summary>
         [TestMethod]
-        [Description("A test for GetFileTypeCommand.PassThru")]
         public void PassThruTest()
         {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem -filter example.ms* | get-msifiletype -passthru"))
+            using (var p = CreatePipeline(@"get-childitem -filter example.ms* | get-msifiletype -passthru"))
             {
-                Collection<PSObject> objs = p.Invoke();
+                var objs = p.Invoke();
 
                 Assert.AreNotEqual<int>(0, objs.Count);
                 Assert.IsInstanceOfType(objs[0].BaseObject, typeof(System.IO.FileInfo));
 
-                foreach (PSObject obj in objs)
+                foreach (var obj in objs)
                 {
                     Assert.IsNotNull(obj.Properties["MSIFileType"]);
-                    Assert.IsInstanceOfType(obj.Properties["MSIFileType"].Value, typeof(string));
 
-                    System.IO.FileInfo file = obj.BaseObject as System.IO.FileInfo;
+                    var file = obj.BaseObject as System.IO.FileInfo;
                     switch (file.Extension)
                     {
                         case ".msi":
-                            Assert.AreEqual<string>("Package", (string)obj.Properties["MSIFileType"].Value);
+                            Assert.AreEqual<string>("Package", obj.GetPropertyValue<string>("MSIFileType"));
                             break;
 
                         case ".msp":
-                            Assert.AreEqual<string>("Patch", (string)obj.Properties["MSIFileType"].Value);
+                            Assert.AreEqual<string>("Patch", obj.GetPropertyValue<string>("MSIFileType"));
                             break;
 
                         case ".mst":
-                            Assert.AreEqual<string>("Transform", (string)obj.Properties["MSIFileType"].Value);
+                            Assert.AreEqual<string>("Transform", obj.GetPropertyValue<string>("MSIFileType"));
                             break;
 
                         default:
@@ -95,17 +84,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        /// <summary>
-        /// A test for <see cref="GetFileTypeCommand.LiteralPath"/>.
-        ///</summary>
         [TestMethod]
-        [Description("A test for GetFileTypeCommand.LiteralPath")]
         public void LiteralPathTest()
         {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
             // Test that a wildcard is not accepted.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifiletype -literalpath example.*"))
+            using (var p = CreatePipeline(@"get-msifiletype -literalpath example.*"))
             {
                 Collection<PSObject> objs = null;
                 try
@@ -119,16 +104,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             // Test that a registry item path is not accepted.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-childitem hkcu:\software | get-msifiletype"))
+            using (var p = CreatePipeline(@"get-childitem hkcu:\software | get-msifiletype"))
             {
-                Collection<PSObject> objs = p.Invoke();
+                var objs = p.Invoke();
                 Assert.AreNotEqual<int>(0, p.Error.Count);
             }
 
             // Test against example.msi specifically.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifiletype -literalpath example.msi"))
+            using (var p = CreatePipeline(@"get-msifiletype -literalpath example.msi"))
             {
-                Collection<PSObject> objs = p.Invoke();
+                var objs = p.Invoke();
 
                 Assert.AreEqual<int>(1, objs.Count);
                 CollectionAssert.Contains(objs, PSObject.AsPSObject("Package"));

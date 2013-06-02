@@ -6,7 +6,6 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -15,13 +14,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Tests for the <see cref="GetPatchSequenceCommand"/> class.
     /// </summary>
     [TestClass]
-    public sealed class GetPatchSequenceCommandTests : CommandTestBase
+    public sealed class GetPatchSequenceCommandTests : TestBase
     {
         [TestMethod]
         public void SequencePatchesForPackage()
         {
             // No parameter names also tests that the default parameter set is correct.
-            using (var p = this.TestRunspace.CreatePipeline(@"get-msipatchsequence ""$TestDeploymentDirectory\example.msp"" ""$TestDeploymentDirectory\example.msi"""))
+            using (var p = CreatePipeline(@"get-msipatchsequence example.msp example.msi"))
             {
                 var items = p.Invoke();
 
@@ -41,18 +40,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public void SequencePatchesForProduct()
         {
             // Tests piping to the cmdlet.
-            using (var p = this.TestRunspace.CreatePipeline(@"get-msipatchinfo -product '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msipatchsequence -product '{877EF582-78AF-4D84-888B-167FDC3BCC11}'"))
+            using (var p = CreatePipeline(@"get-msipatchinfo -product '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msipatchsequence -product '{877EF582-78AF-4D84-888B-167FDC3BCC11}'"))
             {
-                using (var reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    var properties = new Dictionary<string, string>()
-                    {
-                        { "TestDeploymentDirectory", this.TestContext.DeploymentDirectory },
-                        { "TestRunDirectory", this.TestContext.TestRunDirectory },
-                    };
-
-                    reg.Import(Path.Combine(this.TestContext.DeploymentDirectory, "Registry.xml"), properties);
-
                     var items = p.Invoke();
 
                     Assert.IsNotNull(items, "No output was returned.");

@@ -9,7 +9,6 @@ using Microsoft.Tools.WindowsInstaller.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 using System.IO;
-using System.Linq;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
@@ -18,10 +17,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     /// Tests for the <see cref="FileInfo"/> class.
     /// </summary>
     [TestClass]
-    public sealed class FileInfoTests
+    public sealed class FileInfoTests : TestBase
     {
-        public TestContext TestContext { get; set; }
-
         [TestMethod]
         public void GetFileTypeNull()
         {

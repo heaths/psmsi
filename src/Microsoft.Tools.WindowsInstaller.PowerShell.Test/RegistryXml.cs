@@ -24,7 +24,6 @@ namespace Microsoft.Tools.WindowsInstaller
 
         private RegistryKey key;
         private Stack<RegistryKey> keys;
-        private Dictionary<string, string> properties;
 
         /// <summary>
         /// Creates a new instance of the <see cref="RegistryKey"/> class.
@@ -53,16 +52,13 @@ namespace Microsoft.Tools.WindowsInstaller
                 this.keys.Push(key);
             }
 
-            InitializeProperties();
+            this.Properties = new Dictionary<string, string>();
         }
 
         /// <summary>
         /// Gets the propety dictionary.
         /// </summary>
-        internal Dictionary<string, string> Properties
-        {
-            get { return properties; }
-        }
+        internal Dictionary<string, string> Properties { get; private set; }
 
         /// <summary>
         /// Import a registry key tree from the given <see cref="XmlReader"/>.
@@ -208,13 +204,6 @@ namespace Microsoft.Tools.WindowsInstaller
             }
         }
 
-        private void InitializeProperties()
-        {
-            properties = new Dictionary<string, string>();
-            properties.Add("CurrentSID", TestProject.CurrentSID);
-            properties.Add("CurrentUsername", TestProject.CurrentUsername);
-        }
-
         private string ReplaceVariables(string value)
         {
             if (string.IsNullOrEmpty(value))
@@ -226,9 +215,9 @@ namespace Microsoft.Tools.WindowsInstaller
             string replacement = Variables.Replace(value, delegate(Match m)
             {
                 string var = m.Groups["var"].Value;
-                if (properties.ContainsKey(var))
+                if (this.Properties.ContainsKey(var))
                 {
-                    return properties[var];
+                    return this.Properties[var];
                 }
 
                 return string.Format("$({0})", var);

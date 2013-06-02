@@ -14,12 +14,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Tests for the <see cref="GetTableCommand"/> class.
     /// </summary>
     [TestClass]
-    public sealed class GetTableCommandTests : CommandTestBase
+    public sealed class GetTableCommandTests : TestBase
     {
         [TestMethod]
         public void GetTableFromPath()
         {
-            using (var p = TestRunspace.CreatePipeline("get-msitable example.msi -table File"))
+            using (var p = CreatePipeline("get-msitable example.msi -table File"))
             {
                 var output = p.Invoke();
 
@@ -37,7 +37,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetTableFromLiteralPath()
         {
-            using (var p = TestRunspace.CreatePipeline("get-item example.msi | get-msitable -table File"))
+            using (var p = CreatePipeline("get-item example.msi | get-msitable -table File"))
             {
                 var output = p.Invoke();
 
@@ -55,7 +55,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetQueryFromPath()
         {
-            using (var p = TestRunspace.CreatePipeline("get-msitable example.msi -query 'SELECT File, ComponentId FROM File, Component WHERE Component_ = Component'"))
+            using (var p = CreatePipeline("get-msitable example.msi -query 'SELECT File, ComponentId FROM File, Component WHERE Component_ = Component'"))
             {
                 var output = p.Invoke();
 
@@ -76,7 +76,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetQueryFromLiteralPath()
         {
-            using (var p = TestRunspace.CreatePipeline("get-item example.msi | get-msitable -query 'SELECT File, ComponentId FROM File, Component WHERE Component_ = Component'"))
+            using (var p = CreatePipeline("get-item example.msi | get-msitable -query 'SELECT File, ComponentId FROM File, Component WHERE Component_ = Component'"))
             {
                 var output = p.Invoke();
 
@@ -97,7 +97,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetMissingTableFromPath()
         {
-            using (var p = TestRunspace.CreatePipeline("get-msitable example.msi -table NonexistentTable"))
+            using (var p = CreatePipeline("get-msitable example.msi -table NonexistentTable"))
             {
                 var output = p.Invoke();
                 Assert.IsTrue(null == output || 0 == output.Count, "Output is incorrect.");

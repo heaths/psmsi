@@ -6,7 +6,6 @@
 // PARTICULAR PURPOSE.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using System.Security.Principal;
 
@@ -18,13 +17,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public sealed class SidAttribute : ArgumentTransformationAttribute
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="SidAttribute"/> class.
-        /// </summary>
-        public SidAttribute()
-        {
-        }
-
         /// <summary>
         /// Transforms user account identifiers to security identifiers.
         /// </summary>
@@ -60,7 +52,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// <param name="username">The string to parse as a username.</param>
         /// <param name="sddl">The SDDL format of a SID to return.</param>
         /// <returns>Returns true if the string was parsed as a username and an SDDL was returned; otherwise, false.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Return false on any failure like a typical TryParse.")]
         internal static bool TryParseUsername(string username, out string sddl)
         {
             if (username.IndexOf("\\", StringComparison.Ordinal) >= 0)
@@ -73,7 +64,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                     sddl = sid.ToString();
                     return true;
                 }
-                catch (Exception)
+                catch
                 {
                 }
             }

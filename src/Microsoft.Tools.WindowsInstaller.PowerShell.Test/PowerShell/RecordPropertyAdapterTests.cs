@@ -16,17 +16,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     /// Unit tests for the <see cref="RecordPropertyAdapter"/> class.
     /// </summary>
     [TestClass]
-    public sealed class RecordPropertyAdapterTests
+    public sealed class RecordPropertyAdapterTests : TestBase
     {
-        public TestContext TestContext { get; set; }
-
         [TestMethod]
         public void FileTableRecordAdapted()
         {
-            string path = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
+            var path = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
             using (var db = new Database(path, DatabaseOpenMode.ReadOnly))
             {
-                string query = db.Tables["File"].SqlSelectString;
+                var query = db.Tables["File"].SqlSelectString;
                 using (var view = db.OpenView(query))
                 {
                     view.Execute();
@@ -68,10 +66,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [ExpectedException(typeof(NotSupportedException))]
         public void RecordIsReadOnly()
         {
-            string path = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
+            var path = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
             using (var db = new Database(path, DatabaseOpenMode.ReadOnly))
             {
-                string query = db.Tables["File"].SqlSelectString;
+                var query = db.Tables["File"].SqlSelectString;
                 using (var view = db.OpenView(query))
                 {
                     view.Execute();

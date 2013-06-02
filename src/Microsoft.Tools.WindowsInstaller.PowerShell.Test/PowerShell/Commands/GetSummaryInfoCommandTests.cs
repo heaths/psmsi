@@ -9,7 +9,6 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
-using System.Management.Automation.Runspaces;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -17,19 +16,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Tests for the <see cref="GetSummaryInfoCommand"/> class.
     /// </summary>
     [TestClass]
-    public sealed class GetSummaryInfoCommandTests : CommandTestBase
+    public sealed class GetSummaryInfoCommandTests : TestBase
     {
         [TestMethod]
         public void GetSummaryInfoFromMsi()
         {
-            using (var p = this.TestRunspace.CreatePipeline(@"get-msisummaryinfo ""$TestDeploymentDirectory\Example.msi"""))
+            using (var p = CreatePipeline(@"get-msisummaryinfo Example.msi"))
             {
                 var items = p.Invoke();
                 Assert.AreEqual<int>(1, items.Count);
 
                 // Assert values for ETS properties.
                 var info = items[0];
-                Runspace.DefaultRunspace = p.Runspace;
                 
                 Assert.IsTrue(info.GetPropertyValue<bool>("IsPackage"));
                 Assert.AreEqual<ReadOnly>(ReadOnly.Recommended, info.GetPropertyValue<ReadOnly>("ReadOnly"));
@@ -43,14 +41,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetSummaryInfoFromMsp()
         {
-            using (var p = this.TestRunspace.CreatePipeline(@"get-msisummaryinfo ""$TestDeploymentDirectory\Example.msp"""))
+            using (var p = CreatePipeline(@"get-msisummaryinfo Example.msp"))
             {
                 var items = p.Invoke();
                 Assert.AreEqual<int>(1, items.Count);
 
                 // Assert values for ETS properties.
                 var info = items[0];
-                Runspace.DefaultRunspace = p.Runspace;
 
                 Assert.IsTrue(info.GetPropertyValue<bool>("IsPatch"));
                 Assert.AreEqual<ReadOnly>(ReadOnly.Enforced, info.GetPropertyValue<ReadOnly>("ReadOnly"));
@@ -66,14 +63,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetSummaryInfoFromMspTransforms()
         {
-            using (var p = this.TestRunspace.CreatePipeline(@"get-msisummaryinfo ""$TestDeploymentDirectory\Example.msp"" -transforms | where { $_.IsTransform -and $_.Name -notlike ""#*"" }"))
+            using (var p = CreatePipeline(@"get-msisummaryinfo Example.msp -transforms | where { $_.IsTransform -and $_.Name -notlike '#*' }"))
             {
                 var items = p.Invoke();
                 Assert.AreEqual<int>(1, items.Count);
 
                 // Assert values for ETS properties.
                 var info = items[0];
-                Runspace.DefaultRunspace = p.Runspace;
 
                 Assert.IsTrue(info.GetPropertyValue<bool>("IsTransform"));
                 Assert.AreEqual<string>("MSP.1", info.GetPropertyValue<string>("Name"));
@@ -90,14 +86,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetSummaryInfoFromMst()
         {
-            using (var p = this.TestRunspace.CreatePipeline(@"get-msisummaryinfo ""$TestDeploymentDirectory\Example.mst"""))
+            using (var p = CreatePipeline(@"get-msisummaryinfo Example.mst"))
             {
                 var items = p.Invoke();
                 Assert.AreEqual<int>(1, items.Count);
 
                 // Assert values for ETS properties.
                 var info = items[0];
-                Runspace.DefaultRunspace = p.Runspace;
 
                 Assert.IsTrue(info.GetPropertyValue<bool>("IsTransform"));
                 Assert.AreEqual<ReadOnly>(ReadOnly.Enforced, info.GetPropertyValue<ReadOnly>("ReadOnly"));

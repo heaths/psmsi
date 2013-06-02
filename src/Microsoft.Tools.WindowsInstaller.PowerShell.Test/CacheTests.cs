@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller
     /// Tests for the <see cref="Cache&lt;TKey, TValue&gt;"/> class.
     /// </summary>
     [TestClass]
-    public sealed class CacheTests
+    public sealed class CacheTests : TestBase
     {
         [TestMethod]
         public void DefaultCacheCapacity()

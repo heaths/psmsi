@@ -23,13 +23,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     public sealed class ValidateGuidAttribute : ValidateArgumentsAttribute
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="ValidateGuidAttribute"/> class.
-        /// </summary>
-        public ValidateGuidAttribute()
-        {
-        }
-        
-        /// <summary>
         /// Validates that the argument contains acceptable GUIDs if not null.
         /// </summary>
         /// <param name="arguments">The arguments to validate.</param>

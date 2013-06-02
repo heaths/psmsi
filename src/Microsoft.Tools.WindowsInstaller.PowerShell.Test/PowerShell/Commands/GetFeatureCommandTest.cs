@@ -8,7 +8,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
-using System.Management.Automation.Runspaces;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -16,14 +15,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Unit and functional tests for <see cref="GetFeatureCommand"/>.
     ///</summary>
     [TestClass]
-    public class GetFeatureCommandTest : CommandTestBase
+    public class GetFeatureCommandTest : TestBase
     {
         [TestMethod]
-        [Description("Enumerate ProductInstallation.Features")]
         public void EnumerateProductFeatures()
         {
-            Collection<string> expectedFeatures = new Collection<string>();
-            Collection<string> expectedProductCodes = new Collection<string>();
+            var expectedFeatures = new Collection<string>();
+            var expectedProductCodes = new Collection<string>();
 
             // Populate expected features.
             expectedFeatures.Add("Complete");
@@ -37,28 +35,26 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             expectedProductCodes.Add("{877EF582-78AF-4D84-888B-167FDC3BCC11}");
 
             // Check the number of features for a product object.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo -context 'all' | get-msifeatureinfo"))
+            using (var p = CreatePipeline(@"get-msiproductinfo -context 'all' | get-msifeatureinfo"))
             {
-                Runspace.DefaultRunspace = p.Runspace;
-                using (MockRegistry reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    reg.Import(@"registry.xml");
+                    var objs = p.Invoke();
 
-                    Collection<PSObject> objs = p.Invoke();
                     Assert.AreEqual<int>(expectedFeatures.Count, objs.Count);
 
-                    Collection<string> actualFeatures = new Collection<string>();
-                    Collection<string> actualProductCodes = new Collection<string>();
+                    var actualFeatures = new Collection<string>();
+                    var actualProductCodes = new Collection<string>();
 
-                    foreach (PSObject obj in objs)
+                    foreach (var obj in objs)
                     {
                         // Use the ETS-added Name property as an additional check.
                         Assert.IsNotNull(obj.Properties["Name"]);
-                        actualFeatures.Add(obj.Properties["Name"].Value.ToString());
+                        actualFeatures.Add(obj.GetPropertyValue<string>("Name"));
 
                         // Use the ETS-added ProductCode property as an additional check.
                         Assert.IsNotNull(obj.Properties["ProductCode"]);
-                        actualProductCodes.Add(obj.Properties["ProductCode"].Value.ToString());
+                        actualProductCodes.Add(obj.GetPropertyValue<string>("ProductCode"));
                     }
 
                     CollectionAssert.AreEquivalent(expectedFeatures, actualFeatures);
@@ -66,88 +62,81 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             // Check that a null parameter is invalid.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo -product $null"))
+            using (var p = CreatePipeline(@"get-msifeatureinfo -product $null"))
             {
-                TestProject.ExpectException(typeof(ParameterBindingException), null, delegate()
+                ExpectException(typeof(ParameterBindingException), null, () =>
                 {
-                    Collection<PSObject> objs = p.Invoke();
+                    p.Invoke();
                 });
             }
 
             // Check that a collection containing null is invalid.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo -product @($null)"))
+            using (var p = CreatePipeline(@"get-msifeatureinfo -product @($null)"))
             {
-                TestProject.ExpectException(typeof(ParameterBindingException), null, delegate()
+                ExpectException(typeof(ParameterBindingException), null, () =>
                 {
-                    Collection<PSObject> objs = p.Invoke();
+                    p.Invoke();
                 });
             }
         }
 
         [TestMethod]
-        [Description("Enumerate specific features for a ProductCode")]
         public void EnumerateSpecificFeatures()
         {
             // Enumerate a single named feature.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' 'Complete'"))
+            using (var p = CreatePipeline(@"get-msifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' 'Complete'"))
             {
-                Runspace.DefaultRunspace = p.Runspace;
-                using (MockRegistry reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    reg.Import("registry.xml");
-
-                    Collection<PSObject> objs = p.Invoke();
+                    var objs = p.Invoke();
 
                     Assert.AreEqual<int>(1, objs.Count);
                     Assert.IsNotNull(objs[0].Properties["ProductCode"]);
-                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value.ToString());
+                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].GetPropertyValue<string>("ProductCode"));
                     Assert.IsNotNull(objs[0].Properties["Name"]);
-                    Assert.AreEqual<string>("Complete", objs[0].Properties["Name"].Value.ToString());
+                    Assert.AreEqual<string>("Complete", objs[0].GetPropertyValue<string>("Name"));
                 }
             }
 
             // Check that a null parameter is invalid.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo -productcode $null"))
+            using (var p = CreatePipeline(@"get-msifeatureinfo -productcode $null"))
             {
-                TestProject.ExpectException(typeof(ParameterBindingException), null, delegate()
+                ExpectException(typeof(ParameterBindingException), null, () =>
                 {
-                    Collection<PSObject> objs = p.Invoke();
+                    p.Invoke();
                 });
             }
 
             // Check that a collection containing null is invalid.
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' @($null)"))
+            using (var p = CreatePipeline(@"get-msifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' @($null)"))
             {
-                TestProject.ExpectException(typeof(ParameterBindingException), null, delegate()
+                ExpectException(typeof(ParameterBindingException), null, () =>
                 {
-                    Collection<PSObject> objs = p.Invoke();
+                    p.Invoke();
                 });
             }
         }
 
         [TestMethod]
-        [Description("Tests chained execution of get-msifeatureinfo")]
         [WorkItem(9464)]
         public void GetFeatureChainedExecution()
         {
-            Collection<string> expectedFeatures = new Collection<string>();
+            var expectedFeatures = new Collection<string>();
             expectedFeatures.Add("Complete");
             expectedFeatures.Add("Complete2.0.30226.2");
 
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msiproductinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msifeatureinfo | get-msifeatureinfo"))
+            using (var p = CreatePipeline(@"get-msiproductinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msifeatureinfo | get-msifeatureinfo"))
             {
-                using (MockRegistry reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    reg.Import(@"registry.xml");
-
-                    Collection<PSObject> objs = p.Invoke();
+                    var objs = p.Invoke();
                     Assert.AreEqual(2, objs.Count);
 
-                    Collection<string> actualFeatures = new Collection<string>();
-                    foreach (PSObject obj in objs)
+                    var actualFeatures = new Collection<string>();
+                    foreach (var obj in objs)
                     {
                         Assert.IsNotNull(obj.Properties["FeatureName"]);
-                        actualFeatures.Add(obj.Properties["FeatureName"].Value.ToString());
+                        actualFeatures.Add(obj.GetPropertyValue<string>("FeatureName"));
                     }
 
                     CollectionAssert.AreEquivalent(expectedFeatures, actualFeatures);

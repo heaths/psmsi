@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Linq;
-using PS = System.Management.Automation.PowerShell;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -17,10 +16,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Tests for the <see cref="InstallCommandActionData"/> class.
     /// </summary>
     [TestClass]
-    public sealed class InstallCommandActionDataTests
+    public sealed class InstallCommandActionDataTests : TestBase
     {
-        public TestContext TestContext { get; set; }
-
         [TestMethod]
         public void TestNullCommandLineArgs()
         {
@@ -51,12 +48,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void ExtractPathFromPSPath()
         {
-            using (var ps = PS.Create())
+            using (var p = CreatePipeline("get-item example.msi"))
             {
-                var file = ps.AddCommand("get-item").AddArgument("example.msi").Invoke().SingleOrDefault();
+                var file = p.Invoke().SingleOrDefault();
                 Assert.IsNotNull(file, "The file item is null.");
 
-                var data = InstallCommandActionData.CreateActionData<InstallCommandActionData>(ps.Runspace.SessionStateProxy.Path, file);
+                var data = InstallCommandActionData.CreateActionData<InstallCommandActionData>(TestRunspace.SessionStateProxy.Path, file);
                 string path = Path.Combine(this.TestContext.DeploymentDirectory, "example.msi");
                 Assert.AreEqual(path, data.Path, "The paths are not the same.");
             }
@@ -73,10 +70,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestNullFile()
         {
-            using (var ps = PS.Create())
-            {
-                var data = InstallCommandActionData.CreateActionData<InstallCommandActionData>(ps.Runspace.SessionStateProxy.Path, null);
-            }
+            var data = InstallCommandActionData.CreateActionData<InstallCommandActionData>(TestRunspace.SessionStateProxy.Path, null);
         }
     }
 }

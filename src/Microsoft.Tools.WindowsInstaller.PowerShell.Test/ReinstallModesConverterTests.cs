@@ -15,7 +15,7 @@ namespace Microsoft.Tools.WindowsInstaller
     /// Tests for the <see cref="ReinstallModesConverter"/> class.
     /// </summary>
     [TestClass]
-    public sealed class ReinstallModesConverterTests
+    public sealed class ReinstallModesConverterTests : TestBase
     {
         private const ReinstallModes Default = ReinstallModes.FileOlderVersion | ReinstallModes.MachineData | ReinstallModes.UserData | ReinstallModes.Shortcut;
 

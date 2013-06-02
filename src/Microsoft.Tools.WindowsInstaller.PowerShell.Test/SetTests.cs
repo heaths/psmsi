@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller
     /// Tests for the <see cref="Set&lt;T&gt;"/> class.
     /// </summary>
     [TestClass]
-    public sealed class SetTests
+    public sealed class SetTests : TestBase
     {
         [TestMethod]
         public void DefaultSet()

@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller
     /// Tests for the <see cref="EncodingConverter"/> class.
     /// </summary>
     [TestClass]
-    public sealed class EncodingConverterTests
+    public sealed class EncodingConverterTests : TestBase
     {
         [TestMethod]
         public void ConvertFromStringPropertyName()

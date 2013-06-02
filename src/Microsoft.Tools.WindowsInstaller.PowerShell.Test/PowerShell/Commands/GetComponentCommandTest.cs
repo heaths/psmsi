@@ -8,7 +8,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
-using System.Management.Automation.Runspaces;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -16,63 +15,54 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Unit and functional tests for <see cref="GetComponentCommand"/>.
     ///</summary>
     [TestClass]
-    public class GetComponentCommandTest : CommandTestBase
+    public class GetComponentCommandTest : TestBase
     {
         [TestMethod]
-        [Description("A test for GetComponentCommand.ProcessRecord")]
         public void EnumerateAllComponents()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msicomponentinfo"))
+            using (var p = CreatePipeline(@"get-msicomponentinfo"))
             {
-                using (MockRegistry reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    reg.Import(@"registry.xml");
-
-                    Collection<PSObject> objs = p.Invoke();
+                    var objs = p.Invoke();
                     Assert.AreEqual<int>(35, objs.Count);
                 }
             }
         }
 
         [TestMethod]
-        [Description("A test for GetComponentCommand.ProcessRecord")]
         public void EnumerateClients()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}'"))
+            using (var p = CreatePipeline(@"get-msicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}'"))
             {
-                Runspace.DefaultRunspace = p.Runspace;
-                using (MockRegistry reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    reg.Import(@"registry.xml");
+                    var objs = p.Invoke();
 
-                    Collection<PSObject> objs = p.Invoke();
                     Assert.AreEqual<int>(1, objs.Count);
-                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].Properties["ProductCode"].Value.ToString());
+                    Assert.AreEqual<string>("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", objs[0].GetPropertyValue<string>("ProductCode"));
                 }
             }
         }
 
         [TestMethod]
-        [Description("A test for GetComponentCommand.ProcessRecord")]
         public void EnumerateProductComponents()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}', '{CB473DC3-F7BA-4E5B-9721-72CF66BC5262}' '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}'"))
+            using (var p = CreatePipeline(@"get-msicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}', '{CB473DC3-F7BA-4E5B-9721-72CF66BC5262}' '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}'"))
             {
-                using (MockRegistry reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    reg.Import(@"registry.xml");
-
-                    Collection<PSObject> objs = p.Invoke();
+                    var objs = p.Invoke();
                     Assert.AreEqual<int>(2, objs.Count);
 
-                    Collection<string> expected = new Collection<string>();
+                    var expected = new Collection<string>();
                     expected.Add(@"{E7F56051-B133-4702-A5C6-D8C192C04D5F}");
                     expected.Add(@"{CB473DC3-F7BA-4E5B-9721-72CF66BC5262}");
 
-                    Collection<string> actual = new Collection<string>();
+                    var actual = new Collection<string>();
                     foreach (PSObject obj in objs)
                     {
-                        actual.Add(obj.Properties["ComponentCode"].Value.ToString());
+                        actual.Add(obj.GetPropertyValue<string>("ComponentCode"));
                     }
 
                     CollectionAssert.AreEquivalent(expected, actual);
@@ -81,17 +71,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         [TestMethod]
-        [Description("Tests chained execution of get-msicomponentinfo")]
         [WorkItem(9464)]
         public void GetComponentChainedExecution()
         {
-            using (Pipeline p = TestRunspace.CreatePipeline(@"get-msicomponentinfo '{9D8E88E9-8E05-4FC7-AFC7-87759D1D417E}' | get-msicomponentinfo"))
+            using (var p = CreatePipeline(@"get-msicomponentinfo '{9D8E88E9-8E05-4FC7-AFC7-87759D1D417E}' | get-msicomponentinfo"))
             {
-                using (MockRegistry reg = new MockRegistry())
+                using (OverrideRegistry())
                 {
-                    reg.Import(@"registry.xml");
-
-                    Collection<PSObject> objs = p.Invoke();
+                    var objs = p.Invoke();
 
                     // Two shared components piped again yield 4 (duplicated).
                     Assert.AreEqual(4, objs.Count);

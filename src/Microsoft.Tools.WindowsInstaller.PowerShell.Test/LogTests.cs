@@ -18,17 +18,14 @@ namespace Microsoft.Tools.WindowsInstaller
     /// Tests for the <see cref="Log"/> class.
     /// </summary>
     [TestClass]
-    public sealed class LogTests
+    public sealed class LogTests : TestBase
     {
         [TestMethod]
         public void LoggingDefaultPath()
         {
             DateTime start = DateTime.Now;
-            using (var reg = new MockRegistry())
+            using (OverrideRegistry())
             {
-                // Make sure our logging policy is consistent across machines.
-                reg.Import("Registry.xml");
-
                 var log = new Log(null, start);
                 string name = Path.Combine(Path.GetTempPath(), string.Format(CultureInfo.InvariantCulture, "MSI_{0:yyyyMMddhhmmss}", start));
 
@@ -51,11 +48,8 @@ namespace Microsoft.Tools.WindowsInstaller
         public void LoggingCustomPath()
         {
             DateTime start = DateTime.Now;
-            using (var reg = new MockRegistry())
+            using (OverrideRegistry())
             {
-                // Make sure our logging policy is consistent across machines.
-                reg.Import("Registry.xml");
-
                 var log = new Log(@"C:\test.txt", start);
                 string name = string.Format(CultureInfo.InvariantCulture, @"C:\test_{0:yyyyMMddhhmmss}", start);
 
@@ -78,11 +72,8 @@ namespace Microsoft.Tools.WindowsInstaller
         public void LoggingPolicyMode()
         {
             DateTime start = DateTime.Now;
-            using (var reg = new MockRegistry())
+            using (OverrideRegistry())
             {
-                // Make sure our logging policy is consistent across machines.
-                reg.Import("Registry.xml");
-
                 // Set the policy to log extra debug information.
                 using (var key = Registry.LocalMachine.CreateSubKey(@"Software\Policies\Microsoft\Windows\Installer"))
                 {

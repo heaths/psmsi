@@ -18,16 +18,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     /// Test classes for <see cref="PSInstallerException"/>.
     /// </summary>
     [TestClass]
-    public sealed class PSInstallerExceptionTests
+    public sealed class PSInstallerExceptionTests : TestBase
     {
-        /// <summary>
-        /// Test serializing and deserializing an instance of <see cref="PSInstallerException"/>.
-        /// </summary>
         [TestMethod]
         public void DeserializePSInstallerException()
         {
             PSInstallerException ex;
-            BinaryFormatter formatter = new BinaryFormatter();
+            var formatter = new BinaryFormatter();
 
             using (var ms = new MemoryStream())
             {
@@ -60,9 +57,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             }
         }
 
-        /// <summary>
-        /// Tests creating an instance of <see cref="PSInstallerException"/> from an <see cref="InstallerException"/> with a <see cref="Record"/>.
-        /// </summary>
         [TestMethod]
         public void CreateFromInstallerExceptionForRecord()
         {
@@ -81,9 +75,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             }
         }
 
-        /// <summary>
-        /// Validate error information for <see cref="ErrorCategory.OpenError"/>.
-        /// </summary>
         [TestMethod]
         public void ValidateErrorRecordOpenError()
         {
@@ -105,9 +96,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             }
         }
 
-        /// <summary>
-        /// Validate error information for <see cref="ErrorCategory.InvalidData"/>.
-        /// </summary>
         [TestMethod]
         public void ValidateErrorRecordForFusion()
         {

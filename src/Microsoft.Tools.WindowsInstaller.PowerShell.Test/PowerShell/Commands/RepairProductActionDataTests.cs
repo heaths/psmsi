@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// Tests for the <see cref="RepairProductActionData"/> class.
     /// </summary>
     [TestClass]
-    public sealed class RepairProductActionDataTests
+    public sealed class RepairProductActionDataTests : TestBase
     {
         [TestMethod]
         public void AssertDefaultReinstallMode()

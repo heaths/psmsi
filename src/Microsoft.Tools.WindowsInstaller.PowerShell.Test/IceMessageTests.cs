@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller
     /// Tests for the <see cref="IceMessage"/> class.
     /// </summary>
     [TestClass]
-    public sealed class IceMessageTests
+    public sealed class IceMessageTests : TestBase
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
