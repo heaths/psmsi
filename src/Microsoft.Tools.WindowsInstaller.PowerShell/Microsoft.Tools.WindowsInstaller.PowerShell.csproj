@@ -77,6 +77,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache.cs" />
+    <Compile Include="Column.cs" />
+    <Compile Include="ColumnCollection.cs" />
     <Compile Include="EncodingConverter.cs" />
     <Compile Include="ExtensionAttribute.cs" />
     <Compile Include="ExtensionMethods.cs" />
@@ -130,11 +132,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Record.cs" />
     <Compile Include="ReinstallModesConverter.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="SummaryInfo.cs" />
     <Compile Include="Validate.cs" />
+    <Compile Include="ViewManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

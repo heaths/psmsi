@@ -324,7 +324,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        private MessageResult OnMessage(InstallMessage messageType, Record messageRecord, MessageButtons buttons, MessageIcon icon, MessageDefaultButton defaultButton)
+        private MessageResult OnMessage(InstallMessage messageType, Deployment.WindowsInstaller.Record messageRecord, MessageButtons buttons, MessageIcon icon, MessageDefaultButton defaultButton)
         {
             switch (messageType)
             {
@@ -343,7 +343,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
         }
 
-        private MessageResult OnError(Record record)
+        private MessageResult OnError(Deployment.WindowsInstaller.Record record)
         {
             if (null != record)
             {
@@ -360,7 +360,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             return MessageResult.OK;
         }
 
-        private MessageResult OnWarning(Record record)
+        private MessageResult OnWarning(Deployment.WindowsInstaller.Record record)
         {
             if (null != record)
             {
@@ -373,7 +373,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             return MessageResult.OK;
         }
 
-        private MessageResult OnInformation(Record record)
+        private MessageResult OnInformation(Deployment.WindowsInstaller.Record record)
         {
             if (null != record)
             {

@@ -25,13 +25,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         private static readonly string FieldPrefix = "msiField";
 
         private ErrorRecord errorRecord;
-        private Record record;
+        private Deployment.WindowsInstaller.Record record;
 
         /// <summary>
         /// Creates a <see cref="PSInstallerException"/> from the given <paramref name="record"/>.
         /// </summary>
-        /// <param name="record">The <see cref="Record"/> containing error details.</param>
-        public PSInstallerException(Record record)
+        /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing error details.</param>
+        public PSInstallerException(Deployment.WindowsInstaller.Record record)
         {
             this.errorRecord = null;
             this.record = record;
@@ -55,7 +55,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             int fieldCount = (int)info.GetValue(PSInstallerException.FieldCount, typeof(int));
             if (0 < fieldCount)
             {
-                this.record = new Record(fieldCount);
+                this.record = new Deployment.WindowsInstaller.Record(fieldCount);
                 for (int i = 0; i <= fieldCount; ++i)
                 {
                     string name = PSInstallerException.FieldPrefix + i.ToString(CultureInfo.InvariantCulture);
@@ -159,7 +159,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             }
         }
 
-        private Record GetRecord()
+        private Deployment.WindowsInstaller.Record GetRecord()
         {
             if (null != this.record)
             {
@@ -174,7 +174,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             return null;
         }
 
-        private static ErrorCategory GetErrorCategory(Record record, out string resource)
+        private static ErrorCategory GetErrorCategory(Deployment.WindowsInstaller.Record record, out string resource)
         {
             resource = null;
 

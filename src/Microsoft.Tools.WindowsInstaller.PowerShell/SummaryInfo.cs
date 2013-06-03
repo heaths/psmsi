@@ -15,8 +15,36 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </summary>
     public sealed class SummaryInfo
     {
-        private SummaryInfo()
+        /// <summary>
+        /// Creates a new instance of the <see cref="SummaryInfo"/> class copying values
+        /// from the <see cref="Deployment.WindowsInstaller.SummaryInfo"/> object.
+        /// </summary>
+        /// <param name="info">The <see cref="Deployment.WindowsInstaller.SummaryInfo"/> from which to copy values.</param>
+        /// <exception cref="ArgumentNullException">The parameter <paramref name="info"/> is null.</exception>
+        internal SummaryInfo(Deployment.WindowsInstaller.SummaryInfo info)
         {
+            if (null == info)
+            {
+                throw new ArgumentNullException("info");
+            }
+
+            this.Author = info.Author;
+            this.CharacterCount = info.CharacterCount;
+            this.CodePage = info.CodePage;
+            this.Comments = info.Comments;
+            this.CreateTime = info.CreateTime;
+            this.CreatingApp = info.CreatingApp;
+            this.Keywords = info.Keywords;
+            this.LastPrintTime = info.LastPrintTime;
+            this.LastSavedBy = info.LastSavedBy;
+            this.LastSaveTime = info.LastSaveTime;
+            this.PageCount = info.PageCount;
+            this.RevisionNumber = info.RevisionNumber;
+            this.Security = info.Security;
+            this.Subject = info.Subject;
+            this.Template = info.Template;
+            this.Title = info.Title;
+            this.WordCount = info.WordCount;
         }
 
         /// <summary>
@@ -103,39 +131,5 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Gets the WordCount summary information property.
         /// </summary>
         public int WordCount { get; private set; }
-
-        /// <summary>
-        /// Creates a locally cached copy of a <see cref="Deployment.WindowsInstaller.SummaryInfo"/> object.
-        /// </summary>
-        /// <param name="value">The <see cref="Deployment.WindowsInstaller.SummaryInfo"/> to copy.</param>
-        /// <returns>A localled cached copy of a <see cref="Deployment.WindowsInstaller.SummaryInfo"/> object.</returns>
-        public static explicit operator SummaryInfo(Deployment.WindowsInstaller.SummaryInfo value)
-        {
-            if (null == value)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            return new SummaryInfo()
-            {
-                Author = value.Author,
-                CharacterCount = value.CharacterCount,
-                CodePage = value.CodePage,
-                Comments = value.Comments,
-                CreateTime = value.CreateTime,
-                CreatingApp = value.CreatingApp,
-                Keywords = value.Keywords,
-                LastPrintTime = value.LastPrintTime,
-                LastSavedBy = value.LastSavedBy,
-                LastSaveTime = value.LastSaveTime,
-                PageCount = value.PageCount,
-                RevisionNumber = value.RevisionNumber,
-                Security = value.Security,
-                Subject = value.Subject,
-                Template = value.Template,
-                Title = value.Title,
-                WordCount = value.WordCount,
-            };
-        }
     }
 }

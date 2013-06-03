@@ -5,13 +5,9 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Management.Automation;
-using System.Reflection;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {
@@ -73,10 +69,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// <exception cref="InvalidOperationException">The property did not contain enough information to complete this operation.</exception>
         public override string GetPropertyTypeName(PSAdaptedProperty adaptedProperty)
         {
-            var field = adaptedProperty.Tag as FieldInfo;
-            if (null != field)
+            var column = adaptedProperty.Tag as Column;
+            if (null != column)
             {
-                return field.ColumnType.FullName;
+                return column.ColumnType.FullName;
             }
 
             throw new InvalidOperationException();
@@ -153,32 +149,27 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
 
         private PropertySet EnsurePropertyCache(Record record)
         {
-            var view = GetView(record);
-            if (view != null)
+            var columns = record.Columns;
+            if (null != columns)
             {
                 PropertySet properties;
-                if (!this.cache.TryGetValue(view.QueryString, out properties))
+                if (!this.cache.TryGetValue(columns.QueryString, out properties))
                 {
                     properties = new PropertySet();
-                    for (int i = 0; i < view.Columns.Count; ++i)
+
+                    for (int i = 0; i < columns.Count; ++i)
                     {
-                        var column = view.Columns[i];
-                        properties.Add(new PSAdaptedProperty(column.Name, new FieldInfo(view, i)));
+                        var column = columns[i];
+                        properties.Add(new PSAdaptedProperty(column.Name, column));
                     }
 
-                    try
+                    // Format a suitable type name if only a single table was selected.
+                    if (null != columns.TableNames && 1 == columns.TableNames.Length)
                     {
-                        if (null != view.Tables && 1 == view.Tables.Count)
-                        {
-                            string typeName = typeof(Record).FullName + "#" + view.Tables[0].Name;
-                            properties.TypeName = typeName;
-                        }
-                    }
-                    catch (InvalidHandleException)
-                    {
+                        properties.TypeName = typeof(Record).FullName + "#" + columns.TableNames[0];
                     }
 
-                    this.cache.Add(view.QueryString, properties);
+                    this.cache.Add(columns.QueryString, properties);
                 }
 
                 return properties;
@@ -187,100 +178,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             return null;
         }
 
-        private static View GetView(Record record)
-        {
-            var field = typeof(Record).GetField("view", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (null != field)
-            {
-                return field.GetValue(record) as View;
-            }
-
-            return null;
-        }
-
         internal static object GetPropertyValue(PSAdaptedProperty adaptedProperty, Record record)
         {
-            // Caller will check, so simply assert for testing.
-            Debug.Assert(null != adaptedProperty);
-
-            var field = adaptedProperty.Tag as FieldInfo;
-            if (null != field && null != record)
+            var column = adaptedProperty.Tag as Column;
+            if (null != column && null != record)
             {
-                return field.GetValue(record);
+                return record.Data[column.Index];
             }
 
             throw new InvalidOperationException();
-        }
-
-        private class FieldInfo
-        {
-            private bool required;
-
-            internal FieldInfo(View view, int index)
-            {
-                this.Index = index;
-                this.required = false;
-
-                // Remember the column type.
-                var column = view.Columns[index];
-                var type = column.Type;
-
-                this.SimpleType = type;
-
-                if (typeof(string) == type)
-                {
-                    this.ColumnType = typeof(string);
-                }
-                else if (typeof(Stream) == type)
-                {
-                    this.ColumnType = typeof(byte[]);
-                }
-                else if (column.IsRequired)
-                {
-                    this.required = true;
-                    this.ColumnType = type;
-                }
-                else if (typeof(short) == type)
-                {
-                    this.ColumnType = typeof(Nullable<short>);
-                }
-                else
-                {
-                    this.ColumnType = typeof(Nullable<int>);
-                }
-            }
-
-            internal int Index { get; private set; }
-            internal Type SimpleType { get; private set; }
-            internal Type ColumnType { get; private set; }
-
-            internal object GetValue(Record record)
-            {
-                // Windows Installer records use 1-based indices.
-                var index = this.Index + 1;
-
-                if (null == record)
-                {
-                    return null;
-                }
-                else if (typeof(string) == this.SimpleType)
-                {
-                    return record.GetString(index);
-                }
-                else if (typeof(Stream) == this.SimpleType)
-                {
-                    // TODO: Return byte array for stream.
-                    return new byte[] { };
-                }
-                else if (this.required)
-                {
-                    return record.GetInteger(index);
-                }
-                else
-                {
-                    return record.GetNullableInteger(index);
-                }
-            }
         }
 
         private class PropertySet : KeyedCollection<string, PSAdaptedProperty>

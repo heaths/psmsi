@@ -170,15 +170,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
-        /// Handles a message <see cref="Record"/> from Windows Installer.
+        /// Handles a message <see cref="Deployment.WindowsInstaller.Record"/> from Windows Installer.
         /// </summary>
         /// <param name="messageType">The <see cref="InstallMessage"/> type of the message.</param>
-        /// <param name="messageRecord">The <see cref="Record"/> containing more information.</param>
+        /// <param name="messageRecord">The <see cref="Deployment.WindowsInstaller.Record"/> containing more information.</param>
         /// <param name="buttons">the <see cref="MessageButtons"/> to display.</param>
         /// <param name="icon">The <see cref="MessageIcon"/> to display.</param>
         /// <param name="defaultButton">The <see cref="MessageDefaultButton"/> to display.</param>
         /// <returns>The <see cref="MessageResult"/> that informs Windows Installer was action to take in response to the message.</returns>
-        protected MessageResult OnMessage(InstallMessage messageType, Record messageRecord, MessageButtons buttons, MessageIcon icon, MessageDefaultButton defaultButton)
+        protected MessageResult OnMessage(InstallMessage messageType, Deployment.WindowsInstaller.Record messageRecord, MessageButtons buttons, MessageIcon icon, MessageDefaultButton defaultButton)
         {
             // Log all messages in debug mode.
             this.WriteMessage(messageType, messageRecord);
@@ -219,9 +219,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Initializes the execution state.
         /// </summary>
-        /// <param name="record">The <see cref="Record"/> containing additional information.</param>
+        /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing additional information.</param>
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
-        protected MessageResult OnInitialize(Record record)
+        protected MessageResult OnInitialize(Deployment.WindowsInstaller.Record record)
         {
             this.Reset();
             return MessageResult.OK;
@@ -230,9 +230,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Called when a new action starts.
         /// </summary>
-        /// <param name="record">The <see cref="Record"/> containing additional information.</param>
+        /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing additional information.</param>
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
-        protected MessageResult OnActionStart(Record record)
+        protected MessageResult OnActionStart(Deployment.WindowsInstaller.Record record)
         {
             if (this.progress.IsValid)
             {
@@ -257,9 +257,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Called when an action sends more information.
         /// </summary>
-        /// <param name="record">The <see cref="Record"/> containing additional information.</param>
+        /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing additional information.</param>
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
-        protected MessageResult OnActionData(Record record)
+        protected MessageResult OnActionData(Deployment.WindowsInstaller.Record record)
         {
             if (this.progress.IsValid && this.progress.Current.EnableActionData)
             {
@@ -289,9 +289,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Writes and error to the pipeline.
         /// </summary>
-        /// <param name="record">The <see cref="Record"/> containing the error details.</param>
+        /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing the error details.</param>
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
-        protected MessageResult OnError(Record record)
+        protected MessageResult OnError(Deployment.WindowsInstaller.Record record)
         {
             if (null == record)
             {
@@ -327,9 +327,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Writes a warning to the pipeline.
         /// </summary>
-        /// <param name="record">The <see cref="Record"/> containing the warning details.</param>
+        /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing the warning details.</param>
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
-        protected MessageResult OnWarning(Record record)
+        protected MessageResult OnWarning(Deployment.WindowsInstaller.Record record)
         {
             if (null != record)
             {
@@ -343,9 +343,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Writes a verbose message to the pipeline.
         /// </summary>
-        /// <param name="record">The <see cref="Record"/> containing the verbose message details.</param>
+        /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing the verbose message details.</param>
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
-        protected MessageResult OnVerbose(Record record)
+        protected MessageResult OnVerbose(Deployment.WindowsInstaller.Record record)
         {
             if (null != record)
             {
@@ -359,9 +359,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Writes progress information.
         /// </summary>
-        /// <param name="record">The <see cref="Record"/> containing the progress details.</param>
+        /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing the progress details.</param>
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
-        protected MessageResult OnProgress(Record record)
+        protected MessageResult OnProgress(Deployment.WindowsInstaller.Record record)
         {
             if (null == record || 2 > record.FieldCount)
             {
@@ -460,9 +460,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Provides information about the install session.
         /// </summary>
-        /// <param name="record">The <see cref="Record"/> containing common details.</param>
+        /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing common details.</param>
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
-        protected MessageResult OnCommonData(Record record)
+        protected MessageResult OnCommonData(Deployment.WindowsInstaller.Record record)
         {
             // Get the Windows Installer-generated caption.
             if (1 < record.FieldCount && 1 == record.GetInteger(1))
@@ -528,7 +528,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         [Conditional("DEBUG")]
-        private void WriteMessage(InstallMessage type, Record record)
+        private void WriteMessage(InstallMessage type, Deployment.WindowsInstaller.Record record)
         {
             var sb = new StringBuilder();
             sb.AppendFormat(CultureInfo.InvariantCulture, "{0} ({0:d})", type);

@@ -251,14 +251,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 this.WriteObject(this.QueueCountMax);
             }
 
-            private void OnMessage(InstallMessage type, Record record = null)
+            private void OnMessage(InstallMessage type, Deployment.WindowsInstaller.Record record = null)
             {
                 this.OnMessage(type, record, MessageButtons.OKCancel, MessageIcon.None, MessageDefaultButton.Button1);
             }
 
             private void TestError()
             {
-                using (var error = new Record(2))
+                using (var error = new Deployment.WindowsInstaller.Record(2))
                 {
                     error.SetInteger(1, 1301);
                     error.SetString(2, "error");
@@ -268,7 +268,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             private void TestWarning()
             {
-                using (var warning = new Record(0))
+                using (var warning = new Deployment.WindowsInstaller.Record(0))
                 {
                     warning.FormatString = "warning";
                     this.OnMessage(InstallMessage.Warning, warning);
@@ -277,7 +277,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             private void TestVerbose()
             {
-                using (var verbose = new Record(0))
+                using (var verbose = new Deployment.WindowsInstaller.Record(0))
                 {
                     verbose.FormatString = "verbose";
                     this.OnMessage(InstallMessage.Info, verbose);
@@ -287,7 +287,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             private void TestProgressPhase1()
             {
                 // No product name or total tick count yet.
-                using (var rec = new Record(2))
+                using (var rec = new Deployment.WindowsInstaller.Record(2))
                 {
                     rec.SetInteger(1, 2);
                     rec.SetInteger(2, 0);
@@ -298,7 +298,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             private void TestProgressPhase2()
             {
                 // With product name, estimated tick count, generating script.
-                using (var rec = new Record(4))
+                using (var rec = new Deployment.WindowsInstaller.Record(4))
                 {
                     // CommonData: set CurrentProductName.
                     rec.SetInteger(1, 1);
@@ -333,7 +333,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             private void TestProgressPhase3()
             {
                 // With product name, estimated tick count, executing script.
-                using (var rec = new Record(4))
+                using (var rec = new Deployment.WindowsInstaller.Record(4))
                 {
                     // CommonData: set CurrentProductName.
                     rec.SetInteger(1, 1);

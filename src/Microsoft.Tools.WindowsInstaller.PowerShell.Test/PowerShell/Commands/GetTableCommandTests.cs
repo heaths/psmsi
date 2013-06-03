@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(1, output.Count, "The output is incorrect.");
 
                 var item = output[0];
-                Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record#File", item.TypeNames[0], "The first type name is incorrect.");
+                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#File", item.TypeNames[0], "The first type name is incorrect.");
 
                 string value = item.GetPropertyValue<string>("File");
                 Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");
@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(1, output.Count, "The output is incorrect.");
 
                 var item = output[0];
-                Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record#File", item.TypeNames[0], "The first type name is incorrect.");
+                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#File", item.TypeNames[0], "The first type name is incorrect.");
 
                 string value = item.GetPropertyValue<string>("File");
                 Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");
@@ -63,7 +63,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(1, output.Count, "The output is incorrect.");
 
                 var item = output[0];
-                Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
+                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
 
                 string value = item.GetPropertyValue<string>("File");
                 Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");
@@ -84,7 +84,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(1, output.Count, "The output is incorrect.");
 
                 var item = output[0];
-                Assert.AreEqual<string>("Microsoft.Deployment.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
+                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
 
                 string value = item.GetPropertyValue<string>("File");
                 Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");

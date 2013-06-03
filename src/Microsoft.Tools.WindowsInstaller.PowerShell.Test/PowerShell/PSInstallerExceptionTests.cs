@@ -29,7 +29,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             using (var ms = new MemoryStream())
             {
                 // Serialize the error record.
-                using (var record = new Record(2))
+                using (var record = new Deployment.WindowsInstaller.Record(2))
                 {
                     record.FormatString = "Installed [2]";
                     record.SetInteger(1, 1715);
@@ -78,7 +78,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [TestMethod]
         public void ValidateErrorRecordOpenError()
         {
-            using (var record = new Record(2))
+            using (var record = new Deployment.WindowsInstaller.Record(2))
             {
                 record.SetInteger(1, 1301);
                 record.SetString(2, @"C:\test.txt");
@@ -99,7 +99,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [TestMethod]
         public void ValidateErrorRecordForFusion()
         {
-            using (var record = new Record(6))
+            using (var record = new Deployment.WindowsInstaller.Record(6))
             {
                 record.SetInteger(1, 1935);
                 record.SetString(2, "TestComponent");

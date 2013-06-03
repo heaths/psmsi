@@ -61,22 +61,33 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             string path = item.GetPropertyValue<string>("PSPath");
             path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
 
-            // No handles are disposed or the property adapter will throw.
-            var db = new Database(path, DatabaseOpenMode.ReadOnly);
-
-            string query = this.GetQuery(db);
-            if (!string.IsNullOrEmpty(query))
+            using (var db = new Database(path, DatabaseOpenMode.ReadOnly))
             {
-                var view = db.OpenView(query);
-                view.Execute();
-
-                var record = view.Fetch();
-                while (null != record)
+                var query = this.GetQuery(db);
+                if (!string.IsNullOrEmpty(query))
                 {
-                    var obj = PSObject.AsPSObject(record);
-                    this.WriteObject(obj);
+                    using (var view = db.OpenView(query))
+                    {
+                        view.Execute();
 
-                    record = view.Fetch();
+                        // Get column information from the view before being disposed.
+                        var columns = ViewManager.GetColumns(view);
+
+                        var record = view.Fetch();
+                        while (null != record)
+                        {
+                            using (record)
+                            {
+                                // Create a locally cached copy of the record.
+                                var copy = new Record(record, columns);
+
+                                var obj = PSObject.AsPSObject(copy);
+                                this.WriteObject(obj);
+                            }
+
+                            record = view.Fetch();
+                        }
+                    }
                 }
             }
         }

@@ -25,7 +25,7 @@ namespace Microsoft.Tools.WindowsInstaller
         {
             // Casting alone should throw.
             Deployment.WindowsInstaller.SummaryInfo info = null;
-            var copy = (SummaryInfo)info;
+            var copy = new SummaryInfo(info);
         }
 
         [TestMethod]
@@ -34,7 +34,7 @@ namespace Microsoft.Tools.WindowsInstaller
             var path = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
             using (var info = new Deployment.WindowsInstaller.SummaryInfo(path, false))
             {
-                var copy = (SummaryInfo)info;
+                var copy = new SummaryInfo(info);
 
                 // Verify that the declared properties are the same.
                 var infoProperties = info.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public).OrderBy(property => property.Name);

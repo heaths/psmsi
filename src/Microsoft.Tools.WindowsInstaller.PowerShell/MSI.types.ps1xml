@@ -495,12 +495,6 @@
         </Members>
     </Type>
     <Type>
-        <Name>Microsoft.Deployment.WindowsInstaller.Record</Name>
-        <TypeAdapter>
-            <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
-        </TypeAdapter>
-    </Type>
-    <Type>
         <Name>Microsoft.Deployment.WindowsInstaller.Package.TransformInfo</Name>
         <Members>
             <MemberSet>
@@ -574,6 +568,12 @@
                 </Members>
             </MemberSet>
         </Members>
+    </Type>
+    <Type>
+        <Name>Microsoft.Tools.WindowsInstaller.Record</Name>
+        <TypeAdapter>
+            <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
+        </TypeAdapter>
     </Type>
     <Type>
         <Name>Microsoft.Tools.WindowsInstaller.SummaryInfo</Name>

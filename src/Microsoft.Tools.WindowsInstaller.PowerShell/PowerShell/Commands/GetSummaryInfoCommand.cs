@@ -38,7 +38,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 using (var info = new Deployment.WindowsInstaller.SummaryInfo(providerPath, false))
                 {
-                    var obj = PSObject.AsPSObject((SummaryInfo)info);
+                    var copy = new SummaryInfo(info);
+                    var obj = PSObject.AsPSObject(copy);
 
                     // Add the class type as the first type name.
                     var name = typeof(SummaryInfo).FullName + "#" + type;
