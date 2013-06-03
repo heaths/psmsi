@@ -22,6 +22,9 @@ namespace Microsoft.Tools.WindowsInstaller
     /// The following registry hives are supported.
     /// <list type="list">
     /// <item>
+    /// <term>HKEY_CLASSES_ROOT</term>
+    /// </item>
+    /// <item>
     /// <term>HKEY_CURRENT_USER</term>
     /// </item>
     /// <item>
@@ -36,6 +39,7 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </remarks>
     internal sealed class MockRegistry : IDisposable
     {
+        private static readonly IntPtr HKEY_CLASSES_ROOT = new IntPtr(unchecked((int)0x80000000));
         private static readonly IntPtr HKEY_CURRENT_USER = new IntPtr(unchecked((int)0x80000001));
         private static readonly IntPtr HKEY_LOCAL_MACHINE = new IntPtr(unchecked((int)0x80000002));
         private static readonly IntPtr HKEY_USERS = new IntPtr(unchecked((int)0x80000003));
@@ -44,6 +48,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private static int count = 0;
 
         private string baseKeyPath;
+        private RegistryKey classesRoot;
         private RegistryKey currentUser;
         private RegistryKey localMachine;
         private RegistryKey users;
@@ -84,12 +89,17 @@ namespace Microsoft.Tools.WindowsInstaller
 
                         this.baseKeyPath = string.Format(@"Software\{0}\{1:B}", name.Name, Guid.NewGuid());
 
+                        this.classesRoot = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKCR");
                         this.currentUser = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKCU");
                         this.localMachine = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKLM");
                         this.users = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKU");
 
                         int ret;
                         SafeHandle handle;
+
+                        handle = GetRegistryHandle(classesRoot);
+                        ret = RegOverridePredefKey(HKEY_CLASSES_ROOT, handle.DangerousGetHandle());
+                        if (0 != ret) { throw new Win32Exception(ret); }
 
                         handle = GetRegistryHandle(currentUser);
                         ret = RegOverridePredefKey(HKEY_CURRENT_USER, handle.DangerousGetHandle());
@@ -163,6 +173,7 @@ namespace Microsoft.Tools.WindowsInstaller
                 if (0 == --count)
                 {
                     // Restore the redirected keys to their original hives.
+                    RegOverridePredefKey(HKEY_CLASSES_ROOT, IntPtr.Zero);
                     RegOverridePredefKey(HKEY_CURRENT_USER, IntPtr.Zero);
                     RegOverridePredefKey(HKEY_LOCAL_MACHINE, IntPtr.Zero);
                     RegOverridePredefKey(HKEY_USERS, IntPtr.Zero);

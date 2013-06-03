@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<registry xmlns="http://schemas.microsoft.com/psmsi/2008/03/registry.xsd">
+    <hive name="HKEY_CLASSES_ROOT">
+        <key name=".exe">
+            <key name="Shell">
+                <key name="Open">
+                    <key name="Command">
+                        <value type="String">"%1" %*</value>
+                    </key>
+                </key>
+            </key>
+        </key>
+        <key name=".msi">
+            <value type="String">Msi.Package</value>
+        </key>
+        <key name=".msp">
+            <value type="String">Msi.Package</value>
+        </key>
+        <key name="Msi.Package">
+            <key name="Shell">
+                <key name="Edit">
+                    <key name="Command">
+                        <value type="String">"$(TestDeploymentDirectory)\return.exe" "%1"</value>
+                    </key>
+                </key>
+            </key>
+        </key>
+    </hive>
+    <hive name="HKEY_LOCAL_MACHINE">
+        <key name="Software">
+            <key name="Microsoft">
+                <!-- Needed for handling errors in the pipeline -->
+                <key name="Cryptography">
+                    <key name="Defaults">
+                        <key name="Provider">
+                            <key name="Microsoft Strong Cryptographic Provider">
+                                <value name="Image Path" type="String">rsaenh.dll</value>
+                                <value name="SigInFile" type="DWord"/>
+                                <value name="Type" type="DWord">1</value>
+                            </key>
+                        </key>
+                        <key name="Provider Types">
+                            <key name="Type 001">
+                                <value name="Name" type="String">Microsoft Strong Cryptographic Provider</value>
+                                <value name="TypeName" type="String">RSA Full (Signature and Key Exchange)</value>
+                            </key>
+                        </key>
+                    </key>
+                </key>
+                <!-- PowerShell values needed to handle errors -->
+                <key name="PowerShell">
+                    <key name="1">
+                        <key name="ShellIds">
+                            <key name="Microsoft.PowerShell">
+                                <value name="ExecutionPolicy" type="String">RemoteSigned</value>
+                                <value name="Path" type="ExpandString">%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe</value>
+                            </key>
+                        </key>
+                    </key>
+                </key>
+                <key name="Windows">
+                    <key name="CurrentVersion">
+                        <key name="Internet Settings">
+                            <key name="Zones">
+                                <key name="0">
+                                    <value name="1806" type="DWord">0</value>
+                                    <value name="CurrentLevel" type="DWord">0</value>
+                                </key>
+                            </key>
+                        </key>
+                    </key>
+                </key>
+            </key>
+        </key>
+        <key name="System">
+            <key name="CurrentControlSet">
+                <key name="Control">
+                    <!-- vstesthost.exe requires the following values -->
+                    <key name="FileSystem">
+                        <value name="NtfsAllowExtendedCharacter8dot3Rename" type="DWord"/>
+                        <value name="NtfsBugcheckOnCorrupt" type="DWord"/>
+                        <value name="NtfsDisable8dot3NameCreation" type="DWord"/>
+                        <value name="NtfsDisableCompression" type="DWord"/>
+                        <value name="NtfsDisableEncryption" type="DWord"/>
+                        <value name="NtfsDisableLastAccessUpdate" type="DWord">1</value>
+                        <value name="NtfsDisableVolsnapHints" type="DWord">2</value>
+                        <value name="NtfsEncryptPagingFile" type="DWord"/>
+                        <value name="NtfsMemoryUsage" type="DWord"/>
+                        <value name="NtfsMftZoneReservation" type="DWord"/>
+                        <value name="NtfsQuotaNotifyRate" type="DWord">3600</value>
+                        <value name="SymlinkLocalToLocalEvaluation" type="DWord">1</value>
+                        <value name="SymlinkLocalToRemoteEvaluation" type="DWord">1</value>
+                        <value name="SymlinkRemoteToLocalEvaluation" type="DWord"/>
+                        <value name="SymlinkRemoteToRemoteEvaluation" type="DWord"/>
+                        <value name="UdfsCloseSessionOnEject" type="DWord">1</value>
+                        <value name="UdfsSoftwareDefectManagement" type="DWord"/>
+                        <value name="Win31FileSystem" type="DWord"/>
+                        <value name="Win95TruncatedExtensions" type="DWord">1</value>
+                    </key>
+                    <!-- support copying files -->
+                    <key name="LSA">
+                        <key name="AccessProviders">
+                            <key name="Windows NT Access Provider">
+                                <value name="ProviderPath" type="String">%SystemRoot%\system32\ntmarta.dll</value>
+                            </key>
+                            <value name="MartaExtension" type="String">ntmarta.dll</value>
+                            <value name="ProviderOrder" type="MultiString">Windows NT Access Provider</value>
+                        </key>
+                    </key>
+                </key>
+            </key>
+        </key>
+    </hive>
+</registry>

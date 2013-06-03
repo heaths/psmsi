@@ -89,6 +89,10 @@ namespace Microsoft.Tools.WindowsInstaller
                                     // Add the specified hive to the stack.
                                     switch (name)
                                     {
+                                        case "HKEY_CLASSES_ROOT":
+                                            keys.Push(Registry.ClassesRoot);
+                                            break;
+
                                         case "HKEY_CURRENT_USER":
                                             keys.Push(Registry.CurrentUser);
                                             break;

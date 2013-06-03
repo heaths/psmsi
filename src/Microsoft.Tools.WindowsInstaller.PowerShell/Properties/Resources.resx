@@ -177,4 +177,7 @@
   <data name="Action_Merge" xml:space="preserve">
     <value>Merging "{0}" into "{1}".</value>
   </data>
+  <data name="Error_OrcaAbsent" xml:space="preserve">
+    <value>Orca is not installed on this machine. You can download it as part of the Windows SDK.</value>
+  </data>
 </root>

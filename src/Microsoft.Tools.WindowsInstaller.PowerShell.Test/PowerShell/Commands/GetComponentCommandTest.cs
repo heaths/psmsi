@@ -25,7 +25,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 using (OverrideRegistry())
                 {
                     var objs = p.Invoke();
-                    Assert.AreEqual<int>(35, objs.Count);
+                    Assert.AreEqual<int>(36, objs.Count);
                 }
             }
         }

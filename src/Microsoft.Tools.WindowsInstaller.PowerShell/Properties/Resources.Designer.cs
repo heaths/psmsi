@@ -205,6 +205,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Orca is not installed on this machine. You can download it as part of the Windows SDK..
+        /// </summary>
+        internal static string Error_OrcaAbsent {
+            get {
+                return ResourceManager.GetString("Error_OrcaAbsent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The table &quot;{0}&quot; was not found in the database &quot;{1}&quot;..
         /// </summary>
         internal static string Error_TableNotFound {

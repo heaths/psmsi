@@ -82,6 +82,7 @@
     <Compile Include="LogTests.cs" />
     <Compile Include="MockRegistry.cs" />
     <Compile Include="PatchSequencerTests.cs" />
+    <Compile Include="PowerShell\Commands\EditPackageCommandTests.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommandTests.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetFeatureCommandTest.cs" />
@@ -122,6 +123,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\NoEditVerb.xml" />
+    <Content Include="Data\NoOrca.xml" />
     <Content Include="Data\Inapplicable.xml" />
     <Content Include="Data\Example.txt" />
   </ItemGroup>
@@ -143,9 +146,10 @@
     <Content Include="Data\qps-ploc\MSI.psd1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Data\darice.cub" />
-    <None Include="Data\test.cub" />
-    <None Include="Data\Test.psm1" />
+    <Content Include="Data\darice.cub" />
+    <Content Include="Data\return.exe" />
+    <Content Include="Data\test.cub" />
+    <Content Include="Data\Test.psm1" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

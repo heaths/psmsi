@@ -89,6 +89,7 @@
     <Compile Include="PatchApplicator.cs" />
     <Compile Include="PatchSequence.cs" />
     <Compile Include="PatchSequencer.cs" />
+    <Compile Include="PowerShell\Commands\EditPackageCommand.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommand.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFeatureCommand.cs" />

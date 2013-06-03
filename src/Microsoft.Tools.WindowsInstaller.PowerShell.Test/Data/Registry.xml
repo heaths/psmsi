@@ -1,5 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <registry xmlns="http://schemas.microsoft.com/psmsi/2008/03/registry.xsd">
+    <hive name="HKEY_CLASSES_ROOT">
+        <key name=".exe">
+            <key name="Shell">
+                <key name="Open">
+                    <key name="Command">
+                        <value type="String">"%1" %*</value>
+                    </key>
+                </key>
+            </key>
+        </key>
+        <key name=".msi">
+            <value type="String">Msi.Package</value>
+        </key>
+        <key name=".msp">
+            <value type="String">Msi.Package</value>
+        </key>
+        <key name="Msi.Package">
+            <key name="Shell">
+                <key name="Edit">
+                    <key name="Command">
+                        <value type="String">"$(TestDeploymentDirectory)\return.exe" "%1"</value>
+                    </key>
+                </key>
+            </key>
+        </key>
+    </hive>
     <hive name="HKEY_LOCAL_MACHINE">
         <key name="Software">
             <key name="Classes">
@@ -206,9 +232,14 @@
                                         <key name="FCA83C9FA40CC774DB6C93FCF529E671">
                                             <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\npctrl.dll</value>
                                         </key>
-                                        <!-- {FFEE4573-F7C4-4775-8E37-1820A0893765} -->
                                         <key name="3754EEFF4C7F5774E87381020A987356">
                                             <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\baz\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
+                                        </key>
+                                        <key name="E5AC568D64B9543B3B6A345CAE2F900E">
+                                            <value name="00000000000000000000000000000000" type="String">$(TestDeploymentDirectory)\darice.cub</value>
+                                        </key>
+                                        <key name="3393A8597EC898160FFEAC4E76AFFB4F">
+                                            <value name="00000000000000000000000000000000" type="String">$(TestDeploymentDirectory)\return.exe</value>
                                         </key>
                                     </key>
                                     <key name="Patches">
@@ -274,18 +305,13 @@
                                         <key name="9768EC966DC2117418337D872D4A9776">
                                             <value name="285FE778FA8748D488B861F7CDB3CC11" type="String">01:\Software\Microsoft\TEST\Version</value>
                                         </key>
-                                        <!-- {9D8E88E9-8E05-4FC7-AFC7-87759D1D417E} -->
                                         <key name="9E88E8D950E87CF4FA7C7857D9D114E7">
                                             <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">c:\test\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
                                             <value name="225736CE5A378244B864566A1225C97C" type="String">c:\test\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
                                         </key>
-                                        <!-- {FFEE4573-F7C4-4775-8E37-1820A0893765} -->
                                         <key name="3754EEFF4C7F5774E87381020A987356">
                                             <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">c:\foo\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
                                             <value name="225736CE5A378244B864566A1225C97C" type="String">c:\bar\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
-                                        </key>
-                                        <key name="E5AC568D64B9543B3B6A345CAE2F900E">
-                                            <value name="00000000000000000000000000000000" type="String">$(TestDeploymentDirectory)\darice.cub</value>
                                         </key>
                                     </key>
                                     <key name="Patches">
@@ -346,6 +372,14 @@
                                             <key name="Usage"/>
                                         </key>
                                     </key>
+                                </key>
+                            </key>
+                        </key>
+                        <key name="Internet Settings">
+                            <key name="Zones">
+                                <key name="0">
+                                    <value name="1806" type="DWord">0</value>
+                                    <value name="CurrentLevel" type="DWord">0</value>
                                 </key>
                             </key>
                         </key>
