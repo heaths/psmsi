@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <Cultures>en-us</Cultures>
     <DefineSolutionProperties>false</DefineSolutionProperties>
-    <OutputName>Module</OutputName>
+    <OutputName>psmsi</OutputName>
     <OutputType>package</OutputType>
     <ProjectGuid>{d2630778-0547-48d1-a8ca-e93d0d7a8b02}</ProjectGuid>
     <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>

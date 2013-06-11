@@ -12,6 +12,8 @@
         <ComponentGroup Id="DTF">
             <ComponentRef Id="DTF" />
             <ComponentRef Id="DTF.Package" />
+            <ComponentRef Id="DTF.Compression" />
+            <ComponentRef Id="DTF.Compression.Cab" />
         </ComponentGroup>
     </Fragment>
     <Fragment>
