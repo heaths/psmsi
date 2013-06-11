@@ -2002,6 +2002,97 @@
             <maml:name>SwitchParameter</maml:name>
           </dev:type>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Log</maml:name>
+          <maml:description>
+            <maml:para>The path to the log file. This use the file name as the base name and will append timestamp and product-specific information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>PassThru</maml:name>
+          <maml:description>
+            <maml:para>Whether to pass the newly installed patch information after installation to the pipeline.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue)" position="named">
+          <maml:name>Patch</maml:name>
+          <maml:description>
+            <maml:para>Information about a patch or patches to install to other products.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">Microsoft.Deployment.WindowsInstaller.PatchInstallation[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Microsoft.Deployment.WindowsInstaller.PatchInstallation[]</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>ProductCode</maml:name>
+          <maml:description>
+            <maml:para>The ProductCode or ProductCodes to which the patch or patches should be applied.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">string[]</command:parameterValue>
+          <dev:type>
+            <maml:name>string[]</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (FromRemainingArguments)" position="named">
+          <maml:name>Properties</maml:name>
+          <maml:description>
+            <maml:para>Additional property=value pairs to pass during install.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">string[]</command:parameterValue>
+          <dev:type>
+            <maml:name>string[]</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter aliases="Context InstallContext" required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>UserContext</maml:name>
+          <maml:description>
+            <maml:para>The user context for the product listed in the ProductCode parameter.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Microsoft.Deployment.WindowsInstaller.UserContexts</command:parameterValue>
+          <dev:type>
+            <maml:name>Microsoft.Deployment.WindowsInstaller.UserContexts</maml:name>
+          </dev:type>
+          <dev:defaultValue>Machine</dev:defaultValue>
+        </command:parameter>
+        <command:parameter aliases="User" required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>UserSid</maml:name>
+          <maml:description>
+            <maml:para>The user security identifier for product listed in the ProductCode parameter.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+          </dev:type>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Install-MSIPatch</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Chain</maml:name>
+          <maml:description>
+            <maml:para>Whether to install all packages together.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Whether to suppress all prompts.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+          </dev:type>
+        </command:parameter>
         <command:parameter aliases="PSPath" required="true" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
           <maml:name>LiteralPath</maml:name>
           <maml:description>
@@ -2120,6 +2211,16 @@
         </maml:description>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+        </dev:type>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue)" position="named">
+        <maml:name>Patch</maml:name>
+        <maml:description>
+          <maml:para>Information about a patch or patches to install to other products.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">Microsoft.Deployment.WindowsInstaller.PatchInstallation[]</command:parameterValue>
+        <dev:type>
+          <maml:name>Microsoft.Deployment.WindowsInstaller.PatchInstallation[]</maml:name>
         </dev:type>
       </command:parameter>
       <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="true (ByValue, ByPropertyName)" position="0">
@@ -3504,6 +3605,88 @@
             <maml:name>SwitchParameter</maml:name>
           </dev:type>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Log</maml:name>
+          <maml:description>
+            <maml:para>The path to the log file. This use the file name as the base name and will append timestamp and product-specific information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue)" position="named">
+          <maml:name>Patch</maml:name>
+          <maml:description>
+            <maml:para>Information about a patch or patches to uninstall.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">Microsoft.Deployment.WindowsInstaller.PatchInstallation[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Microsoft.Deployment.WindowsInstaller.PatchInstallation[]</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>ProductCode</maml:name>
+          <maml:description>
+            <maml:para>The ProductCode or ProductCodes from which patches are removed.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">string[]</command:parameterValue>
+          <dev:type>
+            <maml:name>string[]</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (FromRemainingArguments)" position="named">
+          <maml:name>Properties</maml:name>
+          <maml:description>
+            <maml:para>Additional property=value pairs to pass during uninstall.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">string[]</command:parameterValue>
+          <dev:type>
+            <maml:name>string[]</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter aliases="Context InstallContext" required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>UserContext</maml:name>
+          <maml:description>
+            <maml:para>The user context for the product listed in the ProductCode parameter.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Microsoft.Deployment.WindowsInstaller.UserContexts</command:parameterValue>
+          <dev:type>
+            <maml:name>Microsoft.Deployment.WindowsInstaller.UserContexts</maml:name>
+          </dev:type>
+          <dev:defaultValue>Machine</dev:defaultValue>
+        </command:parameter>
+        <command:parameter aliases="User" required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>UserSid</maml:name>
+          <maml:description>
+            <maml:para>The user security identifier for product listed in the ProductCode parameter.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+          </dev:type>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Uninstall-MSIPatch</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Chain</maml:name>
+          <maml:description>
+            <maml:para>Whether to install all packages together.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Whether to suppress all prompts.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+          </dev:type>
+        </command:parameter>
         <command:parameter aliases="PSPath" required="true" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
           <maml:name>LiteralPath</maml:name>
           <maml:description>
@@ -3604,6 +3787,16 @@
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+        </dev:type>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue)" position="named">
+        <maml:name>Patch</maml:name>
+        <maml:description>
+          <maml:para>Information about a patch or patches to uninstall.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">Microsoft.Deployment.WindowsInstaller.PatchInstallation[]</command:parameterValue>
+        <dev:type>
+          <maml:name>Microsoft.Deployment.WindowsInstaller.PatchInstallation[]</maml:name>
         </dev:type>
       </command:parameter>
       <command:parameter required="true" variableLength="true" globbing="true" pipelineInput="true (ByValue, ByPropertyName)" position="0">

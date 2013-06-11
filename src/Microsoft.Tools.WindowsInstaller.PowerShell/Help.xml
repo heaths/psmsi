@@ -507,6 +507,9 @@
     <parameter name="PassThru">
       Whether to pass the newly installed patch information after installation to the pipeline.
     </parameter>
+    <parameter name="Patch">
+      Information about a patch or patches to install to other products.
+    </parameter>
     <parameter name="Path" globbing="true">
       The path to a patch package to install. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
     </parameter>
@@ -751,6 +754,9 @@
     </parameter>
     <parameter name="Log">
       The path to the log file. This use the file name as the base name and will append timestamp and product-specific information.
+    </parameter>
+    <parameter name="Patch">
+      Information about a patch or patches to uninstall.
     </parameter>
     <parameter name="Path" globbing="true">
       The path to a patch package to uninstall. Wildcards are permitted. You can specify * in any part of the path to select all matching files.

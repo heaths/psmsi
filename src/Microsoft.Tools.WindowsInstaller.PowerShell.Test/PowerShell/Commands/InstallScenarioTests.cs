@@ -121,5 +121,32 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
             }
         }
+
+        [TestMethod]
+        [TestCategory("Impactful")]
+        [WorkItem(14460)]
+        public void UninstallPatchFromPipeline()
+        {
+            using (var p = CreatePipeline(@"install-msiproduct example.msi -destination ""$TestRunDirectory"" -passthru | install-msipatch example.msp"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
+                Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
+            }
+
+            using (var p = CreatePipeline(@"get-msipatchinfo '{FF63D787-26E2-49CA-8FAA-28B5106ABD3A}' | uninstall-msipatch"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
+                Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
+            }
+
+            using (var p = CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | uninstall-msiproduct"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null == output || 0 == output.Count, "Output was not expected.");
+                Assert.IsTrue(null == p.Error || 0 == p.Error.Count, "Errors were not expected.");
+            }
+        }
     }
 }

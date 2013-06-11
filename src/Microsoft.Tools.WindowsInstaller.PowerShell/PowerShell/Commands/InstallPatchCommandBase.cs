@@ -28,6 +28,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
+        /// Gets or sets the <see cref="ProductInstallation"/> to install.
+        /// </summary>
+        [Parameter(ParameterSetName = ParameterSet.Installation, Mandatory = true, ValueFromPipeline = true)]
+        public PatchInstallation[] Patch { get; set; }
+
+        /// <summary>
         /// Gets or sets the ProductCode to which patches apply.
         /// </summary>
         [Parameter(ValueFromPipelineByPropertyName = true)]
@@ -86,16 +92,31 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     }
                 };
 
-            // Enumerate through the patch files and add them to the sequencer.
-            var files = this.InvokeProvider.Item.Get(this.Path, true, ParameterSet.LiteralPath == this.ParameterSetName);
-            foreach (var file in files)
+            if (this.ParameterSetName == ParameterSet.Installation)
             {
-                string path = file.GetPropertyValue<string>("PSPath");
-                path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
-
-                if (!string.IsNullOrEmpty(path))
+                // Add the patch information to the sequencer.
+                foreach (var patch in this.Patch)
                 {
-                    sequencer.Add(path, true);
+                    string path = patch.LocalPackage;
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        sequencer.Add(path, true);
+                    }
+                }
+            }
+            else
+            {
+                // Enumerate through the patch files and add them to the sequencer.
+                var files = this.InvokeProvider.Item.Get(this.Path, true, ParameterSet.LiteralPath == this.ParameterSetName);
+                foreach (var file in files)
+                {
+                    string path = file.GetPropertyValue<string>("PSPath");
+                    path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
+
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        sequencer.Add(path, true);
+                    }
                 }
             }
 
@@ -114,31 +135,29 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             foreach (var productCode in targetProductCodes)
             {
                 var patches = sequencer.GetApplicablePatches(productCode, this.UserSid, this.UserContext).Select(patch => patch.Patch);
-                if (null == patches)
+                if (null != patches)
                 {
-                    continue;
-                }
-
-                // Queue an action for each product with all applicable patches.
-                var applicable = patches.ToList();
-                if (null != applicable && 0 <applicable.Count)
-                {
-                    var data = new T()
+                    // Queue an action for each product with all applicable patches.
+                    var applicable = patches.ToList();
+                    if (null != applicable && 0 < applicable.Count)
                     {
-                        ProductCode = productCode,
-                        UserSid = this.UserSid,
-                        UserContext = this.UserContext,
-                    };
+                        var data = new T()
+                        {
+                            ProductCode = productCode,
+                            UserSid = this.UserSid,
+                            UserContext = this.UserContext,
+                        };
 
-                    foreach (string path in applicable)
-                    {
-                        data.Patches.Add(path);
+                        foreach (string path in applicable)
+                        {
+                            data.Patches.Add(path);
+                        }
+
+                        data.ParseCommandLine(this.Properties);
+                        this.UpdateAction(data);
+
+                        this.Actions.Enqueue(data);
                     }
-
-                    data.ParseCommandLine(this.Properties);
-                    this.UpdateAction(data);
-
-                    this.Actions.Enqueue(data);
                 }
             }
         }
