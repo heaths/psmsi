@@ -17,6 +17,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIPatchInfo cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIPatchInfo", DefaultParameterSetName = ParameterSet.Patch)]
+    [OutputType(typeof(PatchInstallation))]
     public sealed class GetPatchCommand : PSCmdlet
     {
         private static readonly string[] Empty = new string[] { null };

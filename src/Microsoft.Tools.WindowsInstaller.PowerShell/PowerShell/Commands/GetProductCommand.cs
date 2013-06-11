@@ -17,6 +17,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIProductInfo cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIProductInfo", DefaultParameterSetName = ParameterSet.Product)]
+    [OutputType(typeof(ProductInstallation))]
     public sealed class GetProductCommand : PSCmdlet
     {
         private List<Parameters> allParameters = new List<Parameters>();

@@ -1,0 +1,829 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<help xmlns="http://pshelp.codeplex.com/help">
+  <command>
+    <verb>Edit</verb>
+    <noun>MSIPackage</noun>
+    <synopsis>
+      Opens an install package or patch in Orca or another registered editor.
+    </synopsis>
+    <description>
+      Orca can be installed from the Windows SDK. If installed, MSI and MSP packages can be opened in Orca.
+      If Orca is not installed, any application registered with the "Edit" verb for .msi or .msp file extensions is used.
+    </description>
+    <parameter name="LiteralPath">
+      The path to a package to open. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a package to open. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="Wait">
+      Wait until the process is closed before opening another package.
+    </parameter>
+    <example>
+      <code>get-childitem -filter *.msi -recurse | edit-msipackage</code>
+      <description>Opens all install packages in the curent directory or subdirectories in separate instances of Orca.</description>
+    </example>
+  </command>
+  <command>
+    <verb>Export</verb>
+    <noun>MSIPatchXml</noun>
+    <synopsis>
+      Exports an XML representation of applicability information from a patch package.
+    </synopsis>
+    <description>
+      <p>
+        Windows Installer defines an XML schema that is representational of a patch package - specfically its aplicability information.
+        This allows administrators and bundle developers to not require downloading the patch package just to find out if its applicable
+        or even already installed.
+      </p>
+      <p>
+        This XML file can be passed to Get-MSIPatchSequence along with other XML files or patch packages.
+      </p>
+    </description>
+    <parameter name="Encoding" default="UTF8">
+      The encoding to use for the output XML file.
+    </parameter>
+    <parameter name="FilePath">
+      The path to the output XML file.
+    </parameter>
+    <parameter name="Formatted">
+      Whether to indent the XML file.
+    </parameter>
+    <parameter name="Path">
+      The path to the patch package from which XML is exported.
+    </parameter>
+    <example>
+      <code>export-msipatchxml .\example.msp .\example.xml -formatted</code>
+      <description>Exports formatted XML from the example.msp patch package in the current directory.</description>
+    </example>
+    <link>Get-MSIPatchSequence</link>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSIComponentInfo</noun>
+    <synopsis>
+      Gets information about components registered to the current user and the machine.
+    </synopsis>
+    <description>
+      <p>
+        Gets information about all the components registered to the current user and to the machine.
+        You can also limit the components to only those installed by a particular product.
+      </p>
+      <p>
+        The information includes the state of the component and the path all based on the product that installed it,
+        since multiple products can install the same component even to different locations.
+      </p>
+    </description>
+    <parameter name="ComponentCode">
+      The component GUIDs to retrieve information.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode of the product that installed the components to retrieve information.
+    </parameter>
+    <output type="Microsoft.Deployment.WindowsInstaller.ComponentInstallation">
+      Information about the components installed or registered by one or multiple products.
+    </output>
+    <example>
+      <code>get-msicomponentinfo</code>
+      <description>This command gets all components installed or registered to the current user or to the machine.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo "{90120000-00BA-0409-0000-0000000FF1CE}" | get-msicomponentinfo -componentcode "{90120000-00BA-0409-0000-0E32E9F6E558}"</code>
+      <description>This command gets information for the component "{90120000-00BA-0409-0000-0E32E9F6E558}" installed by the product "{90120000-00BA-0409-0000-0000000FF1CE}".</description>
+    </example>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSIFeatureInfo</noun>
+    <synopsis>
+      Gets information about features of an installed or advertised product.
+    </synopsis>
+    <description>
+      A product must install or advertise one or more features.
+      This cmdlet can query feature of a product or products to determine thei state and optional usage data.
+    </description>
+    <parameter name="FeatureName">
+      The names of the features for which information is retrieved.
+    </parameter>
+    <parameter name="Product">
+      The ProductInstallation object that installed or advertised specified features.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode that installed or advertised specified features.
+    </parameter>
+    <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      The product or products for which features are enumerated.
+    </input>
+    <output type="Microsoft.Deployment.WindowsInstaller.FeatureInstallation">
+      Information about the features installed or advertised by one or multiple products.
+    </output>
+    <example>
+      <code>get-msiproductinfo "{90120000-00BA-0409-0000-0000000FF1CE}" | get-msifeatureinfo | format-table -view Usage</code>
+      <description>Gets the usage information for all the features installed by the product "{90120000-00BA-0409-0000-0000000FF1CE}".</description>
+    </example>
+    <example>
+      <code>get-msifeatureinfo "{90120000-00BA-0409-0000-0000000FF1CE}" "GrooveFilesIntl_1033"</code>
+      <description>Gets state information for the feature "GrooveFilesIntl_1033" installed by product "{90120000-00BA-0409-0000-0000000FF1CE}".</description>
+    </example>
+    <link>Get-MSIProductInfo</link>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSIFileHash</noun>
+    <synopsis>
+      Gets a hash of a file in a Windows Installer-compatible format.
+    </synopsis>
+    <description>
+      <p>
+        Get-MSIFileHash returns a 128-bit file hash in 4 separate parts, compatible with columns in the MsiFileHash table in Windows Installer packages.
+        All non-versioned files should contain this hash.
+      </p>
+      <p>
+        You can optionally add these HashPart1, HashPart2, HashPart3, and HashPart4 properties to FileSystem items.
+      </p>
+    </description>
+    <parameter name="LiteralPath">
+      The path to the item or items which must resolve to a file system path.
+      The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="PassThru">
+      Passes the item or items passed into this cmdlet through the pipeline with additional properties for the file hash.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to the item or items which must resolve to a file system path.
+      You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <output type="Microsoft.Tools.WindowsInstaller.FileHash">
+      If -passthru is not specified, Get-MSIFileHash returns a FileHash object containing the file hash in 4 parts.
+    </output>
+    <output type="System.IO.DirectoryInfo">
+      If -passthru is specified and the input object is a directory, the directory is returned.
+    </output>
+    <output type="System.IO.FileInfo">
+      If -passthru is specified and the input object is a file, the file is returned.
+    </output>
+    <example>
+      <code>get-msifilehash -path * | format-table -auto</code>
+      <description>This command outputs the file hash of every file in the current directory as a table.</description>
+    </example>
+    <example>
+      <code>get-childitem | where-object {$_.PSIsContainer -eq $False} | get-msifilehash -passthru | format-table Name, MSI* -auto</code>
+      <description>This command outputs the name and hash parts of each file in the current directory.</description>
+    </example>
+    <link>Get-MSIFileType</link>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSIFileType</noun>
+    <synopsis>
+      Gets the Windows Installer file type.
+    </synopsis>
+    <description>
+      <p>
+        Gets the Windows Installer file type for a given file or files.
+      </p>
+      <p>
+        You can optionally add this MSIFileType property to FileSystem items.
+      </p>
+    </description>
+    <parameter name="LiteralPath">
+      The path to the item or items which must resolve to a file system path.
+      The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="PassThru">
+      Passes the item or items passed into this cmdlet through the pipeline with the additional property for the file type.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to the item or items which must resolve to a file system path.
+      You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <output type="string">
+      If -passthru is not specified, Get-MSIFileType returns an string object.
+    </output>
+    <output type="System.IO.DirectoryInfo">
+      If -passthru is specified and the input object is a directory, the directory is returned.
+    </output>
+    <output type="System.IO.FileInfo">
+      If -passthru is specified and the input object is a file, the file is returned.
+    </output>
+    <example>
+      <code>get-msifilehash -path $env:WINDIR\Installer</code>
+      <description>This command outputs the file type of files in the Windows Installer cache directory.</description>
+    </example>
+    <example>
+      <code>get-childitem -path $env:WINDIR\Installer\* | where-object {$_.PSIsContainer -eq $False} | get-msifiletype -passthru | format-table Name, MSIFileType -auto</code>
+      <description>This command outputs the Windows Installer file type for files in the Windows Installer cache directory.</description>
+    </example>
+    <link>Get-MSIFileHash</link>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSIPatchInfo</noun>
+    <synopsis>
+      Gets patch information for registered patches.
+    </synopsis>
+    <description>
+      Gets patch information for a given patch or for all patches registered to a given product or products.
+      You can get patch information for machine-registered patches, and patch information for both user-managed- and user-unmanaged-registered patches for the current or another user.
+    </description>
+    <parameter name="Everyone">
+      Whether to retrieve user-managed or user-unmanaged patches for everyone.
+    </parameter>
+    <parameter name="Filter" globbing="true">
+      The state or states of patches to be retrieved. This can be a combination of &quot;Applied&quot;, &quot;Superseded&quot;, &quot;Obsoleted&quot;, &quot;Registered&quot;, or &quot;All&quot;.
+    </parameter>
+    <parameter name="PatchCode">
+      The patch code or patch codes to retrieve patch information.
+    </parameter>
+    <parameter name="ProductCode">
+      Specifies the ProductCode or ProductCodes to get patch information.
+    </parameter>
+    <parameter name="UserContext" default="All">
+      The context for registered patches. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.
+    </parameter>
+    <parameter name="UserSid">
+      The security identifier for a user for user-managed and user-unmanaged patches.
+    </parameter>
+    <output type="Microsoft.Deployment.WindowsInstaller.PatchInstallation">
+      Information about patches applied or registered to a product or products.
+    </output>
+    <example>
+      <code>get-msipatchinfo</code>
+      <description>This command outputs a table of patch information for all applied patches on the machine.</description>
+    </example>
+    <example>
+      <code>get-msipatchinfo -filter superseded | get-childitem</code>
+      <description>This command gets file information for superseded patches on the machine.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo | where-object {$_.Name -match &quot;Office&quot;} | get-msipatchinfo -filter all</code>
+      <description>This command gets patch information for all patches applied to products with &quot;Office&quot; in the name.</description>
+    </example>
+    <link>Get-MSIProductInfo</link>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSIPatchSequence</noun>
+    <synopsis>
+      Given a list of patches or patch XML, outputs the sequence of applicable patches for a product or products.
+    </synopsis>
+    <description>
+      <p>
+        Patch packages or patch XML files can be specified along with a list of products. Each patch is added to a list and after all patches
+        specified are processed, the sequence for all applicable patches is output for each product specified.
+      </p>
+      <p>
+        By default, the table format is used with a grouping for each product specified.
+      </p>
+    </description>
+    <parameter name="LiteralPath">
+      The path to a package to open. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="PackagePath">
+      The path to a product package or packages for which the patch sequence is returned.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a package to open. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode or ProductCodes for products for which the patch sequence is returned.
+    </parameter>
+    <parameter name="UserContext">
+      The user context for the product listed in the ProductCode parameter.
+    </parameter>
+    <parameter name="UserSid">
+      The user security identifier for product listed in the ProductCode parameter.
+    </parameter>
+    <output type="Microsoft.Tools.WindowsInstaller.PatchSequence">
+      The sequence information for each applicable patch to a product or product package.
+    </output>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSIProductInfo</noun>
+    <synopsis>
+      Gets product information for registered products.
+    </synopsis>
+    <description>
+      Gets product information for all per-machine, user-managed, and user-unmanaged products on the machine.
+    </description>
+    <parameter name="Everyone">
+      Whether to retrieve user-managed or user-unmanaged products for everyone.
+    </parameter>
+    <parameter name="Name" globbing="true">
+      The name of a product or products to retrieve. Wildcards are supported.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode or ProductCodes to retrieve product information.
+    </parameter>
+    <parameter name="UserContext" default="All">
+      The context for registered products. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.
+    </parameter>
+    <parameter name="UserSid">
+      The security identifier for a user for user-managed and user-unmanaged products.
+    </parameter>
+    <output type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      Information about the installed or advertised product. To see just the advertised properties use the PSAdvertised property set; or, to see just the installed properties use the PSInstalled property set.
+    </output>
+    <example>
+      <code>get-msiproductinfo</code>
+      <description>This command outputs product information for all registered products assigned to this machine.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo | where-object {$_.Name -match &quot;Visual Studio&quot;}</code>
+      <description>This command outputs all product information for products with &quot;Visual Studio&quot; in the name assigned to this machine.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo -installcontext userunmanaged | where-object {$_.ProductState -eq &quot;Installed&quot;} | get-childitem</code>
+      <description>This command gets file information for all installed user-unmanaged products.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo &quot;{1862162E-3BBC-448F-AA63-49F33152D54A}&quot;</code>
+      <description>This command gets product information for the given ProductCode.</description>
+    </example>
+    <link>Get-MSIPatchInfo</link>
+    <link>Get-MSIRelatedProductInfo</link>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSIRelatedProductInfo</noun>
+    <synopsis>
+      Gets product information for related products.
+    </synopsis>
+    <description>
+      Gets product information for related products based on an UpgradeCode.
+    </description>
+    <parameter name="UpgradeCode">
+      The UpgradeCode for related products.
+    </parameter>
+    <output type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      Information about the installed or advertised product. To see just the installed properties use the PSInstalled property set.
+    </output>
+    <example>
+      <code>get-msirelatedproductinfo &quot;{B4160C68-1EA5-458F-B1EA-E69B41E44007}&quot;</code>
+      <description>This command gets all related products based on their UpgradeCode.</description>
+    </example>
+    <link>Get-MSIProductInfo</link>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSISharedComponentInfo</noun>
+    <synopsis>
+      Gets information about shared components installed or registered for the current user or the machine.
+    </synopsis>
+    <description>
+      <p>
+        Shared components are component which are installed to the same directory by one or more products.
+        This cmdlet gets information about all or specified shared components installed for the current user or the machine.
+      </p>
+      <p>
+        The output is already sorted by ComponentCode then ProductCode.
+      </p>
+    </description>
+    <parameter name="ComponentCode">
+      The component GUIDs to retrieve information.
+    </parameter>
+    <parameter name="Count" default="2">
+      The minimum number count for shared components returned. The absolute minimum is 2.
+    </parameter>
+    <output type="Microsoft.Deployment.WindowsInstaller.ComponentInstallation">
+      Information about the shared components installed or registeredy by one or more products.
+    </output>
+    <example>
+      <code>get-msisharedcomponentinfo -count 4 | format-table -view Clients</code>
+      <description>Gets shared components installed by at least 4 products (or features) and displays them in a table grouped by ComponentCode.</description>
+    </example>
+    <link>Get-MSIComponentInfo</link>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSISummaryInfo</noun>
+    <synopsis>
+      Gets the summary information from a product or patch package, or from a transform.
+    </synopsis>
+    <description>
+      The summary information stream is used by Windows Installer to determine applicability, version requirements, and more.
+      Use this command to view the summary information for a product or patch package, or a transform.
+      The properties returned are adapted for each file type.
+    </description>
+    <parameter name="IncludeTransforms">
+      Whether to enumerate the transforms within a patch package.
+    </parameter>
+    <parameter name="LiteralPath">
+      The path to a package or transform to open. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a package or transform to open. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <output type="Microsoft.Deployment.WindowsInstaller.Package.TransformInfo">
+      Summary information for a transform within a patch package.
+    </output>
+    <output type="Microsoft.Tools.WindowsInstaller.SummaryInfo">
+      Summary information for a product or patch package, or a transform.
+    </output>
+    <example>
+      <code>get-childitem -filter *.ms* | get-msisummaryinfo</code>
+      <description>Gets summary information for any file matching *.ms*, including .msi, .msp, and .mst packages.</description>
+    </example>
+    <example>
+      <code>get-msisummaryinfo *.msp -includetransforms</code>
+      <description>Gets the patch and embedded transform summary information.</description>
+    </example>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSITable</noun>
+    <synopsis>
+      Selects records from a table or custom query from a product or patch package.
+    </synopsis>
+    <description>
+      <p>
+        You can query all records from a table or records matching a custom query from a product or patch package.
+        The Windows Installer SDK has more information about custom queries, since the SQL-like syntax is rather constrained.
+      </p>
+      <p>
+        Records are returned with properties matching column names. If records are selected from a single table, the table name is
+        also part of the type name queryable from the PSTypeNames object property.
+      </p>
+      <p>
+        Note that patch packages do not typically have more than a couple of tables.
+        The patch has to be applied to a product package to view any changes it has made.
+      </p>
+    </description>
+    <parameter name="LiteralPath">
+      The path to a product package to open. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a product package to open. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="Query">
+      A custom query for which records are selected.
+    </parameter>
+    <parameter name="Table">
+      The table from which all records are selected.
+    </parameter>
+    <output type="Microsoft.Tools.WindowsInstaller.Record">
+      Selected records for a table or custom query where properties match column names.
+    </output>
+    <example>
+      <code>get-msitable .\example.msi -table Property</code>
+      <description>Gets all records from the Property table.</description>
+    </example>
+    <example>
+      <code>$productCode = get-msitable .\example.msi -table Property | where-object { $_.Property -eq "ProductCode" } | select-object -expand Value</code>
+      <description>Selects just the ProductCode property from the example.msi package and assigns the value to a variable.</description>
+    </example>
+    <example>
+      <code>get-childitem -filter *.msi | get-table -query "SELECT ComponentId, FileName, FileSize FROM Component, File WHERE Component_ = Component"</code>
+      <description>Selects the component GUID, file name, and file size for all files in all packages in the current directory.</description>
+    </example>
+  </command>
+  <command>
+    <verb>Install</verb>
+    <noun>MSIPatch</noun>
+    <synopsis>
+      Installs a patch package or packages for all or only specified products.
+    </synopsis>
+    <description>
+      <p>
+        You can install one or more patch packages to all installed targets products or to just a subset of products.
+      </p>
+      <p>
+        Progress, warnings, and errors during the install are sent through the pipeline making this command fully integrated.
+      </p>
+    </description>
+    <parameter name="Chain">
+      Whether to install all packages together.
+    </parameter>
+    <parameter name="Force">
+      Whether to suppress all prompts.
+    </parameter>
+    <parameter name="LiteralPath">
+      The path to a patch package to install. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="Log">
+      The path to the log file. This use the file name as the base name and will append timestamp and product-specific information.
+    </parameter>
+    <parameter name="PassThru">
+      Whether to pass the newly installed patch information after installation to the pipeline.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a patch package to install. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode or ProductCodes to which the patch or patches should be applied.
+    </parameter>
+    <parameter name="Properties">
+      Additional property=value pairs to pass during install.
+    </parameter>
+    <parameter name="UserContext" default="Machine">
+      The user context for the product listed in the ProductCode parameter.
+    </parameter>
+    <parameter name="UserSid">
+      The user security identifier for product listed in the ProductCode parameter.
+    </parameter>
+    <output type="Microsoft.Deployment.WindowsInstaller.PatchInstallation">
+      Information for the newly installed patch or patches.
+    </output>
+    <example>
+      <code>install-msipatch .\example.msp MSIFASTINSTALL=2</code>
+      <description>Install the example.msp patch package for all installed target products with MSIFASTINSTALL set to only do file costing before installation.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo -name TEST | install-msipatch .\example.msp -log $env:TEMP\patch.log -passthru</code>
+      <description>
+        <p>
+          Install the example.msp patch package only for the product with ProductName "TEST" and log to the TEMP directory.
+        </p>
+        <p>
+          Return information about the patch after logging.
+        </p>
+      </description>
+    </example>
+    <link>Uninstall-MSIPatch</link>
+  </command>
+  <command>
+    <verb>Install</verb>
+    <noun>MSIProduct</noun>
+    <synopsis>
+      Installs or modifies a product package.
+    </synopsis>
+    <description>
+      <p>
+        Installs a product package or adds features to existing products.
+      </p>
+      <p>
+        Ultimately, this cmdlet can install, modify, repair, and even uninstall a product package or install patches but specialized cmdlets have been added for those tasks.
+      </p>
+      <p>
+        Progress, warnings, and errors during the install are sent through the pipeline making this command fully integrated.
+      </p>
+    </description>
+    <parameter name="Chain">
+      Whether to install all packages together.
+    </parameter>
+    <parameter name="Destination">
+      <p>
+        The target directory where the product should be installed.
+      </p>
+      <p>
+        Note that the product package must be authored to support installing to TARGETDIR.
+      </p>
+    </parameter>
+    <parameter name="Force">
+      Whether to suppress all prompts.
+    </parameter>
+    <parameter name="LiteralPath">
+      The path to a product package to install. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="Log">
+      The path to the log file. This use the file name as the base name and will append timestamp and product-specific information.
+    </parameter>
+    <parameter name="PassThru">
+      Whether to pass the newly installed product information after installation to the pipeline.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a product package to install. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="Product">
+      An existing product to modify.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode of an existing product to modify.
+    </parameter>
+    <parameter name="Properties">
+      Additional property=value pairs to pass during install.
+    </parameter>
+    <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      An existing product to modify.
+    </input>
+    <output type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      Information for the newly installed or modified product.
+    </output>
+    <example>
+      <code>install-msiproduct .\example.msi NOBLOCK=1</code>
+      <description>Installs the example.msi product package passing the ficticious NOBLOCK=1 property.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo -name TEST | install-msiproduct ADDLOCAL=Addin -log $env:TEMP\install.log</code>
+      <description>Modifies the existing product with ProductName TEST to add the "Addin" feature locally and log to the TEMP directory.</description>
+    </example>
+    <link>Install-MSIPatch</link>
+    <link>Repair-MSIProduct</link>
+    <link>Uninstall-MSIPatch</link>
+    <link>Uninstall-MSIProduct</link>
+  </command>
+  <command>
+    <verb>Repair</verb>
+    <noun>MSIProduct</noun>
+    <synopsis>
+      Repairs or modifies a product package.
+    </synopsis>
+    <description>
+      <p>
+        By default, simply repairs an existing product. This cmdlet can also add or remove features, patches, or even uninstall but there are specialized cmdlets for that.
+      </p>
+      <p>
+        Progress, warnings, and errors during the install are sent through the pipeline making this command fully integrated.
+      </p>
+    </description>
+    <parameter name="Chain">
+      Whether to repair all packages together.
+    </parameter>
+    <parameter name="Force">
+      Whether to suppress all prompts.
+    </parameter>
+    <parameter name="LiteralPath">
+      The path to a product package to repair. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="Log">
+      The path to the log file. This use the file name as the base name and will append timestamp and product-specific information.
+    </parameter>
+    <parameter name="PassThru">
+      Whether to pass the newly installed patch information after installation to the pipeline.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a product package to repair. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="Product">
+      An existing product to repair or modify.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode of an existing product to repair or modify.
+    </parameter>
+    <parameter name="Properties">
+      Additional property=value pairs to pass during repair.
+    </parameter>
+    <parameter name="ReinstallMode" default="FileOlderVersion,MachineData,UserData,Shortcut">
+      The REINSTALLMODE to use. You can specify the value as a string in the format used by Windows Installer. The default is equivalent to "omus".
+    </parameter>
+    <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      The product to repair or modify.
+    </input>
+    <output type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      Information for the newly repaired product.
+    </output>
+    <example>
+      <code>repair-msiproduct -productcode {12341234-1234-1234-1234-123412341234} -reinstall "pecmsu" -log $env:TEMP\repair.log</code>
+      <description>Repair the specified product using REINSTALLMODE="pecmsu" and log to the TEMP directory.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo -name *TEST* | repair-msiproduct -chain</code>
+      <description>Repair all products with ProductName matching *TEST* and show a single progress bar for the entire operation.</description>
+    </example>
+    <link>Install-MSIProduct</link>
+    <link>Uninstall-MSIProduct</link>
+  </command>
+  <command>
+    <verb>Test</verb>
+    <noun>MSIProduct</noun>
+    <synopsis>
+      Runs internal consistency evaluators (ICEs) against the product package or packages.
+    </synopsis>
+    <description>
+      <p>
+        Internal consistency evaluators (ICEs) are custom actions that validate whether a product is authored as specified.
+        If Orca or MsiVal2 is installed, the default ICE .cub ("ICE cube") file is used by default, and you can specify custom ICE cube.
+      </p>
+      <p>
+        You can also apply any number of patches or transforms before running ICEs. This allows you to evaluate a product that is transformed
+        by, for example, a patch to also make sure the changes made by a patch or valid.
+      </p>
+    </description>
+    <parameter name="AdditionalCube">
+      One or more ICE .cub files to use for evaluation.
+    </parameter>
+    <parameter name="Exclude" globbing="true">
+      The names of ICEs to exclude from evaluation (all other ICEs are included).
+    </parameter>
+    <parameter name="Include" globbing="true">
+      The names of ICEs to include from evaluation (all other ICEs are excluded).
+    </parameter>
+    <parameter name="LiteralPath">
+      The path to a package to evaluate. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="NoDefault">
+      Do not import darice.cub if installed with Orca or MsiVal2.
+    </parameter>
+    <parameter name="Patch" globbing="true">
+      The path to a patch package or packages to apply to the product package before evaluation. Patches are applied in sequence order.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a package to evaluate. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="Transform" globbing="true">
+      The path to a transform or transforms to apply to the product package before evaluation.
+    </parameter>
+    <output type="Microsoft.Tools.WindowsInstaller.IceMessage">
+      Information generated from each ICE. Specifying -Verbose will show additional information from each ICE.
+    </output>
+    <example>
+      <code>test-msiproduct .\example.msi -include ICE0* -exclude ICE03 -v</code>
+      <description>Output all messages from ICEs 01 through 09 except for ICE03.</description>
+    </example>
+    <example>
+      <code>test-msiproduct .\example.msi -patch .\example.msp -add .\tests\custom.cub</code>
+      <description>Apply example.msp to example.msi, then run all the default and custom ICEs.</description>
+    </example>
+  </command>
+  <command>
+    <verb>Uninstall</verb>
+    <noun>MSIPatch</noun>
+    <synopsis>
+      Installs a patch package or packages for all or only specified products.
+    </synopsis>
+    <description>
+      <p>
+        Uninstalls one or more packages from all products which they're applied or only from the specified set of products based on their ProductCode.
+      </p>
+      <p>
+        Progress, warnings, and errors during the install are sent through the pipeline making this command fully integrated.
+      </p>
+    </description>
+    <parameter name="Chain">
+      Whether to install all packages together.
+    </parameter>
+    <parameter name="Force">
+      Whether to suppress all prompts.
+    </parameter>
+    <parameter name="LiteralPath">
+      The path to a patch package to uninstall. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="Log">
+      The path to the log file. This use the file name as the base name and will append timestamp and product-specific information.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a patch package to uninstall. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode or ProductCodes from which patches are removed.
+    </parameter>
+    <parameter name="Properties">
+      Additional property=value pairs to pass during uninstall.
+    </parameter>
+    <parameter name="UserContext" default="Machine">
+      The user context for the product listed in the ProductCode parameter.
+    </parameter>
+    <parameter name="UserSid">
+      The user security identifier for product listed in the ProductCode parameter.
+    </parameter>
+    <example>
+      <code>get-msiproductifo -name TEST | get-msipatchinfo | uninstall-msipatch -log $env:TEMP\unpatch.log</code>
+      <description>Uninstalls all patches applied to the product with ProductName TEST and logs to the TEMP directory.</description>
+    </example>
+    <link>Install-MSIPatch</link>
+  </command>
+  <command>
+    <verb>Uninstall</verb>
+    <noun>MSIProduct</noun>
+    <synopsis>
+      Uninstalls a product package or packages, or an existing product on the machine.
+    </synopsis>
+    <description>
+      <p>
+        This cmdlet, unlike related cmdlets, is designed to uninstalled one or more products. While there are ways to override this behavior,
+        it is not recommend and you should instead use specialized cmdlets for this purpose. See the related links for suggestions.
+      </p>
+      <p>
+        Progress, warnings, and errors during the install are sent through the pipeline making this command fully integrated.
+      </p>
+    </description>
+    <parameter name="Chain">
+      Whether to install all packages together.
+    </parameter>
+    <parameter name="Force">
+      Whether to suppress all prompts.
+    </parameter>
+    <parameter name="LiteralPath">
+      The path to a product package to uninstall. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="Log">
+      The path to the log file. This use the file name as the base name and will append timestamp and product-specific information.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a product package to uninstall. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="Product">
+      The product to uninstall.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode of a product to uninstall.
+    </parameter>
+    <parameter name="Properties">
+      Additional property=value pairs to pass during uninstall.
+    </parameter>
+    <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      The product to uninstall.
+    </input>
+    <example>
+      <code>uninstall-msiproduct .\example.msi -log $env:TEMP\uninstall.log</code>
+      <description>Uninstall the example.msi product package and log to the TEMP directory.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo -name *TEST* | uninstall-msiproduct -chain</code>
+      <description>Uninstall all products with ProductName matching *TEST* and show a single progress bar for the entire operation.</description>
+    </example>
+    <link>Install-MSIProduct</link>
+    <link>Repair-MSIProduct</link>
+  </command>
+</help>

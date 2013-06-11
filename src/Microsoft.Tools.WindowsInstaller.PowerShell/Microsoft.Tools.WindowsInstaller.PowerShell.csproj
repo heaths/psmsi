@@ -149,6 +149,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Help.xml">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -170,11 +173,6 @@
     <Content Include="MSI.psm1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Sign>True</Sign>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MSI-Help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

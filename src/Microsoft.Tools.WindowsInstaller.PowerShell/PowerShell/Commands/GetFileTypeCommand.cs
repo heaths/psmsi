@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIFileType cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIFileType", DefaultParameterSetName = ParameterSet.Path)]
-    [OutputType(typeof(string), typeof(FileSystemInfo))]
+    [OutputType(typeof(string), typeof(System.IO.FileInfo), typeof(DirectoryInfo))]
     public sealed class GetFileTypeCommand : ItemCommandBase
     {
         /// <summary>

@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIFileHash cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIFileHash", DefaultParameterSetName = ParameterSet.Path)]
-    [OutputType(typeof(FileHash), typeof(FileSystemInfo))]
+    [OutputType(typeof(FileHash), typeof(System.IO.FileInfo), typeof(DirectoryInfo))]
     public sealed class GetFileHashCommand : ItemCommandBase
     {
         /// <summary>

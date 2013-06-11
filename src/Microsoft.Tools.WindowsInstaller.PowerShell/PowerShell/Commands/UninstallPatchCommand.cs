@@ -14,7 +14,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Uninstall-MSIPatch cmdlet.
     /// </summary>
     [Cmdlet(VerbsLifecycle.Uninstall, "MSIPatch", DefaultParameterSetName = ParameterSet.Path)]
-    [OutputType(typeof(PatchInstallation))]
     public sealed class UninstallPatchCommand : InstallPatchCommandBase<InstallPatchActionData>
     {
         /// <summary>

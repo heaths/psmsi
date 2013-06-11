@@ -15,6 +15,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-WIFeatureInfo cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIFeatureInfo", DefaultParameterSetName = ParameterSet.Product)]
+    [OutputType(typeof(FeatureInstallation))]
     public sealed class GetFeatureCommand : PSCmdlet
     {
         /// <summary>

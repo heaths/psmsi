@@ -137,9 +137,6 @@
     <Content Include="Data\qps-ploc\Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\qps-ploc\MSI-Help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Data\Registry.xml" />
   </ItemGroup>
   <ItemGroup>

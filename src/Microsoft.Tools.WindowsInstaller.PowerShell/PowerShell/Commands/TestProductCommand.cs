@@ -19,6 +19,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Test-MSIProduct cmdlet.
     /// </summary>
     [Cmdlet(VerbsDiagnostic.Test, "MSIProduct", DefaultParameterSetName = ParameterSet.Path)]
+    [OutputType(typeof(IceMessage))]
     public sealed class TestProductCommand : ItemCommandBase
     {
         private InstallUIOptions previousInternalUI = InstallUIOptions.Default;

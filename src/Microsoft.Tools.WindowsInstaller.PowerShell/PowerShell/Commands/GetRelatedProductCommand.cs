@@ -16,6 +16,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIRelatedProductInfo cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSIRelatedProductInfo")]
+    [OutputType(typeof(ProductInstallation))]
     public sealed class GetRelatedProductCommand : PSCmdlet
     {
         private List<string> allUpgradeCodes = new List<string>();
