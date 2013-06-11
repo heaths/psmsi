@@ -20,7 +20,10 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </summary>
     internal sealed class PatchSequencer
     {
+        private delegate IEnumerable<PatchSequence> GetApplicablePatchesAction(string product, string userSid, UserContexts context); 
         private static readonly string Namespace = @"http://www.microsoft.com/msi/patch_applicability.xsd";
+
+        private GetApplicablePatchesAction action;
 
         /// <summary>
         /// Creates a new instance of the <see cref="PatchSequencer"/> class.
@@ -29,6 +32,8 @@ namespace Microsoft.Tools.WindowsInstaller
         {
             this.Patches = new Set<string>(StringComparer.InvariantCultureIgnoreCase);
             this.TargetProductCodes = new Set<string>(StringComparer.InvariantCultureIgnoreCase);
+
+            this.action = new GetApplicablePatchesAction(this.GetApplicablePatches);
         }
 
         /// <summary>
@@ -88,6 +93,19 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
+        /// Start to get a list of patches that are applicable to the given ProductCode in a separate thread.
+        /// </summary>
+        /// <param name="product">The ProductCode for which applicability is determined.</param>
+        /// <param name="userSid">The SID of the user for which the product is installed. The default is null.</param>
+        /// <param name="context">The <see cref="UserContexts"/> into which the product is installed. This must be <see cref="UserContexts.None"/> for a package path. The default is <see cref="UserContexts.None"/>.</param>
+        /// <returns>An <see cref="IAsyncResult"/> you can use to query the current state of the task and return results when complete.</returns>
+        /// <exception cref="ArgumentException">The parameters are not correct for the given package path or installed ProductCode (ex: cannot use <see cref="UserContexts.All"/> in any case).</exception>
+        internal IAsyncResult BeginGetApplicablePatches(string product, string userSid = null, UserContexts context = UserContexts.None)
+        {
+            return this.action.BeginInvoke(product, userSid, context, null, null);
+        }
+
+        /// <summary>
         /// Gets a list of patches that are applicable to the given ProductCode.
         /// </summary>
         /// <param name="product">The ProductCode for which applicability is determined.</param>
@@ -97,13 +115,29 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <exception cref="ArgumentException">The parameters are not correct for the given package path or installed ProductCode (ex: cannot use <see cref="UserContexts.All"/> in any case).</exception>
         internal IEnumerable<PatchSequence> GetApplicablePatches(string product, string userSid = null, UserContexts context = UserContexts.None)
         {
+            // Enumerate all applicable patches immediately and return.
+            return this.DetermineApplicablePatches(product, userSid, context).ToList();
+        }
+
+        /// <summary>
+        /// Returns the list of patches that are applicable to the given ProductCode.
+        /// </summary>
+        /// <param name="result">An <see cref="IAsyncResult"/> you can use to return results.</param>
+        /// <returns>The list of patches that are applicable to the ProductCode given in <see cref="BeginGetApplicablePatches"/>.</returns>
+        internal IEnumerable<PatchSequence> EndGetApplicablePatches(IAsyncResult result)
+        {
+            return this.action.EndInvoke(result);
+        }
+
+        private IEnumerable<PatchSequence> DetermineApplicablePatches(string product, string userSid, UserContexts context)
+        {
             var patches = this.Patches.ToArray();
             InapplicablePatchHandler handler = (patch, ex) => this.OnInapplicablePatch(new InapplicablePatchEventArgs(patch, product, ex));
 
             // Keep track of the sequence.
             int i = 0;
 
-            // The current implementation does not return an null list.
+            // The current implementation does not return a null list.
             var applicable = Installer.DetermineApplicablePatches(product, patches, handler, userSid, context);
             foreach (var path in applicable)
             {

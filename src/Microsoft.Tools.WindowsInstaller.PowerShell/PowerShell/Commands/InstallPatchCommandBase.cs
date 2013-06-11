@@ -131,10 +131,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 targetProductCodes.AddRange(sequencer.TargetProductCodes);
             }
 
-            // Enumerate through the ProductCodes and sequence the patch actions.
+            // Enumerate through the ProductCodes and sequence the patch actions in a separate thread.
             foreach (var productCode in targetProductCodes)
             {
-                var patches = sequencer.GetApplicablePatches(productCode, this.UserSid, this.UserContext).Select(patch => patch.Patch);
+                var result = sequencer.BeginGetApplicablePatches(productCode, this.UserSid, this.UserContext);
+                using (result.AsyncWaitHandle)
+                {
+                    result.AsyncWaitHandle.WaitOne();
+                }
+
+                // Select just the path to the patch package.
+                var patches = sequencer.EndGetApplicablePatches(result).Select(patch => patch.Patch);
                 if (null != patches)
                 {
                     // Queue an action for each product with all applicable patches.
