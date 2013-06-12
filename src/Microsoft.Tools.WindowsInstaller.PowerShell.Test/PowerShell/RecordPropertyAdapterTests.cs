@@ -49,7 +49,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                         Assert.AreEqual("product.wxs", RecordPropertyAdapter.GetPropertyValue(property, copy) as string, "The FileName propert value is incorrect.");
 
                         property = adapter.GetProperty(copy, "Attributes");
-                        type = typeof(Nullable<short>).FullName;
+                        type = typeof(AttributeColumn).FullName;
                         Assert.IsNotNull(property, "The Attributes property was not adapted.");
                         Assert.AreEqual(type, adapter.GetPropertyTypeName(property), true, "The Attributes property type is incorrect.");
                         Assert.AreEqual<short>(512, Convert.ToInt16(RecordPropertyAdapter.GetPropertyValue(property, copy)), "The Attributes propert value is incorrect.");

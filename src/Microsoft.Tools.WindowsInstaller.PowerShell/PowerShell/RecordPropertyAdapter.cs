@@ -188,25 +188,5 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
 
             throw new InvalidOperationException();
         }
-
-        private class PropertySet : KeyedCollection<string, PSAdaptedProperty>
-        {
-            internal string TypeName { get; set; }
-
-            protected override string GetKeyForItem(PSAdaptedProperty item)
-            {
-                if (null == item)
-                {
-                    throw new ArgumentNullException("item");
-                }
-
-                return item.Name;
-            }
-
-            internal Collection<PSAdaptedProperty> ToCollection()
-            {
-                return new Collection<PSAdaptedProperty>(this.Items);
-            }
-        }
     }
 }

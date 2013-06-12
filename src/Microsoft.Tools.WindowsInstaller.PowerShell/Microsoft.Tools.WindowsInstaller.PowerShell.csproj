@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeColumn.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="PatchApplicator.cs" />
     <Compile Include="PatchSequence.cs" />
     <Compile Include="PatchSequencer.cs" />
+    <Compile Include="PowerShell\AttributeColumnPropertyAdapter.cs" />
+    <Compile Include="PowerShell\AttributeColumnTypeConverter.cs" />
     <Compile Include="PowerShell\Commands\EditPackageCommand.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommand.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommand.cs" />
@@ -121,6 +124,7 @@
     <Compile Include="PowerShell\EncodingAttribute.cs" />
     <Compile Include="PowerShell\ExtensionMethods.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />
+    <Compile Include="PowerShell\PropertySet.cs" />
     <Compile Include="PowerShell\PSInstallerException.cs" />
     <Compile Include="ReadOnly.cs" />
     <Compile Include="PowerShell\ReinstallModeAttribute.cs" />
@@ -163,6 +167,7 @@
     <Content Include="MSI.types.ps1xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Sign>True</Sign>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>

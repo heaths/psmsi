@@ -36,7 +36,13 @@ namespace Microsoft.Tools.WindowsInstaller
                 // Windows Installer uses 1-based indices.
                 var offset = i + 1;
 
-                if (typeof(Stream) == columns[i].Type)
+                var type = columns[i].Type;
+                if (type.IsEnum)
+                {
+                    var value = record.GetNullableInteger(offset);
+                    this.Data.Add(new AttributeColumn(type, value));
+                }
+                else if (typeof(Stream) == type)
                 {
                     var buffer = CopyStream(record, offset);
                     this.Data.Add(buffer);

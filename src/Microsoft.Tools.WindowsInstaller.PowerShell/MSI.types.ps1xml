@@ -548,6 +548,15 @@
         </Members>
     </Type>
     <Type>
+        <Name>Microsoft.Tools.WindowsInstaller.AttributeColumn</Name>
+        <TypeAdapter>
+            <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.AttributeColumnPropertyAdapter</TypeName>
+        </TypeAdapter>
+        <TypeConverter>
+            <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.AttributeColumnTypeConverter</TypeName>
+        </TypeConverter>
+    </Type>
+    <Type>
         <Name>Microsoft.Tools.WindowsInstaller.IceMessageType</Name>
         <Members>
             <MemberSet>

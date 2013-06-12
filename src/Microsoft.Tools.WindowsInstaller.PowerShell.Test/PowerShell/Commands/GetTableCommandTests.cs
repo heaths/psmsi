@@ -111,5 +111,24 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.IsTrue(error.Exception.Message.Contains("The table \"NonexistentTable\" was not found"), "The error message is incorrect.");
             }
         }
+
+        [TestMethod]
+        public void GetRegistryKeyPathComponents()
+        {
+            using (var p = CreatePipeline(@"get-msitable example.msi -table Component | where { $_.Attributes.HasRegistryKeyPath }"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+
+                var item = output[0];
+                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#Component", item.TypeNames[0], "The first type name is incorrect.");
+
+                var component = item.GetPropertyValue<string>("Component");
+                Assert.AreEqual<string>("Registry", component, "The Component property is incorrect.");
+
+                var attributes = item.GetPropertyValue<int>("Attributes");
+                Assert.AreEqual<int>(4, attributes, "The Attributes property is incorrect.");
+            }
+        }
     }
 }
