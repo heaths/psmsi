@@ -199,18 +199,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             base.EndProcessing();
         }
 
-        private static string GetDefaultCubePath()
-        {
-            // Try to find darice.cub.
-            var component = new ComponentInstallation("{D865CA5E-9B46-B345-B3A6-43C5EAF209E0}");
-            if (InstallState.Local == component.State)
-            {
-                return component.Path;
-            }
-
-            return null;
-        }
-
         private void ApplyTransforms(InstallPackage db)
         {
             // Apply transforms first since they likely apply to the unpatched product.
@@ -303,7 +291,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             if (!this.NoDefault)
             {
-                string darice = GetDefaultCubePath();
+                string darice = ComponentSearcher.Find(ComponentSearcher.KnownComponent.Darice);
                 if (!string.IsNullOrEmpty(darice))
                 {
                     this.MergeCube(db, darice);

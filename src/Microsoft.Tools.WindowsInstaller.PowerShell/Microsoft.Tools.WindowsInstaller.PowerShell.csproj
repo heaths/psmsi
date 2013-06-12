@@ -79,6 +79,7 @@
     <Compile Include="Cache.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
+    <Compile Include="ComponentSearcher.cs" />
     <Compile Include="EncodingConverter.cs" />
     <Compile Include="ExtensionAttribute.cs" />
     <Compile Include="ExtensionMethods.cs" />

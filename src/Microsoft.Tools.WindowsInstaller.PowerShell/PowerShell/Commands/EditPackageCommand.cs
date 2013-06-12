@@ -5,7 +5,6 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.ComponentModel;
@@ -33,12 +32,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         protected override void BeginProcessing()
         {
-            var component = new ComponentInstallation("{958A3933-8CE7-6189-F0EF-CAE467FABFF4}");
-            if (InstallState.Local == component.State)
-            {
-                this.orcaPath = component.Path;
-            }
-            else
+            this.orcaPath = ComponentSearcher.Find(ComponentSearcher.KnownComponent.Orca);
+            if (string.IsNullOrEmpty(this.orcaPath))
             {
                 this.WriteWarning(Resources.Error_OrcaAbsent);
             }
