@@ -58,10 +58,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <param name="item">A file item that references a package database.</param>
         protected override void ProcessItem(PSObject item)
         {
-            string path = item.GetPropertyValue<string>("PSPath");
-            path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
+            var path = item.GetPropertyValue<string>("PSPath");
+            var providerPath = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
 
-            using (var db = new Database(path, DatabaseOpenMode.ReadOnly))
+            using (var db = new Database(providerPath, DatabaseOpenMode.ReadOnly))
             {
                 var query = this.GetQuery(db);
                 if (!string.IsNullOrEmpty(query))
@@ -81,7 +81,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                                 // Create a locally cached copy of the record.
                                 var copy = new Record(record, columns);
 
+                                // Add additional properties to the Members collection; otherwise,
+                                // existing adapted properties are copied along with cached values.
                                 var obj = PSObject.AsPSObject(copy);
+                                obj.Members.Add(new PSNoteProperty("MSIPath", providerPath));
+                                obj.Members.Add(new PSNoteProperty("MSIQuery", query));
+
+                                // Show only column properties by default.
+                                var memberSet = ViewManager.GetMemberSet(view);
+                                obj.Members.Add(memberSet);
+
                                 this.WriteObject(obj);
                             }
 

@@ -8,16 +8,18 @@
 using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
+using System.Management.Automation;
 
-namespace Microsoft.Tools.WindowsInstaller
+namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {
     /// <summary>
     /// Creates and caches an instance of a <see cref="ColumnCollection"/> for each <see cref="View"/>.
     /// </summary>
     internal static class ViewManager
     {
-        // Weak reference allows a column collection to be GC'd it no records are alive that need it.
+        // Weak reference allows a column collection or property sets to be GC'd it no records are alive that need it.
         private static Dictionary<string, WeakReference> views;
+        private static Dictionary<string, WeakReference> memberSets;
 
         /// <summary>
         /// Initializes the <see cref="ViewManager"/>.
@@ -25,6 +27,7 @@ namespace Microsoft.Tools.WindowsInstaller
         static ViewManager()
         {
             views = new Dictionary<string, WeakReference>(StringComparer.InvariantCultureIgnoreCase);
+            memberSets = new Dictionary<string, WeakReference>(StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -54,6 +57,40 @@ namespace Microsoft.Tools.WindowsInstaller
             }
 
             return columns;
+        }
+
+        /// <summary>
+        /// Creates and caches an instance of the "PSStandardMembers" <see cref="PSMemberSet"/> to attach to a <see cref="Record"/>.
+        /// </summary>
+        /// <param name="view">The <see cref="View"/> from which column information is retrieved.</param>
+        /// <returns>A new or cached copy of the "PSStandardMembers" <see cref="PSMemberSet"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="view"/> parameter value is null.</exception>
+        internal static PSMemberSet GetMemberSet(View view)
+        {
+            if (null == view)
+            {
+                throw new ArgumentNullException("view");
+            }
+
+            PSMemberSet memberSet;
+            if (memberSets.ContainsKey(view.QueryString) && memberSets[view.QueryString].IsAlive)
+            {
+                // Get an existing PSMemberSet.
+                memberSet = (PSMemberSet)memberSets[view.QueryString].Target;
+            }
+            else
+            {
+                // Add or set a new PSMemberSet.
+                var columns = ViewManager.GetColumns(view).Select(column => column.Name);
+                var properties = new PSPropertySet("DefaultDisplayPropertySet", columns);
+
+                memberSet = new PSMemberSet("PSStandardMembers");
+                memberSet.Members.Add(properties);
+
+                memberSets[view.QueryString] = new WeakReference(memberSet);
+            }
+
+            return memberSet;
         }
     }
 }

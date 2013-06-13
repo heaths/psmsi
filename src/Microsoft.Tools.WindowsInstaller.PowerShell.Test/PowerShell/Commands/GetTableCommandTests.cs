@@ -55,7 +55,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetQueryFromPath()
         {
-            using (var p = CreatePipeline("get-msitable example.msi -query 'SELECT File, ComponentId FROM File, Component WHERE Component_ = Component'"))
+            var query = "SELECT File, ComponentId FROM File, Component WHERE Component_ = Component";
+            using (var p = CreatePipeline(string.Format("get-msitable example.msi -query '{0}'", query)))
             {
                 var output = p.Invoke();
 
@@ -70,6 +71,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 value = item.GetPropertyValue<string>("ComponentId");
                 Assert.AreEqual<string>("{B88B6441-D16B-4308-B03A-A4BBC0F8F022}", value, "The ComponentId property is incorrect.");
+
+                // Check for additional attached properties.
+                value = item.GetPropertyValue<string>("MSIPath");
+                var expectedPath = p.Runspace.SessionStateProxy.Path.GetUnresolvedProviderPathFromPSPath("example.msi");
+                Assert.AreEqual(expectedPath, value, true, "The MSIPath property is incorrect.");
+
+                value = item.GetPropertyValue<string>("MSIQuery");
+                Assert.AreEqual(query, value, true, "The MSIQuery property is incorrect.");
             }
         }
 
