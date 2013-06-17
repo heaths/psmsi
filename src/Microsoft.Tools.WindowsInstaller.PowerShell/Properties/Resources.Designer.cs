@@ -133,15 +133,6 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The column &quot;{0}&quot; was found in tables &quot;{1}&quot; and &quot;{2}&quot;. The column must be prefixed with the table name to disambiguate..
-        /// </summary>
-        internal static string Error_AmbiguousColumn {
-            get {
-                return ResourceManager.GetString("Error_AmbiguousColumn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The default ICE .cub file was not found and will not be loaded..
         /// </summary>
         internal static string Error_DefaultCubNotFound {

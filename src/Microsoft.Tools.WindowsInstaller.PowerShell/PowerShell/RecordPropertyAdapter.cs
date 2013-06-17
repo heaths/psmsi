@@ -160,7 +160,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                     for (int i = 0; i < columns.Count; ++i)
                     {
                         var column = columns[i];
-                        properties.Add(new PSAdaptedProperty(column.Name, column));
+                        properties.Add(new PSAdaptedProperty(column.Key, column));
                     }
 
                     // Format a suitable type name if only a single table was selected.

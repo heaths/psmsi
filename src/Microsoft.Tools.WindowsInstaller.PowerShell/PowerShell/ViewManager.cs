@@ -81,7 +81,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             else
             {
                 // Add or set a new PSMemberSet.
-                var columns = ViewManager.GetColumns(view).Select(column => column.Name);
+                var columns = ViewManager.GetColumns(view).Select(column => column.Key);
                 var properties = new PSPropertySet("DefaultDisplayPropertySet", columns);
 
                 memberSet = new PSMemberSet("PSStandardMembers");

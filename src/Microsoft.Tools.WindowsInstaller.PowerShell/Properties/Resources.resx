@@ -180,7 +180,4 @@
   <data name="Error_OrcaAbsent" xml:space="preserve">
     <value>Orca is not installed on this machine. You can download it as part of the Windows SDK.</value>
   </data>
-  <data name="Error_AmbiguousColumn" xml:space="preserve">
-    <value>The column "{0}" was found in tables "{1}" and "{2}". The column must be prefixed with the table name to disambiguate.</value>
-  </data>
 </root>

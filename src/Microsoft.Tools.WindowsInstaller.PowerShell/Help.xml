@@ -443,7 +443,15 @@
       </p>
       <p>
         Records are returned with properties matching column names. If records are selected from a single table, the table name is
-        also part of the type name queryable from the PSTypeNames object property.
+        also part of the type name queryable from the PSTypeNames object property. If the column name is prefixed with the table name -
+        required to disambiguate names, or optional otherwise - a property is returned as typed in the original query string. Note that
+        Windows PowerShell allows periods in property names but may require in some scenarios that a property name with periods is contained in quotes,
+        like 'File.Attributes'.
+      </p>
+      <p>
+        For attribute columns in standard Windows Installer tables, you may also query for specific attribute values by specifying a special
+        property name on the end of the attribute column name, like 'File.Attributes'.HasVital, to query for any columns that have the attribute
+        value set.
       </p>
       <p>
         Note that patch packages do not typically have more than a couple of tables.
@@ -457,7 +465,7 @@
       The path to a product package to open. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
     </parameter>
     <parameter name="Query">
-      A custom query for which records are selected.
+      A custom query for which records are selected. Ambiguous column names must be prefixed with the table name to which they belong.
     </parameter>
     <parameter name="Table">
       The table from which all records are selected.
@@ -474,8 +482,22 @@
       <description>Selects just the ProductCode property from the example.msi package and assigns the value to a variable.</description>
     </example>
     <example>
-      <code>get-childitem -filter *.msi | get-table -query "SELECT ComponentId, FileName, FileSize FROM Component, File WHERE Component_ = Component"</code>
+      <code>get-childitem -filter *.msi | get-msitable -query "SELECT ComponentId, FileName, FileSize FROM Component, File WHERE Component_ = Component"</code>
       <description>Selects the component GUID, file name, and file size for all files in all packages in the current directory.</description>
+    </example>
+    <example>
+      <code>get-msitable .\example.msi -query "SELECT ComponentId, FileName, File.Attributes FROM Component, File WHERE Component_ = Component" | where-object { $_.'File.Attributes'.HasVital }</code>
+      <description>
+        <p>
+          Selects all vital files and displays the component GUID, file name, and all file attribtes from the example.msi package.
+        </p>
+        <p>
+          Note that in the query filter the 'File.Attributes' column is contained in quotes; otherwise, Windows PowerShell will attempt to filter
+          based on an Attributes property of a File property of the current pipeline object. The 'File.Attributes' column is contained in quotes
+          in the original query because the Component table also contains a column named Attributes. Windows Installer requires that you
+          disambiguate column names.
+        </p>
+      </description>
     </example>
   </command>
   <command>

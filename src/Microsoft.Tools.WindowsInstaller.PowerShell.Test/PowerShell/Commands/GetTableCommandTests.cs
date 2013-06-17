@@ -55,7 +55,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetQueryFromPath()
         {
-            var query = "SELECT File, ComponentId FROM File, Component WHERE Component_ = Component";
+            var query = "SELECT File, ComponentId, File.Attributes FROM File, Component WHERE Component_ = Component";
             using (var p = CreatePipeline(string.Format("get-msitable example.msi -query '{0}'", query)))
             {
                 var output = p.Invoke();
@@ -66,11 +66,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 var item = output[0];
                 Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
 
-                string value = item.GetPropertyValue<string>("File");
+                var value = item.GetPropertyValue<string>("File");
                 Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");
 
                 value = item.GetPropertyValue<string>("ComponentId");
                 Assert.AreEqual<string>("{B88B6441-D16B-4308-B03A-A4BBC0F8F022}", value, "The ComponentId property is incorrect.");
+
+                var attributes = item.GetPropertyValue<int>("File.Attributes");
+                Assert.AreEqual<int>(512, attributes, "The File.Attributes property is incorrect.");
 
                 // Check for additional attached properties.
                 value = item.GetPropertyValue<string>("MSIPath");
@@ -85,7 +88,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [TestMethod]
         public void GetQueryFromLiteralPath()
         {
-            using (var p = CreatePipeline("get-item example.msi | get-msitable -query 'SELECT File, ComponentId FROM File, Component WHERE Component_ = Component'"))
+            using (var p = CreatePipeline("get-item example.msi | get-msitable -query 'SELECT File, ComponentId, File.Attributes FROM File, Component WHERE Component_ = Component'"))
             {
                 var output = p.Invoke();
 
@@ -95,11 +98,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 var item = output[0];
                 Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record", item.TypeNames[0], "The first type name is incorrect.");
 
-                string value = item.GetPropertyValue<string>("File");
+                var value = item.GetPropertyValue<string>("File");
                 Assert.AreEqual<string>("product.wxs", value, "The File property is incorrect.");
 
                 value = item.GetPropertyValue<string>("ComponentId");
                 Assert.AreEqual<string>("{B88B6441-D16B-4308-B03A-A4BBC0F8F022}", value, "The ComponentId property is incorrect.");
+
+                var attributes = item.GetPropertyValue<int>("File.Attributes");
+                Assert.AreEqual<int>(512, attributes, "The File.Attributes property is incorrect.");
             }
         }
 

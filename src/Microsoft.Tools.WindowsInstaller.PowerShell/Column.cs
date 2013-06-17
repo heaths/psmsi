@@ -6,7 +6,6 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,17 +42,20 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         /// <param name="view">The <see cref="View"/> from which column information is retrieved.</param>
         /// <param name="index">The index of the column within the <see cref="View"/>.</param>
-        internal Column(View view, int index)
+        /// <param name="table">The table name to which the column belongs.</param>
+        /// <param name="name">The name of the column.</param>
+        /// <param name="key">The unique key containing the specified column name from the original query.</param>
+        internal Column(View view, int index, string table, string name, string key)
         {
             // Internal constructor will assume valid parameters.
 
             this.Index = index;
-
             var column = view.Columns[index];
-            this.Name = column.Name;
 
-            // Get the name of the table that contains the column.
-            this.Table = Column.GetTableName(view, this.Name);
+            // Set column information from the collection.
+            this.Table = table;
+            this.Name = name;
+            this.Key = key;
 
             // Determine the simple type that defines the field value.
             var type = Column.GetEnumerationType(this.Table, this.Name) ?? column.Type;
@@ -97,6 +99,11 @@ namespace Microsoft.Tools.WindowsInstaller
         internal int Index { get; private set; }
 
         /// <summary>
+        /// Gets the unique key containing the specified column name from the original query.
+        /// </summary>
+        internal string Key { get; private set; }
+
+        /// <summary>
         /// Gets the name of the column.
         /// </summary>
         internal string Name { get; private set; }
@@ -110,28 +117,6 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Gets the basic <see cref="Type"/> of the column.
         /// </summary>
         internal Type Type { get; private set; }
-
-        private static string GetTableName(View view, string columnName)
-        {
-            string tableName = null;
-            foreach (var table in view.Tables)
-            {
-                // Determine which table contains the column.
-                if (table.Columns.Contains(columnName))
-                {
-                    if (!string.IsNullOrEmpty(tableName))
-                    {
-                        // TODO: Automatically disambiguate columns names.
-                        string message = string.Format(Resources.Error_AmbiguousColumn, columnName, tableName, table.Name);
-                        throw new ArgumentException(message);
-                    }
-
-                    tableName = table.Name;
-                }
-            }
-
-            return tableName;
-        }
 
         private static Type GetEnumerationType(string tableName, string columnName)
         {

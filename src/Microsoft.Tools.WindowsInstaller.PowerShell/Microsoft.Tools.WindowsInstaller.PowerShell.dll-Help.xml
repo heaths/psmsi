@@ -1690,7 +1690,9 @@
     <maml:description>
       <maml:para>You can query all records from a table or records matching a custom query from a product or patch package. The Windows Installer SDK has more information about custom queries, since the SQL-like syntax is rather constrained.</maml:para>
       <maml:para />
-      <maml:para>Records are returned with properties matching column names. If records are selected from a single table, the table name is also part of the type name queryable from the PSTypeNames object property.</maml:para>
+      <maml:para>Records are returned with properties matching column names. If records are selected from a single table, the table name is also part of the type name queryable from the PSTypeNames object property. If the column name is prefixed with the table name - required to disambiguate names, or optional otherwise - a property is returned as typed in the original query string. Note that Windows PowerShell allows periods in property names but may require in some scenarios that a property name with periods is contained in quotes, like 'File.Attributes'.</maml:para>
+      <maml:para />
+      <maml:para>For attribute columns in standard Windows Installer tables, you may also query for specific attribute values by specifying a special property name on the end of the attribute column name, like 'File.Attributes'.HasVital, to query for any columns that have the attribute value set.</maml:para>
       <maml:para />
       <maml:para>Note that patch packages do not typically have more than a couple of tables. The patch has to be applied to a product package to view any changes it has made.</maml:para>
     </maml:description>
@@ -1733,7 +1735,7 @@
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
           <maml:name>Query</maml:name>
           <maml:description>
-            <maml:para>A custom query for which records are selected.</maml:para>
+            <maml:para>A custom query for which records are selected. Ambiguous column names must be prefixed with the table name to which they belong.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1779,7 +1781,7 @@
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
           <maml:name>Query</maml:name>
           <maml:description>
-            <maml:para>A custom query for which records are selected.</maml:para>
+            <maml:para>A custom query for which records are selected. Ambiguous column names must be prefixed with the table name to which they belong.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1812,7 +1814,7 @@
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
         <maml:name>Query</maml:name>
         <maml:description>
-          <maml:para>A custom query for which records are selected.</maml:para>
+          <maml:para>A custom query for which records are selected. Ambiguous column names must be prefixed with the table name to which they belong.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -1868,9 +1870,22 @@
         <maml:introduction>
           <maml:para>C:\PS&gt;</maml:para>
         </maml:introduction>
-        <dev:code>get-childitem -filter *.msi | get-table -query "SELECT ComponentId, FileName, FileSize FROM Component, File WHERE Component_ = Component"</dev:code>
+        <dev:code>get-childitem -filter *.msi | get-msitable -query "SELECT ComponentId, FileName, FileSize FROM Component, File WHERE Component_ = Component"</dev:code>
         <dev:remarks>
           <maml:para>Selects the component GUID, file name, and file size for all files in all packages in the current directory.</maml:para>
+          <maml:para />
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------- EXAMPLE 4 --------------</maml:title>
+        <maml:introduction>
+          <maml:para>C:\PS&gt;</maml:para>
+        </maml:introduction>
+        <dev:code>get-msitable .\example.msi -query "SELECT ComponentId, FileName, File.Attributes FROM Component, File WHERE Component_ = Component" | where-object { $_.'File.Attributes'.HasVital }</dev:code>
+        <dev:remarks>
+          <maml:para>Selects all vital files and displays the component GUID, file name, and all file attribtes from the example.msi package.</maml:para>
+          <maml:para />
+          <maml:para>Note that in the query filter the 'File.Attributes' column is contained in quotes; otherwise, Windows PowerShell will attempt to filter based on an Attributes property of a File property of the current pipeline object. The 'File.Attributes' column is contained in quotes in the original query because the Component table also contains a column named Attributes. Windows Installer requires that you disambiguate column names.</maml:para>
           <maml:para />
         </dev:remarks>
       </command:example>
