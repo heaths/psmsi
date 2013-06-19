@@ -458,11 +458,25 @@
         The patch has to be applied to a product package to view any changes it has made.
       </p>
     </description>
+    <parameter name="IgnoreMachineState" default="false">
+      Whether to apply any patches current installed to the product.
+    </parameter>
     <parameter name="LiteralPath">
       The path to a product package to open. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
     </parameter>
+    <parameter name="Patch" globbing="true">
+      <p>
+        The path to a package package to apply to the product package. Multiple patches are applied in authored sequence order.
+      </p>
+      <p>
+        Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+      </p>
+    </parameter>
     <parameter name="Path" globbing="true">
       The path to a product package to open. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="Product">
+      An installed product to query.
     </parameter>
     <parameter name="Query">
       A custom query for which records are selected. Ambiguous column names must be prefixed with the table name to which they belong.
@@ -470,6 +484,17 @@
     <parameter name="Table">
       The table from which all records are selected.
     </parameter>
+    <parameter name="Transform" globbing="true">
+      <p>
+        The path to a transform to apply to the product package.
+      </p>
+      <p>
+        Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+      </p>
+    </parameter>
+    <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      An existing product to query. By default any patches already applied to the product are applied to the database.
+    </input>
     <output type="Microsoft.Tools.WindowsInstaller.Record">
       Selected records for a table or custom query where properties match column names.
     </output>
@@ -499,6 +524,11 @@
         </p>
       </description>
     </example>
+    <example>
+      <code>get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msitable -table Property</code>
+      <description>Selects records from the installed product along with any patches currently installed.</description>
+    </example>
+    <link>Get-MSIProductInfo</link>
   </command>
   <command>
     <verb>Install</verb>

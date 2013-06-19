@@ -20,7 +20,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// </summary>
     [Cmdlet(VerbsDiagnostic.Test, "MSIProduct", DefaultParameterSetName = ParameterSet.Path)]
     [OutputType(typeof(IceMessage))]
-    public sealed class TestProductCommand : ItemCommandBase
+    public sealed class TestProductCommand : PackageCommandBase
     {
         private InstallUIOptions previousInternalUI = InstallUIOptions.Default;
         private ExternalUIRecordHandler previousExternalUI = null;
@@ -52,18 +52,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [Parameter, ValidateNotNullOrEmpty]
         public string[] Exclude { get; set; }
-
-        /// <summary>
-        /// Gets or sets patch packages to apply before validation.
-        /// </summary>
-        [Parameter, ValidateNotNullOrEmpty]
-        public string[] Patch { get; set; }
-
-        /// <summary>
-        /// Gets or sets transforms to apply before validation.
-        /// </summary>
-        [Parameter, ValidateNotNullOrEmpty]
-        public string[] Transform { get; set; }
 
         /// <summary>
         /// Gets whether the standard Verbose parameter was set.
@@ -199,50 +187,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             base.EndProcessing();
         }
 
-        private void ApplyTransforms(InstallPackage db)
-        {
-            // Apply transforms first since they likely apply to the unpatched product.
-            if (null != this.Transform)
-            {
-                foreach (string path in this.GetFiles(this.Transform))
-                {
-                    try
-                    {
-                        db.ApplyTransform(path, PatchApplicator.IgnoreErrors);
-                    }
-                    catch (InstallerException ex)
-                    {
-                        var psex = new PSInstallerException(ex);
-                        if (null != psex.ErrorRecord)
-                        {
-                            this.WriteError(psex.ErrorRecord);
-                        }
-                    }
-                }
-
-                db.Commit();
-            }
-
-            // Apply applicable patch transforms.
-            if (null != this.Patch)
-            {
-                var applicator = new PatchApplicator(db);
-                foreach (string path in this.GetFiles(this.Patch))
-                {
-                    applicator.Add(path);
-                }
-
-                applicator.InapplicablePatch += (source, args) =>
-                    {
-                        string message = string.Format(Resources.Error_InapplicablePatch, args.Patch, args.Product);
-                        this.WriteVerbose(message);
-                    };
-
-                // The applicator will commit the changes.
-                applicator.Apply();
-            }
-        }
-
         private string Copy(string path)
         {
             string temp = System.IO.Path.GetTempPath();
@@ -250,7 +194,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             string copy = System.IO.Path.Combine(temp, name);
 
             // Copy and overwrite the file into the TEMP directory.
-            this.WriteVerbose(string.Format(Resources.Action_Copy, path, copy));
+            this.WriteDebug(string.Format(Resources.Action_Copy, path, copy));
             File.Copy(path, copy, true);
 
             // Unset the read-only attribute.
@@ -260,25 +204,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             return copy;
         }
 
-        private IEnumerable<string> GetFiles(IEnumerable<string> paths)
-        {
-            ProviderInfo provider;
-            foreach (string path in paths)
-            {
-                foreach (string resolvedPath in this.SessionState.Path.GetResolvedProviderPathFromPSPath(path, out provider))
-                {
-                    yield return resolvedPath;
-                }
-            }
-        }
-
         private void MergeCube(Database db, string path)
         {
             using (var cube = new Database(path, DatabaseOpenMode.ReadOnly))
             {
                 try
                 {
-                    this.WriteVerbose(string.Format(Resources.Action_Merge, path, db.FilePath));
+                    this.WriteDebug(string.Format(Resources.Action_Merge, path, db.FilePath));
                     db.Merge(cube, "MergeConflicts");
                 }
                 catch
@@ -304,7 +236,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             if (null != this.AdditionalCube)
             {
-                foreach (string cube in this.GetFiles(this.AdditionalCube))
+                foreach (string cube in this.ResolveFiles(this.AdditionalCube))
                 {
                     this.MergeCube(db, cube);
                 }

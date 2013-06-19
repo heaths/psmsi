@@ -145,5 +145,96 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<int>(4, attributes, "The Attributes property is incorrect.");
             }
         }
+
+        [TestMethod]
+        public void GetPatchedRegistryTable()
+        {
+            using (var p = CreatePipeline(@"get-msitable example.msi -table Registry -patch example.msp"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+
+                var item = output[0];
+                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#Registry", item.TypeNames[0], "The first type name is incorrect.");
+
+                // Work around a possible bug in PowerShell where adapted property values are cached.
+                var record = item.BaseObject as Record;
+                var value = (string)record.Data[record.Columns["Value"].Index];
+                Assert.AreEqual<string>("1.0.1", value, "The Value property is incorrect.");
+            }
+
+            // Make sure the record data does not cache the patched value.
+            using (var p = CreatePipeline(@"get-msitable example.msi -table Registry"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+
+                var item = output[0];
+
+                // Work around a possible bug in PowerShell where adapted property values are cached.
+                // This does not reproduce when running in powershell.exe.
+                var record = item.BaseObject as Record;
+                var value = (string)record.Data[record.Columns["Value"].Index];
+                Assert.AreEqual<string>("1.0.0", value, "The Value property is incorrect.");
+            }
+        }
+
+        [TestMethod]
+        public void QueryInstalledProduct()
+        {
+            using (var p = CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msitable -table Registry"))
+            {
+                using (OverrideRegistry())
+                {
+                    var output = p.Invoke();
+                    Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+
+                    var item = output[0];
+                    Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#Registry", item.TypeNames[0], "The first type name is incorrect.");
+
+                    // Work around a possible bug in PowerShell where adapted property values are cached.
+                    var record = item.BaseObject as Record;
+                    var value = (string)record.Data[record.Columns["Value"].Index];
+                    Assert.AreEqual<string>("1.0.1", value, "The Value property is incorrect.");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void QueryInstalledProductIgnoreMachineState()
+        {
+            using (var p = CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msitable -table Registry -ignoremachinestate"))
+            {
+                using (OverrideRegistry())
+                {
+                    var output = p.Invoke();
+                    Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+
+                    var item = output[0];
+                    Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#Registry", item.TypeNames[0], "The first type name is incorrect.");
+
+                    // Work around a possible bug in PowerShell where adapted property values are cached.
+                    var record = item.BaseObject as Record;
+                    var value = (string)record.Data[record.Columns["Value"].Index];
+                    Assert.AreEqual<string>("1.0.0", value, "The Value property is incorrect.");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void GetClassificationFromPatchMetadata()
+        {
+            using (var p = CreatePipeline("get-msitable example.msp -table MsiPatchMetadata | where { $_.Property -eq 'Classification' }"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+
+                var item = output[0];
+                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#MsiPatchMetadata", item.TypeNames[0], "The first type name is incorrect.");
+
+                var value = item.GetPropertyValue<string>("Value");
+                Assert.AreEqual<string>("Update", value, "The Classification property value is incorrect.");
+            }
+        }
     }
 }

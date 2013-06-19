@@ -6,6 +6,7 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Management.Automation;
@@ -17,8 +18,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSITable", DefaultParameterSetName = "Path,Table")]
     [OutputType(typeof(Record))]
-    public sealed class GetTableCommand : ItemCommandBase
+    public sealed class GetTableCommand : PackageCommandBase
     {
+        private InstallUIOptions previousInternalUI = InstallUIOptions.Default;
+
         /// <summary>
         /// Gets or sets the path supporting wildcards to enumerate files.
         /// </summary>
@@ -39,10 +42,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
+        /// Gets or sets the <see cref="ProductInstallation"/> to query.
+        /// </summary>
+        [Parameter(ParameterSetName = "Installation,Table", Position = 0, Mandatory = true, ValueFromPipeline = true)]
+        [Parameter(ParameterSetName = "Installation,Query", Position = 0, Mandatory = true, ValueFromPipeline = true)]
+        public ProductInstallation[] Product { get; set; }
+
+        /// <summary>
         /// Gets or sets the table name from which all <see cref="Record"/> objects are selected.
         /// </summary>
         [Parameter(ParameterSetName = "Path,Table", Mandatory = true)]
         [Parameter(ParameterSetName = "LiteralPath,Table", Mandatory = true)]
+        [Parameter(ParameterSetName = "Installation,Table", Mandatory = true)]
         public string Table { get; set; }
 
         /// <summary>
@@ -50,7 +61,74 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [Parameter(ParameterSetName = "Path,Query", Mandatory = true)]
         [Parameter(ParameterSetName = "LiteralPath,Query", Mandatory = true)]
+        [Parameter(ParameterSetName = "Installation,Query", Mandatory = true)]
         public string Query { get; set; }
+
+        /// <summary>
+        /// Gets or sets patch packages to apply before <see cref="Record"/> objects are selected.
+        /// </summary>
+        [Parameter(ParameterSetName = "Path,Table")]
+        [Parameter(ParameterSetName = "Path,Query")]
+        [Parameter(ParameterSetName = "LiteralPath,Table")]
+        [Parameter(ParameterSetName = "LiteralPath,Query")]
+        [ValidateNotNullOrEmpty]
+        public override string[] Patch
+        {
+            get { return base.Patch; }
+            set { base.Patch = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets transforms to apply before <see cref="Record"/> objects are selected.
+        /// </summary>
+        [Parameter(ParameterSetName = "Path,Table")]
+        [Parameter(ParameterSetName = "Path,Query")]
+        [Parameter(ParameterSetName = "LiteralPath,Table")]
+        [Parameter(ParameterSetName = "LiteralPath,Query")]
+        [ValidateNotNullOrEmpty]
+        public override string[] Transform
+        {
+            get { return base.Transform; }
+            set { base.Transform = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether to ignore machine state when opening the <see cref="ProductInstallation"/>.
+        /// </summary>
+        [Parameter(ParameterSetName = "Installation,Table")]
+        [Parameter(ParameterSetName = "Installation,Query")]
+        public SwitchParameter IgnoreMachineState { get; set; }
+
+        /// <summary>
+        /// Sets up the user interface handlers.
+        /// </summary>
+        protected override void BeginProcessing()
+        {
+            // Set up the UI handlers.
+            this.previousInternalUI = Installer.SetInternalUI(InstallUIOptions.Silent);
+            base.BeginProcessing();
+        }
+
+        /// <summary>
+        /// Opens an installed <see cref="Product"/> or the database specified by the <see cref="Path"/> or <see cref="LiteralPath"/>.
+        /// </summary>
+        protected override void ProcessRecord()
+        {
+            if (this.IsInstallation)
+            {
+                foreach (var product in this.Product)
+                {
+                    using (var session = this.OpenProduct(product))
+                    {
+                        this.WriteRecords(session.Database, product.LocalPackage);
+                    }
+                }
+            }
+            else
+            {
+                base.ProcessRecord();
+            }
+        }
 
         /// <summary>
         /// Opens the database specified by the <paramref name="item"/> and executes the specified query.
@@ -61,49 +139,42 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var path = item.GetPropertyValue<string>("PSPath");
             var providerPath = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
 
-            using (var db = new Database(providerPath, DatabaseOpenMode.ReadOnly))
+            using (var db = this.OpenDatabase(providerPath))
             {
-                var query = this.GetQuery(db);
-                if (!string.IsNullOrEmpty(query))
-                {
-                    using (var view = db.OpenView(query))
-                    {
-                        view.Execute();
-
-                        // Get column information from the view before being disposed.
-                        var columns = ViewManager.GetColumns(view);
-
-                        var record = view.Fetch();
-                        while (null != record)
-                        {
-                            using (record)
-                            {
-                                // Create a locally cached copy of the record.
-                                var copy = new Record(record, columns);
-
-                                // Add additional properties to the Members collection; otherwise,
-                                // existing adapted properties are copied along with cached values.
-                                var obj = PSObject.AsPSObject(copy);
-                                obj.Members.Add(new PSNoteProperty("MSIPath", providerPath));
-                                obj.Members.Add(new PSNoteProperty("MSIQuery", query));
-
-                                // Show only column properties by default.
-                                var memberSet = ViewManager.GetMemberSet(view);
-                                obj.Members.Add(memberSet);
-
-                                this.WriteObject(obj);
-                            }
-
-                            record = view.Fetch();
-                        }
-                    }
-                }
+                this.WriteRecords(db, providerPath);
             }
         }
 
-        private string GetQuery(Database db)
+        /// <summary>
+        /// Restores the previous user interface handlers.
+        /// </summary>
+        protected override void EndProcessing()
         {
-            if (0 <= this.ParameterSetName.IndexOf("Query", StringComparison.InvariantCultureIgnoreCase))
+            Installer.SetInternalUI(this.previousInternalUI);
+            base.EndProcessing();
+        }
+
+        private bool IsInstallation
+        {
+            get
+            {
+                return null != this.ParameterSetName
+                    && 0 <= this.ParameterSetName.IndexOf(ParameterSet.Installation, StringComparison.InvariantCultureIgnoreCase);
+            }
+        }
+
+        private bool IsQuery
+        {
+            get
+            {
+                return null != this.ParameterSetName
+                    && 0 <= this.ParameterSetName.IndexOf("Query", StringComparison.InvariantCultureIgnoreCase);
+            }
+        }
+
+        private string GetQuery(Database db, string path)
+        {
+            if (this.IsQuery)
             {
                 return this.Query;
             }
@@ -115,7 +186,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
                 else
                 {
-                    string message = string.Format(Resources.Error_TableNotFound, this.Table, db.FilePath);
+                    string message = string.Format(Resources.Error_TableNotFound, this.Table, path);
                     var ex = new PSArgumentException(message, "Table");
 
                     this.WriteError(ex.ErrorRecord);
@@ -123,6 +194,68 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             return null;
+        }
+
+        private Database OpenDatabase(string path)
+        {
+            var type = FileInfo.GetFileTypeInternal(path);
+            if (FileType.Package == type)
+            {
+                var db = new InstallPackage(path, DatabaseOpenMode.ReadOnly);
+                base.ApplyTransforms(db);
+
+                return db;
+            }
+            else
+            {
+                // Let Windows Installer thow any exceptions if not a valid package.
+                return new Database(path, DatabaseOpenMode.ReadOnly);
+            }
+        }
+
+        private Session OpenProduct(ProductInstallation product)
+        {
+            // Open the product taking machine state into account.
+            return Installer.OpenPackage(product.LocalPackage, this.IgnoreMachineState);
+        }
+
+        private void WriteRecords(Database db, string path)
+        {
+            var query = this.GetQuery(db, path);
+            if (!string.IsNullOrEmpty(query))
+            {
+                using (var view = db.OpenView(query))
+                {
+                    view.Execute();
+
+                    // Get column information from the view before being disposed.
+                    var columns = ViewManager.GetColumns(view);
+
+                    var record = view.Fetch();
+                    while (null != record)
+                    {
+                        using (record)
+                        {
+                            // Create a locally cached copy of the record.
+                            var copy = new Record(record, columns);
+
+                            // Add additional properties to the Members collection; otherwise,
+                            // existing adapted properties are copied along with cached values.
+                            var obj = PSObject.AsPSObject(copy);
+                            obj.Members.Add(new PSNoteProperty("MSIPath", path));
+                            obj.Members.Add(new PSNoteProperty("MSIQuery", query));
+
+                            // Show only column properties by default.
+                            var memberSet = ViewManager.GetMemberSet(view);
+                            obj.Members.Add(memberSet);
+
+                            this.WriteObject(obj);
+                        }
+
+                        record = view.Fetch();
+                    }
+                }
+            }
         }
     }
 }
