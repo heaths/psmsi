@@ -22,6 +22,7 @@
         </Directory>
         <Property Id="ARPHELPLINK" Value="http://psmsi.codeplex.com/thread/list.aspx" />
         <Property Id="ARPURLINFOABOUT" Value="http://psmsi.codeplex.com" />
+        <Property Id="REINSTALLMODE" Value="amus" />
         <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
         <WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
         <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
@@ -35,11 +36,8 @@
         <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[ModuleFolder]" />
         <InstallExecuteSequence>
             <Custom Action="SetARPINSTALLLOCATION" After="CostFinalize" />
-            <RemoveExistingProducts After="InstallInitialize" />
         </InstallExecuteSequence>
-        <Upgrade Id="17C59E89-3732-438F-8910-4F0FAE6DBF67">
-            <UpgradeVersion IncludeMinimum="yes" Minimum="2.0.0" Maximum="!(bind.fileVersion.Module.File)" MigrateFeatures="yes" Property="OLDERVERSIONDETECTED" />
-        </Upgrade>
+        <MajorUpgrade AllowDowngrades="yes" Schedule="afterInstallValidate" />
     </Product>
     <Fragment>
         <DirectoryRef Id="ModuleFolder">
