@@ -240,7 +240,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-MSIComponentInfo</maml:name>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="0">
+        <command:parameter aliases="ComponentId" required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="0">
           <maml:name>ComponentCode</maml:name>
           <maml:description>
             <maml:para>The component GUIDs to retrieve information.</maml:para>
@@ -253,7 +253,7 @@
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>Get-MSIComponentInfo</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="0">
+        <command:parameter aliases="ComponentId" required="true" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="0">
           <maml:name>ComponentCode</maml:name>
           <maml:description>
             <maml:para>The component GUIDs to retrieve information.</maml:para>
@@ -276,7 +276,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="0">
+      <command:parameter aliases="ComponentId" required="false" variableLength="true" globbing="false" pipelineInput="true (ByPropertyName)" position="0">
         <maml:name>ComponentCode</maml:name>
         <maml:description>
           <maml:para>The component GUIDs to retrieve information.</maml:para>
@@ -331,6 +331,168 @@
         </dev:remarks>
       </command:example>
     </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Get-MSIComponentState</maml:linkText>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+  <command:command>
+    <command:details>
+      <command:name>Get-MSIComponentState</command:name>
+      <maml:description>
+        <maml:para>Gets the install state for all authored components for one or more products installed on the machine.</maml:para>
+      </maml:description>
+      <command:verb>Get</command:verb>
+      <command:noun>MSIComponentState</command:noun>
+    </command:details>
+    <maml:description>
+      <maml:para>Gets the install state for all components authored into one or more products. This includes all patches applied to the product. In addition to the information returned from Get-MSIComponentInfo, the authored component identifier from the Component table is attached along with a simple boolean property that determines if the component is installed locally or not.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-MSIComponentState</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue)" position="0">
+          <maml:name>Product</maml:name>
+          <maml:description>
+            <maml:para>The products for which authored component state is retrieved.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">Microsoft.Deployment.WindowsInstaller.ProductInstallation[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Microsoft.Deployment.WindowsInstaller.ProductInstallation[]</maml:name>
+          </dev:type>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Get-MSIComponentState</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
+          <maml:name>ProductCode</maml:name>
+          <maml:description>
+            <maml:para>The installed ProductCodes that define the components for which state information is retrieved.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">string[]</command:parameterValue>
+          <dev:type>
+            <maml:name>string[]</maml:name>
+          </dev:type>
+        </command:parameter>
+        <command:parameter aliases="Context InstallContext" required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>UserContext</maml:name>
+          <maml:description>
+            <maml:para>The context for registered products. This can be a combination of "Machine", "UserManaged", or "UserUnmanaged".</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Microsoft.Deployment.WindowsInstaller.UserContexts</command:parameterValue>
+          <dev:type>
+            <maml:name>Microsoft.Deployment.WindowsInstaller.UserContexts</maml:name>
+          </dev:type>
+          <dev:defaultValue>All</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+          <maml:name>UserSid</maml:name>
+          <maml:description>
+            <maml:para>The security identifier for a user for user-managed and user-unmanaged products.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+          </dev:type>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue)" position="0">
+        <maml:name>Product</maml:name>
+        <maml:description>
+          <maml:para>The products for which authored component state is retrieved.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">Microsoft.Deployment.WindowsInstaller.ProductInstallation[]</command:parameterValue>
+        <dev:type>
+          <maml:name>Microsoft.Deployment.WindowsInstaller.ProductInstallation[]</maml:name>
+        </dev:type>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
+        <maml:name>ProductCode</maml:name>
+        <maml:description>
+          <maml:para>The installed ProductCodes that define the components for which state information is retrieved.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">string[]</command:parameterValue>
+        <dev:type>
+          <maml:name>string[]</maml:name>
+        </dev:type>
+      </command:parameter>
+      <command:parameter aliases="Context InstallContext" required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+        <maml:name>UserContext</maml:name>
+        <maml:description>
+          <maml:para>The context for registered products. This can be a combination of "Machine", "UserManaged", or "UserUnmanaged".</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Microsoft.Deployment.WindowsInstaller.UserContexts</command:parameterValue>
+        <dev:type>
+          <maml:name>Microsoft.Deployment.WindowsInstaller.UserContexts</maml:name>
+        </dev:type>
+        <dev:defaultValue>All</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
+        <maml:name>UserSid</maml:name>
+        <maml:description>
+          <maml:para>The security identifier for a user for user-managed and user-unmanaged products.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+        </dev:type>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Microsoft.Deployment.WindowsInstaller.ProductInstallation</maml:name>
+          <maml:description>
+            <maml:para>Products for which authored component state is retrieved.</maml:para>
+          </maml:description>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Microsoft.Deployment.WindowsInstaller.ComponentInstallation#State</maml:name>
+          <maml:description>
+            <maml:para>State information about the components authored into one or more products and applied patches.</maml:para>
+          </maml:description>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------- EXAMPLE 1 --------------</maml:title>
+        <maml:introduction>
+          <maml:para>C:\PS&gt;</maml:para>
+        </maml:introduction>
+        <dev:code>get-msicomponentstate "{877EF582-78AF-4D84-888B-167FDC3BCC11}"</dev:code>
+        <dev:remarks>
+          <maml:para>Gets state information for all components authored into the product "{877EF582-78AF-4D84-888B-167FDC3BCC11}" and all applied patches.</maml:para>
+          <maml:para />
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------- EXAMPLE 2 --------------</maml:title>
+        <maml:introduction>
+          <maml:para>C:\PS&gt;</maml:para>
+        </maml:introduction>
+        <dev:code>get-msiproductinfo -name *TEST* | get-msicomponentstate</dev:code>
+        <dev:remarks>
+          <maml:para>Gets state information for all components authored into any product where the ProductName matches *TEST*.</maml:para>
+          <maml:para />
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Get-MSIComponentInfo</maml:linkText>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Get-MSIProductInfo</maml:linkText>
+      </maml:navigationLink>
+    </maml:relatedLinks>
   </command:command>
   <command:command>
     <command:details>

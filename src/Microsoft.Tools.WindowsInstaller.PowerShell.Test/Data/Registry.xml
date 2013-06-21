@@ -1,521 +1,527 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <registry xmlns="http://schemas.microsoft.com/psmsi/2008/03/registry.xsd">
-    <hive name="HKEY_CLASSES_ROOT">
-        <key name=".exe">
-            <key name="Shell">
-                <key name="Open">
-                    <key name="Command">
-                        <value type="String">"%1" %*</value>
-                    </key>
-                </key>
+  <hive name="HKEY_CLASSES_ROOT">
+    <key name=".exe">
+      <key name="Shell">
+        <key name="Open">
+          <key name="Command">
+            <value type="String">"%1" %*</value>
+          </key>
+        </key>
+      </key>
+    </key>
+    <key name=".msi">
+      <value type="String">Msi.Package</value>
+    </key>
+    <key name=".msp">
+      <value type="String">Msi.Package</value>
+    </key>
+    <key name="Msi.Package">
+      <key name="Shell">
+        <key name="Edit">
+          <key name="Command">
+            <value type="String">"$(TestDeploymentDirectory)\return.exe" "%1"</value>
+          </key>
+        </key>
+      </key>
+    </key>
+  </hive>
+  <hive name="HKEY_CURRENT_USER">
+    <key name="Software">
+      <key name="Microsoft">
+        <key name="TEST">
+          <value name="Version" type="String">1.0.1</value>
+        </key>
+      </key>
+    </key>
+  </hive>
+  <hive name="HKEY_LOCAL_MACHINE">
+    <key name="Software">
+      <key name="Classes">
+        <!-- Machine-assigned source registration -->
+        <key name="Installer">
+          <key name="Assemblies"/>
+          <key name="Components"/>
+          <key name="Features">
+            <key name="D7314F9862C648A4DB8BE2A5B47BE100">
+              <value name="Complete" type="String"/>
+              <value name="Complete2.0.30226.2" type="String"/>
             </key>
-        </key>
-        <key name=".msi">
-            <value type="String">Msi.Package</value>
-        </key>
-        <key name=".msp">
-            <value type="String">Msi.Package</value>
-        </key>
-        <key name="Msi.Package">
-            <key name="Shell">
-                <key name="Edit">
-                    <key name="Command">
-                        <value type="String">"$(TestDeploymentDirectory)\return.exe" "%1"</value>
-                    </key>
+          </key>
+          <key name="Patches">
+            <key name="904C25E6D0D048B4BA366443834D3DB3">
+              <key name="SourceList">
+                <key name="Media">
+                  <value name="100" type="String">;</value>
                 </key>
+                <key name="Net">
+                  <value name="1" type="String">c:\updates\</value>
+                </key>
+              </key>
+              <value name="LastUsedSource" type="ExpandString">n;1;c:\updates\</value>
+              <value name="PackageName" type="String">Silverlight.msp</value>
             </key>
+          </key>
+          <key name="Products">
+            <key name="D7314F9862C648A4DB8BE2A5B47BE100">
+              <key name="Patches">
+                <value name="904C25E6D0D048B4BA366443834D3DB3" type="String">:oldTocurrent;:#oldTocurrent</value>
+                <value name="Patches" type="MultiString" xml:space="preserve">904C25E6D0D048B4BA366443834D3DB3</value>
+              </key>
+              <key name="SourceList">
+                <key name="Media">
+                  <value name="1" type="String">;1</value>
+                  <value name="DiskPrompt" type="String">Microsoft's Silverlight Installation [1]</value>
+                </key>
+                <key name="Net">
+                  <value name="1" type="ExpandString">c:\2014be2e43e417a3b9\</value>
+                </key>
+                <value name="LastUsedSource" type="ExpandString">n;1;c:\2014be2e43e417a3b9\</value>
+                <value name="PackageName" type="String">silverlight.msi</value>
+              </key>
+              <value name="AdvertiseFlags" type="DWord">388</value>
+              <value name="Assignment" type="DWord">1</value>
+              <value name="AuthorizedLUAApp" type="DWord">1</value>
+              <value name="Clients" type="MultiString" xml:space="preserve">:</value>
+              <value name="DeploymentFlags" type="DWord">3</value>
+              <value name="InstanceType" type="DWord">0</value>
+              <value name="Language" type="DWord">1033</value>
+              <value name="PackageCode" type="String">50C0DE0C1B6094A4C920EA571AD7E803</value>
+              <value name="ProductIcon" type="String">c:\Windows\Installer\{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}\ARPIcon</value>
+              <value name="ProductName" type="String">Microsoft Silverlight</value>
+              <value name="Version" type="DWord">33584658</value>
+            </key>
+          </key>
+          <key name="UpgradeCodes">
+            <key name="4AE2841C3D7016247914C7DE6E8A2CA5">
+              <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String"/>
+            </key>
+          </key>
         </key>
-    </hive>
-    <hive name="HKEY_LOCAL_MACHINE">
-        <key name="Software">
-            <key name="Classes">
-                <!-- Machine-assigned source registration -->
-                <key name="Installer">
-                    <key name="Assemblies"/>
-                    <key name="Components"/>
-                    <key name="Features">
-                        <key name="D7314F9862C648A4DB8BE2A5B47BE100">
-                            <value name="Complete" type="String"/>
-                            <value name="Complete2.0.30226.2" type="String"/>
-                        </key>
+      </key>
+      <key name="Microsoft">
+        <!-- Needed for handling errors in the pipeline -->
+        <key name="Cryptography">
+          <key name="Defaults">
+            <key name="Provider">
+              <key name="Microsoft Strong Cryptographic Provider">
+                <value name="Image Path" type="String">rsaenh.dll</value>
+                <value name="SigInFile" type="DWord"/>
+                <value name="Type" type="DWord">1</value>
+              </key>
+            </key>
+            <key name="Provider Types">
+              <key name="Type 001">
+                <value name="Name" type="String">Microsoft Strong Cryptographic Provider</value>
+                <value name="TypeName" type="String">RSA Full (Signature and Key Exchange)</value>
+              </key>
+            </key>
+          </key>
+        </key>
+        <!-- Provides component state for Silverlight -->
+        <key name="Internet Explorer">
+          <key name="Low Rights">
+            <key name="ElevationPolicy">
+              <key name="{003B91A6-61E3-4591-891D-01E94C8CB11E}">
+                <value name="AppName" type="String">Silverlight.Configuration.exe</value>
+                <value name="AppPath" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\</value>
+                <value name="Policy" type="DWord">3</value>
+              </key>
+            </key>
+          </key>
+        </key>
+        <!-- PowerShell values needed to handle errors -->
+        <key name="PowerShell">
+          <key name="1">
+            <key name="ShellIds">
+              <key name="Microsoft.PowerShell">
+                <value name="ExecutionPolicy" type="String">RemoteSigned</value>
+                <value name="Path" type="ExpandString">%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe</value>
+              </key>
+            </key>
+          </key>
+        </key>
+        <!-- Silverlight information to provide component state -->
+        <key name="Silverlight">
+          <value name="Version" type="String">2.0.30226</value>
+        </key>
+        <key name="Windows">
+          <key name="CurrentVersion">
+            <!-- Product registration -->
+            <key name="Installer">
+              <key name="UpgradeCodes">
+                <key name="4AE2841C3D7016247914C7DE6E8A2CA5">
+                  <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String"/>
+                </key>
+                <key name="BCE064CA78293F54FB664E46DE4EAA2F">
+                  <value name="285FE778FA8748D488B861F7CDB3CC11" type="String"/>
+                </key>
+              </key>
+              <key name="UserData">
+                <key name="S-1-5-18">
+                  <key name="Components">
+                    <key name="01FD291F42E0E1E4E8BEC07CA2697801">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\coreclr.dll</value>
                     </key>
-                    <key name="Patches">
+                    <key name="046C781A795A841458127D18979F95C2">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ko\Microsoft.VisualBasic.resources.dll</value>
+                    </key>
+                    <key name="074D78733334FF641A8DCEC077A7021B">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Xml.dll</value>
+                    </key>
+                    <key name="0874018F7CD573E45B678498FBCE9CF2">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\agcore.dll</value>
+                    </key>
+                    <key name="0D296B4BB4A9DF94E956917CE7E3B366">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\mscorrc.dll</value>
+                    </key>
+                    <key name="1427EF65D52617746B6F1E8FE995D417">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Net.dll</value>
+                    </key>
+                    <key name="15065F7E331B20745A6C8D1C290CD4F5">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\mscorlib.dll</value>
+                    </key>
+                    <key name="2B2813B8E3BF97B4F98AE5BE7491E8B5">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ja\Microsoft.VisualBasic.resources.dll</value>
+                    </key>
+                    <key name="2EDD33689C351844CA7EBA1689FB7C82">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Core.dll</value>
+                    </key>
+                    <key name="31178A0D7ED9799429B9AFCF517CAB4B">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ja\System.Windows.Browser.resources.dll</value>
+                    </key>
+                    <key name="3CD374BCAB7FB5E4791227FC66CB2526">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">02:\SOFTWARE\Microsoft\Silverlight\Version</value>
+                    </key>
+                    <key name="4D750E7A86E81164DB107B1E7572C235">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ja\mscorlib.resources.dll</value>
+                    </key>
+                    <key name="571652DD3990D9448A142A18A301E081">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Windows.Browser.dll</value>
+                    </key>
+                    <key name="5BCCC27E4F78A574AB32D6F248962776">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ko\mscorlib.resources.dll</value>
+                    </key>
+                    <key name="6B0889D8DB6A03C4086F4D4E5C455553">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ko\System.Windows.Browser.resources.dll</value>
+                    </key>
+                    <key name="7025809918349DC4C9C2C51E04813217">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Windows.dll</value>
+                    </key>
+                    <key name="73E05B1C07BA42849841FB82CAE530DC">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\Microsoft.VisualBasic.dll</value>
+                    </key>
+                    <key name="760EC90B6765E1A4F92083F292EC5079">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\slr.dll.managed_manifest</value>
+                    </key>
+                    <key name="7E69891DF8D1A9D4EBBC59D7AE1373B7">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\slup.exe</value>
+                    </key>
+                    <key name="81507E2EA7431324D9D5837550C9FC7A">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">02:\SOFTWARE\Microsoft\Internet Explorer\Low Rights\ElevationPolicy\{003B91A6-61E3-4591-891D-01E94C8CB11E}\</value>
+                    </key>
+                    <key name="866376A96E071774B8135D047FE63266">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.ServiceModel.Web.dll</value>
+                    </key>
+                    <key name="8803043CEF0DEC3469DEF22117258BE3">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Runtime.Serialization.dll</value>
+                    </key>
+                    <key name="9274B1F3DD752DD46B78DE222629060E">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">02:\SOFTWARE\Microsoft\Silverlight\Version</value>
+                    </key>
+                    <key name="9333F658497F902459BF17347C8F0E32">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\system.dll</value>
+                    </key>
+                    <key name="9AB7B36CC20127F48BC6427CE13773F0">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\npctrlui.dll</value>
+                    </key>
+                    <key name="DA52C02BB7E7AC549B24C2286961298C">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.ServiceModel.dll</value>
+                    </key>
+                    <key name="FCA83C9FA40CC774DB6C93FCF529E671">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\npctrl.dll</value>
+                    </key>
+                    <key name="3754EEFF4C7F5774E87381020A987356">
+                      <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\baz\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
+                    </key>
+                    <key name="E5AC568D64B9543B3B6A345CAE2F900E">
+                      <value name="00000000000000000000000000000000" type="String">$(TestDeploymentDirectory)\darice.cub</value>
+                    </key>
+                    <key name="3393A8597EC898160FFEAC4E76AFFB4F">
+                      <value name="00000000000000000000000000000000" type="String">$(TestDeploymentDirectory)\return.exe</value>
+                    </key>
+                  </key>
+                  <key name="Patches">
+                    <key name="904C25E6D0D048B4BA366443834D3DB3">
+                      <value name="LocalPackage" type="String">c:\Windows\Installer\16ca0c.msp</value>
+                    </key>
+                  </key>
+                  <key name="Products">
+                    <key name="D7314F9862C648A4DB8BE2A5B47BE100">
+                      <key name="Features">
+                        <value name="Complete" type="String"/>
+                        <value name="Complete2.0.30226.2" type="String"/>
+                      </key>
+                      <key name="InstallProperties">
+                        <value name="AuthorizedCDFPrefix" type="String"/>
+                        <value name="Comments" type="String"/>
+                        <value name="Contact" type="String"/>
+                        <value name="DisplayName" type="String">Microsoft Silverlight</value>
+                        <value name="DisplayVersion" type="String">2.0.30226.2</value>
+                        <value name="EstimatedSize" type="DWord">10913</value>
+                        <value name="HelpLink" type="ExpandString">http://go.microsoft.com/fwlink/?LinkID=91955</value>
+                        <value name="HelpTelephone" type="String"/>
+                        <value name="InstallDate" type="String">20080303</value>
+                        <value name="InstallLocation" type="String"/>
+                        <value name="InstallSource" type="String">c:\2014be2e43e417a3b9\</value>
+                        <value name="Language" type="DWord">1033</value>
+                        <value name="LocalPackage" type="String">c:\Windows\Installer\16ca06.msi</value>
+                        <value name="ModifyPath" type="ExpandString">MsiExec.exe /I{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}</value>
+                        <value name="NoRepair" type="DWord">1</value>
+                        <value name="Publisher" type="String">Microsoft Corporation</value>
+                        <value name="Readme" type="String"/>
+                        <value name="Size" type="String"/>
+                        <value name="UninstallString" type="ExpandString">MsiExec.exe /I{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}</value>
+                        <value name="URLInfoAbout" type="String"/>
+                        <value name="URLUpdateInfo" type="String"/>
+                        <value name="Version" type="DWord">33584658</value>
+                        <value name="VersionMajor" type="DWord">2</value>
+                        <value name="VersionMinor" type="DWord">0</value>
+                        <value name="WindowsInstaller" type="DWord">1</value>
+                      </key>
+                      <key name="Patches">
                         <key name="904C25E6D0D048B4BA366443834D3DB3">
-                            <key name="SourceList">
-                                <key name="Media">
-                                    <value name="100" type="String">;</value>
-                                </key>
-                                <key name="Net">
-                                    <value name="1" type="String">c:\updates\</value>
-                                </key>
-                            </key>
-                            <value name="LastUsedSource" type="ExpandString">n;1;c:\updates\</value>
-                            <value name="PackageName" type="String">Silverlight.msp</value>
+                          <value name="DisplayName" type="String">Microsoft Silverlight 2.0.30226.2</value>
+                          <value name="Installed" type="String">20080303</value>
+                          <value name="LUAEnabled" type="DWord"/>
+                          <value name="MoreInfoURL" type="String">http://go.microsoft.com/fwlink/?LinkID=91955</value>
+                          <value name="MSI3" type="DWord">1</value>
+                          <value name="PatchType" type="DWord">1</value>
+                          <value name="State" type="DWord">1</value>
+                          <value name="Uninstallable" type="DWord">1</value>
                         </key>
+                        <value name="AllPatches" type="MultiString" xml:space="preserve">904C25E6D0D048B4BA366443834D3DB3</value>
+                      </key>
+                      <key name="Usage"/>
                     </key>
-                    <key name="Products">
-                        <key name="D7314F9862C648A4DB8BE2A5B47BE100">
-                            <key name="Patches">
-                                <value name="904C25E6D0D048B4BA366443834D3DB3" type="String">:oldTocurrent;:#oldTocurrent</value>
-                                <value name="Patches" type="MultiString" xml:space="preserve">904C25E6D0D048B4BA366443834D3DB3</value>
-                            </key>
-                            <key name="SourceList">
-                                <key name="Media">
-                                    <value name="1" type="String">;1</value>
-                                    <value name="DiskPrompt" type="String">Microsoft's Silverlight Installation [1]</value>
-                                </key>
-                                <key name="Net">
-                                    <value name="1" type="ExpandString">c:\2014be2e43e417a3b9\</value>
-                                </key>
-                                <value name="LastUsedSource" type="ExpandString">n;1;c:\2014be2e43e417a3b9\</value>
-                                <value name="PackageName" type="String">silverlight.msi</value>
-                            </key>
-                            <value name="AdvertiseFlags" type="DWord">388</value>
-                            <value name="Assignment" type="DWord">1</value>
-                            <value name="AuthorizedLUAApp" type="DWord">1</value>
-                            <value name="Clients" type="MultiString" xml:space="preserve">:</value>
-                            <value name="DeploymentFlags" type="DWord">3</value>
-                            <value name="InstanceType" type="DWord">0</value>
-                            <value name="Language" type="DWord">1033</value>
-                            <value name="PackageCode" type="String">50C0DE0C1B6094A4C920EA571AD7E803</value>
-                            <value name="ProductIcon" type="String">c:\Windows\Installer\{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}\ARPIcon</value>
-                            <value name="ProductName" type="String">Microsoft Silverlight</value>
-                            <value name="Version" type="DWord">33584658</value>
-                        </key>
-                    </key>
-                    <key name="UpgradeCodes">
-                        <key name="4AE2841C3D7016247914C7DE6E8A2CA5">
-                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String"/>
-                        </key>
-                    </key>
+                  </key>
                 </key>
+                <key name="$(CurrentSID)">
+                  <key name="Components">
+                    <key name="1446B88BB61D80340BA34ABB0C8F0F22">
+                      <value name="285FE778FA8748D488B861F7CDB3CC11" type="String">$(TestRunDirectory)\product.wxs</value>
+                    </key>
+                    <key name="9768EC966DC2117418337D872D4A9776">
+                      <value name="285FE778FA8748D488B861F7CDB3CC11" type="String">01:\Software\Microsoft\TEST\Version</value>
+                    </key>
+                    <key name="9E88E8D950E87CF4FA7C7857D9D114E7">
+                      <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">c:\test\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
+                      <value name="225736CE5A378244B864566A1225C97C" type="String">c:\test\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
+                    </key>
+                    <key name="3754EEFF4C7F5774E87381020A987356">
+                      <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">c:\foo\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
+                      <value name="225736CE5A378244B864566A1225C97C" type="String">c:\bar\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
+                    </key>
+                  </key>
+                  <key name="Patches">
+                    <key name="787D36FF2E62AC94F8AA825B01A6DBA3">
+                      <value name="LocalPackage" type="String">$(TestDeploymentDirectory)\Example.msp</value>
+                    </key>
+                  </key>
+                  <key name="Products">
+                    <key name="1287AE4B1CA15B1408122ACF771D7B7B">
+                      <key name="Features">
+                        <value name="Module" type="String"/>
+                      </key>
+                      <key name="Usage"/>
+                    </key>
+                    <key name="285FE778FA8748D488B861F7CDB3CC11">
+                      <key name="Features">
+                        <value name="TEST" type="String"/>
+                      </key>
+                      <key name="InstallProperties">
+                        <value name="AuthorizedCDFPrefix" type="String"/>
+                        <value name="Comments" type="String"/>
+                        <value name="Contact" type="String">Microsoft Corporation</value>
+                        <value name="DisplayName" type="String">Microsoft Location Finder</value>
+                        <value name="DisplayVersion" type="String">3.0</value>
+                        <value name="EstimatedSize" type="DWord">1512</value>
+                        <value name="HelpLink" type="String"/>
+                        <value name="HelpTelephone" type="String"/>
+                        <value name="InstallDate" type="String">20061119</value>
+                        <value name="InstallLocation" type="String"/>
+                        <value name="InstallSource" type="String">D:\</value>
+                        <value name="Language" type="DWord">1033</value>
+                        <value name="LocalPackage" type="String">$(TestDeploymentDirectory)\Example.msi</value>
+                        <value name="ModifyPath" type="ExpandString">MsiExec.exe /I{877EF582-78AF-4D84-888B-167FDC3BCC11}</value>
+                        <value name="Publisher" type="String">Microsoft Corporation</value>
+                        <value name="Readme" type="String"/>
+                        <value name="Size" type="String"/>
+                        <value name="UninstallString" type="ExpandString">MsiExec.exe /I{877EF582-78AF-4D84-888B-167FDC3BCC11}</value>
+                        <value name="URLInfoAbout" type="String">http://www.microsoft.com</value>
+                        <value name="URLUpdateInfo" type="String"/>
+                        <value name="Version" type="DWord">50331648</value>
+                        <value name="VersionMajor" type="DWord">3</value>
+                        <value name="VersionMinor" type="DWord">0</value>
+                        <value name="WindowsInstaller" type="DWord">1</value>
+                      </key>
+                      <key name="Patches">
+                        <key name="787D36FF2E62AC94F8AA825B01A6DBA3">
+                          <value name="DisplayName" type="String">TEST</value>
+                          <value name="Installed" type="String">20130601</value>
+                          <value name="LUAEnabled" type="DWord">0</value>
+                          <value name="MoreInfoURL" type="String"/>
+                          <value name="MSI3" type="DWord">1</value>
+                          <value name="PatchType" type="DWord">1</value>
+                          <value name="State" type="DWord">1</value>
+                          <value name="Uninstallable" type="DWord">1</value>
+                        </key>
+                        <value name="AllPatches" type="MultiString">787D36FF2E62AC94F8AA825B01A6DBA3</value>
+                      </key>
+                      <key name="Usage"/>
+                    </key>
+                  </key>
+                </key>
+              </key>
             </key>
-            <key name="Microsoft">
-                <!-- Needed for handling errors in the pipeline -->
-                <key name="Cryptography">
-                    <key name="Defaults">
-                        <key name="Provider">
-                            <key name="Microsoft Strong Cryptographic Provider">
-                                <value name="Image Path" type="String">rsaenh.dll</value>
-                                <value name="SigInFile" type="DWord"/>
-                                <value name="Type" type="DWord">1</value>
-                            </key>
-                        </key>
-                        <key name="Provider Types">
-                            <key name="Type 001">
-                                <value name="Name" type="String">Microsoft Strong Cryptographic Provider</value>
-                                <value name="TypeName" type="String">RSA Full (Signature and Key Exchange)</value>
-                            </key>
-                        </key>
-                    </key>
+            <key name="Internet Settings">
+              <key name="Zones">
+                <key name="0">
+                  <value name="1806" type="DWord">0</value>
+                  <value name="CurrentLevel" type="DWord">0</value>
                 </key>
-                <!-- Provides component state for Silverlight -->
-                <key name="Internet Explorer">
-                    <key name="Low Rights">
-                        <key name="ElevationPolicy">
-                            <key name="{003B91A6-61E3-4591-891D-01E94C8CB11E}">
-                                <value name="AppName" type="String">Silverlight.Configuration.exe</value>
-                                <value name="AppPath" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\</value>
-                                <value name="Policy" type="DWord">3</value>
-                            </key>
-                        </key>
-                    </key>
-                </key>
-                <!-- PowerShell values needed to handle errors -->
-                <key name="PowerShell">
-                    <key name="1">
-                        <key name="ShellIds">
-                            <key name="Microsoft.PowerShell">
-                                <value name="ExecutionPolicy" type="String">RemoteSigned</value>
-                                <value name="Path" type="ExpandString">%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe</value>
-                            </key>
-                        </key>
-                    </key>
-                </key>
-                <!-- Silverlight information to provide component state -->
-                <key name="Silverlight">
-                    <value name="Version" type="String">2.0.30226</value>
-                </key>
-                <key name="Windows">
-                    <key name="CurrentVersion">
-                        <!-- Product registration -->
-                        <key name="Installer">
-                            <key name="UpgradeCodes">
-                                <key name="4AE2841C3D7016247914C7DE6E8A2CA5">
-                                    <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String"/>
-                                </key>
-                                <key name="BCE064CA78293F54FB664E46DE4EAA2F">
-                                    <value name="285FE778FA8748D488B861F7CDB3CC11" type="String"/>
-                                </key>
-                            </key>
-                            <key name="UserData">
-                                <key name="S-1-5-18">
-                                    <key name="Components">
-                                        <key name="01FD291F42E0E1E4E8BEC07CA2697801">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\coreclr.dll</value>
-                                        </key>
-                                        <key name="046C781A795A841458127D18979F95C2">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ko\Microsoft.VisualBasic.resources.dll</value>
-                                        </key>
-                                        <key name="074D78733334FF641A8DCEC077A7021B">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Xml.dll</value>
-                                        </key>
-                                        <key name="0874018F7CD573E45B678498FBCE9CF2">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\agcore.dll</value>
-                                        </key>
-                                        <key name="0D296B4BB4A9DF94E956917CE7E3B366">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\mscorrc.dll</value>
-                                        </key>
-                                        <key name="1427EF65D52617746B6F1E8FE995D417">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Net.dll</value>
-                                        </key>
-                                        <key name="15065F7E331B20745A6C8D1C290CD4F5">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\mscorlib.dll</value>
-                                        </key>
-                                        <key name="2B2813B8E3BF97B4F98AE5BE7491E8B5">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ja\Microsoft.VisualBasic.resources.dll</value>
-                                        </key>
-                                        <key name="2EDD33689C351844CA7EBA1689FB7C82">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Core.dll</value>
-                                        </key>
-                                        <key name="31178A0D7ED9799429B9AFCF517CAB4B">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ja\System.Windows.Browser.resources.dll</value>
-                                        </key>
-                                        <key name="3CD374BCAB7FB5E4791227FC66CB2526">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">02:\SOFTWARE\Microsoft\Silverlight\Version</value>
-                                        </key>
-                                        <key name="4D750E7A86E81164DB107B1E7572C235">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ja\mscorlib.resources.dll</value>
-                                        </key>
-                                        <key name="571652DD3990D9448A142A18A301E081">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Windows.Browser.dll</value>
-                                        </key>
-                                        <key name="5BCCC27E4F78A574AB32D6F248962776">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ko\mscorlib.resources.dll</value>
-                                        </key>
-                                        <key name="6B0889D8DB6A03C4086F4D4E5C455553">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\ko\System.Windows.Browser.resources.dll</value>
-                                        </key>
-                                        <key name="7025809918349DC4C9C2C51E04813217">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Windows.dll</value>
-                                        </key>
-                                        <key name="73E05B1C07BA42849841FB82CAE530DC">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\Microsoft.VisualBasic.dll</value>
-                                        </key>
-                                        <key name="760EC90B6765E1A4F92083F292EC5079">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\slr.dll.managed_manifest</value>
-                                        </key>
-                                        <key name="7E69891DF8D1A9D4EBBC59D7AE1373B7">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\slup.exe</value>
-                                        </key>
-                                        <key name="81507E2EA7431324D9D5837550C9FC7A">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">02:\SOFTWARE\Microsoft\Internet Explorer\Low Rights\ElevationPolicy\{003B91A6-61E3-4591-891D-01E94C8CB11E}\</value>
-                                        </key>
-                                        <key name="866376A96E071774B8135D047FE63266">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.ServiceModel.Web.dll</value>
-                                        </key>
-                                        <key name="8803043CEF0DEC3469DEF22117258BE3">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.Runtime.Serialization.dll</value>
-                                        </key>
-                                        <key name="9274B1F3DD752DD46B78DE222629060E">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">02:\SOFTWARE\Microsoft\Silverlight\Version</value>
-                                        </key>
-                                        <key name="9333F658497F902459BF17347C8F0E32">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\system.dll</value>
-                                        </key>
-                                        <key name="9AB7B36CC20127F48BC6427CE13773F0">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\npctrlui.dll</value>
-                                        </key>
-                                        <key name="DA52C02BB7E7AC549B24C2286961298C">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\System.ServiceModel.dll</value>
-                                        </key>
-                                        <key name="FCA83C9FA40CC774DB6C93FCF529E671">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\Program Files\Microsoft Silverlight\2.0.30226.2\npctrl.dll</value>
-                                        </key>
-                                        <key name="3754EEFF4C7F5774E87381020A987356">
-                                            <value name="D7314F9862C648A4DB8BE2A5B47BE100" type="String">c:\baz\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
-                                        </key>
-                                        <key name="E5AC568D64B9543B3B6A345CAE2F900E">
-                                            <value name="00000000000000000000000000000000" type="String">$(TestDeploymentDirectory)\darice.cub</value>
-                                        </key>
-                                        <key name="3393A8597EC898160FFEAC4E76AFFB4F">
-                                            <value name="00000000000000000000000000000000" type="String">$(TestDeploymentDirectory)\return.exe</value>
-                                        </key>
-                                    </key>
-                                    <key name="Patches">
-                                        <key name="904C25E6D0D048B4BA366443834D3DB3">
-                                            <value name="LocalPackage" type="String">c:\Windows\Installer\16ca0c.msp</value>
-                                        </key>
-                                    </key>
-                                    <key name="Products">
-                                        <key name="D7314F9862C648A4DB8BE2A5B47BE100">
-                                            <key name="Features">
-                                                <value name="Complete" type="String"/>
-                                                <value name="Complete2.0.30226.2" type="String"/>
-                                            </key>
-                                            <key name="InstallProperties">
-                                                <value name="AuthorizedCDFPrefix" type="String"/>
-                                                <value name="Comments" type="String"/>
-                                                <value name="Contact" type="String"/>
-                                                <value name="DisplayName" type="String">Microsoft Silverlight</value>
-                                                <value name="DisplayVersion" type="String">2.0.30226.2</value>
-                                                <value name="EstimatedSize" type="DWord">10913</value>
-                                                <value name="HelpLink" type="ExpandString">http://go.microsoft.com/fwlink/?LinkID=91955</value>
-                                                <value name="HelpTelephone" type="String"/>
-                                                <value name="InstallDate" type="String">20080303</value>
-                                                <value name="InstallLocation" type="String"/>
-                                                <value name="InstallSource" type="String">c:\2014be2e43e417a3b9\</value>
-                                                <value name="Language" type="DWord">1033</value>
-                                                <value name="LocalPackage" type="String">c:\Windows\Installer\16ca06.msi</value>
-                                                <value name="ModifyPath" type="ExpandString">MsiExec.exe /I{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}</value>
-                                                <value name="NoRepair" type="DWord">1</value>
-                                                <value name="Publisher" type="String">Microsoft Corporation</value>
-                                                <value name="Readme" type="String"/>
-                                                <value name="Size" type="String"/>
-                                                <value name="UninstallString" type="ExpandString">MsiExec.exe /I{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}</value>
-                                                <value name="URLInfoAbout" type="String"/>
-                                                <value name="URLUpdateInfo" type="String"/>
-                                                <value name="Version" type="DWord">33584658</value>
-                                                <value name="VersionMajor" type="DWord">2</value>
-                                                <value name="VersionMinor" type="DWord">0</value>
-                                                <value name="WindowsInstaller" type="DWord">1</value>
-                                            </key>
-                                            <key name="Patches">
-                                                <key name="904C25E6D0D048B4BA366443834D3DB3">
-                                                    <value name="DisplayName" type="String">Microsoft Silverlight 2.0.30226.2</value>
-                                                    <value name="Installed" type="String">20080303</value>
-                                                    <value name="LUAEnabled" type="DWord"/>
-                                                    <value name="MoreInfoURL" type="String">http://go.microsoft.com/fwlink/?LinkID=91955</value>
-                                                    <value name="MSI3" type="DWord">1</value>
-                                                    <value name="PatchType" type="DWord">1</value>
-                                                    <value name="State" type="DWord">1</value>
-                                                    <value name="Uninstallable" type="DWord">1</value>
-                                                </key>
-                                                <value name="AllPatches" type="MultiString" xml:space="preserve">904C25E6D0D048B4BA366443834D3DB3</value>
-                                            </key>
-                                            <key name="Usage"/>
-                                        </key>
-                                    </key>
-                                </key>
-                                <key name="$(CurrentSID)">
-                                    <key name="Components">
-                                        <key name="1446B88BB61D80340BA34ABB0C8F0F22">
-                                            <value name="285FE778FA8748D488B861F7CDB3CC11" type="String">$(TestRunDirectory)\product.wxs</value>
-                                        </key>
-                                        <key name="9768EC966DC2117418337D872D4A9776">
-                                            <value name="285FE778FA8748D488B861F7CDB3CC11" type="String">01:\Software\Microsoft\TEST\Version</value>
-                                        </key>
-                                        <key name="9E88E8D950E87CF4FA7C7857D9D114E7">
-                                            <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">c:\test\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">c:\test\WindowsInstaller\Microsoft.WindowsInstaller.PowerShell.dll</value>
-                                        </key>
-                                        <key name="3754EEFF4C7F5774E87381020A987356">
-                                            <value name="1287AE4B1CA15B1408122ACF771D7B7B" type="String">c:\foo\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
-                                            <value name="225736CE5A378244B864566A1225C97C" type="String">c:\bar\WindowsInstaller\Microsoft.Deployment.WindowsInstaller.dll</value>
-                                        </key>
-                                    </key>
-                                    <key name="Patches">
-                                        <key name="787D36FF2E62AC94F8AA825B01A6DBA3">
-                                            <value name="LocalPackage" type="String">$(TestDeploymentDirectory)\Example.msp</value>
-                                        </key>
-                                    </key>
-                                    <key name="Products">
-                                        <key name="1287AE4B1CA15B1408122ACF771D7B7B">
-                                            <key name="Features">
-                                                <value name="Module" type="String"/>
-                                            </key>
-                                            <key name="Usage"/>
-                                        </key>
-                                        <key name="285FE778FA8748D488B861F7CDB3CC11">
-                                            <key name="Features">
-                                                <value name="TEST" type="String"/>
-                                            </key>
-                                            <key name="InstallProperties">
-                                                <value name="AuthorizedCDFPrefix" type="String"/>
-                                                <value name="Comments" type="String"/>
-                                                <value name="Contact" type="String">Microsoft Corporation</value>
-                                                <value name="DisplayName" type="String">Microsoft Location Finder</value>
-                                                <value name="DisplayVersion" type="String">3.0</value>
-                                                <value name="EstimatedSize" type="DWord">1512</value>
-                                                <value name="HelpLink" type="String"/>
-                                                <value name="HelpTelephone" type="String"/>
-                                                <value name="InstallDate" type="String">20061119</value>
-                                                <value name="InstallLocation" type="String"/>
-                                                <value name="InstallSource" type="String">D:\</value>
-                                                <value name="Language" type="DWord">1033</value>
-                                                <value name="LocalPackage" type="String">$(TestDeploymentDirectory)\Example.msi</value>
-                                                <value name="ModifyPath" type="ExpandString">MsiExec.exe /I{877EF582-78AF-4D84-888B-167FDC3BCC11}</value>
-                                                <value name="Publisher" type="String">Microsoft Corporation</value>
-                                                <value name="Readme" type="String"/>
-                                                <value name="Size" type="String"/>
-                                                <value name="UninstallString" type="ExpandString">MsiExec.exe /I{877EF582-78AF-4D84-888B-167FDC3BCC11}</value>
-                                                <value name="URLInfoAbout" type="String">http://www.microsoft.com</value>
-                                                <value name="URLUpdateInfo" type="String"/>
-                                                <value name="Version" type="DWord">50331648</value>
-                                                <value name="VersionMajor" type="DWord">3</value>
-                                                <value name="VersionMinor" type="DWord">0</value>
-                                                <value name="WindowsInstaller" type="DWord">1</value>
-                                            </key>
-                                            <key name="Patches">
-                                                <key name="787D36FF2E62AC94F8AA825B01A6DBA3">
-                                                    <value name="DisplayName" type="String">TEST</value>
-                                                    <value name="Installed" type="String">20130601</value>
-                                                    <value name="LUAEnabled" type="DWord">0</value>
-                                                    <value name="MoreInfoURL" type="String"/>
-                                                    <value name="MSI3" type="DWord">1</value>
-                                                    <value name="PatchType" type="DWord">1</value>
-                                                    <value name="State" type="DWord">1</value>
-                                                    <value name="Uninstallable" type="DWord">1</value>
-                                                </key>
-                                                <value name="AllPatches" type="MultiString">787D36FF2E62AC94F8AA825B01A6DBA3</value>
-                                            </key>
-                                            <key name="Usage"/>
-                                        </key>
-                                    </key>
-                                </key>
-                            </key>
-                        </key>
-                        <key name="Internet Settings">
-                            <key name="Zones">
-                                <key name="0">
-                                    <value name="1806" type="DWord">0</value>
-                                    <value name="CurrentLevel" type="DWord">0</value>
-                                </key>
-                            </key>
-                        </key>
-                    </key>
-                </key>
+              </key>
             </key>
-            <key name="Policies">
-                <key name="Microsoft">
-                    <key name="Windows">
-                        <key name="Installer">
-                            <value name="Debug" type="DWord">7</value>
-                            <value name="Logging" type="String">voicewarmup</value>
-                        </key>
-                    </key>
-                </key>
-            </key>
+          </key>
         </key>
-        <key name="System">
-            <key name="CurrentControlSet">
-                <key name="Control">
-                    <!-- vstesthost.exe requires the following values -->
-                    <key name="FileSystem">
-                        <value name="NtfsAllowExtendedCharacter8dot3Rename" type="DWord"/>
-                        <value name="NtfsBugcheckOnCorrupt" type="DWord"/>
-                        <value name="NtfsDisable8dot3NameCreation" type="DWord"/>
-                        <value name="NtfsDisableCompression" type="DWord"/>
-                        <value name="NtfsDisableEncryption" type="DWord"/>
-                        <value name="NtfsDisableLastAccessUpdate" type="DWord">1</value>
-                        <value name="NtfsDisableVolsnapHints" type="DWord">2</value>
-                        <value name="NtfsEncryptPagingFile" type="DWord"/>
-                        <value name="NtfsMemoryUsage" type="DWord"/>
-                        <value name="NtfsMftZoneReservation" type="DWord"/>
-                        <value name="NtfsQuotaNotifyRate" type="DWord">3600</value>
-                        <value name="SymlinkLocalToLocalEvaluation" type="DWord">1</value>
-                        <value name="SymlinkLocalToRemoteEvaluation" type="DWord">1</value>
-                        <value name="SymlinkRemoteToLocalEvaluation" type="DWord"/>
-                        <value name="SymlinkRemoteToRemoteEvaluation" type="DWord"/>
-                        <value name="UdfsCloseSessionOnEject" type="DWord">1</value>
-                        <value name="UdfsSoftwareDefectManagement" type="DWord"/>
-                        <value name="Win31FileSystem" type="DWord"/>
-                        <value name="Win95TruncatedExtensions" type="DWord">1</value>
-                    </key>
-                    <!-- support copying files -->
-                    <key name="LSA">
-                        <key name="AccessProviders">
-                            <key name="Windows NT Access Provider">
-                                <value name="ProviderPath" type="String">%SystemRoot%\system32\ntmarta.dll</value>
-                            </key>
-                            <value name="MartaExtension" type="String">ntmarta.dll</value>
-                            <value name="ProviderOrder" type="MultiString">Windows NT Access Provider</value>
-                        </key>
-                    </key>
-                    <!-- enable pseudo-loc -->
-                    <key name="Nls">
-                        <key name="Locale">
-                            <value name="00000501" type="String">1</value>
-                            <value name="000005fe" type="String">7</value>
-                            <value name="000009ff" type="String">d</value>
-                        </key>
-                    </key>
-                </key>
+      </key>
+      <key name="Policies">
+        <key name="Microsoft">
+          <key name="Windows">
+            <key name="Installer">
+              <value name="Debug" type="DWord">7</value>
+              <value name="Logging" type="String">voicewarmup</value>
             </key>
+          </key>
         </key>
-    </hive>
-    <hive name="HKEY_USERS">
-        <key name="$(CurrentSID)">
-            <key name="Software">
-                <key name="Microsoft">
-                    <!-- User-assigned source registration that Windows Installer enumerates -->
-                    <key name="Installer">
-                        <key name="Assemblies"/>
-                        <key name="Features">
-                            <key name="1287AE4B1CA15B1408122ACF771D7B7B">
-                                <value name="Module" type="String"/>
-                            </key>
-                            <key name="285FE778FA8748D488B861F7CDB3CC11">
-                                <value name="TEST" type="String"/>
-                            </key>
-                        </key>
-                        <key name="Patches">
-                            <key name="787D36FF2E62AC94F8AA825B01A6DBA3">
-                                <key name="SourceList">
-                                    <key name="Media">
-                                        <value name="100" type="String">;</value>
-                                    </key>
-                                    <key name="Net">
-                                        <value name="1" type="ExpandString">D:\</value>
-                                    </key>
-                                    <value name="LastUsedSource" type="ExpandString">n;1;D:\</value>
-                                    <value name="PackageName" type="String">Example.msp</value>
-                                </key>
-                            </key>
-                        </key>
-                        <key name="Products">
-                            <key name="1287AE4B1CA15B1408122ACF771D7B7B">
-                                <!-- Just enough is registered for ModuleTest -->
-                                <value name="ProductName" type="String">Windows Installer PowerShell Module</value>
-                            </key>
-                            <key name="285FE778FA8748D488B861F7CDB3CC11">
-                                <key name="Patches">
-                                    <value name="787D36FF2E62AC94F8AA825B01A6DBA3" type="String">:MSP.1;:#MSP.1</value>
-                                    <value name="Patches" type="MultiString">787D36FF2E62AC94F8AA825B01A6DBA3</value>
-                                </key>
-                                <key name="SourceList">
-                                    <key name="Media">
-                                        <value name="1" type="String">;</value>
-                                    </key>
-                                    <key name="Net">
-                                        <value name="1" type="ExpandString">D:\</value>
-                                    </key>
-                                    <value name="LastUsedSource" type="ExpandString">D:\</value>
-                                    <value name="PackageName" type="String">Example.msi</value>
-                                </key>
-                                <value name="AdvertiseFlags" type="DWord">388</value>
-                                <value name="Assignment" type="DWord">0</value>
-                                <value name="AuthorizedLUAApp" type="DWord">0</value>
-                                <value name="Clients" type="MultiString" xml:space="preserve">:</value>
-                                <value name="DeploymentFlags" type="DWord">2</value>
-                                <value name="InstanceType" type="DWord">0</value>
-                                <value name="Language" type="DWord">1033</value>
-                                <value name="PackageCode" type="String">ADD069BBE6CCC2B4A8980F4384415A2B</value>
-                                <value name="ProductName" type="String">TEST</value>
-                                <value name="Version" type="DWord">16777216</value>
-                            </key>
-                        </key>
-                        <key name="UpgradeCodes">
-                            <key name="BCE064CA78293F54FB664E46DE4EAA2F">
-                                <value name="285FE778FA8748D488B861F7CDB3CC11" type="String"/>
-                            </key>
-                        </key>
-                    </key>
-                    <key name="TEST">
-                        <value name="Version" type="String">1.0.1</value>
-                    </key>
-                </key>
+      </key>
+    </key>
+    <key name="System">
+      <key name="CurrentControlSet">
+        <key name="Control">
+          <!-- vstesthost.exe requires the following values -->
+          <key name="FileSystem">
+            <value name="NtfsAllowExtendedCharacter8dot3Rename" type="DWord"/>
+            <value name="NtfsBugcheckOnCorrupt" type="DWord"/>
+            <value name="NtfsDisable8dot3NameCreation" type="DWord"/>
+            <value name="NtfsDisableCompression" type="DWord"/>
+            <value name="NtfsDisableEncryption" type="DWord"/>
+            <value name="NtfsDisableLastAccessUpdate" type="DWord">1</value>
+            <value name="NtfsDisableVolsnapHints" type="DWord">2</value>
+            <value name="NtfsEncryptPagingFile" type="DWord"/>
+            <value name="NtfsMemoryUsage" type="DWord"/>
+            <value name="NtfsMftZoneReservation" type="DWord"/>
+            <value name="NtfsQuotaNotifyRate" type="DWord">3600</value>
+            <value name="SymlinkLocalToLocalEvaluation" type="DWord">1</value>
+            <value name="SymlinkLocalToRemoteEvaluation" type="DWord">1</value>
+            <value name="SymlinkRemoteToLocalEvaluation" type="DWord"/>
+            <value name="SymlinkRemoteToRemoteEvaluation" type="DWord"/>
+            <value name="UdfsCloseSessionOnEject" type="DWord">1</value>
+            <value name="UdfsSoftwareDefectManagement" type="DWord"/>
+            <value name="Win31FileSystem" type="DWord"/>
+            <value name="Win95TruncatedExtensions" type="DWord">1</value>
+          </key>
+          <!-- support copying files -->
+          <key name="LSA">
+            <key name="AccessProviders">
+              <key name="Windows NT Access Provider">
+                <value name="ProviderPath" type="String">%SystemRoot%\system32\ntmarta.dll</value>
+              </key>
+              <value name="MartaExtension" type="String">ntmarta.dll</value>
+              <value name="ProviderOrder" type="MultiString">Windows NT Access Provider</value>
             </key>
+          </key>
+          <!-- enable pseudo-loc -->
+          <key name="Nls">
+            <key name="Locale">
+              <value name="00000501" type="String">1</value>
+              <value name="000005fe" type="String">7</value>
+              <value name="000009ff" type="String">d</value>
+            </key>
+          </key>
         </key>
-    </hive>
+      </key>
+    </key>
+  </hive>
+  <hive name="HKEY_USERS">
+    <key name="$(CurrentSID)">
+      <key name="Software">
+        <key name="Microsoft">
+          <!-- User-assigned source registration that Windows Installer enumerates -->
+          <key name="Installer">
+            <key name="Assemblies"/>
+            <key name="Features">
+              <key name="1287AE4B1CA15B1408122ACF771D7B7B">
+                <value name="Module" type="String"/>
+              </key>
+              <key name="285FE778FA8748D488B861F7CDB3CC11">
+                <value name="TEST" type="String"/>
+              </key>
+            </key>
+            <key name="Patches">
+              <key name="787D36FF2E62AC94F8AA825B01A6DBA3">
+                <key name="SourceList">
+                  <key name="Media">
+                    <value name="100" type="String">;</value>
+                  </key>
+                  <key name="Net">
+                    <value name="1" type="ExpandString">D:\</value>
+                  </key>
+                  <value name="LastUsedSource" type="ExpandString">n;1;D:\</value>
+                  <value name="PackageName" type="String">Example.msp</value>
+                </key>
+              </key>
+            </key>
+            <key name="Products">
+              <key name="1287AE4B1CA15B1408122ACF771D7B7B">
+                <!-- Just enough is registered for ModuleTest -->
+                <value name="ProductName" type="String">Windows Installer PowerShell Module</value>
+              </key>
+              <key name="285FE778FA8748D488B861F7CDB3CC11">
+                <key name="Patches">
+                  <value name="787D36FF2E62AC94F8AA825B01A6DBA3" type="String">:MSP.1;:#MSP.1</value>
+                  <value name="Patches" type="MultiString">787D36FF2E62AC94F8AA825B01A6DBA3</value>
+                </key>
+                <key name="SourceList">
+                  <key name="Media">
+                    <value name="1" type="String">;</value>
+                  </key>
+                  <key name="Net">
+                    <value name="1" type="ExpandString">D:\</value>
+                  </key>
+                  <value name="LastUsedSource" type="ExpandString">D:\</value>
+                  <value name="PackageName" type="String">Example.msi</value>
+                </key>
+                <value name="AdvertiseFlags" type="DWord">388</value>
+                <value name="Assignment" type="DWord">0</value>
+                <value name="AuthorizedLUAApp" type="DWord">0</value>
+                <value name="Clients" type="MultiString" xml:space="preserve">:</value>
+                <value name="DeploymentFlags" type="DWord">2</value>
+                <value name="InstanceType" type="DWord">0</value>
+                <value name="Language" type="DWord">1033</value>
+                <value name="PackageCode" type="String">ADD069BBE6CCC2B4A8980F4384415A2B</value>
+                <value name="ProductName" type="String">TEST</value>
+                <value name="Version" type="DWord">16777216</value>
+              </key>
+            </key>
+            <key name="UpgradeCodes">
+              <key name="BCE064CA78293F54FB664E46DE4EAA2F">
+                <value name="285FE778FA8748D488B861F7CDB3CC11" type="String"/>
+              </key>
+            </key>
+          </key>
+        </key>
+      </key>
+    </key>
+  </hive>
 </registry>
