@@ -91,6 +91,48 @@
       <code>get-msiproductinfo "{90120000-00BA-0409-0000-0000000FF1CE}" | get-msicomponentinfo -componentcode "{90120000-00BA-0409-0000-0E32E9F6E558}"</code>
       <description>This command gets information for the component "{90120000-00BA-0409-0000-0E32E9F6E558}" installed by the product "{90120000-00BA-0409-0000-0000000FF1CE}".</description>
     </example>
+    <link>Get-MSIComponentState</link>
+  </command>
+  <command>
+    <verb>Get</verb>
+    <noun>MSIComponentState</noun>
+    <synopsis>
+      Gets the install state for all authored components for one or more products installed on the machine.
+    </synopsis>
+    <description>
+      Gets the install state for all components authored into one or more products. This includes all patches
+      applied to the product. In addition to the information returned from Get-MSIComponentInfo, the authored
+      component identifier from the Component table is attached along with a simple boolean property that determines
+      if the component is installed locally or not.
+    </description>
+    <parameter name="Product">
+      The products for which authored component state is retrieved.
+    </parameter>
+    <parameter name="ProductCode">
+      The installed ProductCodes that define the components for which state information is retrieved.
+    </parameter>
+    <parameter name="UserContext" default="All">
+      The context for registered products. This can be a combination of &quot;Machine&quot;, &quot;UserManaged&quot;, or &quot;UserUnmanaged&quot;.
+    </parameter>
+    <parameter name="UserSid">
+      The security identifier for a user for user-managed and user-unmanaged products.
+    </parameter>
+    <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      Products for which authored component state is retrieved.
+    </input>
+    <output type="Microsoft.Deployment.WindowsInstaller.ComponentInstallation#State">
+      State information about the components authored into one or more products and applied patches.
+    </output>
+    <example>
+      <code>get-msicomponentstate "{877EF582-78AF-4D84-888B-167FDC3BCC11}"</code>
+      <description>Gets state information for all components authored into the product "{877EF582-78AF-4D84-888B-167FDC3BCC11}" and all applied patches.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo -name *TEST* | get-msicomponentstate</code>
+      <description>Gets state information for all components authored into any product where the ProductName matches *TEST*.</description>
+    </example>
+    <link>Get-MSIComponentInfo</link>
+    <link>Get-MSIProductInfo</link>
   </command>
   <command>
     <verb>Get</verb>

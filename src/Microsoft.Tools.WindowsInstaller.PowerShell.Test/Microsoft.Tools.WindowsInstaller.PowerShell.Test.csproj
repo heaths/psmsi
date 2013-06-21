@@ -88,6 +88,7 @@
     <Compile Include="PowerShell\Commands\EditPackageCommandTests.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommandTests.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommandTest.cs" />
+    <Compile Include="PowerShell\Commands\GetComponentStateFunctionTests.cs" />
     <Compile Include="PowerShell\Commands\GetFeatureCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetPatchSequenceCommandTests.cs" />
@@ -137,6 +138,7 @@
     <Content Include="Data\Example.msp" />
     <Content Include="Data\Example.mst" />
     <Content Include="Data\Applicable.xml" />
+    <Content Include="Data\product.wxs" />
     <Content Include="Data\qps-ploc\Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

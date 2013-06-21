@@ -118,6 +118,24 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the default replacement properties for the mock registry file.
+        /// </summary>
+        protected Dictionary<string, string> DefaultRegistryProperties
+        {
+            get
+            {
+                return new Dictionary<string, string>()
+                {
+                    { "CurrentSID", CurrentSID },
+                    { "CurrentUsername", CurrentUsername },
+                    { "TestDeploymentDirectory", this.TestContext.DeploymentDirectory },
+                    { "TestRunDirectory", this.TestContext.TestResultsDirectory },
+                };
+            }
+        }
+
         #endregion
 
         #region Test Execution
@@ -141,13 +159,7 @@ namespace Microsoft.Tools.WindowsInstaller
 
             if (null == properties)
             {
-                properties = new Dictionary<string, string>()
-                {
-                    { "CurrentSID", CurrentSID },
-                    { "CurrentUsername", CurrentUsername },
-                    { "TestDeploymentDirectory", this.TestContext.DeploymentDirectory },
-                    { "TestRunDirectory", this.TestContext.TestResultsDirectory },
-                };
+                properties = this.DefaultRegistryProperties;
             }
 
             var reg = new MockRegistry();
