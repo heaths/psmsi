@@ -574,6 +574,15 @@
   </Type>
   <Type>
     <Name>Microsoft.Tools.WindowsInstaller.AttributeColumn</Name>
+    <Members>
+      <ScriptMethod>
+        <Name>ToString</Name>
+        <Script>
+          try { $this.PSBase.ToString($MsiAttributeColumnFormat) }
+          catch { $this.PSBase.ToString() }
+        </Script>
+      </ScriptMethod>
+    </Members>
     <TypeAdapter>
       <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.AttributeColumnPropertyAdapter</TypeName>
     </TypeAdapter>

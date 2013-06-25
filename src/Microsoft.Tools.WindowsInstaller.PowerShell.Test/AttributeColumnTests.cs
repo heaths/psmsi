@@ -74,11 +74,36 @@ namespace Microsoft.Tools.WindowsInstaller
         [TestMethod]
         public void AttributeColumnToString()
         {
-            var column = new AttributeColumn(null, 0);
-            Assert.AreEqual<string>("0", column.ToString());
+            var column = new AttributeColumn(typeof(ComponentAttributes), (int)ComponentAttributes.Shared);
+            var value = column.ToString();
+            Assert.AreEqual<string>("2048", value);
 
             column = new AttributeColumn(null, null);
             Assert.IsNull(column.ToString());
+        }
+
+        [TestMethod]
+        public void AttributeColumnToHexString()
+        {
+            var column = new AttributeColumn(typeof(ComponentAttributes), (int)ComponentAttributes.Shared);
+            var value = column.ToString("X8");
+            Assert.AreEqual<string>("0x00000800", value);
+        }
+
+        [TestMethod]
+        public void AttributeColumnToEnumString()
+        {
+            var column = new AttributeColumn(typeof(ComponentAttributes), (int)ComponentAttributes.Shared);
+            var value = column.ToString("F");
+            Assert.AreEqual<string>("Shared", value);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void UnsupportedFormatThrows()
+        {
+            var column = new AttributeColumn(typeof(ComponentAttributes), (int)ComponentAttributes.Shared);
+            var value = column.ToString("Z");
         }
 
         [TestMethod]

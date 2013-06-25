@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsInstaller
     /// <summary>
     /// Provides additional properties for column types with associated enumerations.
     /// </summary>
-    public sealed class AttributeColumn : IConvertible
+    public sealed class AttributeColumn : IConvertible, IFormattable
     {
         // Used as a fallback when the enumeration type cannot be determined.
         // The framework will return the integer value for undefined enumeration values.
@@ -70,15 +70,53 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Returns a string representation of the internal value.
+        /// Returns a string representation of the internal value using the <see cref="CultureInfo.InvariantCulture"/>.
         /// </summary>
         /// <returns>A string representation of the internal value.</returns>
         public override string ToString()
         {
+            var formattable = (IFormattable)this;
+            return formattable.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Returns a string representation of the internal value using the <see cref="CultureInfo.InvariantCulture"/>.
+        /// </summary>
+        /// <param name="format">The format specification.</param>
+        /// <returns>A string representation of the internal value.</returns>
+        public string ToString(string format)
+        {
+            var formattable = (IFormattable)this;
+            return formattable.ToString(format, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Returns a string representation of the internal value.
+        /// </summary>
+        /// <param name="format">The format specification.</param>
+        /// <param name="provider">The <see cref="IFormatProvider"/> that determines how values are formatted.</param>
+        /// <returns>A string representation of the internal value.</returns>
+        string IFormattable.ToString(string format, IFormatProvider provider)
+        {
             if (this.Value.HasValue)
             {
                 var value = this.Value.Value;
-                return value.ToString(CultureInfo.InvariantCulture);
+
+                if (string.IsNullOrEmpty(format) || "G" == format.ToUpperInvariant())
+                {
+                    // Return the numeric value as the default.
+                    return value.ToString(provider);
+                }
+
+                // Enum only supports a lone X but caller may expect numeric formatting.
+                if (0 <= format.IndexOf("X", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    // Return the hexadecimal value with the proper prefix.
+                    return "0x" + Enum.Format(this.Type, value, "X");
+                }
+
+                // Use any other format specifier as is.
+                return Enum.Format(this.Type, value, format);
             }
 
             return null;

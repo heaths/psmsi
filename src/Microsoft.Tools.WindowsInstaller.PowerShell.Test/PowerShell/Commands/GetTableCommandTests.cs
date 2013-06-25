@@ -236,5 +236,43 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<string>("Update", value, "The Classification property value is incorrect.");
             }
         }
+
+        [TestMethod]
+        public void FormatComponentAttributes()
+        {
+            using (var p = CreatePipeline(@"get-msitable example.msi -table Component | where { $_.Attributes.HasRegistryKeyPath }"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null != output && 1 == output.Count);
+
+                var item = output[0];
+
+                var attributes = item.Members.Match("Attributes", PSMemberTypes.Properties).FirstOrDefault();
+                Assert.IsNotNull(attributes);
+
+                var obj = PSObject.AsPSObject(attributes.Value);
+                var toString = obj.Members.Match("ToString", PSMemberTypes.Methods).FirstOrDefault() as PSMethodInfo;
+                Assert.IsNotNull(toString);
+
+                // Default formatting.
+                var value = toString.Invoke().ToString();
+                Assert.AreEqual<string>("4", value, "The default formatting is incorrect.");
+
+                // Hexadecimal formatting.
+                p.Runspace.SessionStateProxy.SetVariable("MsiAttributeColumnFormat", "X");
+                value = toString.Invoke().ToString();
+                Assert.AreEqual<string>("0x00000004", value, "The hexadecimal formatting is incorrect.");
+
+                // Enumeration name formatting.
+                p.Runspace.SessionStateProxy.SetVariable("MsiAttributeColumnFormat", "F");
+                value = toString.Invoke().ToString();
+                Assert.AreEqual<string>("RegistryKeyPath", value, "The enumeration name formatting is incorrect.");
+
+                // Exceptions use default formatting.
+                p.Runspace.SessionStateProxy.SetVariable("MsiAttributeColumnFormat", "Z");
+                value = toString.Invoke().ToString();
+                Assert.AreEqual<string>("4", value, "The exceptional formatting is incorrect.");
+            }
+        }
     }
 }

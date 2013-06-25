@@ -1,0 +1,40 @@
+﻿TOPIC
+    about_MSI
+
+DESCRIPTION
+    Exposes Windows Installer functionality to PowerShell, providing means to
+    query installed product and patch information and to query views on
+    packages.
+
+
+VARIABLES
+    MsiAttributeColumnFormat
+        The format specification string to alter how attributes are displayed.
+
+        Valid values are:
+
+        -- G:   Displays the integer value. This is the default.
+        -- X:   Displays the hexadecimal integer value.
+        -- F:   Displays one or more names for well-known attribute types.
+
+ONLINE
+    https://psmsi.codeplex.com/documentation
+
+LICENSE
+    https://psmsi.codeplex.com/license
+
+HISTORY
+    See http://psmsi.codeplex.com/releases for up-to-date information.
+
+    2.2.0
+        This release adds many new cmdlets from the past release, including
+        cmdlets to select records from a table or custom query, run ICEs on a
+        package, and install, repair, or uninstall packages. The install,
+        repair, and uninstall cmdlets also display progress, warning, and
+        error information. Some issues were fixed as well.
+
+        The snap-in installer has been removed in favor of the module
+        installer - a per-user install that will upgrade any previous version.
+        You may also install the package to a per-machine location, though
+        elevation is required. This will make the module accessible to any
+        host for any user on the machine.
