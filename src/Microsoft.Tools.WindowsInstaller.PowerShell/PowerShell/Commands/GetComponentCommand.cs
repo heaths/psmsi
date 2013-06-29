@@ -113,8 +113,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             PSObject obj = PSObject.AsPSObject(component);
 
             // Add the component key path as the PSPath.
-            string path = this.SessionState.Path.GetUnresolvedPSPathFromKeyPath(component.Path);
-            obj.Properties.Add(new PSNoteProperty("PSPath", path));
+            var path = this.SessionState.Path.GetUnresolvedPSPathFromKeyPath(component.Path);
+            if (!string.IsNullOrEmpty(path))
+            {
+                obj.Properties.Add(new PSNoteProperty("PSPath", path));
+            }
 
             // Must hide the ClientProducts property or exceptions will be thrown.
             obj.Properties.Add(new PSNoteProperty("ClientProducts", null));

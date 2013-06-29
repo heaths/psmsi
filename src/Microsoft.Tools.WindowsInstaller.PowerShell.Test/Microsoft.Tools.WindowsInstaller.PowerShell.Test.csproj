@@ -111,6 +111,7 @@
     <Compile Include="PowerShell\RecordPropertyAdapterTests.cs" />
     <Compile Include="PowerShell\SidAttributeTest.cs" />
     <Compile Include="PowerShell\ValidateGuidAttributeTest.cs" />
+    <Compile Include="RegistryViewTests.cs" />
     <Compile Include="RegistryXml.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommandTest.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="SetTests.cs" />
     <Compile Include="SummaryInfoTests.cs" />
     <Compile Include="TestBase.cs" />
+    <Compile Include="TreeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj">

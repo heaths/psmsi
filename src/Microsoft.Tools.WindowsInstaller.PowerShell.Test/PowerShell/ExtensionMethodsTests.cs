@@ -71,10 +71,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             paths[@"C:\foo"] = @"Microsoft.PowerShell.Core\FileSystem::C:\foo";
             paths[@"C?\foo"] = @"Microsoft.PowerShell.Core\FileSystem::C:\foo";
             paths[@"\\server\share\directory"] = @"Microsoft.PowerShell.Core\FileSystem::\\server\share\directory";
-            paths[@"00:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_CLASSES_ROOT\SOFTWARE";
-            paths[@"01:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_CURRENT_USER\SOFTWARE";
-            paths[@"02:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE";
-            paths[@"03:\SOFTWARE"] = @"Microsoft.PowerShell.Core\Registry::HKEY_USERS\SOFTWARE";
+            paths[@"00:\SOFTWARE\"] = @"Microsoft.PowerShell.Core\Registry::HKEY_CLASSES_ROOT\SOFTWARE";
+            paths[@"00:\SOFTWARE\Value"] = @"Microsoft.PowerShell.Core\Registry::HKEY_CLASSES_ROOT\SOFTWARE";
+            paths[@"01:\SOFTWARE\"] = @"Microsoft.PowerShell.Core\Registry::HKEY_CURRENT_USER\SOFTWARE";
+            paths[@"02:\SOFTWARE\"] = @"Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE";
+            paths[@"03:\SOFTWARE\"] = @"Microsoft.PowerShell.Core\Registry::HKEY_USERS\SOFTWARE";
 
             foreach (var item in paths)
             {

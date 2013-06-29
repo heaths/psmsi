@@ -17,6 +17,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     /// </summary>
     internal static class ExtensionMethods
     {
+        private static readonly string DirectorySeparator = @"\";
+        private static readonly string DriveSeparator = ":";
+        private static readonly char[] DriveSeparators = new char[] { ':', '?' };
+        private static readonly string ProviderSeparator = "::";
+        private static readonly string RegistryProvider = @"Microsoft.PowerShell.Core\Registry::";
+
         /// <summary>
         /// Matches a string using any of the wildcard <paramref name="patterns"/>.
         /// </summary>
@@ -64,14 +70,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             }
 
             // Treat UNC paths as normal FileSystem paths.
-            if (path.StartsWith(@"\\", StringComparison.Ordinal))
+            if (path.StartsWith(DirectorySeparator, StringComparison.Ordinal))
             {
                 return source.GetUnresolvedPSPathFromProviderPath(path);
             }
 
             // Get the path prefix to determine the path type.
             // Windows Installer will sometimes use a ? instead of : so search for both.
-            int pos = path.IndexOfAny(new char[] { ':', '?' });
+            var pos = path.IndexOfAny(DriveSeparators);
 
             // File system key paths.
             if (1 == pos)
@@ -79,7 +85,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 // Translate a ? to a :.
                 if ('?' == path[pos])
                 {
-                    path = path.Substring(0, pos) + ":" + path.Substring(1 + pos);
+                    path = path.Substring(0, pos) + DriveSeparator + path.Substring(1 + pos);
                 }
 
                 return source.GetUnresolvedPSPathFromProviderPath(path);
@@ -88,43 +94,24 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             // Registry key paths.
             else if (2 == pos)
             {
-                string root = null;
-                switch (path.Substring(0, pos))
+                // Map the key path based on the current process's bitness.
+                var view = RegistryView.GetInstance();
+                path = view.MapKeyPath(path);
+
+                if (!string.IsNullOrEmpty(path))
                 {
-                    case "00":
-                    case "20":
-                        root = "HKEY_CLASSES_ROOT";
-                        break;
+                    // Strip the trailing backslash (for registry keys) or full registry value
+                    // since the Registry provider cannot represent registry values in a PSPath.
+                    pos = path.LastIndexOf(DirectorySeparator, StringComparison.Ordinal);
+                    path = path.Substring(0, pos);
 
-                    case "01":
-                    case "21":
-                        root = "HKEY_CURRENT_USER";
-                        break;
-
-                    case "02":
-                    case "22":
-                        root = "HKEY_LOCAL_MACHINE";
-                        break;
-
-                    case "03":
-                    case "23":
-                        root = "HKEY_USERS";
-                        break;
-
-                    default:
-                        // Not an error, but not valid either.
-                        return null;
+                    // Not all the roots have drives, so we have to hard code the provider-qualified root.
+                    return RegistryProvider + path;
                 }
-
-                // Not all the roots have drives, so we have to hard code the provider-qualified root.
-                return @"Microsoft.PowerShell.Core\Registry::" + root + path.Substring(1 + pos);
             }
 
             // Fallback: not an error, but not valid either.
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         /// <summary>
@@ -149,7 +136,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             PSDriveInfo drive;
 
             path = source.GetUnresolvedProviderPathFromPSPath(path, out provider, out drive);
-            return provider.ModuleName + @"\" + provider.Name + "::" + path;
+            return provider.ModuleName + DirectorySeparator + provider.Name + ProviderSeparator + path;
         }
 
         /// <summary>
