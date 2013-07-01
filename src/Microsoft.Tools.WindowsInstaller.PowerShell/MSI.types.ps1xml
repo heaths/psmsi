@@ -567,7 +567,7 @@
       <ScriptProperty>
         <Name>Validations</Name>
         <GetScriptBlock>
-          [Microsoft.Deployment.WindowsInstaller.TransformValidations] ([int] $this.PSBase.Validations -shr 16)
+          [Microsoft.Deployment.WindowsInstaller.TransformValidations] [Math]::Floor(([int] $this.PSBase.Validations -band 0xffff0000) / 0xffff)
         </GetScriptBlock>
       </ScriptProperty>
     </Members>
@@ -834,7 +834,7 @@
       <ScriptProperty>
         <Name>Validations</Name>
         <GetScriptBlock>
-          [Microsoft.Deployment.WindowsInstaller.TransformValidations] ($this.CharacterCount -shr 16)
+          [Microsoft.Deployment.WindowsInstaller.TransformValidations] [Math]::Floor(($this.CharacterCount -band 0xffff0000) / 0xffff)
         </GetScriptBlock>
       </ScriptProperty>
       <ScriptProperty>
