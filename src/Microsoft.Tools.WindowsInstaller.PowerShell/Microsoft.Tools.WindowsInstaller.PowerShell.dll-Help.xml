@@ -1854,7 +1854,7 @@
       <maml:para />
       <maml:para>Records are returned with properties matching column names. If records are selected from a single table, the table name is also part of the type name queryable from the PSTypeNames object property. If the column name is prefixed with the table name - required to disambiguate names, or optional otherwise - a property is returned as typed in the original query string. Note that Windows PowerShell allows periods in property names but may require in some scenarios that a property name with periods is contained in quotes, like 'File.Attributes'.</maml:para>
       <maml:para />
-      <maml:para>For attribute columns in standard Windows Installer tables, you may also query for specific attribute values by specifying a special property name on the end of the attribute column name, like 'File.Attributes'.HasVital, to query for any columns that have the attribute value set.</maml:para>
+      <maml:para>For attribute columns in standard Windows Installer tables, you may also query for specific attribute values by specifying a special property name on the end of the attribute column name, like 'File.Attributes'.HasVital, to query for any columns that have the attribute value set. You can define an $MsiAttributeColumnFormat variable to control the display format of attribute columns, though the underlying value will not be changed. Run 'help about_MSI' for more information.</maml:para>
       <maml:para />
       <maml:para>Note that patch packages do not typically have more than a couple of tables. The patch has to be applied to a product package to view any changes it has made.</maml:para>
     </maml:description>

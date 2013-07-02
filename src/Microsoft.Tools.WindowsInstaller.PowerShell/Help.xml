@@ -493,7 +493,8 @@
       <p>
         For attribute columns in standard Windows Installer tables, you may also query for specific attribute values by specifying a special
         property name on the end of the attribute column name, like 'File.Attributes'.HasVital, to query for any columns that have the attribute
-        value set.
+        value set. You can define an $MsiAttributeColumnFormat variable to control the display format of attribute
+        columns, though the underlying value will not be changed. Run 'help about_MSI' for more information.
       </p>
       <p>
         Note that patch packages do not typically have more than a couple of tables.
