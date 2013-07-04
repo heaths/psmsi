@@ -9,6 +9,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -50,7 +51,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 if (value == UserContexts.None)
                 {
-                    string message = string.Format(Properties.Resources.Error_InvalidContext, UserContexts.None);
+                    var message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_InvalidContext, UserContexts.None);
                     throw new ArgumentException(message, "UserContext");
                 }
 

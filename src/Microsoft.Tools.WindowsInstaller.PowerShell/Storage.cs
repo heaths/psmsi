@@ -7,6 +7,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 
 namespace Microsoft.Tools.WindowsInstaller
@@ -56,7 +57,7 @@ namespace Microsoft.Tools.WindowsInstaller
             if (NativeMethods.STG_E_FILEALREADYEXISTS == ret)
             {
                 // 0x80030050 is a rather odd error string, so return something more appropriate.
-                string message = string.Format(Properties.Resources.Error_InvalidStorage, path);
+                var message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_InvalidStorage, path);
                 throw new InvalidDataException(message, new Win32Exception(ret));
             }
             else if (0 != ret)

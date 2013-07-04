@@ -10,6 +10,7 @@ using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Management.Automation;
 
@@ -165,10 +166,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         }
                         catch (InstallerException ex)
                         {
-                            var psex = new PSInstallerException(ex);
-                            if (null != psex.ErrorRecord)
+                            using (var psex = new PSInstallerException(ex))
                             {
-                                this.WriteError(psex.ErrorRecord);
+                                if (null != psex.ErrorRecord)
+                                {
+                                    this.WriteError(psex.ErrorRecord);
+                                }
                             }
                         }
                     }
@@ -194,7 +197,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             string copy = System.IO.Path.Combine(temp, name);
 
             // Copy and overwrite the file into the TEMP directory.
-            this.WriteDebug(string.Format(Resources.Action_Copy, path, copy));
+            this.WriteDebug(string.Format(CultureInfo.CurrentCulture, Resources.Action_Copy, path, copy));
             File.Copy(path, copy, true);
 
             // Unset the read-only attribute.
@@ -210,7 +213,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 try
                 {
-                    this.WriteDebug(string.Format(Resources.Action_Merge, path, db.FilePath));
+                    this.WriteDebug(string.Format(CultureInfo.CurrentCulture, Resources.Action_Merge, path, db.FilePath));
                     db.Merge(cube, "MergeConflicts");
                 }
                 catch

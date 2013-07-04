@@ -8,6 +8,7 @@
 using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
@@ -219,7 +220,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 }
                 else
                 {
-                    return (T)LanguagePrimitives.ConvertTo(property.Value, typeof(T));
+                    return (T)LanguagePrimitives.ConvertTo(property.Value, typeof(T), CultureInfo.InvariantCulture);
                 }
             }
 
@@ -255,7 +256,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 }
                 else if (null != property.Value)
                 {
-                    property.Value = LanguagePrimitives.ConvertTo(propertyValue, property.Value.GetType());
+                    property.Value = LanguagePrimitives.ConvertTo(propertyValue, property.Value.GetType(), CultureInfo.InvariantCulture);
                 }
                 else
                 {

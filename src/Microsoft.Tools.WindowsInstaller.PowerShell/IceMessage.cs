@@ -6,6 +6,7 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Globalization;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -25,7 +26,7 @@ namespace Microsoft.Tools.WindowsInstaller
             }
 
             this.Name = parts[0];
-            this.Type = (IceMessageType)Convert.ToInt32(parts[1]);
+            this.Type = (IceMessageType)Convert.ToInt32(parts[1], CultureInfo.InvariantCulture);
             this.Description = parts[2];
 
             if (3 < parts.Length)

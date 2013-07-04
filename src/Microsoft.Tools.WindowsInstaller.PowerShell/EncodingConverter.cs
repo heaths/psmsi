@@ -102,7 +102,7 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
                 else if (IsNumeric(destinationType))
                 {
-                    return Convert.ChangeType(enc.CodePage, destinationType);
+                    return Convert.ChangeType(enc.CodePage, destinationType, CultureInfo.InvariantCulture);
                 }
             }
 

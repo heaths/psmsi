@@ -97,7 +97,7 @@ namespace Microsoft.Tools.WindowsInstaller
                         }
                         else
                         {
-                            throw new ArgumentException(string.Format(Resources.Error_InvalidReinstallMode, c), "value");
+                            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.Error_InvalidReinstallMode, c), "value");
                         }
                     }
 

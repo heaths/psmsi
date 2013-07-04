@@ -9,6 +9,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -20,8 +21,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     [OutputType(typeof(PatchInstallation))]
     public sealed class GetPatchCommand : PSCmdlet
     {
-        private static readonly string[] Empty = new string[] { null };
-
         private List<Parameters> allParameters = new List<Parameters>();
         private PatchStates filter = PatchStates.Applied;
         private UserContexts context = UserContexts.All;
@@ -74,7 +73,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 if (value == UserContexts.None)
                 {
-                    string message = string.Format(Properties.Resources.Error_InvalidContext, UserContexts.None);
+                    var message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_InvalidContext, UserContexts.None);
                     throw new ArgumentException(message, "UserContext");
                 }
 
@@ -107,7 +106,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             this.allParameters.Add(new Parameters
                 {
-                    ParameterSetName = this.ParameterSetName,
                     ProductCode = this.ProductCode != null && this.ProductCode.Length > 0 ? this.ProductCode : new string[] { null},
                     PatchCode = this.PatchCode != null && this.PatchCode.Length > 0 ? this.PatchCode : new string[] { null},
                     Filter = this.Filter,
@@ -164,11 +162,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         private sealed class Parameters
         {
-            /// <summary>
-            /// Gets or sets the parameter set name.
-            /// </summary>
-            internal string ParameterSetName;
-
             /// <summary>
             /// Gets or sets the ProductCodes.
             /// </summary>

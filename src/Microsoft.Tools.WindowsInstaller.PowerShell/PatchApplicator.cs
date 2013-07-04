@@ -9,6 +9,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Deployment.WindowsInstaller.Package;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Microsoft.Tools.WindowsInstaller
@@ -85,7 +86,7 @@ namespace Microsoft.Tools.WindowsInstaller
                     foreach (string transform in transforms)
                     {
                         // Skip patch transforms.
-                        if (transform.StartsWith("#"))
+                        if (transform.StartsWith("#", StringComparison.Ordinal))
                         {
                             continue;
                         }
@@ -104,6 +105,7 @@ namespace Microsoft.Tools.WindowsInstaller
             }
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private static InstallPackage Copy(InstallPackage db)
         {
             string temp = Path.ChangeExtension(Path.GetTempFileName(), ".msi");

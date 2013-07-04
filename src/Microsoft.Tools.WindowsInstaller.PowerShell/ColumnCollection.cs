@@ -73,8 +73,8 @@ namespace Microsoft.Tools.WindowsInstaller
             var query = view.QueryString;
 
             // Parse the column names for table references.
-            var start = query.IndexOf("SELECT", StringComparison.InvariantCultureIgnoreCase) + 7;
-            var end = query.IndexOf("FROM", StringComparison.InvariantCultureIgnoreCase) - 1;
+            var start = query.IndexOf("SELECT", StringComparison.OrdinalIgnoreCase) + 7;
+            var end = query.IndexOf("FROM", StringComparison.OrdinalIgnoreCase) - 1;
             return query.Substring(start, end - start)
                         .Replace("`", "")
                         .Split(ColumnCollection.ColumnSeparators, StringSplitOptions.RemoveEmptyEntries);

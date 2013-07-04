@@ -37,7 +37,7 @@ namespace Microsoft.Tools.WindowsInstaller
         {
             if (0 >= capacity)
             {
-                throw new ArgumentException();
+                throw new ArgumentOutOfRangeException("capacity");
             }
 
             this.Capacity = capacity;
