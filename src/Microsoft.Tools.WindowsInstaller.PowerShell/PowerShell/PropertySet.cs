@@ -19,7 +19,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// <summary>
         /// Creates a case-insensitive instance of the <see cref="PropertySet"/> class.
         /// </summary>
-        internal PropertySet() : base(StringComparer.InvariantCultureIgnoreCase)
+        internal PropertySet() : base(StringComparer.OrdinalIgnoreCase)
         {
         }
 

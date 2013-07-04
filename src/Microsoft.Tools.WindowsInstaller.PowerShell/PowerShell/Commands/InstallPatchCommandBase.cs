@@ -9,6 +9,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -70,7 +71,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Validate property values.
             if (UserContexts.All == this.UserContext)
             {
-                string message = string.Format(Resources.Error_InvalidContext, UserContexts.All);
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.Error_InvalidContext, UserContexts.All);
                 throw new ArgumentException(message, "UserContext");
             }
 
@@ -78,7 +79,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             sequencer.InapplicablePatch += (source, args) =>
                 {
                     // Log verbose information that the patch does not apply.
-                    string message = string.Format(Resources.Error_InapplicablePatch, args.Patch, args.Product);
+                    var message = string.Format(CultureInfo.CurrentCulture, Resources.Error_InapplicablePatch, args.Patch, args.Product);
                     this.WriteVerbose(message);
 
                     // Attempt to log why the patch does not apply to the debug stream.

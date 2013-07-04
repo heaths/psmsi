@@ -6,6 +6,7 @@
 // PARTICULAR PURPOSE.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Management.Automation;
 
@@ -43,7 +44,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             get
             {
                 return null != this.ParameterSetName
-                    && 0 <= this.ParameterSetName.IndexOf(ParameterSet.LiteralPath, StringComparison.InvariantCultureIgnoreCase);
+                    && 0 <= this.ParameterSetName.IndexOf(ParameterSet.LiteralPath, StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -72,7 +73,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
                 else
                 {
-                    var message = string.Format(Properties.Resources.Error_InvalidFile, path);
+                    var message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_InvalidFile, path);
                     var ex = new NotSupportedException(message);
                     var error = new ErrorRecord(ex, "UnsupportedItemType", ErrorCategory.InvalidType, path);
 

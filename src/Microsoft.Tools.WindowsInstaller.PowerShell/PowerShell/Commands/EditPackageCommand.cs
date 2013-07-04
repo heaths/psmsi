@@ -9,6 +9,7 @@ using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -52,7 +53,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var type = FileInfo.GetFileTypeInternal(path);
             if (FileType.Package != type && FileType.Patch != type)
             {
-                var message = string.Format(Resources.Error_InvalidStorage, path);
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.Error_InvalidStorage, path);
                 var ex = new PSInvalidOperationException(message);
                 this.WriteError(ex.ErrorRecord);
 

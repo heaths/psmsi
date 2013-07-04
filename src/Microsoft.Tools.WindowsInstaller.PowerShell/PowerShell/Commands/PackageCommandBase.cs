@@ -9,6 +9,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -47,10 +48,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     }
                     catch (InstallerException ex)
                     {
-                        var psex = new PSInstallerException(ex);
-                        if (null != psex.ErrorRecord)
+                        using (var psex = new PSInstallerException(ex))
                         {
-                            this.WriteError(psex.ErrorRecord);
+                            if (null != psex.ErrorRecord)
+                            {
+                                this.WriteError(psex.ErrorRecord);
+                            }
                         }
                     }
                 }
@@ -69,7 +72,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 applicator.InapplicablePatch += (source, args) =>
                 {
-                    string message = string.Format(Resources.Error_InapplicablePatch, args.Patch, args.Product);
+                    var message = string.Format(CultureInfo.CurrentCulture, Resources.Error_InapplicablePatch, args.Patch, args.Product);
                     this.WriteVerbose(message);
                 };
 

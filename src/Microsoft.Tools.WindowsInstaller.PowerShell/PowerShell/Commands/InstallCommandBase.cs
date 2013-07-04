@@ -555,7 +555,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         private void WriteProgress(bool complete = false)
         {
             // Show operation and product name (if available yet).
-            var activity = string.Format(this.Activity, this.progress.CurrentProductName).TrimEnd();
+            var activity = string.Format(CultureInfo.CurrentCulture, this.Activity, this.progress.CurrentProductName).TrimEnd();
 
             // Make sure there's always a status description.
             if (string.IsNullOrEmpty(this.progress.CurrentAction))
@@ -597,7 +597,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Action queue.
         /// </summary>
-        public sealed class ActionQueue : Queue<T>
+        protected internal sealed class ActionQueue : Queue<T>
         {
             /// <summary>
             /// Gets the original queue count before processing.

@@ -76,7 +76,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             get
             {
                 return null != this.ParameterSetName
-                    && 0 <= this.ParameterSetName.IndexOf("ProductCode", StringComparison.InvariantCultureIgnoreCase);
+                    && 0 <= this.ParameterSetName.IndexOf("ProductCode", StringComparison.OrdinalIgnoreCase);
             }
         }
         

@@ -26,8 +26,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// </summary>
         static ViewManager()
         {
-            views = new Dictionary<string, WeakReference>(StringComparer.InvariantCultureIgnoreCase);
-            memberSets = new Dictionary<string, WeakReference>(StringComparer.InvariantCultureIgnoreCase);
+            views = new Dictionary<string, WeakReference>(StringComparer.OrdinalIgnoreCase);
+            memberSets = new Dictionary<string, WeakReference>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>

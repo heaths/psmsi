@@ -180,7 +180,7 @@ namespace Microsoft.Tools.WindowsInstaller
                 // Simply return 32-bit paths as-is and null for 64-bit paths.
                 if (!is64Bit)
                 {
-                    root = this.MapRoot(root, path, false, hive);
+                    root = this.MapRoot(path, false, hive);
                     if (null != root)
                     {
                         return root + path;
@@ -192,11 +192,11 @@ namespace Microsoft.Tools.WindowsInstaller
                 // Return 64-bit paths as-is but map 32-bit paths to WOW64 node only if redirected.
                 if (is64Bit || !tree.Under(keyPath))
                 {
-                    root = this.MapRoot(root, path, true, hive);
+                    root = this.MapRoot(path, true, hive);
                 }
                 else
                 {
-                    root = this.MapRoot(root, path, false, hive);
+                    root = this.MapRoot(path, false, hive);
 
                     if ('3' == hive)
                     {
@@ -206,14 +206,14 @@ namespace Microsoft.Tools.WindowsInstaller
                     }
 
                     // The redirected root will be replaced.
-                    if (0 == path.IndexOf(SOFTWARE, StringComparison.InvariantCultureIgnoreCase))
+                    if (0 == path.IndexOf(SOFTWARE, StringComparison.OrdinalIgnoreCase))
                     {
                         path = path.Substring(SOFTWARE.Length);
                     }
 
                     // Make sure the path doesn't reference the WOW64 node twice.
                     // Windows Installer seems to handle this correctly during installation.
-                    if (0 == path.IndexOf(WOW64, StringComparison.InvariantCultureIgnoreCase))
+                    if (0 == path.IndexOf(WOW64, StringComparison.OrdinalIgnoreCase))
                     {
                         path = path.Substring(WOW64.Length);
                     }
@@ -228,7 +228,7 @@ namespace Microsoft.Tools.WindowsInstaller
             return null;
         }
 
-        private string MapRoot(string root, string path, bool is64bit, char hive)
+        private string MapRoot(string path, bool is64bit, char hive)
         {
             // Check for impossible mapping.
             if (!this.Is64Bit && is64bit)

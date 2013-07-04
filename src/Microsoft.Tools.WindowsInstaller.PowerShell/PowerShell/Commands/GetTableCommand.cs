@@ -9,6 +9,8 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -159,7 +161,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             get
             {
                 return null != this.ParameterSetName
-                    && 0 <= this.ParameterSetName.IndexOf(ParameterSet.Installation, StringComparison.InvariantCultureIgnoreCase);
+                    && 0 <= this.ParameterSetName.IndexOf(ParameterSet.Installation, StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -168,7 +170,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             get
             {
                 return null != this.ParameterSetName
-                    && 0 <= this.ParameterSetName.IndexOf("Query", StringComparison.InvariantCultureIgnoreCase);
+                    && 0 <= this.ParameterSetName.IndexOf("Query", StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -186,7 +188,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
                 else
                 {
-                    string message = string.Format(Resources.Error_TableNotFound, this.Table, path);
+                    var message = string.Format(CultureInfo.CurrentCulture, Resources.Error_TableNotFound, this.Table, path);
                     var ex = new PSArgumentException(message, "Table");
 
                     this.WriteError(ex.ErrorRecord);
@@ -196,6 +198,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             return null;
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private Database OpenDatabase(string path)
         {
             var type = FileInfo.GetFileTypeInternal(path);

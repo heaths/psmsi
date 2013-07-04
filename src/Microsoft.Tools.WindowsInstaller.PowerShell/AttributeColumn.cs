@@ -109,7 +109,7 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
 
                 // Enum only supports a lone X but caller may expect numeric formatting.
-                if (0 <= format.IndexOf("X", StringComparison.InvariantCultureIgnoreCase))
+                if (0 <= format.IndexOf("X", StringComparison.OrdinalIgnoreCase))
                 {
                     // Return the hexadecimal value with the proper prefix.
                     return "0x" + Enum.Format(this.Type, value, "X");
@@ -141,7 +141,7 @@ namespace Microsoft.Tools.WindowsInstaller
             if (Enum.IsDefined(this.Type, name))
             {
                 var e = Enum.Parse(this.Type, name, true);
-                var value = Convert.ToInt32(e);
+                var value = Convert.ToInt32(e, CultureInfo.InvariantCulture);
 
                 if (this.Value == value)
                 {

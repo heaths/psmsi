@@ -147,7 +147,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 {
                     return typeof(bool).FullName;
                 }
-                else if (ValueProperty.Equals(adaptedProperty.Name, StringComparison.InvariantCultureIgnoreCase))
+                else if (ValueProperty.Equals(adaptedProperty.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     return column.Type.FullName;
                 }
@@ -165,7 +165,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 {
                     return column.HasValue(name);
                 }
-                else if (ValueProperty.Equals(adaptedProperty.Name, StringComparison.InvariantCultureIgnoreCase))
+                else if (ValueProperty.Equals(adaptedProperty.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     return column.Value;
                 }

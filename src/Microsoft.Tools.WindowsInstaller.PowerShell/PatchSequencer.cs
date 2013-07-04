@@ -10,6 +10,7 @@ using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.Tools.WindowsInstaller.PowerShell;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Xml.XPath;
 
@@ -30,8 +31,8 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         internal PatchSequencer()
         {
-            this.Patches = new Set<string>(StringComparer.InvariantCultureIgnoreCase);
-            this.TargetProductCodes = new Set<string>(StringComparer.InvariantCultureIgnoreCase);
+            this.Patches = new Set<string>(StringComparer.OrdinalIgnoreCase);
+            this.TargetProductCodes = new Set<string>(StringComparer.OrdinalIgnoreCase);
 
             this.action = new GetApplicablePatchesAction(this.GetApplicablePatches);
         }
@@ -67,7 +68,7 @@ namespace Microsoft.Tools.WindowsInstaller
             }
             else if (!File.Exists(path))
             {
-                string message = string.Format(Properties.Resources.Error_InvalidFile, path);
+                var message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.Error_InvalidFile, path);
                 throw new FileNotFoundException(message, path);
             }
 

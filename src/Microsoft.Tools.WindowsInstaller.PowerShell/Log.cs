@@ -124,7 +124,7 @@ namespace Microsoft.Tools.WindowsInstaller
             if (InstallLogModes.ExtraDebug != (InstallLogModes.ExtraDebug & this.Mode))
             {
                 string policy = GetLoggingPolicy();
-                if (!string.IsNullOrEmpty(policy) && 0 <= policy.IndexOf("x", StringComparison.InvariantCultureIgnoreCase))
+                if (!string.IsNullOrEmpty(policy) && 0 <= policy.IndexOf("X", StringComparison.OrdinalIgnoreCase))
                 {
                     this.Mode |= InstallLogModes.ExtraDebug;
                 }
