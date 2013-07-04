@@ -30,6 +30,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         [TestMethod]
         [TestCategory("Impactful")]
+        [TestProperty("IsImpactful", "true")]
         public void BasicInstall()
         {
             using (var p = CreatePipeline(@"install-msiproduct example.msi TARGETDIR=`""$TestRunDirectory`"""))
@@ -64,6 +65,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         [TestMethod]
         [TestCategory("Impactful")]
+        [TestProperty("IsImpactful", "true")]
         public void PipelineInstall()
         {
             using (var p = CreatePipeline(@"install-msiproduct example.msi -destination ""$TestRunDirectory"""))
@@ -112,6 +114,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         [TestMethod]
         [TestCategory("Impactful")]
+        [TestProperty("IsImpactful", "true")]
         public void PassThruInstall()
         {
             using (var p = CreatePipeline(@"install-msiproduct example.msi -destination ""$TestRunDirectory"" -passthru | repair-msiproduct -passthru | install-msipatch example.msp -passthru | uninstall-msiproduct"))
@@ -124,6 +127,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         [TestMethod]
         [TestCategory("Impactful")]
+        [TestProperty("IsImpactful", "true")]
         [WorkItem(14460)]
         public void UninstallPatchFromPipeline()
         {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D84EC7AD-CF71-406E-B795-ABFCCE784076}"
 	ProjectSection(SolutionItems) = preProject
-		local.testrunconfig = local.testrunconfig
+		Local.testsettings = Local.testsettings
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{FFCC062A-C705-4E55-A362-B206FB0B29BF}"
