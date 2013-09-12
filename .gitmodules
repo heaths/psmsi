@@ -1,0 +1,3 @@
+[submodule "tools/help"]
+	path = tools/help
+	url = https://git01.codeplex.com/pshelp
