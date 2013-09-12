@@ -53,10 +53,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             // Resolve the file system path to the patch package.
             var item = this.InvokeProvider.Item.Get(this.Path).FirstOrDefault();
-            string path = item.GetPropertyValue<string>("PSPath");
+            var path = item.GetPropertyValue<string>("PSPath");
             path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
 
-            string xml = Installer.ExtractPatchXmlData(this.Path);
+            string xml = Installer.ExtractPatchXmlData(path);
 
             // Load and format the XML if requested.
             var doc = new XmlDocument();
