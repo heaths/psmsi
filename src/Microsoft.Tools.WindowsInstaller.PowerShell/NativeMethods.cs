@@ -29,7 +29,7 @@ namespace Microsoft.Tools.WindowsInstaller
         #endregion
 
         #region Windows Installer functions
-        [DllImport("msi.dll", EntryPoint = "MsiGetFileHashW", ExactSpelling = true)]
+        [DllImport("msi.dll", CharSet = CharSet.Unicode, EntryPoint = "MsiGetFileHashW", ExactSpelling = true, PreserveSig = true)]
         [return: MarshalAs(UnmanagedType.U4)]
         internal static extern int MsiGetFileHash(
             string szFilePath,
@@ -47,8 +47,8 @@ namespace Microsoft.Tools.WindowsInstaller
         internal static readonly Guid CLSID_MsiTransform = new Guid(0xC1082, 0x0, 0x0, new byte[] { 0xC0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46 });
         #endregion
 
-        #region Open storage functions
-        [DllImport("ole32.dll", ExactSpelling = true)]
+        #region Storage functions
+        [DllImport("ole32.dll", CharSet = CharSet.Unicode, ExactSpelling = true, PreserveSig = true)]
         internal static extern int StgOpenStorageEx(
             string pwcsName,
             [MarshalAs(UnmanagedType.U4)] NativeMethods.STGM grfMode,
