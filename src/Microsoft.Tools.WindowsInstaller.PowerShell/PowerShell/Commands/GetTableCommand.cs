@@ -9,6 +9,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
@@ -120,9 +121,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 foreach (var product in this.Product)
                 {
-                    using (var session = this.OpenProduct(product))
+                    var session = this.OpenProduct(product);
+                    if (null != session)
                     {
-                        this.WriteRecords(session.Database, product.LocalPackage);
+                        using (session)
+                        {
+                            this.WriteRecords(session.Database, product.LocalPackage);
+                        }
                     }
                 }
             }
@@ -219,7 +224,28 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         private Session OpenProduct(ProductInstallation product)
         {
             // Open the product taking machine state into account.
-            return Installer.OpenPackage(product.LocalPackage, this.IgnoreMachineState);
+            var path = product.LocalPackage;
+            if (!string.IsNullOrEmpty(path))
+            {
+                return Installer.OpenPackage(path, this.IgnoreMachineState);
+            }
+            else if (product.IsAdvertised && !String.IsNullOrEmpty(product.AdvertisedPackageName))
+            {
+                // Product is advertised and has no locally installed package.
+                var message = string.Format(Properties.Resources.Error_Advertised, product.ProductCode);
+                this.WriteWarning(message);
+            }
+            else
+            {
+                // Product registration is corrupt.
+                var message = string.Format(Properties.Resources.Error_Corrupt, product.ProductCode);
+                var ex = new Exception(message, new Win32Exception(NativeMethods.ERROR_BAD_CONFIGURATION));
+                var error = new ErrorRecord(ex, "Error_Corrupt", ErrorCategory.NotInstalled, product);
+
+                this.WriteError(error);
+            }
+
+            return null;
         }
 
         private void WriteRecords(Database db, string path)

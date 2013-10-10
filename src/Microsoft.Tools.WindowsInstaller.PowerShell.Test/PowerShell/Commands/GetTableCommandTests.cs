@@ -6,6 +6,8 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections;
+using System.IO;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -272,6 +274,46 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 p.Runspace.SessionStateProxy.SetVariable("MsiAttributeColumnFormat", "Z");
                 value = toString.Invoke().ToString();
                 Assert.AreEqual<string>("4", value, "The exceptional formatting is incorrect.");
+            }
+        }
+
+        [TestMethod]
+        public void TableFromAdvertisedProduct()
+        {
+            using (var p = CreatePipeline("get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msitable -table Property -wv Warnings"))
+            {
+                var path = Path.Combine(this.TestContext.DeploymentDirectory, "Corrupt.xml");
+                using (OverrideRegistry("Corrupt.xml"))
+                {
+                    p.Invoke();
+
+                    Assert.AreEqual<int>(0, p.Output.Count, "Output was not expected.");
+                    Assert.AreEqual<int>(0, p.Error.Count, "Errors were not expected.");
+
+                    var warnings = p.Runspace.SessionStateProxy.GetVariable("Warnings") as ICollection;
+                    Assert.IsNotNull(warnings, "Expected a Warnings variable.");
+                    Assert.AreEqual<int>(1, warnings.Count, "Expected a warning.");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TableFromCorruptProduct()
+        {
+            using (var p = CreatePipeline("get-msiproductinfo '{9AC08E99-230B-47e8-9721-4577B7F124EA}' | get-msitable -table Property -wv Warnings"))
+            {
+                var path = Path.Combine(this.TestContext.DeploymentDirectory, "Corrupt.xml");
+                using (OverrideRegistry("Corrupt.xml"))
+                {
+                    p.Invoke();
+
+                    Assert.AreEqual<int>(0, p.Output.Count, "Output was not expected.");
+                    Assert.AreEqual<int>(1, p.Error.Count, "Expected an error.");
+
+                    var warnings = p.Runspace.SessionStateProxy.GetVariable("Warnings") as ICollection;
+                    Assert.IsNotNull(warnings, "Expected a Warnings variable.");
+                    Assert.AreEqual<int>(0, warnings.Count, "Warnings were not expected.");
+                }
             }
         }
     }

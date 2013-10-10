@@ -129,6 +129,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\Corrupt.xml" />
     <Content Include="Data\NoEditVerb.xml" />
     <Content Include="Data\NoOrca.xml" />
     <Content Include="Data\Inapplicable.xml" />

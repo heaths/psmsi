@@ -21,6 +21,7 @@ namespace Microsoft.Tools.WindowsInstaller
     {
         #region Error codes
         internal const int ERROR_SUCCESS = 0;
+        internal const int ERROR_BAD_CONFIGURATION = 1610;
         internal const int STG_E_FILEALREADYEXISTS = unchecked((int)0x80030050);
         #endregion
 

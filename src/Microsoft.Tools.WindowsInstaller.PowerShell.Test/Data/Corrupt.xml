@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<registry xmlns="http://schemas.microsoft.com/psmsi/2008/03/registry.xsd">
+  <hive name="HKEY_LOCAL_MACHINE">
+    <key name="Software">
+      <key name="Classes">
+        <key name="Installer">
+          <key name="Features">
+            <key name="285FE778FA8748D488B861F7CDB3CC11">
+              <value name="TEST" type="String"/>
+            </key>
+            <key name="99E80CA9B0328e74791254777B1F42AE">
+              <value name="TEST" type="String"/>
+            </key>
+          </key>
+          <key name="Products">
+            <!-- {877EF582-78AF-4D84-888B-167FDC3BCC11} is properly advertised -->
+            <key name="285FE778FA8748D488B861F7CDB3CC11">
+              <key name="SourceList">
+                <key name="Media">
+                  <value name="1" type="String">;</value>
+                </key>
+                <key name="Net">
+                  <value name="1" type="ExpandString">$(TestDeploymentDirectory)</value>
+                </key>
+                <value name="PackageName" type="String">Example.msi</value>
+              </key>
+              <value name="AdvertiseFlags" type="DWord">388</value>
+              <value name="Assignment" type="DWord">1</value>
+              <value name="AuthorizedLUAApp" type="DWord">0</value>
+              <value name="Clients" type="MultiString" xml:space="preserve">:</value>
+              <value name="DeploymentFlags" type="DWord">2</value>
+              <value name="InstanceType" type="DWord">0</value>
+              <value name="Language" type="DWord">1033</value>
+              <value name="PackageCode" type="String">ADD069BBE6CCC2B4A8980F4384415A2B</value>
+              <value name="ProductName" type="String">TEST</value>
+              <value name="Version" type="DWord">16777216</value>
+            </key>
+            <!-- {9AC08E99-230B-47e8-9721-4577B7F124EA} is corrupt (actual example) -->
+            <key name="99E80CA9B0328e74791254777B1F42AE"/>
+          </key>
+        </key>
+      </key>
+      <key name="Microsoft">
+        <!-- Needed for handling errors in the pipeline -->
+        <key name="Cryptography">
+          <key name="Defaults">
+            <key name="Provider">
+              <key name="Microsoft Strong Cryptographic Provider">
+                <value name="Image Path" type="String">rsaenh.dll</value>
+                <value name="SigInFile" type="DWord"/>
+                <value name="Type" type="DWord">1</value>
+              </key>
+            </key>
+            <key name="Provider Types">
+              <key name="Type 001">
+                <value name="Name" type="String">Microsoft Strong Cryptographic Provider</value>
+                <value name="TypeName" type="String">RSA Full (Signature and Key Exchange)</value>
+              </key>
+            </key>
+          </key>
+        </key>
+        <!-- PowerShell values needed to handle errors -->
+        <key name="PowerShell">
+          <key name="1">
+            <key name="ShellIds">
+              <key name="Microsoft.PowerShell">
+                <value name="ExecutionPolicy" type="String">RemoteSigned</value>
+                <value name="Path" type="ExpandString">%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe</value>
+              </key>
+            </key>
+          </key>
+        </key>
+        <key name="Windows">
+          <key name="CurrentVersion">
+            <key name="Installer">
+              <key name="UserData">
+                <key name="S-1-5-18">
+                  <key name="Products">
+                    <key name="285FE778FA8748D488B861F7CDB3CC11">
+                      <key name="Patches">
+                        <value name="AllPatches" type="MultiString"/>
+                      </key>
+                    </key>
+                    <key name="99E80CA9B0328e74791254777B1F42AE">
+                      <key name="Features">
+                        <value name="TEST" type="String">TEST</value>
+                      </key>
+                    </key>
+                  </key>
+                </key>
+              </key>
+            </key>
+          </key>
+        </key>
+      </key>
+    </key>
+    <key name="System">
+      <key name="CurrentControlSet">
+        <key name="Control">
+          <!-- vstesthost.exe requires the following values -->
+          <key name="FileSystem">
+            <value name="NtfsAllowExtendedCharacter8dot3Rename" type="DWord"/>
+            <value name="NtfsBugcheckOnCorrupt" type="DWord"/>
+            <value name="NtfsDisable8dot3NameCreation" type="DWord"/>
+            <value name="NtfsDisableCompression" type="DWord"/>
+            <value name="NtfsDisableEncryption" type="DWord"/>
+            <value name="NtfsDisableLastAccessUpdate" type="DWord">1</value>
+            <value name="NtfsDisableVolsnapHints" type="DWord">2</value>
+            <value name="NtfsEncryptPagingFile" type="DWord"/>
+            <value name="NtfsMemoryUsage" type="DWord"/>
+            <value name="NtfsMftZoneReservation" type="DWord"/>
+            <value name="NtfsQuotaNotifyRate" type="DWord">3600</value>
+            <value name="SymlinkLocalToLocalEvaluation" type="DWord">1</value>
+            <value name="SymlinkLocalToRemoteEvaluation" type="DWord">1</value>
+            <value name="SymlinkRemoteToLocalEvaluation" type="DWord"/>
+            <value name="SymlinkRemoteToRemoteEvaluation" type="DWord"/>
+            <value name="UdfsCloseSessionOnEject" type="DWord">1</value>
+            <value name="UdfsSoftwareDefectManagement" type="DWord"/>
+            <value name="Win31FileSystem" type="DWord"/>
+            <value name="Win95TruncatedExtensions" type="DWord">1</value>
+          </key>
+          <!-- support copying files -->
+          <key name="LSA">
+            <key name="AccessProviders">
+              <key name="Windows NT Access Provider">
+                <value name="ProviderPath" type="String">%SystemRoot%\system32\ntmarta.dll</value>
+              </key>
+              <value name="MartaExtension" type="String">ntmarta.dll</value>
+              <value name="ProviderOrder" type="MultiString">Windows NT Access Provider</value>
+            </key>
+          </key>
+        </key>
+      </key>
+    </key>
+  </hive>
+</registry>

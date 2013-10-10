@@ -180,4 +180,10 @@
   <data name="Error_OrcaAbsent" xml:space="preserve">
     <value>Orca is not installed on this machine. You can download it as part of the Windows SDK.</value>
   </data>
+  <data name="Error_Advertised" xml:space="preserve">
+    <value>The product "{0}" is advertised and the package cannot be opened.</value>
+  </data>
+  <data name="Error_Corrupt" xml:space="preserve">
+    <value>Registration for the product "{0}" is corrupt.</value>
+  </data>
 </root>
