@@ -21,6 +21,7 @@ namespace Microsoft.Tools.WindowsInstaller
     {
         #region Error codes
         internal const int ERROR_SUCCESS = 0;
+        internal const int ERROR_ACCESS_DENIED = 5;
         internal const int ERROR_BAD_CONFIGURATION = 1610;
         internal const int STG_E_FILEALREADYEXISTS = unchecked((int)0x80030050);
         #endregion
@@ -251,6 +252,42 @@ namespace Microsoft.Tools.WindowsInstaller
             STGTY_STREAM = 2,
             STGTY_LOCKBYTES = 3,
             STGTY_PROPERTY = 4
+        }
+        #endregion
+
+        #region Other functions
+        [DllImport("srclient.dll", CharSet = CharSet.Unicode, EntryPoint = "SRSetRestorePointW", ExactSpelling = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool SRSetRestorePoint(
+            [In] ref RestorePointInfo pRestorePtSpec,
+            out StateManagerStatus pSMgrStatus
+            );
+        #endregion
+
+        #region Other structures
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        internal struct RestorePointInfo
+        {
+            [MarshalAs(UnmanagedType.U4)] internal NativeMethods.RestorePointEventType EventType;
+            [MarshalAs(UnmanagedType.U4)] internal RestorePointType Type;
+            internal long SequenceNumber;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] internal string Description;
+        }
+
+        internal struct StateManagerStatus
+        {
+            [MarshalAs(UnmanagedType.U4)] internal int ErrorCode;
+            internal long SequenceNumber;
+        }
+        #endregion
+
+        #region Other enumerations
+        internal enum RestorePointEventType
+        {
+            BeginSystemChange = 100,
+            EndSystemChange,
+            BeginNestedSystemChange,
+            EndNestedSystemChange,
         }
         #endregion
     }

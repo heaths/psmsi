@@ -98,6 +98,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected abstract string Activity { get; }
 
         /// <summary>
+        /// Gets the <see cref="RestorePointType"/> of the current operation.
+        /// </summary>
+        internal virtual RestorePointType Operation
+        {
+            get { return RestorePointType.ApplicationInstall; }
+        }
+
+        /// <summary>
         /// Called to allow child classes to execute based on the given <paramref name="data"/>.
         /// </summary>
         /// <param name="data">The <see cref="InstallCommandActionData"/> on which to execute.</param>
@@ -480,6 +488,21 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 // Keep track of how many actions were queued.
                 this.Actions.OriginalCount = this.Actions.Count;
 
+                // Create a single restore point for chained packages.
+                SystemRestorePoint restorePoint = null;
+                if (this.Chain)
+                {
+                    try
+                    {
+                        restorePoint = SystemRestorePoint.Create(this.Operation);
+                    }
+                    catch (Win32Exception ex)
+                    {
+                        var message = string.Format(CultureInfo.CurrentCulture, Resources.Error_NoRestorePoint, ex.Message);
+                        this.WriteWarning(message);
+                    }
+                }
+
                 // Execute the actions.
                 while (0 < this.Actions.Count)
                 {
@@ -489,6 +512,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                         string extra = null != data ? data.LogName : null;
                         Installer.EnableLog(this.log.Mode, this.log.Next(extra));
+
+                        // If a system restore point was successfully created,
+                        // disable creating restore points for each package.
+                        if (null != restorePoint)
+                        {
+                            data.CommandLine = "MSIFASTINSTALL=1 " + data.CommandLine;
+                        }
 
                         this.ExecuteAction(data);
                     }
@@ -507,6 +537,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                             }
                         }
                     }
+                }
+
+                // Complete an existing restore point.
+                if (null != restorePoint)
+                {
+                    restorePoint.Commit();
                 }
 
                 // Make sure progress is completed.
