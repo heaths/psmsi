@@ -17,6 +17,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     public sealed class UninstallPatchCommand : InstallPatchCommandBase<InstallPatchActionData>
     {
         /// <summary>
+        /// Gets the <see cref="RestorePointType"/> of the current operation.
+        /// </summary>
+        internal override RestorePointType Operation
+        {
+            get { return RestorePointType.ApplicationUninstall; }
+        }
+
+        /// <summary>
         /// Installs a patch given the provided <paramref name="data"/>.
         /// </summary>
         /// <param name="data">An <see cref="InstallProductActionData"/> with information about the package to install.</param>

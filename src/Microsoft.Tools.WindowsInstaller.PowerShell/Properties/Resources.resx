@@ -186,4 +186,7 @@
   <data name="Error_Corrupt" xml:space="preserve">
     <value>Registration for the product "{0}" is corrupt.</value>
   </data>
+  <data name="Error_NoRestorePoint" xml:space="preserve">
+    <value>Could not create a system restore point: {0}</value>
+  </data>
 </root>

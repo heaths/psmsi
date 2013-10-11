@@ -145,6 +145,7 @@
     <Compile Include="Set.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="SummaryInfo.cs" />
+    <Compile Include="SystemRestorePoint.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="PowerShell\ViewManager.cs" />

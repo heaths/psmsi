@@ -223,6 +223,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not create a system restore point: {0}.
+        /// </summary>
+        internal static string Error_NoRestorePoint {
+            get {
+                return ResourceManager.GetString("Error_NoRestorePoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Orca is not installed on this machine. You can download it as part of the Windows SDK..
         /// </summary>
         internal static string Error_OrcaAbsent {
