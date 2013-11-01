@@ -8,46 +8,78 @@
     PARTICULAR PURPOSE.
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="*" Name="!(loc.Module.ProductName)" Language="1033" Version="!(bind.fileVersion.Module.File)" Manufacturer="!(loc.Manufacturer)" UpgradeCode="17C59E89-3732-438F-8910-4F0FAE6DBF67">
-        <Package Id="*" Description="!(loc.Module.ProductName)" Comments="!(loc.Module.Comments)" Manufacturer="!(loc.Manufacturer)" Platform="x86" InstallerVersion="200" InstallPrivileges="limited" Compressed="yes" />
-        <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
+    <Product Id="*" Name="!(loc.Module.ProductName)" Language="!(loc.Module.ProductLanguage)" Version="!(bind.fileVersion.Module.File)" Manufacturer="!(loc.Manufacturer)" UpgradeCode="17C59E89-3732-438F-8910-4F0FAE6DBF67">
+        <Package Id="*" Description="!(loc.Module.ProductName)" Comments="!(loc.Module.Comments)" Manufacturer="!(loc.Manufacturer)" Platform="x86" InstallerVersion="200" InstallPrivileges="limited" Compressed="yes" SummaryCodepage="!(loc.Codepage)" />
+        <MediaTemplate CompressionLevel="high" EmbedCab="yes" />
         <Directory Id="TARGETDIR" Name="SourceDir">
-            <Directory Id="PersonalFolder" Name="Documents">
-                <Directory Id="PSProfileFolder" Name="WindowsPowerShell">
-                    <Directory Id="APPROOT" Name="Modules" DiskId="1">
-                        <Directory Id="ModuleFolder" Name="MSI" />
-                    </Directory>
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="APPROOT" Name="!(loc.Module.ProductName)">
+                    <Directory Id="ModuleFolder" Name="MSI" />
                 </Directory>
             </Directory>
         </Directory>
+        <Property Id="ALLUSERS" Value="2" />
         <Property Id="ARPHELPLINK" Value="http://psmsi.codeplex.com/thread/list.aspx" />
         <Property Id="ARPURLINFOABOUT" Value="http://psmsi.codeplex.com" />
-        <Property Id="REINSTALLMODE" Value="amus" />
+        <Property Id="REINSTALLMODE" Value="amu" />
+        <Property Id="MSIINSTALLPERUSER" Value="1" />
         <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
         <WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
         <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
         <UIRef Id="WixUI_Minimal" />
         <Feature Id="Module" AllowAdvertise="no" Description="!(loc.Module.Description)" ConfigurableDirectory="APPROOT" Level="1" Title="!(loc.Module.Title)">
             <FeatureGroupRef Id="Help"/>
-            <ComponentRef Id="Module" />
             <ComponentGroupRef Id="DTF" />
             <ComponentGroupRef Id="MSI" />
+            <ComponentRef Id="Module" />
+            <ComponentRef Id="PSModulePath.User" />
+            <ComponentRef Id="PSModulePath.System" />
         </Feature>
-        <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[ModuleFolder]" />
+        <!--
+            To allow non-elevated per-user installations downlevel and support dual-purpose packages on Windows Installer 5.0 and newer,
+            the client process will need to be elevated to install into the per-machine context or a permissions error occurs.
+        -->
+        <Condition Message="!(loc.Error.ElevationRequired)"><![CDATA[ALLUSERS <> 1 OR Privileged]]></Condition>
+        <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[APPROOT]" />
+        <CustomAction Id="SetPerUserInstall" Property="ALLUSERS" Value="" Execute="firstSequence" />
+        <InstallUISequence>
+            <Custom Action="SetPerUserInstall" Before="CostInitialize">
+                <![CDATA[VersionNT < 601]]>
+            </Custom>
+        </InstallUISequence>
         <InstallExecuteSequence>
+            <Custom Action="SetPerUserInstall" Before="CostInitialize">
+                <![CDATA[VersionNT < 601]]>
+            </Custom>
             <Custom Action="SetARPINSTALLLOCATION" After="CostFinalize" />
         </InstallExecuteSequence>
         <MajorUpgrade AllowDowngrades="yes" Schedule="afterInstallValidate" />
     </Product>
     <Fragment>
-        <DirectoryRef Id="ModuleFolder">
-            <Component Id="Module" Guid="9D8E88E9-8E05-4FC7-AFC7-87759D1D417E">
-                <File Id="Module.File" Name="Microsoft.Tools.WindowsInstaller.PowerShell.dll" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" />
-                <File Id="Module.Formats.File" Name="MSI.formats.ps1xml" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.formats.ps1xml" />
-                <File Id="Module.Types.File" Name="MSI.types.ps1xml" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.types.ps1xml" />
-                <!-- ICE64: Make sure the application directory is always removed on uninstall. -->
+            <Component Id="Module" Directory="ModuleFolder">
+                <File Id="Module.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" />
+                <File Id="Module.Formats.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.formats.ps1xml" />
+                <File Id="Module.Types.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.types.ps1xml" />
+                <!-- Make sure the application directory is always removed on uninstall. -->
                 <RemoveFolder Id="Module.RemoveFolder" On="uninstall" />
             </Component>
-        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <Component Id="PSModulePath.User" Guid="CB19DF54-C2F6-4C9F-BEF8-11BD9B7496C4" Directory="ModuleFolder">
+            <Condition><![CDATA[ALLUSERS <> 1]]></Condition>
+            <CreateFolder />
+            <!-- Work around bug that PowerShell does not always consider default module paths. -->
+            <Environment Id="PSModulePath.UserDefault" Action="set" Name="PSMODULEPATH" Part="first" Value="%PSMODULEPATH%" />
+            <Environment Id="PSModulePath.UserAppRoot" Action="set" Name="PSMODULEPATH" Part="last" Value="[APPROOT]" />
+        </Component>
+    </Fragment>
+    <Fragment>
+        <Component Id="PSModulePath.System" Guid="D48CD4B4-616A-453D-8E98-8B6EB1DD794D" Directory="ModuleFolder">
+            <Condition><![CDATA[ALLUSERS = 1]]></Condition>
+            <CreateFolder />
+            <!-- Work around bug that PowerShell does not always consider default module paths. -->
+            <Environment Id="PSModulePath.SystemDefault" Action="set" Name="PSMODULEPATH" Part="first" Value="%PSMODULEPATH%" System="yes" />
+            <Environment Id="PSModulePath.SystemAppRoot" Action="set" Name="PSMODULEPATH" Part="last" Value="[APPROOT]" System="yes" />
+        </Component>
     </Fragment>
 </Wix>

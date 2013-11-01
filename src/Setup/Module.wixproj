@@ -13,12 +13,13 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DefineConstants>Debug</DefineConstants>
-    <SuppressValidation>true</SuppressValidation>
+    <SuppressValidation>False</SuppressValidation>
     <Cultures>en-us</Cultures>
     <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)</IntermediateOutputPath>
     <VerboseOutput>False</VerboseOutput>
+    <SuppressIces>ICE40;ICE61</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Cultures>en-us</Cultures>
@@ -49,10 +50,8 @@
     <EmbeddedResource Include="en-us.wxl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="License.rtf" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Banner.bmp" />
     <None Include="Dialog.bmp" />
+    <None Include="License.rtf" />
   </ItemGroup>
 </Project>
