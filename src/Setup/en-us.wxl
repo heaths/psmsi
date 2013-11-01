@@ -7,17 +7,16 @@
     IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
     PARTICULAR PURPOSE.
 -->
-<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+<WixLocalization Codepage="1252" Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+    <String Id="Error.ElevationRequired">[ProductName] requires elevated privileges to install for all users.</String>
     <String Id="Help.en_US.Description">English (US) Help</String>
     <String Id="Help.qps_ploc.Description">Pseudo Language (Pseudo) Help</String>
     <String Id="MachineOnly">Only per-machine installations are supported. This is the default install behavior.</String>
     <String Id="Manufacturer">Microsoft Corporation</String>
+    <String Id="Codepage">1252</String>
     <String Id="Module.Comments">This installer database contains the logic and data required to install the Windows Installer Powershell Module.</String>
     <String Id="Module.Description">Installs the PowerShell module.</String>
+    <String Id="Module.ProductLanguage">1033</String>
     <String Id="Module.ProductName">Windows Installer PowerShell Module</String>
     <String Id="Module.Title">PowerShell Module</String>
-    <String Id="SnapIn.Comments">This installer database contains the logic and data required to install the Windows Installer PowerShell Snap-In.</String>
-    <String Id="SnapIn.Description">Installs the PowerShell snap-in.</String>
-    <String Id="SnapIn.ProductName">Windows Installer PowerShell Snap-In</String>
-    <String Id="SnapIn.Title">PowerShell Snap-In</String>
 </WixLocalization>
