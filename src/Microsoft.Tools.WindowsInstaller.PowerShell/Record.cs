@@ -22,12 +22,16 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> from which to copy values.</param>
         /// <param name="columns">The <see cref="ColumnCollection"/> for a <see cref="Deployment.WindowsInstaller.View"/>.</param>
-        internal Record(Deployment.WindowsInstaller.Record record, ColumnCollection columns)
+        /// <param name="path">The path to the package that contains the record.</param>
+        internal Record(Deployment.WindowsInstaller.Record record, ColumnCollection columns, string path = null)
         {
             // Internal constructor will assume valid parameters.
 
             // Shared reference to the column collection.
             this.Columns = columns;
+
+            // Store the path to the package.
+            this.Path = path;
 
             // Cache the data from the record.
             this.Data = new List<object>(record.FieldCount);
@@ -63,6 +67,11 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Gets the locally cached record data.
         /// </summary>
         internal List<object> Data { get; private set; }
+
+        /// <summary>
+        /// Gets the path to the package that contains this <see cref="Record"/>.
+        /// </summary>
+        internal string Path { get; private set; }
 
         private static byte[] CopyStream(Deployment.WindowsInstaller.Record record, int index)
         {

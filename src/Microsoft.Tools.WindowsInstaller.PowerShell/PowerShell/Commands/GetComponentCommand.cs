@@ -7,7 +7,6 @@
 
 using Microsoft.Deployment.WindowsInstaller;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -117,6 +116,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             if (!string.IsNullOrEmpty(path))
             {
                 obj.Properties.Add(new PSNoteProperty("PSPath", path));
+
+                // Make sure cmdlets further in the pipeline can bind to the right value.
+                obj.Properties.Add(new PSAliasProperty("Path", "PSPath"));
             }
 
             // Must hide the ClientProducts property or exceptions will be thrown.
