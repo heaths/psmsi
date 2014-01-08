@@ -19,4 +19,5 @@
     <String Id="Module.ProductLanguage">1033</String>
     <String Id="Module.ProductName">Windows Installer PowerShell Module</String>
     <String Id="Module.Title">PowerShell Module</String>
+    <String Id="UI.Install">&amp;Install</String>
 </WixLocalization>

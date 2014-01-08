@@ -13,8 +13,10 @@
         <MediaTemplate CompressionLevel="high" EmbedCab="yes" />
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder">
-                <Directory Id="APPROOT" Name="!(loc.Module.ProductName)">
-                    <Directory Id="ModuleFolder" Name="MSI" />
+                <Directory Id="APPLICATIONFOLDER" Name="!(loc.Module.ProductName)">
+                    <Directory Id="APPROOT">
+                        <Directory Id="ModuleFolder" Name="MSI" />
+                    </Directory>
                 </Directory>
             </Directory>
         </Directory>
@@ -26,7 +28,9 @@
         <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
         <WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
         <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
-        <UIRef Id="WixUI_Minimal" />
+        <UIRef Id="DualScope" />
+        <Property Id="ApplicationFolderName" Value="!(loc.Module.ProductName)" />
+        <Property Id="MsiAppFolder" Value="MsiPerUserFolder" />
         <Feature Id="Module" AllowAdvertise="no" Description="!(loc.Module.Description)" ConfigurableDirectory="APPROOT" Level="1" Title="!(loc.Module.Title)">
             <FeatureGroupRef Id="Help"/>
             <ComponentGroupRef Id="DTF" />
