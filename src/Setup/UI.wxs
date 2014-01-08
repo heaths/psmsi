@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) Microsoft Corporation. All rights reserved.
+
+    THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+    PARTICULAR PURPOSE.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
+        <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
+
+        <PropertyRef Id="ApplicationFolderName" />
+
+        <CustomAction Id="MsiSetDefaultPerUserFolder" Property="MsiPerUserFolder" Value="[LocalAppDataFolder]Apps\[ApplicationFolderName]" Execute="immediate" />
+        <CustomAction Id="MsiSetDefaultPerMachineFolder" Property="MsiPerMachineFolder" Value="[ProgramFilesFolder][ApplicationFolderName]" Execute="immediate" />
+        <CustomAction Id="MsiSetPerUserFolder" Property="APPLICATIONFOLDER" Value="[MsiPerUserFolder]" Execute="immediate" />
+        <CustomAction Id="MsiSetPerMachineFolder" Property="APPLICATIONFOLDER" Value="[MsiPerMachineFolder]" Execute="immediate" />
+
+        <InstallExecuteSequence>
+            <Custom Action="MsiSetDefaultPerUserFolder" Before="CostFinalize" />
+            <Custom Action="MsiSetDefaultPerMachineFolder" After="MsiSetDefaultPerUserFolder" />
+            <Custom Action="MsiSetPerUserFolder" After="MsiSetDefaultPerMachineFolder">ACTION="INSTALL" AND APPLICATIONFOLDER="" AND (ALLUSERS="" OR (ALLUSERS=2 AND (NOT Privileged)))</Custom>
+            <Custom Action="MsiSetPerMachineFolder" After="MsiSetPerUserFolder">ACTION="INSTALL" AND APPLICATIONFOLDER="" AND (ALLUSERS=1 OR (ALLUSERS=2 AND Privileged))</Custom>
+        </InstallExecuteSequence>
+        <InstallUISequence>
+            <Custom Action="MsiSetDefaultPerUserFolder" Before="CostFinalize" />
+            <Custom Action="MsiSetDefaultPerMachineFolder" After="MsiSetDefaultPerUserFolder" />
+            <Custom Action="MsiSetPerUserFolder" After="MsiSetDefaultPerMachineFolder">ACTION="INSTALL" AND APPLICATIONFOLDER="" AND (ALLUSERS="" OR (ALLUSERS=2 AND (NOT Privileged)))</Custom>
+            <Custom Action="MsiSetPerMachineFolder" After="MsiSetPerUserFolder">ACTION="INSTALL" AND APPLICATIONFOLDER="" AND (ALLUSERS=1 OR (ALLUSERS=2 AND Privileged))</Custom>
+        </InstallUISequence>
+
+        <UI Id="DualScope">
+            <TextStyle Id="WixUI_Font_Normal" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Normal_Size)" />
+            <TextStyle Id="WixUI_Font_Bigger" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Bigger_Size)" />
+            <TextStyle Id="WixUI_Font_Title" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Title_Size)" Bold="yes" />
+            <TextStyle Id="WixUI_Font_Emphasized" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Emphasized_Size)" Bold="yes" />
+
+            <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+            <Property Id="WixUI_Mode" Value="Advanced" />
+
+            <DialogRef Id="BrowseDlg" />
+            <DialogRef Id="DiskCostDlg" />
+            <DialogRef Id="ErrorDlg" />
+            <DialogRef Id="FatalError" />
+            <DialogRef Id="FilesInUse" />
+            <DialogRef Id="MsiRMFilesInUse" />
+            <DialogRef Id="PrepareDlg" />
+            <DialogRef Id="ProgressDlg" />
+            <DialogRef Id="ResumeDlg" />
+            <DialogRef Id="UserExit" />
+            <DialogRef Id="WelcomeDlg"/>
+
+            <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+            <Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath" Order="1">1</Publish>
+            <Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="2"><![CDATA[WIXUI_INSTALLDIR_VALID <> 1]]></Publish>
+
+            <Publish Dialog="AdvancedWelcomeEulaDlg" Control="Advanced" Event="NewDialog" Value="DualInstallScopeDlg" Order="1" />
+
+            <Publish Dialog="DualInstallScopeDlg" Control="Back" Event="NewDialog" Value="AdvancedWelcomeEulaDlg">1</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Install" Property="MsiAppFolder" Value="MsiPerUserFolder" Order="1">!(wix.WixUISupportPerUser) AND NOT Privileged</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Install" Property="ALLUSERS" Value="{}" Order="2">MsiAppFolder = "MsiPerUserFolder"</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Install" Property="ALLUSERS" Value="1" Order="3">MsiAppFolder = "MsiPerMachineFolder"</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Install" Property="APPLICATIONFOLDER" Value="[MsiPerUserFolder]" Order="4">MsiAppFolder = "MsiPerUserFolder"</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Install" Property="APPLICATIONFOLDER" Value="[MsiPerMachineFolder]" Order="5">MsiAppFolder = "MsiPerMachineFolder"</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Install" Event="EndDialog" Value="Return" Order="6">MsiAppFolder = "MsiPerUserFolder"</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Install" Event="NewDialog" Value="InstallDirDlg" Order="7">MsiAppFolder = "MsiPerMachineFolder"</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Next" Property="MsiAppFolder" Value="MsiPerMachineFolder" Order="1">!(wix.WixUISupportPerMachine) AND Privileged</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Next" Property="ALLUSERS" Value="1" Order="2">1</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Next" Property="APPLICATIONFOLDER" Value="[MsiPerMachineFolder]" Order="3">1</Publish>
+            <Publish Dialog="DualInstallScopeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="4">1</Publish>
+
+            <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="DualInstallScopeDlg">!(wix.WixUISupportPerUser)</Publish>
+            <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="AdvancedWelcomeEulaDlg">NOT !(wix.WixUISupportPerUser)</Publish>
+            <Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+            <Publish Dialog="InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+            <Publish Dialog="InstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+            <Publish Dialog="InstallDirDlg" Control="Next" Event="EndDialog" Value="Return" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+            <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+            <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+
+            <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="DualMaintenanceTypeDlg">1</Publish>
+
+            <Publish Dialog="DualMaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="DualMaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="DualMaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="DualMaintenanceTypeDlg" Order="2">Installed AND NOT PATCH</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="3">Installed AND PATCH</Publish>
+
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>
+
+            <Dialog Id="DualInstallScopeDlg" Width="370" Height="270" Title="!(loc.InstallScopeDlg_Title)" KeepModeless="yes">
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallScopeDlgBannerBitmap)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgDescription)" />
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgTitle)" />
+                <Control Id="BothScopes" Type="RadioButtonGroup" X="20" Y="55" Width="330" Height="120" Property="MsiAppFolder" Hidden="yes">
+                    <RadioButtonGroup Property="MsiAppFolder">
+                        <RadioButton Value="MsiPerUserFolder" X="0" Y="0" Width="295" Height="16" Text="!(loc.InstallScopeDlgPerUser)" />
+                        <RadioButton Value="MsiPerMachineFolder" X="0" Y="60" Width="295" Height="16" Text="!(loc.InstallScopeDlgPerMachine)" />
+                    </RadioButtonGroup>
+                    <Condition Action="show">Privileged AND (!(wix.WixUISupportPerUser) AND !(wix.WixUISupportPerMachine))</Condition>
+                </Control>
+                <Control Id="PerUserDescription" Type="Text" X="33" Y="70" Width="300" Height="36" Hidden="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgPerUserDescription)">
+                    <Condition Action="show">!(wix.WixUISupportPerUser)</Condition>
+                </Control>
+                <Control Id="NoPerUserDescription" Type="Text" X="33" Y="70" Width="300" Height="36" Hidden="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgNoPerUserDescription)">
+                    <Condition Action="show">NOT !(wix.WixUISupportPerUser)</Condition>
+                </Control>
+                <Control Id="PerMachineDescription" Type="Text" X="33" Y="131" Width="300" Height="36" Hidden="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgPerMachineDescription)">
+                    <Condition Action="show">Privileged</Condition>
+                </Control>
+                <Control Id="Install" Type="PushButton" X="236" Y="243" Width="56" Height="17" Hidden="yes" Default="yes" Text="!(loc.UI.Install)">
+                    <Condition Action="show">MsiAppFolder="MsiPerUserFolder"</Condition>
+                    <Condition Action="hide"><![CDATA[MsiAppFolder<>"MsiPerUserFolder"]]></Condition>
+                </Control>
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Hidden="yes" Text="!(loc.WixUINext)">
+                    <Condition Action="show">MsiAppFolder="MsiPerMachineFolder"</Condition>
+                    <Condition Action="hide"><![CDATA[MsiAppFolder<>"MsiPerMachineFolder"]]></Condition>
+                </Control>
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+            </Dialog>
+
+            <Dialog Id="DualMaintenanceTypeDlg" Width="370" Height="270" Title="!(loc.MaintenanceTypeDlg_Title)">
+                <Control Id="RepairButton" Type="PushButton" X="40" Y="65" Width="80" Height="17" ToolTip="!(loc.MaintenanceTypeDlgRepairButtonTooltip)" Text="!(loc.MaintenanceTypeDlgRepairButton)">
+                    <Publish Property="WixUI_InstallMode" Value="Repair">1</Publish>
+                    <Condition Action="disable">ARPNOREPAIR</Condition>
+                </Control>
+                <Control Id="RepairText" Type="Text" X="60" Y="85" Width="280" Height="30" Text="!(loc.MaintenanceTypeDlgRepairText)">
+                    <Condition Action="hide">ARPNOREPAIR</Condition>
+                </Control>
+                <Control Id="RepairDisabledText" Type="Text" X="60" Y="85" Width="280" Height="30" NoPrefix="yes" Text="!(loc.MaintenanceTypeDlgRepairDisabledText)" Hidden="yes">
+                    <Condition Action="show">ARPNOREPAIR</Condition>
+                </Control>
+                <Control Id="RemoveButton" Type="PushButton" X="40" Y="118" Width="80" Height="17" ToolTip="!(loc.MaintenanceTypeDlgRemoveButtonTooltip)" Text="!(loc.MaintenanceTypeDlgRemoveButton)">
+                    <Publish Property="WixUI_InstallMode" Value="Remove">1</Publish>
+                    <Condition Action="disable">ARPNOREMOVE</Condition>
+                </Control>
+                <Control Id="RemoveText" Type="Text" X="60" Y="138" Width="280" Height="20" NoPrefix="yes" Text="!(loc.MaintenanceTypeDlgRemoveText)">
+                    <Condition Action="hide">ARPNOREMOVE</Condition>
+                </Control>
+                <Control Id="RemoveDisabledText" Type="Text" X="60" Y="138" Width="280" Height="20" NoPrefix="yes" Text="!(loc.MaintenanceTypeDlgRemoveDisabledText)" Hidden="yes">
+                    <Condition Action="show">ARPNOREMOVE</Condition>
+                </Control>
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.WixUINext)" />
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.MaintenanceTypeDlgBannerBitmap)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="340" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.MaintenanceTypeDlgTitle)" />
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="340" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.MaintenanceTypeDlgDescription)" />
+            </Dialog>
+        </UI>
+
+        <InstallUISequence>
+            <Show Dialog="WelcomeDlg" Before="AdvancedWelcomeEulaDlg">Installed AND PATCH</Show>
+        </InstallUISequence>
+
+        <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONFOLDER" />
+        <UIRef Id="WixUI_Common" />
+    </Fragment>
+</Wix>

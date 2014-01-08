@@ -33,10 +33,7 @@
     <Compile Include="DTF.wxs" />
     <Compile Include="Module.wxs" />
     <Compile Include="MSI.wxs" />
-    <WixExtension Include="WixUIExtension">
-      <HintPath>C:\Program Files\Windows Installer XML v3.5\bin\WixUIExtension.dll</HintPath>
-      <Name>WixUIExtension</Name>
-    </WixExtension>
+    <Compile Include="UI.wxs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj">
@@ -53,5 +50,11 @@
     <None Include="Banner.bmp" />
     <None Include="Dialog.bmp" />
     <None Include="License.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
   </ItemGroup>
 </Project>
