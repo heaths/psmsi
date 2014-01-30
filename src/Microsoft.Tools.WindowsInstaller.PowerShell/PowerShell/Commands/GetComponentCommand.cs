@@ -7,7 +7,6 @@
 
 using Microsoft.Deployment.WindowsInstaller;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -111,17 +110,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         private void WriteComponent(ComponentInstallation component)
         {
             PSObject obj = PSObject.AsPSObject(component);
-
-            // Add the component key path as the PSPath.
-            var path = this.SessionState.Path.GetUnresolvedPSPathFromKeyPath(component.Path);
-            if (!string.IsNullOrEmpty(path))
-            {
-                obj.Properties.Add(new PSNoteProperty("PSPath", path));
-            }
-
-            // Must hide the ClientProducts property or exceptions will be thrown.
-            obj.Properties.Add(new PSNoteProperty("ClientProducts", null));
-
             this.WriteObject(obj);
         }
 

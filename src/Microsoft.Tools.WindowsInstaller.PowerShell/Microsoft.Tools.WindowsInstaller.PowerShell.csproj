@@ -122,6 +122,7 @@
     <Compile Include="PowerShell\Commands\TestProductCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />
+    <Compile Include="PowerShell\ComponentProvider.cs" />
     <Compile Include="PowerShell\EncodingAttribute.cs" />
     <Compile Include="PowerShell\ExtensionMethods.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />
