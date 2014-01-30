@@ -436,9 +436,21 @@
         </Members>
       </MemberSet>
       <ScriptProperty>
+        <Name>PSPath</Name>
+        <GetScriptBlock>
+          [Microsoft.Tools.WindowsInstaller.PowerShell.ComponentProvider]::ResolveKeyPath($ExecutionContext.SessionState, $this.Path)
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
         <Name>ProductCode</Name>
         <GetScriptBlock>
           $this.Product.ProductCode
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>ClientProducts</Name>
+        <GetScriptBlock>
+          $null
         </GetScriptBlock>
       </ScriptProperty>
     </Members>
