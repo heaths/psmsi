@@ -436,11 +436,21 @@
         </Members>
       </MemberSet>
       <ScriptProperty>
-        <Name>PSPath</Name>
+        <Name>KeyPath</Name>
         <GetScriptBlock>
-          [Microsoft.Tools.WindowsInstaller.PowerShell.ComponentProvider]::ResolveKeyPath($ExecutionContext.SessionState, $this.Path)
+          $this.PSBase.Path
         </GetScriptBlock>
       </ScriptProperty>
+      <ScriptProperty>
+        <Name>Path</Name>
+        <GetScriptBlock>
+          [Microsoft.Tools.WindowsInstaller.PowerShell.ComponentProvider]::ResolveKeyPath($ExecutionContext.SessionState, $this.KeyPath)
+        </GetScriptBlock>
+      </ScriptProperty>
+      <AliasProperty>
+        <Name>PSPath</Name>
+        <ReferencedMemberName>Path</ReferencedMemberName>
+      </AliasProperty>
       <ScriptProperty>
         <Name>ProductCode</Name>
         <GetScriptBlock>

@@ -7,6 +7,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -82,6 +83,45 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                     // Two shared components piped again yield 4 (duplicated).
                     Assert.AreEqual(4, objs.Count);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ValidateFileComponentPath()
+        {
+            string keyPath = Path.Combine(this.TestContext.DeploymentDirectory, "return.exe");
+
+            using (var p = CreatePipeline(@"get-msicomponentinfo '{958A3933-8CE7-6189-F0EF-CAE467FABFF4}'"))
+            {
+                using (OverrideRegistry())
+                {
+                    var obj = p.Invoke().FirstOrDefault();
+
+                    Assert.IsNotNull(obj);
+                    Assert.AreEqual(keyPath, obj.GetPropertyValue<string>("KeyPath"), true);
+                    Assert.AreEqual(@"Microsoft.PowerShell.Core\FileSystem::" + keyPath, obj.GetPropertyValue<string>("Path"), true);
+                    Assert.AreEqual(@"Microsoft.PowerShell.Core\FileSystem::" + keyPath, obj.GetPropertyValue<string>("PSPath"), true);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ValidateRegistryComponentPath()
+        {
+            string keyPath = @"02:\SOFTWARE\Microsoft\Internet Explorer\Low Rights\ElevationPolicy\{003B91A6-61E3-4591-891D-01E94C8CB11E}\";
+            string providerPath = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Low Rights\ElevationPolicy\{003B91A6-61E3-4591-891D-01E94C8CB11E}";
+
+            using (var p = CreatePipeline(@"get-msicomponentinfo '{E2E70518-347A-4231-9D5D-3857059CCFA7}'"))
+            {
+                using (OverrideRegistry())
+                {
+                    var obj = p.Invoke().FirstOrDefault();
+
+                    Assert.IsNotNull(obj);
+                    Assert.AreEqual(keyPath, obj.GetPropertyValue<string>("KeyPath"), true);
+                    Assert.AreEqual(@"Microsoft.PowerShell.Core\Registry::" + providerPath, obj.GetPropertyValue<string>("Path"), true);
+                    Assert.AreEqual(@"Microsoft.PowerShell.Core\Registry::" + providerPath, obj.GetPropertyValue<string>("PSPath"), true);
                 }
             }
         }
