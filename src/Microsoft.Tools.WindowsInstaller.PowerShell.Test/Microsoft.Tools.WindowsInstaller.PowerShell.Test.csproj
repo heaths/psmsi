@@ -120,6 +120,7 @@
     <Compile Include="SetTests.cs" />
     <Compile Include="SummaryInfoTests.cs" />
     <Compile Include="SystemRestorePointTests.cs" />
+    <Compile Include="SystemRestoreTestService.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="TreeTests.cs" />
   </ItemGroup>

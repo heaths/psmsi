@@ -15,16 +15,19 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </summary>
     internal sealed class SystemRestorePoint
     {
-        private NativeMethods.RestorePointInfo info;
+        private static ISystemRestoreService _defaultService;
+        private ISystemRestoreService _service;
+        private RestorePointInfo _info;
 
         /// <summary>
         /// Begins a system restore point.
         /// </summary>
         /// <param name="type">The type of restore point to create.</param>
         /// <param name="description">Optional description for the restore point. The default value is the assembly title.</param>
+        /// <param name="service">The service provider to create or modify restore points. The default calls info the system service.</param>
         /// <returns>Information about the restore point or null if the service is disabled.</returns>
         /// <exception cref="Win32Exception">Failed to create the system restore point.</exception>
-        internal static SystemRestorePoint Create(RestorePointType type, string description = null)
+        internal static SystemRestorePoint Create(RestorePointType type, string description = null, ISystemRestoreService service = null)
         {
             if (RestorePointType.CancelledOperation == type)
             {
@@ -44,25 +47,40 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
             }
 
-            var info = new NativeMethods.RestorePointInfo()
+            var info = new RestorePointInfo()
             {
                 Description = description,
-                EventType = NativeMethods.RestorePointEventType.BeginSystemChange,
+                EventType = RestorePointEventType.BeginSystemChange,
                 SequenceNumber = 0,
                 Type = type,
             };
 
-            // Create the system restore point.
-            NativeMethods.StateManagerStatus status;
-            if (!NativeMethods.SRSetRestorePoint(ref info, out status))
+            var instance = new SystemRestorePoint()
             {
-                throw new Win32Exception(status.ErrorCode);
-            }
+                _service = service ?? SystemRestorePoint.DefaultServiceProvider,
+                _info = info,
+            };
+
+            // Create the system restore point.
+            var status = instance.SetRestorePoint(info);
 
             // Update the sequence number.
             info.SequenceNumber = status.SequenceNumber;
+            instance._info = info;
 
-            return new SystemRestorePoint(info);
+            return instance;
+        }
+
+        /// <summary>
+        /// Gets or sets the default implementation of the <see cref="ISystemRestoreService"/>.
+        /// </summary>
+        /// <remarks>
+        /// If not already set or reset to null, the default system implementation is used.
+        /// </remarks>
+        internal static ISystemRestoreService DefaultServiceProvider
+        {
+            get { return _defaultService ?? DefaultSystemRestoreService.GetInstance(); }
+            set { _defaultService = value; }
         }
 
         /// <summary>
@@ -70,25 +88,15 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         internal string Description
         {
-            get { return this.info.Description; }
+            get { return this._info.Description; }
         }
 
         /// <summary>
-        /// Cancels the system restore point.
+        /// Gets the sequence number for the restore point.
         /// </summary>
-        internal void Rollback()
+        internal long SequenceNumber
         {
-            if (NativeMethods.RestorePointEventType.EndSystemChange != info.EventType)
-            {
-                info.Type = RestorePointType.CancelledOperation;
-                info.EventType = NativeMethods.RestorePointEventType.EndSystemChange;
-
-                NativeMethods.StateManagerStatus status;
-                if (!NativeMethods.SRSetRestorePoint(ref info, out status))
-                {
-                    throw new Win32Exception(status.ErrorCode);
-                }
-            }
+            get { return this._info.SequenceNumber; }
         }
 
         /// <summary>
@@ -96,22 +104,74 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         internal void Commit()
         {
-            if (NativeMethods.RestorePointEventType.EndSystemChange != info.EventType)
+            if (RestorePointEventType.EndSystemChange != _info.EventType)
             {
-                info.EventType = NativeMethods.RestorePointEventType.EndSystemChange;
+                // Copy information for next call.
+                var info = this._info;
+                info.EventType = RestorePointEventType.EndSystemChange;
 
-                NativeMethods.StateManagerStatus status;
-                if (!NativeMethods.SRSetRestorePoint(ref info, out status))
-                {
-                    throw new Win32Exception(status.ErrorCode);
-                }
+                this.SetRestorePoint(info);
             }
         }
 
-        private SystemRestorePoint(NativeMethods.RestorePointInfo info)
+        /// <summary>
+        /// Cancels the system restore point.
+        /// </summary>
+        internal void Rollback()
         {
-            this.info = info;
+            if (RestorePointEventType.EndSystemChange != this._info.EventType)
+            {
+                // Copy information for next call.
+                var info = this._info;
+                info.Type = RestorePointType.CancelledOperation;
+                info.EventType = RestorePointEventType.EndSystemChange;
+
+                this.SetRestorePoint(info);
+            }
         }
+
+        private SystemRestorePoint()
+        {
+        }
+
+        private StateManagerStatus SetRestorePoint(RestorePointInfo info)
+        {
+            StateManagerStatus status;
+            if (!this._service.SetRestorePoint(info, out status))
+            {
+                throw new Win32Exception(status.ErrorCode);
+            }
+
+            return status;
+        }
+
+        private class DefaultSystemRestoreService : ISystemRestoreService
+        {
+            private static volatile object _monitor = new object();
+            private static ISystemRestoreService _instance = null;
+
+            internal static ISystemRestoreService GetInstance()
+            {
+                if (null == _instance)
+                {
+                    lock (_monitor)
+                    {
+                        if (null == _instance)
+                        {
+                            _instance = new DefaultSystemRestoreService();
+                        }
+                    }
+                }
+
+                return _instance;
+            }
+
+            public bool SetRestorePoint(RestorePointInfo info, out StateManagerStatus status)
+            {
+                return NativeMethods.SRSetRestorePoint(ref info, out status);
+            }
+        }
+
     }
 
     /// <summary>
