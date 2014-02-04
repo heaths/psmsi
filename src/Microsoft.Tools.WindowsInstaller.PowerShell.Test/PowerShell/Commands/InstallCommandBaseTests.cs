@@ -42,11 +42,19 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 TestInstallCommand.Register(ps.Runspace.RunspaceConfiguration);
 
-                var objs = ps.AddScript("@('foo', 'bar')").AddCommand("test-install").AddParameter("chain").Invoke();
+                try
+                {
+                    SystemRestorePoint.DefaultServiceProvider = new SystemRestoreTestService();
+                    var objs = ps.AddScript("@('foo', 'bar')").AddCommand("test-install").AddParameter("chain").Invoke();
 
-                Assert.AreEqual<int>(2, objs.Count, "The number of objects returned is incorrect.");
-                Assert.AreEqual<int>(2, (int)objs[0].BaseObject, "The execute count is incorrect.");
-                Assert.AreEqual<int>(2, (int)objs[1].BaseObject, "The maximum queue count is incorrect.");
+                    Assert.AreEqual<int>(2, objs.Count, "The number of objects returned is incorrect.");
+                    Assert.AreEqual<int>(2, (int)objs[0].BaseObject, "The execute count is incorrect.");
+                    Assert.AreEqual<int>(2, (int)objs[1].BaseObject, "The maximum queue count is incorrect.");
+                }
+                finally
+                {
+                    SystemRestorePoint.DefaultServiceProvider = null;
+                }
             }
         }
 

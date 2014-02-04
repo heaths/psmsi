@@ -22,6 +22,7 @@ namespace Microsoft.Tools.WindowsInstaller
         #region Error codes
         internal const int ERROR_SUCCESS = 0;
         internal const int ERROR_ACCESS_DENIED = 5;
+        internal const int ERROR_INVALID_DATA = 13;
         internal const int ERROR_BAD_CONFIGURATION = 1610;
         internal const int STG_E_FILEALREADYEXISTS = unchecked((int)0x80030050);
         #endregion
@@ -263,32 +264,28 @@ namespace Microsoft.Tools.WindowsInstaller
             out StateManagerStatus pSMgrStatus
             );
         #endregion
+    }
 
-        #region Other structures
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        internal struct RestorePointInfo
-        {
-            [MarshalAs(UnmanagedType.U4)] internal NativeMethods.RestorePointEventType EventType;
-            [MarshalAs(UnmanagedType.U4)] internal RestorePointType Type;
-            internal long SequenceNumber;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] internal string Description;
-        }
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    internal struct RestorePointInfo
+    {
+        [MarshalAs(UnmanagedType.U4)] internal RestorePointEventType EventType;
+        [MarshalAs(UnmanagedType.U4)] internal RestorePointType Type;
+        internal long SequenceNumber;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] internal string Description;
+    }
 
-        internal struct StateManagerStatus
-        {
-            [MarshalAs(UnmanagedType.U4)] internal int ErrorCode;
-            internal long SequenceNumber;
-        }
-        #endregion
+    internal struct StateManagerStatus
+    {
+        [MarshalAs(UnmanagedType.U4)] internal int ErrorCode;
+        internal long SequenceNumber;
+    }
 
-        #region Other enumerations
-        internal enum RestorePointEventType
-        {
-            BeginSystemChange = 100,
-            EndSystemChange,
-            BeginNestedSystemChange,
-            EndNestedSystemChange,
-        }
-        #endregion
+    internal enum RestorePointEventType
+    {
+        BeginSystemChange = 100,
+        EndSystemChange,
+        BeginNestedSystemChange,
+        EndNestedSystemChange,
     }
 }
