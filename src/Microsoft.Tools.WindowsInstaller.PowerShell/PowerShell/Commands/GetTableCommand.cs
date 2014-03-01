@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
+using System.Reflection;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -23,7 +24,40 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     [OutputType(typeof(Record))]
     public sealed class GetTableCommand : PackageCommandBase
     {
+        private static readonly MethodInfo methodGetPath = typeof(GetTableCommand).GetMethod("GetPath", BindingFlags.Public | BindingFlags.Static);
+        private static readonly MethodInfo methodGetQuery = typeof(GetTableCommand).GetMethod("GetQuery", BindingFlags.Public | BindingFlags.Static);
         private InstallUIOptions previousInternalUI = InstallUIOptions.Default;
+
+        /// <summary>
+        /// Gets the path to the package that contains this <see cref="Record"/> for use in code methods.
+        /// </summary>
+        /// <param name="obj">The <see cref="PSObject"/> that wraps a <see cref="Record"/>.</param>
+        /// <returns>The path to the package that contains this <see cref="Record"/>.</returns>
+        public static string GetPath(PSObject obj)
+        {
+            var record = obj.As<Record>();
+            if (null != record)
+            {
+                return record.Path;
+            }
+
+            return null;
+        }
+        /// <summary>
+        /// Gets the query string that returned the <see cref="Record"/> for use in code methods.
+        /// </summary>
+        /// <param name="obj">The <see cref="PSObject"/> that wraps a <see cref="Record"/>.</param>
+        /// <returns>The query string that returned the <see cref="Record"/>.</returns>
+        public static string GetQuery(PSObject obj)
+        {
+            var record = obj.As<Record>();
+            if (null != record && null != record.Columns)
+            {
+                return record.Columns.QueryString;
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Gets or sets the path supporting wildcards to enumerate files.
@@ -266,13 +300,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         using (record)
                         {
                             // Create a locally cached copy of the record.
-                            var copy = new Record(record, columns);
+                            var copy = new Record(record, columns, path);
 
                             // Add additional properties to the Members collection; otherwise,
                             // existing adapted properties are copied along with cached values.
                             var obj = PSObject.AsPSObject(copy);
-                            obj.Members.Add(new PSNoteProperty("MSIPath", path));
-                            obj.Members.Add(new PSNoteProperty("MSIQuery", query));
+                            obj.Members.Add(new PSCodeProperty("MSIPath", methodGetPath));
+                            obj.Members.Add(new PSCodeProperty("MSIQuery", methodGetQuery));
 
                             // Show only column properties by default.
                             var memberSet = ViewManager.GetMemberSet(view);
