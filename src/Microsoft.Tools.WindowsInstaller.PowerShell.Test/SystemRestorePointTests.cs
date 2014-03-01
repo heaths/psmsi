@@ -17,6 +17,7 @@ namespace Microsoft.Tools.WindowsInstaller
     public sealed class SystemRestorePointTests
     {
         [TestMethod]
+        [TestCategory("Impactful")]
         public void CreateRestorePoint()
         {
             try
@@ -40,6 +41,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         [TestMethod]
+        [TestCategory("Impactful")]
         public void CancelRestorePoint()
         {
             try
