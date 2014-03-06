@@ -17,7 +17,6 @@ namespace Microsoft.Tools.WindowsInstaller
     public sealed class SystemRestorePointTests
     {
         [TestMethod]
-        [TestCategory("Impactful")]
         public void CreateRestorePoint()
         {
             var service = new SystemRestoreTestService();
@@ -44,7 +43,6 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         [TestMethod]
-        [TestCategory("Impactful")]
         public void CancelRestorePoint()
         {
             var service = new SystemRestoreTestService();
