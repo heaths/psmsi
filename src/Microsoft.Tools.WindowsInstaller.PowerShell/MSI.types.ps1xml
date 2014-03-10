@@ -636,6 +636,22 @@
   </Type>
   <Type>
     <Name>Microsoft.Tools.WindowsInstaller.Record</Name>
+    <Members>
+      <CodeProperty>
+        <Name>MSIPath</Name>
+        <GetCodeReference>
+          <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
+          <MethodName>GetPath</MethodName>
+        </GetCodeReference>
+      </CodeProperty>
+      <CodeProperty>
+        <Name>MSIQuery</Name>
+        <GetCodeReference>
+          <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
+          <MethodName>GetQuery</MethodName>
+        </GetCodeReference>
+      </CodeProperty>
+    </Members>
     <TypeAdapter>
       <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
     </TypeAdapter>
