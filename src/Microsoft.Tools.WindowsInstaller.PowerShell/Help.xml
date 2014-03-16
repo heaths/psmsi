@@ -21,7 +21,7 @@
     </parameter>
     <example>
       <code>get-childitem -filter *.msi -recurse | edit-msipackage</code>
-      <description>Opens all install packages in the curent directory or subdirectories in separate instances of Orca.</description>
+      <description>Opens all install packages in the current directory or subdirectories in separate instances of Orca.</description>
     </example>
   </command>
   <command>
@@ -32,8 +32,8 @@
     </synopsis>
     <description>
       <p>
-        Windows Installer defines an XML schema that is representational of a patch package - specfically its aplicability information.
-        This allows administrators and bundle developers to not require downloading the patch package just to find out if its applicable
+        Windows Installer defines an XML schema that is representational of a patch package - specifically its applicability information.
+        This allows administrators and bundle developers to not require downloading the patch package just to find out if it's applicable
         or even already installed.
       </p>
       <p>
@@ -142,7 +142,7 @@
     </synopsis>
     <description>
       A product must install or advertise one or more features.
-      This cmdlet can query feature of a product or products to determine thei state and optional usage data.
+      This cmdlet can query feature of a product or products to determine their state and optional usage data.
     </description>
     <parameter name="FeatureName">
       The names of the features for which information is retrieved.
@@ -240,7 +240,7 @@
       You can specify * in any part of the path to select all matching files.
     </parameter>
     <output type="string">
-      If -passthru is not specified, Get-MSIFileType returns an string object.
+      If -passthru is not specified, Get-MSIFileType returns a string object.
     </output>
     <output type="System.IO.DirectoryInfo">
       If -passthru is specified and the input object is a directory, the directory is returned.
@@ -429,7 +429,7 @@
       The minimum number count for shared components returned. The absolute minimum is 2.
     </parameter>
     <output type="Microsoft.Deployment.WindowsInstaller.ComponentInstallation">
-      Information about the shared components installed or registeredy by one or more products.
+      Information about the shared components installed or registered by one or more products.
     </output>
     <example>
       <code>get-msisharedcomponentinfo -count 4 | format-table -view Clients</code>
@@ -509,7 +509,7 @@
     </parameter>
     <parameter name="Patch" globbing="true">
       <p>
-        The path to a package package to apply to the product package. Multiple patches are applied in authored sequence order.
+        The path to a patch package to apply to the product package. Multiple patches are applied in authored sequence order.
       </p>
       <p>
         Wildcards are permitted. You can specify * in any part of the path to select all matching files.
