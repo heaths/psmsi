@@ -16,6 +16,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     public class InstallCommandActionData
     {
         /// <summary>
+        /// Gets the default weight based on a small sampling of machine states.
+        /// </summary>
+        /// <remarks>
+        /// The average weight did actually turn out to be 42 MB which is further proof of its significance.
+        /// </remarks>
+        public const int DefaultWeight = 42 * 1024 * 1024;
+
+        /// <summary>
         /// Gets or sets the package path for which the action is performed.
         /// </summary>
         public string Path { get; set; }
@@ -53,6 +61,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
+        /// Gets or sets the weight of the package for progress reporting.
+        /// </summary>
+        public int Weight { get; set; }
+
+        /// <summary>
         /// Creates an instance of an <see cref="InstallCommandActionData"/> class from the given file path.
         /// </summary>
         /// <typeparam name="T">The specific type of <see cref="InstallCommandActionData"/> to create.</typeparam>
@@ -87,6 +100,25 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             if (null != args && 0 < args.Length)
             {
                 this.CommandLine = string.Join(" ", args);
+            }
+        }
+
+        /// <summary>
+        /// Updates the <see cref="Weight"/> for progress reporting.
+        /// </summary>
+        public virtual void UpdateWeight()
+        {
+            if (!string.IsNullOrEmpty(this.Path))
+            {
+                this.Weight = PackageInfo.GetWeightFromPath(this.Path);
+            }
+            else if (!string.IsNullOrEmpty(this.ProductCode))
+            {
+                this.Weight = PackageInfo.GetWeightFromProductCode(this.ProductCode);
+            }
+            else if (0 >= this.Weight)
+            {
+                this.Weight = InstallCommandActionData.DefaultWeight;
             }
         }
     }

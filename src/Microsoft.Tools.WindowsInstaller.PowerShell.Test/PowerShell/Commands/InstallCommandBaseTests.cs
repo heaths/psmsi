@@ -244,6 +244,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     {
                         CommandLine = null != this.Properties && 0 < this.Properties.Length ? string.Join(" ", this.Properties) : null,
                         Action = token,
+                        Weight = 100,
                     };
 
                     this.QueueCount++;

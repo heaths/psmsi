@@ -123,6 +123,7 @@
     <Compile Include="SystemRestoreTestService.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="TreeTests.cs" />
+    <Compile Include="PackageInfoTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj">

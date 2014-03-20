@@ -82,6 +82,34 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
+        /// Reeturns the sum of the field selected from each item in the source enumerable.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence of values from which fields are selected to sum.</param>
+        /// <param name="selector">A transform function to apply to each element to get the field to sum.</param>
+        /// <returns>The sum of the field selected from each item in the source enumerable.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> or <paramref name="selector"/> argument is null.</exception>
+        internal static int Sum<TSource>(this IEnumerable<TSource> source, Func<TSource, int> selector)
+        {
+            if (null == source)
+            {
+                throw new ArgumentNullException("source");
+            }
+            else if (null == selector)
+            {
+                throw new ArgumentNullException("selector");
+            }
+
+            int sum = 0;
+            foreach (int i in ForEach(source, selector))
+            {
+                sum += i;
+            }
+
+            return sum;
+        }
+
+        /// <summary>
         /// Creates an array from the enumerable <paramref name="source"/>.
         /// </summary>
         /// <typeparam name="T">The type of elements of <paramref name="source"/>.</typeparam>

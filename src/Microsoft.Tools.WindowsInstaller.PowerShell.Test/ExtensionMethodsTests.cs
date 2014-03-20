@@ -87,6 +87,35 @@ namespace Microsoft.Tools.WindowsInstaller
         }
         #endregion
 
+        #region Sum
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SumWithNullSource()
+        {
+            string[] source = null;
+            Func<string, int> selector = null;
+            var sum = ExtensionMethods.Sum(source, selector);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SumWithNullSelector()
+        {
+            var source = new string[] { "A", "B" };
+            Func<string, int> selector = null;
+            var sum = ExtensionMethods.Sum(source, selector);
+        }
+
+        [TestMethod]
+        public void Sum()
+        {
+            var source = new string[] { "A", "B" };
+            var sum = ExtensionMethods.Sum(source, x => x.Length);
+
+            Assert.AreEqual<int>(2, sum);
+        }
+        #endregion
+
         #region ToArray
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]

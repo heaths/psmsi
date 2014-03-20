@@ -89,6 +89,7 @@
     <Compile Include="ISystemRestoreService.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="PackageInfo.cs" />
     <Compile Include="PatchApplicator.cs" />
     <Compile Include="PatchSequence.cs" />
     <Compile Include="PatchSequencer.cs" />
