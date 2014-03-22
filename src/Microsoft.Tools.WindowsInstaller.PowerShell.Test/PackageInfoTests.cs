@@ -22,7 +22,7 @@ namespace Microsoft.Tools.WindowsInstaller
             var path = Path.Combine(this.TestContext.DeploymentDirectory, "example.msi");
 
             var weight = PackageInfo.GetWeightFromPath(path);
-            Assert.AreEqual<int>(1419, weight);
+            Assert.AreEqual<long>(1419, weight);
         }
 
         [TestMethod]
@@ -31,8 +31,17 @@ namespace Microsoft.Tools.WindowsInstaller
             using (OverrideRegistry())
             {
                 var weight = PackageInfo.GetWeightFromProductCode("{877EF582-78AF-4D84-888B-167FDC3BCC11}");
-                Assert.AreEqual<int>(1419, weight);
+                Assert.AreEqual<long>(1419, weight);
             }
+        }
+
+        [TestMethod]
+        public void PackageWeightFromFileSizeTest()
+        {
+            var path = Path.Combine(this.TestContext.DeploymentDirectory, "noweight.msi");
+
+            var weight = PackageInfo.GetWeightFromPath(path);
+            Assert.AreEqual<long>(24576, weight);
         }
     }
 }

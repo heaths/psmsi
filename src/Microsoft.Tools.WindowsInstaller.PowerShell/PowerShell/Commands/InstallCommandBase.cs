@@ -627,7 +627,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     percentage += (int)(factor * this.progress.CurrentWeight);
                 }
 
-                record.PercentComplete = Math.Min(100, percentage);
+                record.PercentComplete = Math.Min(100, (int)percentage);
             }
 
             this.WriteProgress(record);
@@ -639,17 +639,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected internal sealed class ActionQueue : Queue<T>
         {
             private int previousCount = -1;
-            private int previousWeight = 0;
+            private long previousWeight = 0;
 
             /// <summary>
             /// Gets the total original weight of all actions before processing.
             /// </summary>
-            public int OriginalWeight { get; internal set; }
+            public long OriginalWeight { get; internal set; }
 
             /// <summary>
             /// Gets the total weight of all remaining actions in the queue.
             /// </summary>
-            public int RemainingWeight
+            public long RemainingWeight
             {
                 get
                 {
@@ -725,7 +725,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
             }
 
-            internal int CurrentWeight { get; set; }
+            internal long CurrentWeight { get; set; }
 
             internal bool IsValid
             {

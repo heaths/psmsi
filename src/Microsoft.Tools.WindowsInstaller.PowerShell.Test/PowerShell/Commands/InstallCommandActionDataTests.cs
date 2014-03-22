@@ -24,7 +24,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var data = new InstallCommandActionData();
             data.ParseCommandLine(null);
 
-            Assert.IsNull(data.CommandLine, "The command line should be null.");
+            Assert.IsNull(data.CommandLine);
+            Assert.AreEqual<long>(PackageInfo.DefaultWeight, data.Weight);
         }
 
         [TestMethod]
@@ -33,7 +34,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var data = new InstallCommandActionData();
             data.ParseCommandLine(new string[] { });
 
-            Assert.IsNull(data.CommandLine, "The command line should be null.");
+            Assert.IsNull(data.CommandLine);
+            Assert.AreEqual<long>(PackageInfo.DefaultWeight, data.Weight);
         }
 
         [TestMethod]
@@ -42,7 +44,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var data = new InstallCommandActionData();
             data.ParseCommandLine(new string[] { "PROPERTY=VALUE",  "REINSTALL=ALL" });
 
-            Assert.AreEqual("PROPERTY=VALUE REINSTALL=ALL", data.CommandLine, "The command line is incorrect.");
+            Assert.AreEqual("PROPERTY=VALUE REINSTALL=ALL", data.CommandLine);
+            Assert.AreEqual<long>(PackageInfo.DefaultWeight, data.Weight);
         }
 
         [TestMethod]
@@ -51,11 +54,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline("get-item example.msi"))
             {
                 var file = p.Invoke().SingleOrDefault();
-                Assert.IsNotNull(file, "The file item is null.");
+                Assert.IsNotNull(file);
 
                 var data = InstallCommandActionData.CreateActionData<InstallCommandActionData>(TestRunspace.SessionStateProxy.Path, file);
                 string path = Path.Combine(this.TestContext.DeploymentDirectory, "example.msi");
-                Assert.AreEqual(path, data.Path, "The paths are not the same.");
+                Assert.AreEqual(path, data.Path);
+
+                data.UpdateWeight();
+                Assert.AreEqual<long>(1419, data.Weight);
             }
         }
 

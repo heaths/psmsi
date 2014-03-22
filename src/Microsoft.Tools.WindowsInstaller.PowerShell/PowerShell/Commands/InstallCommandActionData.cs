@@ -15,13 +15,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// </summary>
     public class InstallCommandActionData
     {
-        /// <summary>
-        /// Gets the default weight based on a small sampling of machine states.
-        /// </summary>
-        /// <remarks>
-        /// The average weight did actually turn out to be 42 MB which is further proof of its significance.
-        /// </remarks>
-        public const int DefaultWeight = 42 * 1024 * 1024;
+        private long weight = 0;
 
         /// <summary>
         /// Gets or sets the package path for which the action is performed.
@@ -63,7 +57,21 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the weight of the package for progress reporting.
         /// </summary>
-        public int Weight { get; set; }
+        /// <value>The calculated weight of the package, or the <see cref="DefaultWeight"/> if not specified.</value>
+        public long Weight
+        {
+            get
+            {
+                if (0 >= this.weight)
+                {
+                    return PackageInfo.DefaultWeight;
+                }
+
+                return this.weight;
+            }
+
+            set { this.weight = value; }
+        }
 
         /// <summary>
         /// Creates an instance of an <see cref="InstallCommandActionData"/> class from the given file path.
@@ -115,10 +123,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             else if (!string.IsNullOrEmpty(this.ProductCode))
             {
                 this.Weight = PackageInfo.GetWeightFromProductCode(this.ProductCode);
-            }
-            else if (0 >= this.Weight)
-            {
-                this.Weight = InstallCommandActionData.DefaultWeight;
             }
         }
     }

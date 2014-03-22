@@ -89,7 +89,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <param name="selector">A transform function to apply to each element to get the field to sum.</param>
         /// <returns>The sum of the field selected from each item in the source enumerable.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> or <paramref name="selector"/> argument is null.</exception>
-        internal static int Sum<TSource>(this IEnumerable<TSource> source, Func<TSource, int> selector)
+        internal static long Sum<TSource>(this IEnumerable<TSource> source, Func<TSource, long> selector)
         {
             if (null == source)
             {
@@ -100,8 +100,8 @@ namespace Microsoft.Tools.WindowsInstaller
                 throw new ArgumentNullException("selector");
             }
 
-            int sum = 0;
-            foreach (int i in ForEach(source, selector))
+            var sum = 0L;
+            foreach (long i in ForEach(source, selector))
             {
                 sum += i;
             }

@@ -93,7 +93,7 @@ namespace Microsoft.Tools.WindowsInstaller
         public void SumWithNullSource()
         {
             string[] source = null;
-            Func<string, int> selector = null;
+            Func<string, long> selector = null;
             var sum = ExtensionMethods.Sum(source, selector);
         }
 
@@ -102,7 +102,7 @@ namespace Microsoft.Tools.WindowsInstaller
         public void SumWithNullSelector()
         {
             var source = new string[] { "A", "B" };
-            Func<string, int> selector = null;
+            Func<string, long> selector = null;
             var sum = ExtensionMethods.Sum(source, selector);
         }
 
@@ -112,7 +112,7 @@ namespace Microsoft.Tools.WindowsInstaller
             var source = new string[] { "A", "B" };
             var sum = ExtensionMethods.Sum(source, x => x.Length);
 
-            Assert.AreEqual<int>(2, sum);
+            Assert.AreEqual<long>(2, sum);
         }
         #endregion
 
