@@ -57,7 +57,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the weight of the package for progress reporting.
         /// </summary>
-        /// <value>The calculated weight of the package, or the <see cref="DefaultWeight"/> if not specified.</value>
+        /// <value>The calculated weight of the package, or the <see cref="PackageInfo.DefaultWeight"/> if not specified.</value>
         public long Weight
         {
             get
