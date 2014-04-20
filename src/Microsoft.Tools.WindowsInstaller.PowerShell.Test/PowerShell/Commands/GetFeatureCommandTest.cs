@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Check that a null parameter is invalid.
             using (var p = CreatePipeline(@"get-msifeatureinfo -product $null"))
             {
-                ExpectException(typeof(ParameterBindingException), null, () =>
+                ExceptionAssert.Throws<ParameterBindingException>(() =>
                 {
                     p.Invoke();
                 });
@@ -73,7 +73,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Check that a collection containing null is invalid.
             using (var p = CreatePipeline(@"get-msifeatureinfo -product @($null)"))
             {
-                ExpectException(typeof(ParameterBindingException), null, () =>
+                ExceptionAssert.Throws<ParameterBindingException>(() =>
                 {
                     p.Invoke();
                 });
@@ -101,7 +101,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Check that a null parameter is invalid.
             using (var p = CreatePipeline(@"get-msifeatureinfo -productcode $null"))
             {
-                ExpectException(typeof(ParameterBindingException), null, () =>
+                ExceptionAssert.Throws<ParameterBindingException>(() =>
                 {
                     p.Invoke();
                 });
@@ -110,7 +110,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Check that a collection containing null is invalid.
             using (var p = CreatePipeline(@"get-msifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' @($null)"))
             {
-                ExpectException(typeof(ParameterBindingException), null, () =>
+                ExceptionAssert.Throws<ParameterBindingException>(() =>
                 {
                     p.Invoke();
                 });

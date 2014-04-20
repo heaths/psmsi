@@ -90,7 +90,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             // Test that None is not supported.
             var cmdlet = new GetPatchCommand();
-            ExpectException(typeof(ArgumentException), null, () =>
+            ExceptionAssert.Throws<ArgumentException>(() =>
             {
                 cmdlet.UserContext = UserContexts.None;
             });
@@ -118,7 +118,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             Assert.AreEqual<PatchStates>(PatchStates.Applied, cmdlet.Filter);
 
             // Test that Invalid is not supported.
-            ExpectException(typeof(ArgumentException), null, () =>
+            ExceptionAssert.Throws<ArgumentException>(() =>
             {
                 cmdlet.Filter = PatchStates.None;
             });

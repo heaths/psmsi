@@ -25,7 +25,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             using (var p = CreatePipeline(script + "1"))
             {
                 // Actual outer exception type is ParameterBindingValidationException.
-                ExpectException(typeof(ParameterBindingException), typeof(ValidationMetadataException), delegate()
+                ExceptionAssert.Throws<ParameterBindingException, ValidationMetadataException>(() =>
                 {
                     p.Invoke();
                 });
@@ -35,7 +35,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             using (var p = CreatePipeline(script + "'test'"))
             {
                 // Actual outer exception type is ParameterBindingValidationException.
-                ExpectException(typeof(ParameterBindingException), typeof(ValidationMetadataException), delegate()
+                ExceptionAssert.Throws<ParameterBindingException, ValidationMetadataException>(() =>
                 {
                     p.Invoke();
                 });
@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             using (var p = CreatePipeline(script + "'{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}'"))
             {
                 // Actual outer exception type is ParameterBindingValidationException.
-                ExpectException(typeof(ParameterBindingException), typeof(ValidationMetadataException), delegate()
+                ExceptionAssert.Throws<ParameterBindingException, ValidationMetadataException>(() =>
                 {
                     p.Invoke();
                 });
