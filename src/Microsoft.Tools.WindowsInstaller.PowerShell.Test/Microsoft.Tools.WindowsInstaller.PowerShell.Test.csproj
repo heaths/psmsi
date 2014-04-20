@@ -131,33 +131,31 @@
       <Name>Microsoft.Tools.WindowsInstaller.PowerShell</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemDefinitionGroup>
+    <Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemDefinitionGroup>
   <ItemGroup>
+    <Content Include="Data\Applicable.xml" />
     <Content Include="Data\Corrupt.xml" />
-    <Content Include="Data\NoEditVerb.xml" />
-    <Content Include="Data\NoOrca.xml" />
-    <Content Include="Data\Inapplicable.xml" />
-    <Content Include="Data\Example.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Data\Example.jpn.mst" />
     <Content Include="Data\Example.msi" />
     <Content Include="Data\Example.msp" />
     <Content Include="Data\Example.mst" />
-    <Content Include="Data\Applicable.xml" />
-    <Content Include="Data\product.wxs" />
-    <Content Include="Data\qps-ploc\Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\Example.txt" />
+    <Content Include="Data\Inapplicable.xml" />
+    <Content Include="Data\NoEditVerb.xml" />
+    <Content Include="Data\NoOrca.xml" />
+    <Content Include="Data\NoWeight.msi" />
     <Content Include="Data\Registry.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Data\qps-ploc\MSI.psd1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\Test.psm1" />
     <Content Include="Data\darice.cub" />
+    <Content Include="Data\product.wxs" />
+    <Content Include="Data\qps-ploc\MSI.psd1" />
+    <Content Include="Data\qps-ploc\Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml" />
     <Content Include="Data\return.exe" />
     <Content Include="Data\test.cub" />
-    <Content Include="Data\Test.psm1" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -180,9 +178,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Data\NoWeight.msi" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
