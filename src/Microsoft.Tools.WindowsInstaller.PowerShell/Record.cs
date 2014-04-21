@@ -34,8 +34,8 @@ namespace Microsoft.Tools.WindowsInstaller
             this.Path = path;
 
             // Cache the data from the record.
-            this.Data = new List<object>(record.FieldCount);
-            for (int i = 0; i < record.FieldCount; ++i)
+            this.Data = new List<object>(columns.Count);
+            for (int i = 0; i < columns.Count; ++i)
             {
                 // Windows Installer uses 1-based indices.
                 var offset = i + 1;

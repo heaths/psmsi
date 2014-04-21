@@ -7,6 +7,7 @@
 
 using Microsoft.Deployment.WindowsInstaller;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Microsoft.Tools.WindowsInstaller
@@ -68,6 +69,19 @@ namespace Microsoft.Tools.WindowsInstaller
             return item.Key;
         }
 
+        private static IEnumerable<string> GetAllColumns(View view)
+        {
+            foreach (var table in view.Tables)
+            {
+                foreach (var column in table.Columns)
+                {
+                    // Windows Installer does not support wildcard column names
+                    // with multiple tables so only need to return the column name.
+                    yield return column.Name;
+                }
+            }
+        }
+
         private static string[] GetColumns(View view)
         {
             var query = view.QueryString;
@@ -75,9 +89,20 @@ namespace Microsoft.Tools.WindowsInstaller
             // Parse the column names for table references.
             var start = query.IndexOf("SELECT", StringComparison.OrdinalIgnoreCase) + 7;
             var end = query.IndexOf("FROM", StringComparison.OrdinalIgnoreCase) - 1;
-            return query.Substring(start, end - start)
-                        .Replace("`", "")
-                        .Split(ColumnCollection.ColumnSeparators, StringSplitOptions.RemoveEmptyEntries);
+            var columns = query.Substring(start, end - start);
+
+            if ("*" == columns.Trim())
+            {
+                // Return all columns from all tables.
+                return ColumnCollection.GetAllColumns(view).ToArray();
+            }
+            else
+            {
+                // Return only specified columns.
+                return columns
+                    .Replace("`", "")
+                    .Split(ColumnCollection.ColumnSeparators, StringSplitOptions.RemoveEmptyEntries);
+            }
         }
 
         private static Column GetColumn(View view, int index, string name)

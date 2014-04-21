@@ -224,6 +224,23 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         [TestMethod]
+        public void QueryAllColumns()
+        {
+            using (var p = CreatePipeline(@"get-msitable example.msi -query 'select * from Property'"))
+            {
+                using (OverrideRegistry())
+                {
+                    var output = p.Invoke();
+                    Assert.IsTrue(null != output && 0 < output.Count);
+
+                    var item = output[0];
+                    Assert.IsNotNull(item.Properties.Match("Property"));
+                    Assert.IsNotNull(item.Properties.Match("Value"));
+                }
+            }
+        }
+
+        [TestMethod]
         public void GetClassificationFromPatchMetadata()
         {
             using (var p = CreatePipeline("get-msitable example.msp -table MsiPatchMetadata | where { $_.Property -eq 'Classification' }"))
