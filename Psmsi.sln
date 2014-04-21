@@ -5,11 +5,11 @@ VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{FFCC062A-C705-4E55-A362-B206FB0B29BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Tools.WindowsInstaller.PowerShell", "Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj", "{EAE7D4BF-5061-4220-BE94-E268E965DCE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Tools.WindowsInstaller.PowerShell", "src\Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj", "{EAE7D4BF-5061-4220-BE94-E268E965DCE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Tools.WindowsInstaller.PowerShell.Test", "Microsoft.Tools.WindowsInstaller.PowerShell.Test\Microsoft.Tools.WindowsInstaller.PowerShell.Test.csproj", "{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Tools.WindowsInstaller.PowerShell.Test", "src\Microsoft.Tools.WindowsInstaller.PowerShell.Test\Microsoft.Tools.WindowsInstaller.PowerShell.Test.csproj", "{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Module", "Setup\Module.wixproj", "{D2630778-0547-48D1-A8CA-E93D0D7A8B02}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Module", "src\Setup\Module.wixproj", "{D2630778-0547-48D1-A8CA-E93D0D7A8B02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

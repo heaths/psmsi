@@ -12,7 +12,7 @@
     <AssemblyName>Microsoft.Tools.WindowsInstaller.PowerShell</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <SolutionDir Condition=" '$(SolutionDir)' == '' ">..\</SolutionDir>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)KeyFile.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)src\KeyFile.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
