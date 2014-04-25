@@ -150,6 +150,7 @@
     <Compile Include="Storage.cs" />
     <Compile Include="SummaryInfo.cs" />
     <Compile Include="SystemRestorePoint.cs" />
+    <Compile Include="TableInfo.cs" />
     <Compile Include="TableOperation.cs" />
     <Compile Include="TransformView.cs" />
     <Compile Include="Tree.cs" />

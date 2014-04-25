@@ -58,7 +58,7 @@ namespace Microsoft.Tools.WindowsInstaller
             this.Key = key;
 
             this.IsPrimaryKey = view.Tables
-                .Where(t => t.Name == name)
+                .Where(t => t.Name == table)
                 .Any(t => t.PrimaryKeys.Contains(name));
 
             // BUG: PatchPackage - typically added by patches - is not identified as having a primary key (PatchId).

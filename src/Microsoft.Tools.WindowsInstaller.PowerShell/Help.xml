@@ -484,6 +484,11 @@
         The Windows Installer SDK has more information about custom queries, since the SQL-like syntax is rather constrained.
       </p>
       <p>
+        When no table or query is provided all tables from the package are displayed. Specifying a patch or transform will cause
+        tables added by the patch or transform to be displayed, along with the operation performed on that table by the patch or transform
+        in the MSIOperation property.
+      </p>
+      <p>
         Records are returned with properties matching column names. If records are selected from a single table, the table name is
         also part of the type name queryable from the PSTypeNames object property. If the column name is prefixed with the table name -
         required to disambiguate names, or optional otherwise - a property is returned as typed in the original query string. Note that
@@ -497,8 +502,9 @@
         columns, though the underlying value will not be changed. Run 'help about_MSI' for more information.
       </p>
       <p>
-        Note that patch packages do not typically have more than a couple of tables.
-        The patch has to be applied to a product package to view any changes it has made.
+        Note that patch packages do not typically have more than a couple of tables. The patch has to be applied to a product package
+        to view any changes it has made. When applying a patch or transforms, records will contain an operation performed on the record
+        by the patch or transform in the MSIOperation property.
       </p>
     </description>
     <parameter name="IgnoreMachineState" default="false">
@@ -525,7 +531,7 @@
       A custom query for which records are selected. Ambiguous column names must be prefixed with the table name to which they belong.
     </parameter>
     <parameter name="Table">
-      The table from which all records are selected.
+      The table from which all records are selected. If no table name is provided all tables in the database are displayed.
     </parameter>
     <parameter name="Transform" globbing="true">
       <p>
@@ -540,6 +546,9 @@
     </input>
     <output type="Microsoft.Tools.WindowsInstaller.Record">
       Selected records for a table or custom query where properties match column names.
+    </output>
+    <output type="Microsoft.Tools.WindowsInstaller.TableInfo">
+      Information about a table contained in the database or added by a patch or transform.
     </output>
     <example>
       <code>get-msitable .\example.msi -table Property</code>
@@ -565,6 +574,12 @@
           in the original query because the Component table also contains a column named Attributes. Windows Installer requires that you
           disambiguate column names.
         </p>
+      </description>
+    </example>
+    <example>
+      <code>get-msitable .\example.msi -patch .\example.msp | get-msitable | where-object { $_.MSIOperation -ne None }</code>
+      <description>
+        Gets all records in the example.msi package added or modified by the example.msp patch package.
       </description>
     </example>
     <example>

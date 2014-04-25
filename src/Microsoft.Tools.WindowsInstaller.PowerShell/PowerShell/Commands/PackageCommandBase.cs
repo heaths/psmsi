@@ -40,7 +40,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Apply transforms first since they likely apply to the unpatched product.
             if (null != this.Transform)
             {
-                foreach (string path in this.ResolveFiles(this.Transform))
+                this.Transform = this.ResolveFiles(this.Transform).ToArray();
+
+                foreach (string path in this.Transform)
                 {
                     try
                     {
@@ -65,8 +67,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Apply applicable patch transforms.
             if (null != this.Patch)
             {
+                this.Patch = this.ResolveFiles(this.Patch).ToArray();
+
                 var applicator = new PatchApplicator(db);
-                foreach (string path in this.ResolveFiles(this.Patch))
+                foreach (string path in this.Patch)
                 {
                     applicator.Add(path);
                 }

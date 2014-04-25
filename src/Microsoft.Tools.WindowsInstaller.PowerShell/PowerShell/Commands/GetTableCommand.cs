@@ -20,7 +20,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// The Get-MSIRecord cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSITable", DefaultParameterSetName = "Path,Table")]
-    [OutputType(typeof(Record))]
+    [OutputType(typeof(Record), typeof(TableInfo))]
     public sealed class GetTableCommand : PackageCommandBase
     {
         private InstallUIOptions previousInternalUI = InstallUIOptions.Default;
@@ -51,12 +51,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [Parameter(ParameterSetName = "Installation,Query", Position = 0, Mandatory = true, ValueFromPipeline = true)]
         public ProductInstallation[] Product { get; set; }
 
+        // TODO: Next major release Table should be the first parameter like Get-WMIObject -Class.
+
         /// <summary>
         /// Gets or sets the table name from which all <see cref="Record"/> objects are selected.
         /// </summary>
-        [Parameter(ParameterSetName = "Path,Table", Mandatory = true)]
-        [Parameter(ParameterSetName = "LiteralPath,Table", Mandatory = true)]
-        [Parameter(ParameterSetName = "Installation,Table", Mandatory = true)]
+        [Parameter(ParameterSetName = "Path,Table", ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "LiteralPath,Table", ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "Installation,Table", ValueFromPipelineByPropertyName = true)]
         public string Table { get; set; }
 
         /// <summary>
@@ -70,11 +72,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets patch packages to apply before <see cref="Record"/> objects are selected.
         /// </summary>
-        [Parameter(ParameterSetName = "Path,Table")]
-        [Parameter(ParameterSetName = "Path,Query")]
-        [Parameter(ParameterSetName = "LiteralPath,Table")]
-        [Parameter(ParameterSetName = "LiteralPath,Query")]
-        [ValidateNotNullOrEmpty]
+        [Parameter(ParameterSetName = "Path,Table", ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "Path,Query", ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "LiteralPath,Table", ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "LiteralPath,Query", ValueFromPipelineByPropertyName = true)]
         public override string[] Patch
         {
             get { return base.Patch; }
@@ -84,11 +85,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets transforms to apply before <see cref="Record"/> objects are selected.
         /// </summary>
-        [Parameter(ParameterSetName = "Path,Table")]
-        [Parameter(ParameterSetName = "Path,Query")]
-        [Parameter(ParameterSetName = "LiteralPath,Table")]
-        [Parameter(ParameterSetName = "LiteralPath,Query")]
-        [ValidateNotNullOrEmpty]
+        [Parameter(ParameterSetName = "Path,Table", ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "Path,Query", ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "LiteralPath,Table", ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "LiteralPath,Query", ValueFromPipelineByPropertyName = true)]
         public override string[] Transform
         {
             get { return base.Transform; }
@@ -185,7 +185,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 return this.Query;
             }
-            else
+            else if (!string.IsNullOrEmpty(this.Table))
             {
                 if (db.Tables.Contains(this.Table))
                 {
@@ -194,9 +194,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 else
                 {
                     var message = string.Format(CultureInfo.CurrentCulture, Resources.Error_TableNotFound, this.Table, path);
-                    var ex = new PSArgumentException(message, "Table");
-
-                    this.WriteError(ex.ErrorRecord);
+                    throw new PSArgumentException(message, "Table");
                 }
             }
 
@@ -250,15 +248,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
         private void WriteRecords(Database db, string path)
         {
+            TransformView transform = null;
+            if (db.Tables.Contains(TransformView.TableName))
+            {
+                transform = new TransformView(db);
+            }
+
             var query = this.GetQuery(db, path);
             if (!string.IsNullOrEmpty(query))
             {
-                TransformView transform = null;
-                if (db.Tables.Contains(TransformView.TableName))
-                {
-                    transform = new TransformView(db);
-                }
-
                 using (var view = db.OpenView(query))
                 {
                     view.Execute();
@@ -284,6 +282,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                         record = view.Fetch();
                     }
+                }
+            }
+            else
+            {
+                foreach (var table in db.Tables)
+                {
+                    var info = new TableInfo(table.Name, db.FilePath, transform, this.Patch, this.Transform);
+                    var obj = PSObject.AsPSObject(info);
+
+                    this.WriteObject(obj);
                 }
             }
         }

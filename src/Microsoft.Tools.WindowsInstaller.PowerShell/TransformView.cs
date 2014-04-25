@@ -140,7 +140,23 @@ namespace Microsoft.Tools.WindowsInstaller
             return RowOperation.None;
         }
 
-        private void Initialize(Database db, TableInfo info)
+        /// <summary>
+        /// Gets the <see cref="TableOperation"/> for the specific table.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>The <see cref="TableOperation"/> for the specific table.</returns>
+        internal TableOperation GetTableOperation(string tableName)
+        {
+            if (!string.IsNullOrEmpty(tableName) && this.tables.ContainsKey(tableName))
+            {
+                var table = this.tables[tableName];
+                return table.Operation;
+            }
+
+            return TableOperation.None;
+        }
+
+        private void Initialize(Database db, Microsoft.Deployment.WindowsInstaller.TableInfo info)
         {
             using (var view = db.OpenView(info.SqlSelectString))
             {

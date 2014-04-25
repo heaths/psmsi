@@ -6,8 +6,11 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -116,16 +119,20 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline("get-msitable example.msi -table NonexistentTable"))
             {
-                var output = p.Invoke();
-                Assert.IsTrue(null == output || 0 == output.Count, "Output is incorrect.");
-                Assert.AreEqual<int>(1, p.Error.Count, "The error count is incorrect.");
+                Collection<PSObject> output = null;
 
-                var obj = p.Error.Read() as PSObject;
-                Assert.IsNotNull(obj, "The error stream is not correct.");
+                try
+                {
+                    output = p.Invoke();
+                    Assert.Fail();
+                }
+                catch (Exception ex)
+                {
+                    Assert.IsInstanceOfType(ex.InnerException, typeof(PSArgumentException));
+                    ex = ex.InnerException as PSArgumentException;
 
-                var error = obj.BaseObject as ErrorRecord;
-                Assert.IsNotNull(error, "The error record is incorrect.");
-                Assert.IsTrue(error.Exception.Message.Contains("The table \"NonexistentTable\" was not found"), "The error message is incorrect.");
+                    Assert.IsTrue(ex.Message.Contains("The table \"NonexistentTable\" was not found"));
+                }
             }
         }
 
@@ -180,6 +187,33 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 var value = (string)record.Data[record.Columns["Value"].Index];
                 Assert.AreEqual<string>("1.0.0", value);
                 Assert.AreEqual<RowOperation>(RowOperation.None, item.GetPropertyValue<RowOperation>("MSIOperation"));
+            }
+        }
+
+        [TestMethod]
+        public void GetAllPatchedRecords()
+        {
+            Collection<PSObject> tables = null;
+            using (var p = CreatePipeline(@"get-msitable example.msi -patch example.msp"))
+            {
+                tables = p.Invoke();
+                Assert.IsNotNull(tables);
+                Assert.AreEqual<int>(17, tables.Count);
+            }
+
+            using (var p = CreatePipeline(@"$input | get-msitable | where-object { $_.MSIOperation -ne 'None' }"))
+            {
+                var output = p.Invoke(tables);
+                Assert.IsNotNull(output);
+                Assert.AreEqual<int>(9, output.Count);
+
+                var e = from obj in output
+                        from prop in obj.Properties
+                        where prop.Name == "DiskId" && 100 == (int)prop.Value
+                        select obj;
+
+                Assert.IsNotNull(e);
+                Assert.AreEqual<long>(1, e.Count());
             }
         }
 

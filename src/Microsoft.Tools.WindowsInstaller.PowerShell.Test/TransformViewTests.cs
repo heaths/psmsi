@@ -51,19 +51,24 @@ namespace Microsoft.Tools.WindowsInstaller
                 // Despite Orca showing 5 tables, the _TransformView table does not show the created, empty "Patch" table.
                 Assert.AreEqual<int>(4, view.Tables.Count);
 
+                Assert.AreEqual<TableOperation>(TableOperation.Modify, view.GetTableOperation("Media"));
                 Assert.AreEqual<RowOperation>(RowOperation.None, view.GetRowOperation("Media", "1"));
                 Assert.AreEqual<RowOperation>(RowOperation.Insert, view.GetRowOperation("Media", "100"));
 
+                Assert.AreEqual<TableOperation>(TableOperation.Create, view.GetTableOperation("PatchPackage"));
                 Assert.AreEqual<RowOperation>(RowOperation.Insert, view.GetRowOperation("PatchPackage", "{FF63D787-26E2-49CA-8FAA-28B5106ABD3A}"));
 
+                Assert.AreEqual<TableOperation>(TableOperation.Modify, view.GetTableOperation("Property"));
                 Assert.AreEqual<RowOperation>(RowOperation.None, view.GetRowOperation("Property", "ProductCode"));
                 Assert.AreEqual<RowOperation>(RowOperation.Modify, view.GetRowOperation("Property", "ProductVersion"));
                 Assert.AreEqual<RowOperation>(RowOperation.Insert, view.GetRowOperation("Property", "Example.PatchCode"));
                 Assert.AreEqual<RowOperation>(RowOperation.Insert, view.GetRowOperation("Property", "Example.AllowRemoval"));
 
+                Assert.AreEqual<TableOperation>(TableOperation.Modify, view.GetTableOperation("Registry"));
                 Assert.AreEqual<RowOperation>(RowOperation.Modify, view.GetRowOperation("Registry", "reg302A797C45AD3AD1EC816DDC58DF65F3"));
 
                 // Negative assertions.
+                Assert.AreEqual<TableOperation>(TableOperation.None, view.GetTableOperation("File"));
                 Assert.AreEqual<RowOperation>(RowOperation.None, view.GetRowOperation(null, null));
                 Assert.AreEqual<RowOperation>(RowOperation.None, view.GetRowOperation("File", null));
                 Assert.AreEqual<RowOperation>(RowOperation.None, view.GetRowOperation("File", "product.wxs"));
