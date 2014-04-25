@@ -577,7 +577,7 @@
       </description>
     </example>
     <example>
-      <code>get-msitable .\example.msi -patch .\example.msp | get-msitable | where-object { $_.MSIOperation -ne None }</code>
+      <code>get-msitable .\example.msi -patch .\example.msp | get-msitable | where-object { $_.MSIOperation -ne 'None' }</code>
       <description>
         Gets all records in the example.msi package added or modified by the example.msp patch package.
       </description>
