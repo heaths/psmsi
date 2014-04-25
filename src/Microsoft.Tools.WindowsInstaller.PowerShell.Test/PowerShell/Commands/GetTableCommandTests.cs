@@ -154,22 +154,23 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline(@"get-msitable example.msi -table Registry -patch example.msp"))
             {
                 var output = p.Invoke();
-                Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+                Assert.IsTrue(null != output && 1 == output.Count);
 
                 var item = output[0];
-                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#Registry", item.TypeNames[0], "The first type name is incorrect.");
+                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#Registry", item.TypeNames[0]);
 
                 // Work around a possible bug in PowerShell where adapted property values are cached.
                 var record = item.BaseObject as Record;
                 var value = (string)record.Data[record.Columns["Value"].Index];
-                Assert.AreEqual<string>("1.0.1", value, "The Value property is incorrect.");
+                Assert.AreEqual<string>("1.0.1", value);
+                Assert.AreEqual<RowOperation>(RowOperation.Modify, item.GetPropertyValue<RowOperation>("MSIOperation"));
             }
 
             // Make sure the record data does not cache the patched value.
             using (var p = CreatePipeline(@"get-msitable example.msi -table Registry"))
             {
                 var output = p.Invoke();
-                Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+                Assert.IsTrue(null != output && 1 == output.Count);
 
                 var item = output[0];
 
@@ -177,7 +178,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 // This does not reproduce when running in powershell.exe.
                 var record = item.BaseObject as Record;
                 var value = (string)record.Data[record.Columns["Value"].Index];
-                Assert.AreEqual<string>("1.0.0", value, "The Value property is incorrect.");
+                Assert.AreEqual<string>("1.0.0", value);
+                Assert.AreEqual<RowOperation>(RowOperation.None, item.GetPropertyValue<RowOperation>("MSIOperation"));
+            }
+        }
+
+        [TestMethod]
+        public void GetTransformViewTable()
+        {
+            using (var p = CreatePipeline(@"get-msitable example.msi -transform example.mst -table _TransformView"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null != output && 0 < output.Count);
             }
         }
 

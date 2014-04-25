@@ -21,6 +21,51 @@ namespace Microsoft.Tools.WindowsInstaller
     [TestClass]
     public sealed class ExtensionMethodsTests : TestBase
     {
+        #region Any
+        [TestMethod]
+        public void AnyThrows()
+        {
+            IEnumerable<int> source = null;
+            ExceptionAssert.Throws<ArgumentNullException>(() => { source.Any(element => true); });
+
+            source = new int[] { 0, 1 };
+            ExceptionAssert.Throws<ArgumentNullException>(() => { source.Any(null); });
+        }
+
+        [TestMethod]
+        public void AnyFromList()
+        {
+            var source = new int[] { 0, 1 };
+            Assert.IsTrue(source.Any(i => i == 0));
+            Assert.IsFalse(source.Any(i => i == 2));
+        }
+        #endregion
+
+        #region Count
+        [TestMethod]
+        public void CountFromList()
+        {
+            IEnumerable<int> source = null;
+            Assert.AreEqual<long>(0, source.Count());
+
+            // Count a collection.
+            source = new int[] { 0, 1 };
+            Assert.AreEqual<long>(2, source.Count());
+
+            // Count an enumerable.
+            source = ExtensionMethodsTests.Iterate();
+            Assert.AreEqual<long>(10, source.Count());
+        }
+
+        private static IEnumerable<int> Iterate()
+        {
+            for (var i = 0; i < 10; ++i)
+            {
+                yield return i;
+            }
+        }
+        #endregion
+
         #region FirstOrDefault
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -55,6 +100,28 @@ namespace Microsoft.Tools.WindowsInstaller
             var item = ExtensionMethods.FirstOrDefault(source);
 
             Assert.IsNull(item, "The default item is incorrect.");
+        }
+        #endregion
+
+        #region Join
+        [TestMethod]
+        public void JoinTests()
+        {
+            IEnumerable<string> source = null;
+            Assert.IsNull(source.Join(string.Empty));
+
+            source = new string[] { "A", "B" };
+            Assert.AreEqual("AB", source.Join(null));
+            Assert.AreEqual("A, B", source.Join(", "));
+
+            source = new List<string>(new string[] { "A" });
+            Assert.AreEqual("A", source.Join(Record.KeySeparator));
+
+            ((IList<string>)source).Add("B");
+            Assert.AreEqual("A/B", source.Join(Record.KeySeparator));
+
+            ((IList<string>)source).Add(null);
+            Assert.AreEqual("A/B/", source.Join(Record.KeySeparator));
         }
         #endregion
 
@@ -152,6 +219,26 @@ namespace Microsoft.Tools.WindowsInstaller
 
             // IList<T> doesn't implement ICollection, so we convert back to an array.
             CollectionAssert.AreEqual(source, list.ToArray(), "The arrays are not equivalent.");
+        }
+        #endregion
+
+        #region Where
+        [TestMethod]
+        public void WhereThrows()
+        {
+            IEnumerable<int> source = null;
+            ExceptionAssert.Throws<ArgumentNullException>(() => { source.Where(element => true); });
+
+            source = new int[] { 0, 1 };
+            ExceptionAssert.Throws<ArgumentNullException>(() => { source.Where(null); });
+        }
+
+        [TestMethod]
+        public void WhereFromList()
+        {
+            var source = new int[] { 0, 1 };
+            Assert.AreEqual<long>(1, source.Where(i => i == 0).Count());
+            Assert.AreEqual<long>(0, source.Where(i => i == 2).Count());
         }
         #endregion
     }

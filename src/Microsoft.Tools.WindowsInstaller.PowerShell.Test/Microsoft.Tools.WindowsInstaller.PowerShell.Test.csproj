@@ -126,6 +126,7 @@
     <Compile Include="TestBase.cs" />
     <Compile Include="TreeTests.cs" />
     <Compile Include="PackageInfoTests.cs" />
+    <Compile Include="TransformViewTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj">

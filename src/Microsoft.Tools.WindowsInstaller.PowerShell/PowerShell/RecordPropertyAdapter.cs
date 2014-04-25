@@ -19,6 +19,22 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         private Cache<string, PropertySet> cache = new Cache<string, PropertySet>();
 
         /// <summary>
+        /// Gets the operation performed on this <see cref="Record"/> by a patch or transform for use in code methods.
+        /// </summary>
+        /// <param name="obj">The <see cref="PSObject"/> that wraps a <see cref="Record"/>.</param>
+        /// <returns>The operation performed on this <see cref="Record"/> by a patch or transform.</returns>
+        public static RowOperation GetOperation(PSObject obj)
+        {
+            var record = obj.As<Record>();
+            if (null != record)
+            {
+                return record.Operation;
+            }
+
+            return RowOperation.None;
+        }
+
+        /// <summary>
         /// Gets the path to the package that contains this <see cref="Record"/> for use in code methods.
         /// </summary>
         /// <param name="obj">The <see cref="PSObject"/> that wraps a <see cref="Record"/>.</param>

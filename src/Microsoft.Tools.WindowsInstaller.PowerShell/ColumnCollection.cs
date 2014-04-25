@@ -6,6 +6,7 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,6 +25,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Creates a new instance of the <see cref="Column"/> class from the specified <see cref="View"/>.
         /// </summary>
         /// <param name="view">The <see cref="View"/> from which column information is retrieved.</param>
+        /// <exception cref="InvalidOperationException">A column name was defined by multiple tables.</exception>
         internal ColumnCollection(View view)
         {
             // Internal constructor will assume valid parameter.
@@ -45,8 +47,17 @@ namespace Microsoft.Tools.WindowsInstaller
             for (int i = 0; i < columns.Length; ++i)
             {
                 var column = ColumnCollection.GetColumn(view, i, columns[i]);
+
+                if (this.Contains(column.Name))
+                {
+                    var message = string.Format(Resources.Error_AmbiguousColumn, column.Name);
+                    throw new InvalidOperationException(message);
+                }
+
                 this.Add(column);
             }
+
+            this.PrimaryKeys = this.Where(column => column.IsPrimaryKey).Select(column => column.Name);
         }
 
         /// <summary>
@@ -58,6 +69,11 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Gets the query string used to create the original <see cref="View"/>.
         /// </summary>
         internal string QueryString { get; private set; }
+
+        /// <summary>
+        /// Gets the primary key columns.
+        /// </summary>
+        internal IEnumerable<string> PrimaryKeys { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="Column.Name"/> of the <see cref="Column"/>.

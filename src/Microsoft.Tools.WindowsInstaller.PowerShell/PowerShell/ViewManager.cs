@@ -81,11 +81,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             else
             {
                 // Add or set a new PSMemberSet.
+                memberSet = new PSMemberSet("PSStandardMembers");
+
                 var columns = ViewManager.GetColumns(view).Select(column => column.Key);
                 var properties = new PSPropertySet("DefaultDisplayPropertySet", columns);
-
-                memberSet = new PSMemberSet("PSStandardMembers");
                 memberSet.Members.Add(properties);
+
+                columns = ViewManager.GetColumns(view).PrimaryKeys;
+                if (0 < columns.Count())
+                {
+                    properties = new PSPropertySet("DefaultKeyPropertySet", columns);
+                    memberSet.Members.Add(properties);
+                }
 
                 memberSets[view.QueryString] = new WeakReference(memberSet);
             }

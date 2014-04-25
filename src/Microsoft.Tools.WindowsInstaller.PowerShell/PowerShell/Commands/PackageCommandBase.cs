@@ -45,6 +45,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     try
                     {
                         db.ApplyTransform(path, PatchApplicator.IgnoreErrors);
+                        db.ApplyTransform(path, PatchApplicator.IgnoreErrors | TransformErrors.ViewTransform);
                     }
                     catch (InstallerException ex)
                     {

@@ -13,7 +13,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
-using System.Reflection;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -254,6 +253,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var query = this.GetQuery(db, path);
             if (!string.IsNullOrEmpty(query))
             {
+                TransformView transform = null;
+                if (db.Tables.Contains(TransformView.TableName))
+                {
+                    transform = new TransformView(db);
+                }
+
                 using (var view = db.OpenView(query))
                 {
                     view.Execute();
@@ -267,7 +272,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         using (record)
                         {
                             // Create a locally cached copy of the record.
-                            var copy = new Record(record, columns, path);
+                            var copy = new Record(record, columns, transform, path);
                             var obj = PSObject.AsPSObject(copy);
 
                             // Show only column properties by default.

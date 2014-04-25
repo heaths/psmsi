@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -25,20 +26,81 @@ namespace Microsoft.Tools.WindowsInstaller
     internal static class ExtensionMethods
     {
         /// <summary>
-        /// Returns the first item of an enumeration; otherwise, if not found, the default value for type <typeparamref name="T"/>.
+        /// Determines whether any element of a sequence satisfies a condition.
         /// </summary>
-        /// <typeparam name="T">The type being enumerated.</typeparam>
-        /// <param name="source">An enumeration of type <typeparamref name="T"/>.</param>
-        /// <returns>the first item of an enumeration; otherwise, if not found, the default value for type <typeparamref name="T"/>.</returns>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">The type of the elements of source.</param>
+        /// <param name="predicate">The condition to apply to each element.</param>
+        /// <returns>True if any of the elements satisfy the <paramref name="predicate"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> or <paramref name="predicate"/> argument is null.</exception>
+        internal static bool Any<TSource>(this IEnumerable<TSource> source, Predicate<TSource> predicate)
+        {
+            if (null == source)
+            {
+                throw new ArgumentNullException("source");
+            }
+            else if (null == predicate)
+            {
+                throw new ArgumentNullException("selector");
+            }
+
+            foreach (var element in source)
+            {
+                if (predicate(element))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the number of elements in a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence that contains elements to be counted.</param>
+        /// <returns>The number of elements in the input sequence or 0 if <paramref name="source"/> is null.</returns>
+        internal static long Count<TSource>(this IEnumerable<TSource> source)
+        {
+            if (null == source)
+            {
+                return 0;
+            }
+
+            var coll = source as ICollection<TSource>;
+            if (null != coll)
+            {
+                return coll.Count;
+            }
+
+            var count = 0L;
+            using (var e = source.GetEnumerator())
+            {
+                while (e.MoveNext())
+                {
+                    ++count;
+                }
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// Returns the first item of an enumeration; otherwise, if not found, the default value for type <typeparamref name="TSource"/>.
+        /// </summary>
+        /// <typeparam name="TSource">The type being enumerated.</typeparam>
+        /// <param name="source">An enumeration of type <typeparamref name="TSource"/>.</param>
+        /// <returns>the first item of an enumeration; otherwise, if not found, the default value for type <typeparamref name="TSource"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> argument is null.</exception>
-        internal static T FirstOrDefault<T>(this IEnumerable<T> source)
+        internal static TSource FirstOrDefault<TSource>(this IEnumerable<TSource> source)
         {
             if (null == source)
             {
                 throw new ArgumentNullException("source");
             }
 
-            var list = source as IList<T>;
+            var list = source as IList<TSource>;
             if (null != list && 0 < list.Count)
             {
                 return list[0];
@@ -54,7 +116,44 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
             }
 
-            return default(T);
+            return default(TSource);
+        }
+
+        /// <summary>
+        /// Joins an enumerable of <see cref="String"/> elements with the given <paramref name="separator"/>.
+        /// </summary>
+        /// <param name="source">An enumerable of type <see cref="String"/>.</param>
+        /// <param name="separator">The string separator to separate <see cref="String"/> elements. The default is an empty string.</param>
+        /// <returns>A string of all elements separated by the given <paramref name="separator"/>, or null if <paramref name="source"/> is null.</returns>
+        internal static string Join(this IEnumerable<string> source, string separator)
+        {
+            if (null == source)
+            {
+                return null;
+            }
+
+            var array = source as string[];
+            if (null != array)
+            {
+                return string.Join(separator, array);
+            }
+
+            var sb = new StringBuilder();
+            using (var e = source.GetEnumerator())
+            {
+                if (e.MoveNext())
+                {
+                    sb.Append(e.Current);
+                }
+
+                while (e.MoveNext())
+                {
+                    sb.Append(separator ?? string.Empty);
+                    sb.Append(e.Current);
+                }
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>
@@ -78,7 +177,7 @@ namespace Microsoft.Tools.WindowsInstaller
             }
 
             // Project each item in a separate method or null checks above are compiled away.
-            return ForEach(source, selector);
+            return ExtensionMethods.SelectIterator(source, selector);
         }
 
         /// <summary>
@@ -101,7 +200,7 @@ namespace Microsoft.Tools.WindowsInstaller
             }
 
             var sum = 0L;
-            foreach (long i in ForEach(source, selector))
+            foreach (long i in ExtensionMethods.SelectIterator(source, selector))
             {
                 sum += i;
             }
@@ -112,41 +211,75 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <summary>
         /// Creates an array from the enumerable <paramref name="source"/>.
         /// </summary>
-        /// <typeparam name="T">The type of elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TSource">The type of elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">An enumerable from which the array is created.</param>
         /// <returns>An array that contains the elements from the input <paramref name="source"/>.</returns>
-        internal static T[] ToArray<T>(this IEnumerable<T> source)
+        internal static TSource[] ToArray<TSource>(this IEnumerable<TSource> source)
         {
             if (null == source)
             {
                 throw new ArgumentNullException("source");
             }
 
-            var list = new List<T>(source);
+            var list = new List<TSource>(source);
             return list.ToArray();
         }
 
         /// <summary>
         /// Createsa new list from the enumerable <paramref name="source"/>.
         /// </summary>
-        /// <typeparam name="T">The type of elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TSource">The type of elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">An enumerable from which the array is created.</param>
         /// <returns>A list that contains the elements from the input <paramref name="source"/>.</returns>
-        internal static IList<T> ToList<T>(this IEnumerable<T> source)
+        internal static IList<TSource> ToList<TSource>(this IEnumerable<TSource> source)
         {
             if (null == source)
             {
                 throw new ArgumentNullException("source");
             }
 
-            return new List<T>(source);
+            return new List<TSource>(source);
         }
 
-        private static IEnumerable<TResult> ForEach<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, TResult> selector)
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">The type of the elements of source.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <returns>An enumerable that contains elements from the input sequence that satisfy the condition.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> or <paramref name="predicate"/> argument is null.</exception>
+        internal static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, Predicate<TSource> predicate)
         {
-            foreach (var item in source)
+            if (null == source)
             {
-                yield return selector(item);
+                throw new ArgumentNullException("source");
+            }
+            else if (null == predicate)
+            {
+                throw new ArgumentNullException("selector");
+            }
+
+            // Project each item in a separate method or null checks above are compiled away.
+            return ExtensionMethods.WhereIterator(source, predicate);
+        }
+
+        private static IEnumerable<TResult> SelectIterator<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, TResult> selector)
+        {
+            foreach (var element in source)
+            {
+                yield return selector(element);
+            }
+        }
+
+        private static IEnumerable<TSource> WhereIterator<TSource>(IEnumerable<TSource> source, Predicate<TSource> predicate)
+        {
+            foreach (var element in source)
+            {
+                if (predicate(element))
+                {
+                    yield return element;
+                }
             }
         }
     }

@@ -145,10 +145,13 @@
     <Compile Include="Record.cs" />
     <Compile Include="RegistryView.cs" />
     <Compile Include="ReinstallModesConverter.cs" />
+    <Compile Include="RowOperation.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="SummaryInfo.cs" />
     <Compile Include="SystemRestorePoint.cs" />
+    <Compile Include="TableOperation.cs" />
+    <Compile Include="TransformView.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="PowerShell\ViewManager.cs" />

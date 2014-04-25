@@ -638,6 +638,13 @@
     <Name>Microsoft.Tools.WindowsInstaller.Record</Name>
     <Members>
       <CodeProperty>
+        <Name>MSIOperation</Name>
+        <GetCodeReference>
+          <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
+          <MethodName>GetOperation</MethodName>
+        </GetCodeReference>
+      </CodeProperty>
+      <CodeProperty>
         <Name>MSIPath</Name>
         <GetCodeReference>
           <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>

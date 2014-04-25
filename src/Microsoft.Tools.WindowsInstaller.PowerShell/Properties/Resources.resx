@@ -189,4 +189,7 @@
   <data name="Error_NoRestorePoint" xml:space="preserve">
     <value>Could not create a system restore point: {0}</value>
   </data>
+  <data name="Error_AmbiguousColumn" xml:space="preserve">
+    <value>The column "{0}" is defined by multiple tables and must be prefixed by its table names.</value>
+  </data>
 </root>
