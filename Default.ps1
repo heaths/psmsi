@@ -6,6 +6,7 @@ Properties {
     $SolutionDir = Resolve-Path .
     $SolutionFile = Join-Path $SolutionDir 'Psmsi.sln' -Resolve
     $SourceDir = Join-Path $SolutionDir 'src' -Resolve
+    $Version = '2.3.0.0'
 }
 
 Task Default -Depends Compile
@@ -55,11 +56,37 @@ TaskSetup {
     }
 }
 
-Task Compile {
+Task Compile -Alias Build {
     assert ($Configuration.Length) "Must specify `$Configuration"
     assert (Get-Command "$MSBuild" -ea SilentlyContinue) "Must specify location of `$MSBuild"
 
     exec { & "$MSBuild" "$SolutionFile" /m /t:Build /p:Configuration="$Configuration" }
+}
+
+Task Document -Alias Doc -Depends Compile {
+    $HelpToolsDir = Join-Path $SolutionDir 'tools\help'
+    assert (Test-Path $HelpToolsDir) 'Help tools not found. Did you run "git submodule update --init"?'
+
+    $Project = 'Microsoft.Tools.WindowsInstaller.PowerShell'
+    $ProjectDir = Join-Path $SourceDir $Project
+    $OutputDir = Join-Path $SourceDir "$Project\bin\$Configuration"
+    $ModulePath = Join-Path $OutputDir 'MSI.psd1'
+    $IntermediateDir = Join-Path $SourceDir "$Project\obj\$Configuration"
+
+    Import-Module (Join-Path $HelpToolsDir 'Help.psd1')
+
+    $ProjectHelp = Join-Path $ProjectDir 'Help.xml'
+    $IntermediateHelp = Join-Path $IntermediateDir 'Help.xml'
+    Write-Host "Converting $ProjectHelp into $IntermediateHelp"
+    ConvertTo-Help -Module $ModulePath -Path $IntermediateHelp -TemplatePath $ProjectHelp
+
+    $OutputHelp = Join-Path $ProjectDir "$Project.dll-Help.xml"
+    Write-Host "Formatting $IntermediateHelp into MAML help file $OutputHelp"
+    Format-Help -Path $OutputHelp -ContentPath $IntermediateHelp -Transform (Join-Path $HelpToolsDir 'maml.xslt')
+
+    $OutputHelp = Join-Path $OutputDir 'codeplex\codeplex.txt'
+    Write-Host "Formatting $IntermediateHelp into CodePlex help file $OutputHelp"
+    Format-Help4CodePlex -Path $OutputHelp -ContentPath $IntermediateHelp -Version $Version
 }
 
 Task Clean {
@@ -84,4 +111,29 @@ Task Package -Depends Compile {
 
 Task Publish -Depends Package {
     assert (Get-Command 'NuGet' -ea SilentlyContinue) "Must specify location of `$NuGet"
+}
+
+function Join-Path
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory=$true, Position=0)]
+        [string] $Path,
+
+        [Parameter(Mandatory=$true, Position=1)]
+        [string] $ChildPath,
+
+        [Parameter()]
+        [switch] $Resolve
+    )
+
+    # Join-Path doesn't support non-existent paths.
+    $Path = [System.IO.Path]::Combine($Path, $ChildPath)
+    if ($Resolve)
+    {
+        $Path = Get-Item $Path | Select-Object -Expand FullName
+    }
+
+    $Path
 }
