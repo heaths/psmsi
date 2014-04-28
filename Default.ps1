@@ -1,19 +1,26 @@
+# Copyright (C) Microsoft Corporation. All rights reserved.
+#
+# THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+
 Properties {
     $Configuration = 'Debug'
-    $MSBuild = 'MSBuild'
-    $MSTest = 'MSTest'
-    $NuGet = 'NuGet'
+    $Script:MSBuild = 'MSBuild'
+    $Script:MSTest = 'MSTest'
+    $Script:NuGet = 'NuGet'
     $SolutionDir = Resolve-Path .
     $SolutionFile = Join-Path $SolutionDir 'Psmsi.sln' -Resolve
     $SourceDir = Join-Path $SolutionDir 'src' -Resolve
-    $Version = '2.3.0.0'
+    $Script:Version = '2.3.0.0'
 }
 
 Task Default -Depends Compile
 
 TaskSetup {
 
-    if (-not (Get-Command "$MSBuild" -ea SilentlyContinue))
+    if (-not (Get-Command $MSBuild -ea SilentlyContinue))
     {
         Write-Verbose "Looking for location of MSBuild..."
         $Keys = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\MSBuild', 'HKLM:\SOFTWARE\Microsoft\MSBuild'
@@ -25,16 +32,17 @@ TaskSetup {
 
         if ($MSBuild.Length)
         {
+            $Script:MSBuild = $MSBuild
             Write-Verbose "Found MSBuild at '$MSBuild'."
         }
         else
         {
             $MSBuild = 'MSBuild'
             Write-Warning "MSBuild could not be found. Will simply invoke 'MSBuild'."
-        }
+       }
     }
 
-    if (-not (Get-Command "$MSTest" -ea SilentlyContinue))
+    if (-not (Get-Command $MSTest -ea SilentlyContinue))
     {
         Write-Verbose "Looking for location of MSTest..."
         $Keys = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\Setup\VS', 'HKLM:\SOFTWARE\Microsoft\VisualStudio\12.0\Setup\VS',
@@ -46,11 +54,11 @@ TaskSetup {
 
         if ($MSTest.Length)
         {
+            $Script:MSTest = $MSTest
             Write-Verbose "Found MSTest at '$MSTest'."
         }
         else
         {
-            $MSTest = 'MSTest'
             Write-Warning "MSTest could not be found. Will simply invoke 'MSTest'."
         }
     }
@@ -58,7 +66,7 @@ TaskSetup {
 
 Task Compile -Alias Build {
     assert ($Configuration.Length) "Must specify `$Configuration"
-    assert (Get-Command "$MSBuild" -ea SilentlyContinue) "Must specify location of `$MSBuild"
+    assert (Get-Command $MSBuild -ea SilentlyContinue).Length "Must specify location of `$MSBuild"
 
     exec { & "$MSBuild" "$SolutionFile" /m /t:Build /p:Configuration="$Configuration" }
 }
@@ -91,13 +99,14 @@ Task Document -Alias Doc -Depends Compile {
 
 Task Clean {
     assert ($Configuration.Length) "Must specify `$Configuration"
-    assert (Get-Command "$MSBuild" -ea SilentlyContinue) "Must specify location of `$MSBuild"
+    assert (Get-Command $MSBuild -ea SilentlyContinue).Length "Must specify location of `$MSBuild"
 
     exec { & "$MSBuild" "$SolutionFile" /m /t:Clean /p:Configuration="$Configuration" }
 }
 
 Task Test -Depends Compile {
-    assert (Get-Command "$MSTest" -ea SilentlyContinue) "Must specify location of `$MSTest"
+    $MSTest
+    assert (Get-Command $MSTest -ea SilentlyContinue).Length "Must specify location of `$MSTest"
 
     $Projects = 'Microsoft.Tools.WindowsInstaller.PowerShell.Test'
     $CommandLine = $Projects | ForEach-Object { "/testcontainer:$SourceDir\$_\bin\$Configuration\$_.dll " }
@@ -106,11 +115,11 @@ Task Test -Depends Compile {
 }
 
 Task Package -Depends Compile {
-    assert (Get-Command 'NuGet' -ea SilentlyContinue) "Must specify location of `$NuGet"
+    assert (Get-Command 'NuGet' -ea SilentlyContinue).Length "Must specify location of `$NuGet"
 }
 
 Task Publish -Depends Package {
-    assert (Get-Command 'NuGet' -ea SilentlyContinue) "Must specify location of `$NuGet"
+    assert (Get-Command 'NuGet' -ea SilentlyContinue).Length "Must specify location of `$NuGet"
 }
 
 function Join-Path
