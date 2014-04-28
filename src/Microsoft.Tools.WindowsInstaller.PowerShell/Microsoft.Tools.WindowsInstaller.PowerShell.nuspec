@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata>
+    <id>psmsi</id>
+    <title>psmsi</title>
+    <version>$version$</version>
+    <authors>Heath Stewart</authors>
+    <owners>Heath Stewart</owners>
+    <summary>Windows Installer PowerShell Module</summary>
+    <description>Exposes Windows Installer functionality to PowerShell, providing means to query installed product and patch information, and to query views on packages.</description>
+    <projectUrl>http://bit.ly/psmsi-home</projectUrl>
+    <tags>windows installer powershell cmdlets msi product msp patch mst transform</tags>
+    <iconUrl>http://bit.ly/psmsi-icon</iconUrl>
+    <licenseUrl>http://bit.ly/psmsi-license</licenseUrl>
+    <dependencies>
+      <dependency id="chocolatey" version="0.9.8.20" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+    <file src="bin\Release\*.*" target="MSI" exclude="**\*.nupkg;**\*.pdb;**\Microsoft.Tools.WindowsInstaller.PowerShell.xml" />
+  </files>
+</package>

@@ -1,5 +1,6 @@
 *.cache
 *.ncb
+*.nupkg
 *.pdb
 *.suo
 *.user
