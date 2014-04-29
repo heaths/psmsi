@@ -62,6 +62,11 @@ TaskSetup {
             Write-Warning "MSTest could not be found. Will simply invoke 'MSTest'."
         }
     }
+
+    if (-not (Get-Command $NuGet -ea SilentlyContinue))
+    {
+        $Script:NuGet = Join-Path $SolutionDir '.nuget\NuGet.exe'
+    }
 }
 
 Task Compile -Alias Build {
@@ -114,8 +119,16 @@ Task Test -Depends Compile {
     exec { & "$MSTest" $CommandLine }
 }
 
-Task Package -Depends Compile {
+Task Package -Alias Pack -Depends Compile {
     assert (Get-Command 'NuGet' -ea SilentlyContinue).Length "Must specify location of `$NuGet"
+
+    $Projects = 'Microsoft.Tools.WindowsInstaller.PowerShell'
+
+    $Projects | ForEach-Object {
+        $Project = Join-Path $SourceDir "$_\$_.csproj" -Resolve
+        $OutputDir = Join-Path $SourceDir "$_\bin\$Configuration"
+        exec { & "$NuGet" pack "$Project" -OutputDirectory $OutputDir -Version $Version -Properties "Configuration=$Configuration" -Symbols }
+    }
 }
 
 Task Publish -Depends Package {
