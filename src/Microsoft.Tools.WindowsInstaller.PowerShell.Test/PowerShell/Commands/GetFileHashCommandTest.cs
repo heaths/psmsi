@@ -28,11 +28,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 var objs = p.Invoke();
 
-                Assert.AreEqual<int>(1, objs.Count);
-                Assert.AreEqual<int>(hash[0], objs[0].GetPropertyValue<int>("MSIHashPart1"));
-                Assert.AreEqual<int>(hash[1], objs[0].GetPropertyValue<int>("MSIHashPart2"));
-                Assert.AreEqual<int>(hash[2], objs[0].GetPropertyValue<int>("MSIHashPart3"));
-                Assert.AreEqual<int>(hash[3], objs[0].GetPropertyValue<int>("MSIHashPart4"));
+                Assert.AreEqual<int>(2, objs.Count);
+
+                var obj = objs.Where(o => o.GetPropertyValue<int>("MSIHashPart1") == hash[0]).FirstOrDefault();
+                Assert.IsNotNull(obj);
+                Assert.AreEqual<int>(hash[0], obj.GetPropertyValue<int>("MSIHashPart1"));
+                Assert.AreEqual<int>(hash[1], obj.GetPropertyValue<int>("MSIHashPart2"));
+                Assert.AreEqual<int>(hash[2], obj.GetPropertyValue<int>("MSIHashPart3"));
+                Assert.AreEqual<int>(hash[3], obj.GetPropertyValue<int>("MSIHashPart4"));
             }
 
             // Test with no parameter.
