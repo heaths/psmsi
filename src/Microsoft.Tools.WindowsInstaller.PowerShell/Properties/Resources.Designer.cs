@@ -214,6 +214,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The LoggingMode contains an invalid character: {0}..
+        /// </summary>
+        internal static string Error_InvalidLoggingMode {
+            get {
+                return ResourceManager.GetString("Error_InvalidLoggingMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The ReinstallMode contains an invalid character: {0}..
         /// </summary>
         internal static string Error_InvalidReinstallMode {
@@ -255,6 +264,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         internal static string Error_TableNotFound {
             get {
                 return ResourceManager.GetString("Error_TableNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The logging option &quot;+&quot; is not supported in the logging policy..
+        /// </summary>
+        internal static string Error_UnsupportedLoggingMode {
+            get {
+                return ResourceManager.GetString("Error_UnsupportedLoggingMode", resourceCulture);
             }
         }
         

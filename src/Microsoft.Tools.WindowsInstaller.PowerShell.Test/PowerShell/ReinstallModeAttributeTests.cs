@@ -10,33 +10,30 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {
-    /// <summary>
-    /// Tests for the <see cref="ReinstallModeAttribute"/> class.
-    /// </summary>
     [TestClass]
     public sealed class ReinstallModeAttributeTests : TestBase
     {
         private const ReinstallModes Default = ReinstallModes.FileOlderVersion | ReinstallModes.MachineData | ReinstallModes.UserData | ReinstallModes.Shortcut;
 
         [TestMethod]
-        public void TransformNullValue()
+        public void TransformNullReinstallModeValue()
         {
             var attr = new ReinstallModeAttribute();
-            Assert.IsNull(attr.Transform(null, null), "The return value was not null.");
+            Assert.IsNull(attr.Transform(null, null));
         }
 
         [TestMethod]
-        public void TransformStringValue()
+        public void TransformStringReinstallModeValue()
         {
             var attr = new ReinstallModeAttribute();
-            Assert.AreEqual<ReinstallModes>(Default, (ReinstallModes)attr.Transform(null, "omus"), "The transformed ReinstallMode is incorrect.");
+            Assert.AreEqual<ReinstallModes>(Default, (ReinstallModes)attr.Transform(null, "omUS"));
         }
 
         [TestMethod]
-        public void TransformUnsupportedValue()
+        public void TransformUnsupportedReinstallModeValue()
         {
             var attr = new ReinstallModeAttribute();
-            Assert.AreEqual<int>(0, (int)attr.Transform(null, 0), "The value to be transformed was not returned as-is.");
+            Assert.AreEqual<int>(0, (int)attr.Transform(null, 0));
         }
     }
 }

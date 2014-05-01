@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="AttributeColumn.cs" />
     <Compile Include="Cache.cs" />
+    <Compile Include="CharComparer.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
     <Compile Include="ComponentSearcher.cs" />
@@ -86,8 +87,11 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="FileHash.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ILoggingPolicyService.cs" />
     <Compile Include="ISystemRestoreService.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="LoggingPolicies.cs" />
+    <Compile Include="LoggingPoliciesConverter.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="PackageInfo.cs" />
     <Compile Include="PatchApplicator.cs" />
@@ -101,6 +105,7 @@
     <Compile Include="PowerShell\Commands\GetFeatureCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetLoggingPolicyCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchSequenceCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
@@ -117,10 +122,13 @@
     <Compile Include="PowerShell\Commands\InstallProductCommand.cs" />
     <Compile Include="PowerShell\Commands\InstallProductCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
+    <Compile Include="PowerShell\Commands\LoggingPolicyCommandBase.cs" />
     <Compile Include="PowerShell\Commands\PackageCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
+    <Compile Include="PowerShell\Commands\RemoveLoggingPolicyCommand.cs" />
     <Compile Include="PowerShell\Commands\RepairProductActionData.cs" />
     <Compile Include="PowerShell\Commands\RepairProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\SetLoggingPolicyCommand.cs" />
     <Compile Include="PowerShell\Commands\TestProductCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />
@@ -128,6 +136,7 @@
     <Compile Include="PowerShell\EncodingAttribute.cs" />
     <Compile Include="PowerShell\ExtensionMethods.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />
+    <Compile Include="PowerShell\LoggingPoliciesAttribute.cs" />
     <Compile Include="PowerShell\PropertySet.cs" />
     <Compile Include="PowerShell\PSInstallerException.cs" />
     <Compile Include="ReadOnly.cs" />

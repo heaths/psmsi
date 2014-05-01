@@ -5,7 +5,6 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
@@ -15,33 +14,45 @@ using System.Globalization;
 namespace Microsoft.Tools.WindowsInstaller
 {
     /// <summary>
-    /// Provides conversion between the <see cref="ReinstallModes"/> enumeration and string short form.
+    /// Provides conversion between the <see cref="LoggingPolicies"/> enumeration and string short form.
     /// </summary>
-    internal sealed class ReinstallModesConverter : TypeConverter
+    internal sealed class LoggingPoliciesConverter : TypeConverter
     {
-        private static readonly Dictionary<char, ReinstallModes> CharToModeMap;
-        private static readonly Dictionary<ReinstallModes, char> ModeToCharMap;
+        /// <summary>
+        /// Logging mode equivalent to the command line options "oicewarmup", or "*".
+        /// </summary>
+        internal const LoggingPolicies Normal = LoggingPolicies.OutOfDiskSpace | LoggingPolicies.Information | LoggingPolicies.CommonData | LoggingPolicies.Error |
+                                            LoggingPolicies.Warning | LoggingPolicies.ActionStart | LoggingPolicies.ActionData | LoggingPolicies.FatalExit | LoggingPolicies.User | LoggingPolicies.PropertyDump;
 
-        static ReinstallModesConverter()
+        private static readonly Dictionary<char, LoggingPolicies> CharToModeMap;
+        private static readonly Dictionary<LoggingPolicies, char> ModeToCharMap;
+
+        static LoggingPoliciesConverter()
         {
-            CharToModeMap = new Dictionary<char, ReinstallModes>(CharComparer.InvariantCultureIgnoreCase);
-            CharToModeMap.Add('p', ReinstallModes.FileMissing);
-            CharToModeMap.Add('o', ReinstallModes.FileOlderVersion);
-            CharToModeMap.Add('e', ReinstallModes.FileEqualVersion);
-            CharToModeMap.Add('d', ReinstallModes.FileExact);
-            CharToModeMap.Add('c', ReinstallModes.FileVerify);
-            CharToModeMap.Add('a', ReinstallModes.FileReplace);
-            CharToModeMap.Add('u', ReinstallModes.UserData);
-            CharToModeMap.Add('m', ReinstallModes.MachineData);
-            CharToModeMap.Add('s', ReinstallModes.Shortcut);
-            CharToModeMap.Add('v', ReinstallModes.Package);
+            CharToModeMap = new Dictionary<char, LoggingPolicies>(CharComparer.InvariantCultureIgnoreCase);
+            CharToModeMap.Add('v', LoggingPolicies.Verbose);
+            CharToModeMap.Add('o', LoggingPolicies.OutOfDiskSpace);
+            CharToModeMap.Add('i', LoggingPolicies.Information);
+            CharToModeMap.Add('c', LoggingPolicies.CommonData);
+            CharToModeMap.Add('e', LoggingPolicies.Error);
+            CharToModeMap.Add('w', LoggingPolicies.Warning);
+            CharToModeMap.Add('a', LoggingPolicies.ActionStart);
+            CharToModeMap.Add('r', LoggingPolicies.ActionData);
+            CharToModeMap.Add('m', LoggingPolicies.FatalExit);
+            CharToModeMap.Add('u', LoggingPolicies.User);
+            CharToModeMap.Add('p', LoggingPolicies.PropertyDump);
+            CharToModeMap.Add('x', LoggingPolicies.ExtraDebug);
+            CharToModeMap.Add('!', LoggingPolicies.FlushEachLine);
 
             // Reverse the key/value pairs.
-            ModeToCharMap = new Dictionary<ReinstallModes, char>();
+            ModeToCharMap = new Dictionary<LoggingPolicies, char>();
             foreach (var entry in CharToModeMap)
             {
                 ModeToCharMap.Add(entry.Value, entry.Key);
             }
+
+            // Special case for asterisk.
+            CharToModeMap.Add('*', Normal);
         }
 
         /// <summary>
@@ -67,19 +78,19 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Converts a <see cref="String"/> in the short form like "omus" to a <see cref="ReinstallModes"/> enumeration.
+        /// Converts a <see cref="String"/> in the short form like "omus" to a <see cref="LoggingPolicies"/> enumeration.
         /// </summary>
         /// <param name="context">Additional context for conversion.</param>
         /// <param name="culture">The culture to use for conversion.</param>
         /// <param name="value">The <see cref="String"/> value to convert.</param>
-        /// <returns>The converted <see cref="ReinstallModes"/> enumeration.</returns>
+        /// <returns>The converted <see cref="LoggingPolicies"/> enumeration.</returns>
         /// <exception cref="ArgumentException">The short form string contains invalid characters.</exception>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (null != value && this.CanConvertFrom(context, value.GetType()))
             {
-                string s = value as string;
-                ReinstallModes mode = 0;
+                var s = value as string;
+                var mode = LoggingPolicies.None;
 
                 // Attempt the simple coversion.
                 if (TryParse(s, out mode))
@@ -88,16 +99,21 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
                 else
                 {
-                    // Try parsing the REINSTALLMODE property values.
-                    foreach (char c in s)
+                    // Try parsing the logging command line options.
+                    foreach (var c in s)
                     {
                         if (CharToModeMap.ContainsKey(c))
                         {
                             mode |= CharToModeMap[c];
                         }
+                        else if ('+' == c)
+                        {
+                            throw new ArgumentException(Resources.Error_UnsupportedLoggingMode, "value");
+                        }
                         else
                         {
-                            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.Error_InvalidReinstallMode, c), "value");
+                            var message = String.Format(CultureInfo.CurrentCulture, Resources.Error_InvalidLoggingMode, c);
+                            throw new ArgumentException(message, "value");
                         }
                     }
 
@@ -109,24 +125,24 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Converts a <see cref="ReinstallModes"/> to a short form <see cref="String"/> like "omus".
+        /// Converts a <see cref="LoggingPolicies"/> to a short form <see cref="String"/> like "voicewarmup".
         /// </summary>
         /// <param name="context">Additional context for conversion.</param>
         /// <param name="culture">The culture to use for conversion.</param>
-        /// <param name="value">The <see cref="ReinstallModes"/> to convert.</param>
+        /// <param name="value">The <see cref="LoggingPolicies"/> to convert.</param>
         /// <param name="destinationType">The type of the destination object.</param>
-        /// <returns></returns>
+        /// <returns>The converted short form for a <see cref="LoggingPolicies"/> enumeration.</returns>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (null != value && this.CanConvertTo(context, destinationType))
             {
-                string s = string.Empty;
-                ReinstallModes mode = (ReinstallModes)value;
+                var s = string.Empty;
+                var mode = (LoggingPolicies)value;
 
-                // Return the REINSTALLMODE property value form.
-                foreach (ReinstallModes val in Enum.GetValues(typeof(ReinstallModes)))
+                // Return the logging modes command line form.
+                foreach (LoggingPolicies val in Enum.GetValues(typeof(LoggingPolicies)))
                 {
-                    if (0 != (val & mode))
+                    if (0 != (val & mode) && LoggingPolicies.All != val)
                     {
                         s += ModeToCharMap[val];
                     }
@@ -138,11 +154,11 @@ namespace Microsoft.Tools.WindowsInstaller
             return base.ConvertTo(context, culture, value, destinationType);
         }
 
-        private static bool TryParse(string value, out ReinstallModes mode)
+        private static bool TryParse(string value, out LoggingPolicies mode)
         {
             try
             {
-                mode = (ReinstallModes)Enum.Parse(typeof(ReinstallModes), value, true);
+                mode = (LoggingPolicies)Enum.Parse(typeof(LoggingPolicies), value, true);
                 return true;
             }
             catch

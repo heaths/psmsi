@@ -23,31 +23,31 @@ namespace Microsoft.Tools.WindowsInstaller
         public void ConvertReinstallModesToShortForm()
         {
             var converter = new ReinstallModesConverter();
-            Assert.IsTrue(converter.CanConvertTo(typeof(string)), "Cannot convert to type String.");
+            Assert.IsTrue(converter.CanConvertTo(typeof(string)));
 
             var mode = (string)converter.ConvertTo(Default, typeof(string));
-            Assert.AreEqual("omus", mode, "The REINSTALLMODE short form is incorrect.");
+            Assert.AreEqual("omus", mode);
         }
 
         [TestMethod]
         public void ConvertNamesToReinstallModes()
         {
             var converter = new ReinstallModesConverter();
-            Assert.IsTrue(converter.CanConvertFrom(typeof(string)), "Cannot convert from type String.");
+            Assert.IsTrue(converter.CanConvertFrom(typeof(string)));
 
             // Use mixed case to test case-insensitivity.
             var mode = (ReinstallModes)converter.ConvertFrom("FileOlderVersion, MachineData, userData, shortcut");
-            Assert.AreEqual(Default, mode, "The ReinstallModes is incorrect.");
+            Assert.AreEqual(Default, mode);
         }
 
         [TestMethod]
         public void ConvertShortFormToReinstallModes()
         {
             var converter = new ReinstallModesConverter();
-            Assert.IsTrue(converter.CanConvertFrom(typeof(string)), "Cannot convert from type String.");
+            Assert.IsTrue(converter.CanConvertFrom(typeof(string)));
 
-            var mode = (ReinstallModes)converter.ConvertFrom("omus");
-            Assert.AreEqual(Default, mode, "The ReinstallModes is incorrect.");
+            var mode = (ReinstallModes)converter.ConvertFrom("omUS");
+            Assert.AreEqual(Default, mode);
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace Microsoft.Tools.WindowsInstaller
         public void ConvertInvalidStringToReinstallModes()
         {
             var converter = new ReinstallModesConverter();
-            Assert.IsTrue(converter.CanConvertFrom(typeof(string)), "Cannot convert from type String.");
+            Assert.IsTrue(converter.CanConvertFrom(typeof(string)));
 
             // Should throw ArgumentException.
             var mode = (ReinstallModes)converter.ConvertFrom("xyz");

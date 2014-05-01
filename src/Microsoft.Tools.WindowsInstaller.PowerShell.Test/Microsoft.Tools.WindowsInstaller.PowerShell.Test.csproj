@@ -82,6 +82,7 @@
     <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="IceMessageTests.cs" />
     <Compile Include="LocTest.cs" />
+    <Compile Include="LoggingPoliciesConverterTests.cs" />
     <Compile Include="LogTests.cs" />
     <Compile Include="MockRegistry.cs" />
     <Compile Include="PatchSequencerTests.cs" />
@@ -102,11 +103,15 @@
     <Compile Include="PowerShell\Commands\InstallCommandActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\InstallProductActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\InstallScenarioTests.cs" />
+    <Compile Include="PowerShell\Commands\RemoveLoggingPolicyCommandTests.cs" />
     <Compile Include="PowerShell\Commands\RepairProductActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommandTests.cs" />
+    <Compile Include="PowerShell\Commands\SetLoggingPolicyCommandTests.cs" />
     <Compile Include="PowerShell\Commands\TestProductCommandTests.cs" />
+    <Compile Include="PowerShell\Commands\GetLoggingPolicyCommandTests.cs" />
     <Compile Include="PowerShell\ExtensionMethodsTests.cs" />
     <Compile Include="PowerShell\FileInfoTests.cs" />
+    <Compile Include="PowerShell\LoggingPoliciesAttributeTests.cs" />
     <Compile Include="PowerShell\ModuleTest.cs" />
     <Compile Include="PowerShell\PSInstallerExceptionTests.cs" />
     <Compile Include="PowerShell\ReinstallModeAttributeTests.cs" />
@@ -124,9 +129,11 @@
     <Compile Include="SystemRestorePointTests.cs" />
     <Compile Include="SystemRestoreTestService.cs" />
     <Compile Include="TestBase.cs" />
+    <Compile Include="TestLoggingPolicyService.cs" />
     <Compile Include="TreeTests.cs" />
     <Compile Include="PackageInfoTests.cs" />
     <Compile Include="TransformViewTests.cs" />
+    <Compile Include="CharComparerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj">
