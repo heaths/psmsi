@@ -617,16 +617,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
 
                 // Calculate progress for all completed actions. Current action was already dequeued so subtract its weight.
-                var completed = this.Actions.OriginalWeight - this.Actions.RemainingWeight - this.progress.CurrentWeight;
-                var percentage = 100 * completed / this.Actions.OriginalWeight;
+                var completed = Math.Max(0, this.Actions.OriginalWeight - this.Actions.RemainingWeight - this.progress.CurrentWeight);
 
                 // Calculate the remaining progress for the current action.
                 if (this.progress.IsValid)
                 {
                     var factor = this.progress.CurrentPercentage / 100f;
-                    percentage += (int)(factor * this.progress.CurrentWeight);
+                    completed += (int)(factor * this.progress.CurrentWeight);
                 }
 
+                var percentage = 100 * completed / this.Actions.OriginalWeight;
                 record.PercentComplete = Math.Min(100, (int)percentage);
             }
 
