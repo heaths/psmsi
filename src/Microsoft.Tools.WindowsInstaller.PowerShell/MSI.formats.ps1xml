@@ -809,5 +809,77 @@
         </ListEntries>
       </ListControl>
     </View>
+    <!-- SourceInfo -->
+    <View>
+      <Name>Default</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Tools.WindowsInstaller.SourceInfo</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <Label>ProductCode</Label>
+        <PropertyName>ProductCode</PropertyName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>Order</Label>
+            <Width>5</Width>
+            <Alignment>Right</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Path</Label>
+            <Alignment>Left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Order</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Path</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <!-- PatchSourceInfo -->
+    <View>
+      <Name>Default</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Tools.WindowsInstaller.PatchSourceInfo</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <Label>PatchCode</Label>
+        <PropertyName>PatchCode</PropertyName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>Order</Label>
+            <Width>5</Width>
+            <Alignment>Right</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Path</Label>
+            <Alignment>Left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Order</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Path</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
   </ViewDefinitions>
 </Configuration>

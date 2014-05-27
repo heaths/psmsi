@@ -461,6 +461,40 @@
   </command>
   <command>
     <verb>Get</verb>
+    <noun>MSISource</noun>
+    <synopsis>
+      Gets the registered network source or URLs for a product or patch.
+    </synopsis>
+    <description>
+      Windows Installer products and patches can have zero or more registered locations
+      that direct Windows Installer where to look for package source. This cmdlet will
+      enumerate those locations registered to a product or patch.
+    </description>
+    <parameter name="PatchCode">
+      The patch code for a patch.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode for a product or applied patch.
+    </parameter>
+    <parameter name="UserContext" default="All">
+      The user context for a product or patch.
+    </parameter>
+    <parameter name="UserSid">
+      The user SID for a product or patch.
+    </parameter>
+    <output type="Microsoft.Tools.WindowsInstaller.SourceInfo">
+      Source information for an installed product.
+    </output>
+    <output type="Microsoft.Tools.WindowsInstaller.PatchSourceInfo">
+      Source information for an applied patch.
+    </output>
+    <example>
+      <code>get-msiproductinfo | get-msisource</code>
+      <description>Gets the registered source for all installed products on the machine.</description>
+    </example>
+  </command>
+  <command>
+    <verb>Get</verb>
     <noun>MSISummaryInfo</noun>
     <synopsis>
       Gets the summary information from a product or patch package, or from a transform.

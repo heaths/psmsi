@@ -151,7 +151,7 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registration for the product &quot;{0}&quot; is corrupt..
+        ///   Looks up a localized string similar to Registration for the product or patch &quot;{0}&quot; is corrupt..
         /// </summary>
         internal static string Error_Corrupt {
             get {

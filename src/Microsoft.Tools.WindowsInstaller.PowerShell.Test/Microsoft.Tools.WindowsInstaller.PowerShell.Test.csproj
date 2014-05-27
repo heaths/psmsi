@@ -98,6 +98,7 @@
     <Compile Include="PowerShell\Commands\GetProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetSharedComponentFunctionTest.cs" />
+    <Compile Include="PowerShell\Commands\GetSourceCommandTests.cs" />
     <Compile Include="PowerShell\Commands\GetSummaryInfoCommandTests.cs" />
     <Compile Include="PowerShell\Commands\InstallCommandBaseTests.cs" />
     <Compile Include="PowerShell\Commands\InstallCommandActionDataTests.cs" />

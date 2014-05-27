@@ -97,6 +97,7 @@
     <Compile Include="PatchApplicator.cs" />
     <Compile Include="PatchSequence.cs" />
     <Compile Include="PatchSequencer.cs" />
+    <Compile Include="PatchSourceInfo.cs" />
     <Compile Include="PowerShell\AttributeColumnPropertyAdapter.cs" />
     <Compile Include="PowerShell\AttributeColumnTypeConverter.cs" />
     <Compile Include="PowerShell\Commands\EditPackageCommand.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchSequenceCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetSourceCommand.cs" />
     <Compile Include="PowerShell\Commands\GetSummaryInfoCommand.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="PowerShell\Commands\RepairProductActionData.cs" />
     <Compile Include="PowerShell\Commands\RepairProductCommand.cs" />
     <Compile Include="PowerShell\Commands\SetLoggingPolicyCommand.cs" />
+    <Compile Include="PowerShell\Commands\SourceCommandBase.cs" />
     <Compile Include="PowerShell\Commands\TestProductCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />
@@ -156,6 +159,7 @@
     <Compile Include="ReinstallModesConverter.cs" />
     <Compile Include="RowOperation.cs" />
     <Compile Include="Set.cs" />
+    <Compile Include="SourceInfo.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="SummaryInfo.cs" />
     <Compile Include="SystemRestorePoint.cs" />
