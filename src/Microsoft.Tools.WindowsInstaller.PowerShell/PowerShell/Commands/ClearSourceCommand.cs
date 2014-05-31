@@ -10,13 +10,13 @@ using System.Management.Automation;
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
-    /// Cmdlet to get the source list for a product or patch.
+    /// Cmdlets to clear all registered source paths from a product or patch.
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "MSISource")]
-    public sealed class GetSourceCommand : SourceCommandBase
+    [Cmdlet(VerbsCommon.Clear, "MSISource")]
+    public sealed class ClearSourceCommand : SourceCommandBase
     {
         /// <summary>
-        /// Writes the list of source paths or URLs to the pipeline.
+        /// Clears all registered source paths from a product or patch.
         /// </summary>
         protected override void EndProcessing()
         {
@@ -25,7 +25,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 var installation = base.GetInstallation(param);
                 if (null != installation)
                 {
-                    base.WriteSourceList(installation);
+                    installation.SourceList.ClearNetworkSources();
+                    installation.SourceList.ClearUrlSources();
                 }
             }
         }

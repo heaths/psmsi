@@ -8,6 +8,7 @@
 using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -22,14 +23,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         protected SourceCommandBase()
         {
-            this.PreviousParameters = new List<Parameters>();
+            this.PreviousParameters = new ParametersCollection();
             this.UserContext = UserContexts.All;
         }
 
         /// <summary>
         /// Gets or sets the ProductCode for a product or patch to which the source is registered.
         /// </summary>
-        [Parameter(Mandatory = true, Position = 1, ValueFromPipelineByPropertyName = true)]
+        [Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true)]
         public string ProductCode { get; set; }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets the list of previous parameters to work around a reentrency problem with Windows Installer.
         /// </summary>
-        protected List<Parameters> PreviousParameters { get; private set; }
+        protected ParametersCollection PreviousParameters { get; private set; }
 
         /// <summary>
         /// Adds current parameters to <see cref="PreviousParameters"/> towork around a reentrency problem with Windows Installer.
@@ -70,7 +71,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 UserContext = this.UserContext,
             };
 
+            this.UpdateParameters(param);
             this.PreviousParameters.Add(param);
+        }
+
+        /// <summary>
+        /// Allows child classes to update the <see cref="Parameters"/>.
+        /// </summary>
+        /// <param name="param">The <see cref="Parameters"/> to update.</param>
+        protected virtual void UpdateParameters(Parameters param)
+        {
         }
 
         /// <summary>
@@ -161,6 +171,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected class Parameters
         {
             /// <summary>
+            /// Creates a new instance of the <see cref="Parameters"/> class.
+            /// </summary>
+            internal Parameters()
+            {
+                this.Paths = new List<string>();
+            }
+
+            /// <summary>
             /// Gets or sets the ProductCode parameter.
             /// </summary>
             public string ProductCode { get; internal set; }
@@ -179,6 +197,57 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             /// Gets or sets the UserContext parameter.
             /// </summary>
             public UserContexts UserContext { get; internal set; }
+
+            /// <summary>
+            /// Gets the Path or LiteralPath parameters.
+            /// </summary>
+            public IList<string> Paths { get; private set; }
+        }
+
+        /// <summary>
+        /// A collection of <see cref="Parameters"/> indexed by their <see cref="Parameters.PatchCode"/> or <see cref="Parameters.ProductCode"/>.
+        /// </summary>
+        protected class ParametersCollection : KeyedCollection<string, Parameters>
+        {
+            /// <summary>
+            /// Creates a new instance of the <see cref="ParametersCollection"/> class.
+            /// </summary>
+            public ParametersCollection()
+                : base(StringComparer.OrdinalIgnoreCase)
+            {
+            }
+
+            /// <summary>
+            /// Adds a new <see cref="Parameters"/> instance or updates the <see cref="Parameters.Paths"/> of an existing one.
+            /// </summary>
+            /// <param name="param">The <see cref="Parameters"/> instance to add or merge into an existing one.</param>
+            /// <returns>The updated <see cref="Parameters"/> instance.</returns>
+            public new void Add(Parameters param)
+            {
+                var key = this.GetKeyForItem(param);
+                if (this.Contains(key))
+                {
+                    var existing = this[key];
+                    foreach (var path in param.Paths)
+                    {
+                        existing.Paths.Add(path);
+                    }
+                }
+                else
+                {
+                    base.Add(param);
+                }
+            }
+
+            /// <summary>
+            /// Gets the <see cref="Parameters.PatchCode"/> or <see cref="Parameters.ProductCode"/>.
+            /// </summary>
+            /// <param name="item">The <see cref="Parameters"/> from which the key is derived.</param>
+            /// <returns>The key for the <see cref="Parameters"/> instance.</returns>
+            protected override string GetKeyForItem(Parameters item)
+            {
+                return item.PatchCode ?? item.ProductCode;
+            }
         }
     }
 }

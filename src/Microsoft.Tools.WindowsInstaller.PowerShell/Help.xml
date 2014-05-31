@@ -492,6 +492,9 @@
       <code>get-msiproductinfo | get-msisource</code>
       <description>Gets the registered source for all installed products on the machine.</description>
     </example>
+    <link>Add-MSISource</link>
+    <link>Clear-MSISource</link>
+    <link>Remove-MSISource</link>
   </command>
   <command>
     <verb>Get</verb>
@@ -796,6 +799,53 @@
     <link>Set-MSILoggingPolicy</link>
   </command>
   <command>
+    <verb>Remove</verb>
+    <noun>MSISource</noun>
+    <synopsis>
+      Removes a registered network source or URL from a product or patch.
+    </synopsis>
+    <description>
+      Windows Installer products and patches can have zero or more registered locations
+      that direct Windows Installer where to look for package source. This cmdlet will
+      remove a location registered to a product or patch and optionally return the
+      remaining locations through the pipeline.
+    </description>
+    <parameter name="LiteralPath">
+      The directory or URL to unregister. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="PassThru">
+      Whether to return the remaining registered source through the pipeline.
+    </parameter>
+    <parameter name="PatchCode">
+      The patch code for a patch.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The directory or URL to unregister. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode for a product or applied patch.
+    </parameter>
+    <parameter name="UserContext" default="All">
+      The user context for a product or patch.
+    </parameter>
+    <parameter name="UserSid">
+      The user SID for a product or patch.
+    </parameter>
+    <output type="Microsoft.Tools.WindowsInstaller.SourceInfo">
+      Source information for an installed product.
+    </output>
+    <output type="Microsoft.Tools.WindowsInstaller.PatchSourceInfo">
+      Source information for an applied patch.
+    </output>
+    <example>
+      <code>remove-msisource '{707ABAE4-4DC5-478C-9D36-7CC5C1A85A3C}' 'C:\Package Cache\'</code>
+      <description>Removes the C:\Package Cache source location from the specified product.</description>
+    </example>
+    <link>Add-MSISource</link>
+    <link>Clear-MSISource</link>
+    <link>Get-MSISource</link>
+  </command>
+  <command>
     <verb>Repair</verb>
     <noun>MSIProduct</noun>
     <synopsis>
@@ -1047,5 +1097,89 @@
     </example>
     <link>Install-MSIProduct</link>
     <link>Repair-MSIProduct</link>
+  </command>
+  <command>
+    <verb>Add</verb>
+    <noun>MSISource</noun>
+    <synopsis>
+      Adds a registered network source or URL from a product or patch.
+    </synopsis>
+    <description>
+      Windows Installer products and patches can have zero or more registered locations
+      that direct Windows Installer where to look for package source. This cmdlet will
+      add a network source or URL to a product or patch and optionally return the remaining
+      registered source locations through the pipeline.
+    </description>
+    <parameter name="LiteralPath">
+      The directory or URL to register. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="PassThru">
+      Whether to return the remaining registered source through the pipeline.
+    </parameter>
+    <parameter name="PatchCode">
+      The patch code for a patch.
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The directory or URL to register. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode for a product or applied patch.
+    </parameter>
+    <parameter name="UserContext" default="All">
+      The user context for a product or patch.
+    </parameter>
+    <parameter name="UserSid">
+      The user SID for a product or patch.
+    </parameter>
+    <output type="Microsoft.Tools.WindowsInstaller.SourceInfo">
+      Source information for an installed product.
+    </output>
+    <output type="Microsoft.Tools.WindowsInstaller.PatchSourceInfo">
+      Source information for an applied patch.
+    </output>
+    <example>
+      <code>add-msisource '{707ABAE4-4DC5-478C-9D36-7CC5C1A85A3C}' 'C:\Package Cache\'</code>
+      <description>Adds the C:\Package Cache source location from the specified product.</description>
+    </example>
+    <link>Clear-MSISource</link>
+    <link>Get-MSISource</link>
+    <link>Remove-MSISource</link>
+  </command>
+  <command>
+    <verb>Clear</verb>
+    <noun>MSISource</noun>
+    <synopsis>
+      Clears all registered network sources and URLs from a product or patch.
+    </synopsis>
+    <description>
+      Windows Installer products and patches can have zero or more registered locations
+      that direct Windows Installer where to look for package source. This cmdlet will
+      clear all network sources and URLs from a product or patch.
+    </description>
+    <parameter name="PatchCode">
+      The patch code for a patch.
+    </parameter>
+    <parameter name="ProductCode">
+      The ProductCode for a product or applied patch.
+    </parameter>
+    <parameter name="UserContext" default="All">
+      The user context for a product or patch.
+    </parameter>
+    <parameter name="UserSid">
+      The user SID for a product or patch.
+    </parameter>
+    <output type="Microsoft.Tools.WindowsInstaller.SourceInfo">
+      Source information for an installed product.
+    </output>
+    <output type="Microsoft.Tools.WindowsInstaller.PatchSourceInfo">
+      Source information for an applied patch.
+    </output>
+    <example>
+      <code>get-msiproductinfo '{707ABAE4-4DC5-478C-9D36-7CC5C1A85A3C}' | clear-msisource</code>
+      <description>Clears all registered source from the specified product.</description>
+    </example>
+    <link>Add-MSISource</link>
+    <link>Get-MSISource</link>
+    <link>Remove-MSISource</link>
   </command>
 </help>

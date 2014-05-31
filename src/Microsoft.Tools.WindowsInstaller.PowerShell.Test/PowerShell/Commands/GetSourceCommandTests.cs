@@ -24,15 +24,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 using (OverrideRegistry())
                 {
-                    var actual = p.Invoke();
+                    var output = p.Invoke();
 
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual<long>(1, output.Count());
+
+                    var actual = output.FirstOrDefault().As<SourceInfo>();
                     Assert.IsNotNull(actual);
-                    Assert.AreEqual<long>(1, actual.Count());
-
-                    var source = actual.FirstOrDefault().As<SourceInfo>();
-                    Assert.IsNotNull(source);
-                    Assert.AreEqual("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", source.ProductCode);
-                    Assert.AreEqual(expected, source.Path, true);
+                    Assert.AreEqual("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", actual.ProductCode);
+                    Assert.AreEqual(expected, actual.Path, true);
                 }
             }
         }
@@ -45,15 +45,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 using (OverrideRegistry())
                 {
-                    var actual = p.Invoke();
+                    var output = p.Invoke();
 
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual<long>(1, output.Count());
+
+                    var actual = output.FirstOrDefault().As<SourceInfo>();
                     Assert.IsNotNull(actual);
-                    Assert.AreEqual<long>(1, actual.Count());
-
-                    var source = actual.FirstOrDefault().As<SourceInfo>();
-                    Assert.IsNotNull(source);
-                    Assert.AreEqual("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", source.ProductCode);
-                    Assert.AreEqual(expected, source.Path, true);
+                    Assert.AreEqual("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", actual.ProductCode);
+                    Assert.AreEqual(expected, actual.Path, true);
                 }
             }
         }
@@ -66,10 +66,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 var path = Path.Combine(base.TestContext.DeploymentDirectory, "Corrupt.xml");
                 using (OverrideRegistry(path))
                 {
-                    var actual = p.Invoke();
+                    var output = p.Invoke();
 
-                    Assert.IsNotNull(actual);
-                    Assert.AreEqual<long>(0, actual.Count());
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual<long>(0, output.Count());
                     Assert.AreEqual<int>(0, p.Output.Count);
                     Assert.AreEqual<int>(1, p.Error.Count);
                 }
@@ -84,16 +84,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 using (OverrideRegistry())
                 {
-                    var actual = p.Invoke();
+                    var output = p.Invoke();
 
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual<long>(1, output.Count());
+
+                    var actual = output.FirstOrDefault().As<PatchSourceInfo>();
                     Assert.IsNotNull(actual);
-                    Assert.AreEqual<long>(1, actual.Count());
-
-                    var source = actual.FirstOrDefault().As<PatchSourceInfo>();
-                    Assert.IsNotNull(source);
-                    Assert.AreEqual("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", source.ProductCode);
-                    Assert.AreEqual("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", source.PatchCode);
-                    Assert.AreEqual(expected, source.Path, true);
+                    Assert.AreEqual("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", actual.ProductCode);
+                    Assert.AreEqual("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", actual.PatchCode);
+                    Assert.AreEqual(expected, actual.Path, true);
                 }
             }
         }
@@ -106,16 +106,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 using (OverrideRegistry())
                 {
-                    var actual = p.Invoke();
+                    var output = p.Invoke();
 
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual<long>(1, output.Count());
+
+                    var actual = output.FirstOrDefault().As<PatchSourceInfo>();
                     Assert.IsNotNull(actual);
-                    Assert.AreEqual<long>(1, actual.Count());
-
-                    var source = actual.FirstOrDefault().As<PatchSourceInfo>();
-                    Assert.IsNotNull(source);
-                    Assert.AreEqual("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", source.ProductCode);
-                    Assert.AreEqual("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", source.PatchCode);
-                    Assert.AreEqual(expected, source.Path, true);
+                    Assert.AreEqual("{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}", actual.ProductCode);
+                    Assert.AreEqual("{6E52C409-0D0D-4B84-AB63-463438D4D33B}", actual.PatchCode);
+                    Assert.AreEqual(expected, actual.Path, true);
                 }
             }
         }

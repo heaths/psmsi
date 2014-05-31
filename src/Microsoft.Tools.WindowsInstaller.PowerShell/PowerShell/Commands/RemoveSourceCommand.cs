@@ -10,13 +10,13 @@ using System.Management.Automation;
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
-    /// Cmdlet to get the source list for a product or patch.
+    /// Cmdlet to remove a registered source path from a product or patch.
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "MSISource")]
-    public sealed class GetSourceCommand : SourceCommandBase
+    [Cmdlet(VerbsCommon.Remove, "MSISource")]
+    public sealed class RemoveSourceCommand : SourcePathCommandBase
     {
         /// <summary>
-        /// Writes the list of source paths or URLs to the pipeline.
+        /// Removes a registered source path from a product or patch.
         /// </summary>
         protected override void EndProcessing()
         {
@@ -25,7 +25,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 var installation = base.GetInstallation(param);
                 if (null != installation)
                 {
-                    base.WriteSourceList(installation);
+                    foreach (var path in param.Paths)
+                    {
+                        installation.SourceList.Remove(path);
+                    }
+
+                    if (this.PassThru)
+                    {
+                        base.WriteSourceList(installation);
+                    }
                 }
             }
         }

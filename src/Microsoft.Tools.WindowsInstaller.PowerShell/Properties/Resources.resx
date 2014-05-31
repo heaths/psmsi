@@ -198,4 +198,7 @@
   <data name="Error_UnsupportedLoggingMode" xml:space="preserve">
     <value>The logging option "+" is not supported in the logging policy.</value>
   </data>
+  <data name="Error_InvalidDirectory" xml:space="preserve">
+    <value>The path "{0}" is not a directory or does not exist.</value>
+  </data>
 </root>

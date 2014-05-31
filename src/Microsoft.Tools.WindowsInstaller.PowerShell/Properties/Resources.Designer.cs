@@ -187,6 +187,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The path &quot;{0}&quot; is not a directory or does not exist..
+        /// </summary>
+        internal static string Error_InvalidDirectory {
+            get {
+                return ResourceManager.GetString("Error_InvalidDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The path &quot;{0}&quot; is not a file or does not exist..
         /// </summary>
         internal static string Error_InvalidFile {

@@ -100,6 +100,8 @@
     <Compile Include="PatchSourceInfo.cs" />
     <Compile Include="PowerShell\AttributeColumnPropertyAdapter.cs" />
     <Compile Include="PowerShell\AttributeColumnTypeConverter.cs" />
+    <Compile Include="PowerShell\Commands\AddSourceCommand.cs" />
+    <Compile Include="PowerShell\Commands\ClearSourceCommand.cs" />
     <Compile Include="PowerShell\Commands\EditPackageCommand.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommand.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommand.cs" />
@@ -128,10 +130,12 @@
     <Compile Include="PowerShell\Commands\PackageCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
     <Compile Include="PowerShell\Commands\RemoveLoggingPolicyCommand.cs" />
+    <Compile Include="PowerShell\Commands\RemoveSourceCommand.cs" />
     <Compile Include="PowerShell\Commands\RepairProductActionData.cs" />
     <Compile Include="PowerShell\Commands\RepairProductCommand.cs" />
     <Compile Include="PowerShell\Commands\SetLoggingPolicyCommand.cs" />
     <Compile Include="PowerShell\Commands\SourceCommandBase.cs" />
+    <Compile Include="PowerShell\Commands\SourcePathCommandBase.cs" />
     <Compile Include="PowerShell\Commands\TestProductCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />

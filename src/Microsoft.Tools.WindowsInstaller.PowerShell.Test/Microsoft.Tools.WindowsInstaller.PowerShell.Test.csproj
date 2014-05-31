@@ -88,6 +88,7 @@
     <Compile Include="PatchSequencerTests.cs" />
     <Compile Include="PowerShell\AttributeColumnPropertyAdapterTests.cs" />
     <Compile Include="PowerShell\AttributeColumnTypeConverterTests.cs" />
+    <Compile Include="PowerShell\Commands\SourceCommandTests.cs" />
     <Compile Include="PowerShell\Commands\EditPackageCommandTests.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommandTests.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommandTest.cs" />

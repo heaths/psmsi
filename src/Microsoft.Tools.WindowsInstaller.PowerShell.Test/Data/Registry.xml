@@ -16,6 +16,14 @@
     <key name=".msp">
       <value type="String">Msi.Package</value>
     </key>
+    <key name="CLSID">
+      <key name="{000C101D-0000-0000-C000-000000000046}">
+        <key name="DllVersion">
+          <value type="String">5.0.9600</value>
+        </key>
+        <value type="String">Microsoft Windows Installer Message RPC</value>
+      </key>
+    </key>
     <key name="Msi.Package">
       <key name="Shell">
         <key name="Edit">
