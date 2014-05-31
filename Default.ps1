@@ -76,6 +76,22 @@ Task Compile -Alias Build {
     exec { & "$MSBuild" "$SolutionFile" /m /t:Build /p:Configuration="$Configuration" }
 }
 
+Task AddCommands -Alias Update -Depends Compile {
+    $HelpToolsDir = Join-Path $SolutionDir 'tools\help'
+    assert (Test-Path $HelpToolsDir) 'Help tools not found. Did you run "git submodule update --init"?'
+
+    $Project = 'Microsoft.Tools.WindowsInstaller.PowerShell'
+    $ProjectDir = Join-Path $SourceDir $Project
+    $OutputDir = Join-Path $SourceDir "$Project\bin\$Configuration"
+    $ModulePath = Join-Path $OutputDir 'MSI.psd1'
+
+    Import-Module (Join-Path $HelpToolsDir 'Help.psd1')
+
+    $ProjectHelp = Join-Path $ProjectDir 'Help.xml'
+    Write-Host "Adding commands from $ModulePath into $ProjectHelp"
+    Export-HelpTemplate -Module $ModulePath -Path $ProjectHelp
+}
+
 Task Document -Alias Doc -Depends Compile {
     $HelpToolsDir = Join-Path $SolutionDir 'tools\help'
     assert (Test-Path $HelpToolsDir) 'Help tools not found. Did you run "git submodule update --init"?'
