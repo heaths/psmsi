@@ -28,8 +28,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the path supporting wildcards to enumerate files.
         /// </summary>
-        [Parameter(ParameterSetName = "Path,Table", Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        [Parameter(ParameterSetName = "Path,Query", Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "Path,Table", Position = 1, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "Path,Query", Position = 1, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
         public override string[] Path { get; set; }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the <see cref="ProductInstallation"/> to query.
         /// </summary>
-        [Parameter(ParameterSetName = "Installation,Table", Position = 0, Mandatory = true, ValueFromPipeline = true)]
-        [Parameter(ParameterSetName = "Installation,Query", Position = 0, Mandatory = true, ValueFromPipeline = true)]
+        [Parameter(ParameterSetName = "Installation,Table", Position = 1, Mandatory = true, ValueFromPipeline = true)]
+        [Parameter(ParameterSetName = "Installation,Query", Position = 1, Mandatory = true, ValueFromPipeline = true)]
         public ProductInstallation[] Product { get; set; }
 
         // TODO: Next major release Table should be the first parameter like Get-WMIObject -Class.
@@ -56,9 +56,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the table name from which all <see cref="Record"/> objects are selected.
         /// </summary>
-        [Parameter(ParameterSetName = "Path,Table", ValueFromPipelineByPropertyName = true)]
-        [Parameter(ParameterSetName = "LiteralPath,Table", ValueFromPipelineByPropertyName = true)]
-        [Parameter(ParameterSetName = "Installation,Table", ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "Path,Table", Position = 0, ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "LiteralPath,Table", Position = 0, ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "Installation,Table", Position = 0, ValueFromPipelineByPropertyName = true)]
         public string Table { get; set; }
 
         /// <summary>

@@ -194,7 +194,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public void GetAllPatchedRecords()
         {
             Collection<PSObject> tables = null;
-            using (var p = CreatePipeline(@"get-msitable example.msi -patch example.msp"))
+            using (var p = CreatePipeline(@"get-msitable -path example.msi -patch example.msp"))
             {
                 tables = p.Invoke();
                 Assert.IsNotNull(tables);
