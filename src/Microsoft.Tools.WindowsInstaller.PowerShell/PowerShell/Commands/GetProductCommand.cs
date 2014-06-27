@@ -128,13 +128,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         }
 
                         // Enumerate all products in the context and attempt a match against each pattern.
-                        foreach (ProductInstallation product in ProductInstallation.GetProducts(null, param.UserSid, param.UserContext))
-                        {
-                            if (product.ProductName.Match(patterns))
-                            {
-                                this.WriteProduct(product);
-                            }
-                        }
+                        this.WriteProducts(null, param.UserSid, param.UserContext, patterns);
                     }
                 });
         }
@@ -145,11 +139,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <param name="productCode">The ProductCode of products to enumerate.</param>
         /// <param name="userSid">The user's SID for products to enumerate.</param>
         /// <param name="context">The installation context for products to enumerate.</param>
-        private void WriteProducts(string productCode, string userSid, UserContexts context)
+        /// <param name="patterns">Optional list of <see cref="WildcardPattern"/> to match product names.</param>
+        private void WriteProducts(string productCode, string userSid, UserContexts context, IList<WildcardPattern> patterns = null)
         {
             foreach (ProductInstallation product in ProductInstallation.GetProducts(productCode, userSid, context))
             {
-                this.WriteProduct(product);
+                if (0 == patterns.Count() || product.ProductName.Match(patterns))
+                {
+                    this.WriteProduct(product);
+                }
             }
         }
 

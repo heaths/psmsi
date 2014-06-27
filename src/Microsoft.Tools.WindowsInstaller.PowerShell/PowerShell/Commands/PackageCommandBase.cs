@@ -51,11 +51,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     }
                     catch (InstallerException ex)
                     {
-                        using (var psex = new PSInstallerException(ex))
+                        using (var pse = new PSInstallerException(ex))
                         {
-                            if (null != psex.ErrorRecord)
+                            if (null != pse.ErrorRecord)
                             {
-                                this.WriteError(psex.ErrorRecord);
+                                this.WriteError(pse.ErrorRecord);
                             }
                         }
                     }

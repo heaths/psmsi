@@ -96,13 +96,25 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected Installation GetInstallation(Parameters param)
         {
             Installation installation = null;
-            if (string.IsNullOrEmpty(param.PatchCode))
+
+            try
             {
-                installation = ProductInstallation.GetProducts(param.ProductCode, param.UserSid, param.UserContext).FirstOrDefault();
+                if (string.IsNullOrEmpty(param.PatchCode))
+                {
+                    installation = ProductInstallation.GetProducts(param.ProductCode, param.UserSid, param.UserContext).FirstOrDefault();
+                }
+                else
+                {
+                    installation = PatchInstallation.GetPatches(param.PatchCode, param.ProductCode, param.UserSid, param.UserContext, PatchStates.All).FirstOrDefault();
+                }
             }
-            else
+            catch (InstallerException ex)
             {
-                installation = PatchInstallation.GetPatches(param.PatchCode, param.ProductCode, param.UserSid, param.UserContext, PatchStates.All).FirstOrDefault();
+                var pse = new PSInstallerException(ex);
+                if (null != pse.ErrorRecord)
+                {
+                    base.WriteError(pse.ErrorRecord);
+                }
             }
 
             return installation;

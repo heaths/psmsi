@@ -119,20 +119,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline("get-msitable example.msi -table NonexistentTable"))
             {
-                Collection<PSObject> output = null;
+                var output = p.Invoke();
+                Assert.AreEqual<long>(0, output.Count());
+                Assert.AreEqual<int>(1, p.Error.Count);
 
-                try
-                {
-                    output = p.Invoke();
-                    Assert.Fail();
-                }
-                catch (Exception ex)
-                {
-                    Assert.IsInstanceOfType(ex.InnerException, typeof(PSArgumentException));
-                    ex = ex.InnerException as PSArgumentException;
+                var obj = p.Error.Peek() as PSObject;
+                Assert.IsNotNull(obj);
 
-                    Assert.IsTrue(ex.Message.Contains("The table \"NonexistentTable\" was not found"));
-                }
+                var error = obj.BaseObject as ErrorRecord;
+                Assert.IsNotNull(error);
+                StringAssert.StartsWith(error.Exception.Message, @"The table ""NonexistentTable"" was not found");
             }
         }
 

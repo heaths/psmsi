@@ -93,8 +93,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 if (ex is InvalidOperationException || ex is Win32Exception)
                 {
                     // Likely the "edit" verb is not supported so terminate.
-                    var psex = new PSInvalidOperationException(ex.Message, ex);
-                    this.ThrowTerminatingError(psex.ErrorRecord);
+                    var pse = new PSInvalidOperationException(ex.Message, ex);
+                    this.ThrowTerminatingError(pse.ErrorRecord);
                 }
                 else
                 {

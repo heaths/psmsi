@@ -146,9 +146,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var path = item.GetPropertyValue<string>("PSPath");
             var providerPath = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
 
-            using (var db = this.OpenDatabase(providerPath))
+            var db = this.OpenDatabase(providerPath);
+            if (null != db)
             {
-                this.WriteRecords(db, providerPath);
+                using (db)
+                {
+                    this.WriteRecords(db, providerPath);
+                }
             }
         }
 
@@ -254,7 +258,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 transform = new TransformView(db);
             }
 
-            var query = this.GetQuery(db, path);
+            string query = null;
+            try
+            {
+                query = this.GetQuery(db, path);
+            }
+            catch (PSArgumentException ex)
+            {
+                base.WriteError(ex.ErrorRecord);
+                return;
+            }
+
             if (!string.IsNullOrEmpty(query))
             {
                 using (var view = db.OpenView(query))

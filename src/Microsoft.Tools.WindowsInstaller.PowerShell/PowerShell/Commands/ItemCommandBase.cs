@@ -5,6 +5,7 @@
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 
+using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Globalization;
 using System.IO;
@@ -69,7 +70,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 if (File.Exists(path) || Directory.Exists(path))
                 {
-                    this.ProcessItem(item);
+                    try
+                    {
+                        this.ProcessItem(item);
+                    }
+                    catch (InstallerException ex)
+                    {
+                        var pse = new PSInstallerException(ex);
+                        if (null != pse.ErrorRecord)
+                        {
+                            base.WriteError(pse.ErrorRecord);
+                        }
+                    }
                 }
                 else
                 {
