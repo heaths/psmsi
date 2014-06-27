@@ -302,10 +302,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 foreach (var table in db.Tables)
                 {
-                    var info = new TableInfo(table.Name, db.FilePath, transform, this.Patch, this.Transform);
-                    var obj = PSObject.AsPSObject(info);
+                    if (db.IsTablePersistent(table.Name))
+                    {
+                        var info = new TableInfo(table.Name, path, transform, this.Patch, this.Transform);
+                        var obj = PSObject.AsPSObject(info);
 
-                    this.WriteObject(obj);
+                        this.WriteObject(obj);
+                    }
                 }
             }
         }

@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected void ApplyTransforms(InstallPackage db)
         {
             // Apply transforms first since they likely apply to the unpatched product.
-            if (null != this.Transform)
+            if (0 < this.Transform.Count())
             {
                 this.Transform = this.ResolveFiles(this.Transform).ToArray();
 
@@ -65,7 +65,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             // Apply applicable patch transforms.
-            if (null != this.Patch)
+            if (0 < this.Patch.Count())
             {
                 this.Patch = this.ResolveFiles(this.Patch).ToArray();
 
