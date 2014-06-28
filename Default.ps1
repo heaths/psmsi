@@ -5,6 +5,8 @@
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+Framework '4.0'
+
 Properties {
     $Configuration = 'Debug'
     $Script:MSBuild = 'MSBuild'
@@ -73,7 +75,7 @@ Task Compile -Alias Build {
     assert ($Configuration.Length) "Must specify `$Configuration"
     assert (Get-Command $MSBuild -ea SilentlyContinue).Length "Must specify location of `$MSBuild"
 
-    exec { & "$MSBuild" "$SolutionFile" /m /t:Build /p:Configuration="$Configuration" }
+    exec { & "$MSBuild" /nologo "$SolutionFile" /m /t:Build /p:Configuration="$Configuration" }
 }
 
 Task AddCommands -Alias Update -Depends Compile {
@@ -122,17 +124,43 @@ Task Clean {
     assert ($Configuration.Length) "Must specify `$Configuration"
     assert (Get-Command $MSBuild -ea SilentlyContinue).Length "Must specify location of `$MSBuild"
 
-    exec { & "$MSBuild" "$SolutionFile" /m /t:Clean /p:Configuration="$Configuration" }
+    exec { & "$MSBuild" /nologo "$SolutionFile" /m /t:Clean /p:Configuration="$Configuration" }
 }
 
 Task Test -Depends Compile {
-    $MSTest
+    assert ($Configuration.Length) "Must specify `$Configuration"
     assert (Get-Command $MSTest -ea SilentlyContinue).Length "Must specify location of `$MSTest"
 
     $Projects = 'Microsoft.Tools.WindowsInstaller.PowerShell.Test'
     $CommandLine = $Projects | ForEach-Object { "/testcontainer:$SourceDir\$_\bin\$Configuration\$_.dll " }
 
-    exec { & "$MSTest" $CommandLine }
+    $Global:LASTEXITCODE = 0
+    $Results = & "$MSTest" /nologo $CommandLine /category:"!Impactful"
+
+    $Results | ForEach-Object {
+        $Result, $Name = $_ -split ' ', 2
+
+        # Color test results for easy identification.
+        $Color = [Console]::ForegroundColor
+        if ($Result -eq 'Passed') {
+            $Color = [ConsoleColor]::Green
+        } elseif ($Result -eq 'Failed') {
+            $Color = [ConsoleColor]::Red
+        }
+
+        # Strip root prefix from name for compact view.
+        $Name = $Name -replace 'Microsoft\.Tools\.WindowsInstaller\.', ''
+
+        if (@('Passed', 'Failed', 'Skipped') -contains $Result) {
+            Write-Host "$Result $Name" -ForegroundColor $Color
+        } else {
+            Write-Host $_
+        }
+    }
+
+    if ($LASTEXITCODE -ne 0) {
+        throw ("Exec: `"$MSTest`" /nologo $CommandLine /category:`"!Impactful`"")
+    }
 }
 
 Task Package -Alias Pack -Depends Compile {
