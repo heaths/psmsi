@@ -194,7 +194,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 tables = p.Invoke();
                 Assert.IsNotNull(tables);
-                Assert.AreEqual<int>(17, tables.Count);
+
+                // Only persistent tables are piped which excludes _TransformView.
+                Assert.AreEqual<int>(16, tables.Count);
             }
 
             using (var p = CreatePipeline(@"$input | get-msitable | where-object { $_.MSIOperation -ne 'None' }"))
