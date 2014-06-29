@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
 
                     Assert.IsNotNull(output);
-                    Assert.AreEqual<long>(1, output.Count());
+                    Assert.AreEqual<int>(1, output.Count());
 
                     var actual = output.FirstOrDefault().As<SourceInfo>();
                     Assert.IsNotNull(actual);
@@ -48,7 +48,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
 
                     Assert.IsNotNull(output);
-                    Assert.AreEqual<long>(1, output.Count());
+                    Assert.AreEqual<int>(1, output.Count());
 
                     var actual = output.FirstOrDefault().As<SourceInfo>();
                     Assert.IsNotNull(actual);
@@ -69,7 +69,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
 
                     Assert.IsNotNull(output);
-                    Assert.AreEqual<long>(0, output.Count());
+                    Assert.AreEqual<int>(0, output.Count());
                     Assert.AreEqual<int>(0, p.Output.Count);
                     Assert.AreEqual<int>(1, p.Error.Count);
                 }
@@ -87,7 +87,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
 
                     Assert.IsNotNull(output);
-                    Assert.AreEqual<long>(1, output.Count());
+                    Assert.AreEqual<int>(1, output.Count());
 
                     var actual = output.FirstOrDefault().As<PatchSourceInfo>();
                     Assert.IsNotNull(actual);
@@ -109,7 +109,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
 
                     Assert.IsNotNull(output);
-                    Assert.AreEqual<long>(1, output.Count());
+                    Assert.AreEqual<int>(1, output.Count());
 
                     var actual = output.FirstOrDefault().As<PatchSourceInfo>();
                     Assert.IsNotNull(actual);

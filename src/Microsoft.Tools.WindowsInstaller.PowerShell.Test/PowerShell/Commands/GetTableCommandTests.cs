@@ -120,7 +120,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline("get-msitable example.msi -table NonexistentTable"))
             {
                 var output = p.Invoke();
-                Assert.AreEqual<long>(0, output.Count());
+                Assert.AreEqual<int>(0, output.Count());
                 Assert.AreEqual<int>(1, p.Error.Count);
 
                 var obj = p.Error.Peek() as PSObject;
@@ -211,7 +211,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         select obj;
 
                 Assert.IsNotNull(e);
-                Assert.AreEqual<long>(1, e.Count());
+                Assert.AreEqual<int>(1, e.Count());
             }
         }
 

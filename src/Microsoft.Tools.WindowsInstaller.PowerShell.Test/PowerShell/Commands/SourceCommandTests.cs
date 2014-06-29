@@ -54,7 +54,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
 
                     Assert.IsNotNull(output);
-                    Assert.AreEqual<long>(original.Length + 1, output.Count());
+                    Assert.AreEqual<int>(original.Length + 1, output.Count());
                 }
 
                 using (var p = CreatePipeline(@"$Input | add-msisource -path 'ShouldNotExist.txt' -passthru"))
@@ -74,7 +74,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                     // Should return the previous number of source locations we already registered.
                     Assert.IsNotNull(output);
-                    Assert.AreEqual<long>(original.Length + 1, output.Count());
+                    Assert.AreEqual<int>(original.Length + 1, output.Count());
                     Assert.AreEqual<int>(1, p.Error.Count);
                 }
 
@@ -96,7 +96,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
 
                     Assert.IsNotNull(output);
-                    Assert.AreEqual<long>(paths.Length, output.Count());
+                    Assert.AreEqual<int>(paths.Length, output.Count());
                 }
 
                 using (var p = CreatePipeline(string.Format(@"$Input | remove-msisource -path '{0}' -passthru", this.TestContext.DeploymentDirectory)))
@@ -105,7 +105,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
 
                     Assert.IsNotNull(output);
-                    Assert.AreEqual<long>(original.Length, output.Count());
+                    Assert.AreEqual<int>(original.Length, output.Count());
                 }
             }
             finally

@@ -61,7 +61,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence that contains elements to be counted.</param>
         /// <returns>The number of elements in the input sequence or 0 if <paramref name="source"/> is null.</returns>
-        internal static long Count<TSource>(this IEnumerable<TSource> source)
+        internal static int Count<TSource>(this IEnumerable<TSource> source)
         {
             if (null == source)
             {
@@ -74,7 +74,7 @@ namespace Microsoft.Tools.WindowsInstaller
                 return coll.Count;
             }
 
-            var count = 0L;
+            var count = 0;
             using (var e = source.GetEnumerator())
             {
                 while (e.MoveNext())

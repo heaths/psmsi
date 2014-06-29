@@ -46,15 +46,15 @@ namespace Microsoft.Tools.WindowsInstaller
         public void CountFromList()
         {
             IEnumerable<int> source = null;
-            Assert.AreEqual<long>(0, source.Count());
+            Assert.AreEqual<int>(0, source.Count());
 
             // Count a collection.
             source = new int[] { 0, 1 };
-            Assert.AreEqual<long>(2, source.Count());
+            Assert.AreEqual<int>(2, source.Count());
 
             // Count an enumerable.
             source = ExtensionMethodsTests.Iterate();
-            Assert.AreEqual<long>(10, source.Count());
+            Assert.AreEqual<int>(10, source.Count());
         }
 
         private static IEnumerable<int> Iterate()
@@ -237,8 +237,8 @@ namespace Microsoft.Tools.WindowsInstaller
         public void WhereFromList()
         {
             var source = new int[] { 0, 1 };
-            Assert.AreEqual<long>(1, source.Where(i => i == 0).Count());
-            Assert.AreEqual<long>(0, source.Where(i => i == 2).Count());
+            Assert.AreEqual<int>(1, source.Where(i => i == 0).Count());
+            Assert.AreEqual<int>(0, source.Where(i => i == 2).Count());
         }
         #endregion
     }

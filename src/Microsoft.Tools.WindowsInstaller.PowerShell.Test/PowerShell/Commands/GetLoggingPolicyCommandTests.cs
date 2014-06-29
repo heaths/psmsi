@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var output = cmd.Invoke<string>();
 
             Assert.IsNotNull(output);
-            Assert.AreEqual<long>(0, output.Count());
+            Assert.AreEqual<int>(0, output.Count());
         }
 
         [TestMethod]
