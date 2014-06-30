@@ -6,18 +6,16 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
-    /// The Get-MSIRecord cmdlet.
+    /// The Get-MSITable cmdlet.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "MSITable", DefaultParameterSetName = "Path,Table")]
     [OutputType(typeof(Record), typeof(TableInfo))]
@@ -28,9 +26,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the path supporting wildcards to enumerate files.
         /// </summary>
-        [Parameter(ParameterSetName = "Path,Table", Position = 1, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        [Parameter(ParameterSetName = "Path,Query", Position = 1, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        public override string[] Path { get; set; }
+        [Parameter(ParameterSetName = "Path,Table", Position = 1, Mandatory = true, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
+        [Parameter(ParameterSetName = "Path,Query", Position = 1, Mandatory = true, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
+        public override string[] Path
+        {
+            get { return base.Path; }
+            set { base.Path = value; }
+        }
 
         /// <summary>
         /// Gets or sets the literal path for one or more files.
@@ -40,8 +42,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [Parameter(ParameterSetName = "LiteralPath,Query", Mandatory = true, ValueFromPipelineByPropertyName = true)]
         public override string[] LiteralPath
         {
-            get { return this.Path; }
-            set { this.Path = value; }
+            get { return base.Path; }
+            set { base.Path = value; }
         }
 
         /// <summary>
@@ -146,7 +148,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var path = item.GetPropertyValue<string>("PSPath");
             var providerPath = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
 
-            var db = this.OpenDatabase(providerPath);
+            var db = base.OpenDatabase(providerPath);
             if (null != db)
             {
                 using (db)
@@ -203,24 +205,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             return null;
-        }
-
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        private Database OpenDatabase(string path)
-        {
-            var type = FileInfo.GetFileTypeInternal(path);
-            if (FileType.Package == type)
-            {
-                var db = new InstallPackage(path, DatabaseOpenMode.ReadOnly);
-                base.ApplyTransforms(db);
-
-                return db;
-            }
-            else
-            {
-                // Let Windows Installer thow any exceptions if not a valid package.
-                return new Database(path, DatabaseOpenMode.ReadOnly);
-            }
         }
 
         private Session OpenProduct(ProductInstallation product)

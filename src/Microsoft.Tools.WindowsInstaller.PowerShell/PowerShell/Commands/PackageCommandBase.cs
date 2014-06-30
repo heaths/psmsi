@@ -9,6 +9,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Deployment.WindowsInstaller.Package;
 using Microsoft.Tools.WindowsInstaller.Properties;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
 
@@ -19,6 +20,19 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// </summary>
     public abstract class PackageCommandBase : ItemCommandBase
     {
+        /// <summary>
+        /// Gets or sets the path supporting wildcards to enumerate files.
+        /// </summary>
+        /// <remarks>
+        /// Assumes that all derivative classes will require another parameter in first position and that the Path parameter be specified.
+        /// </remarks>
+        [Parameter(ParameterSetName = ParameterSet.Path, Position = 1, Mandatory = true, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
+        public override string[] Path
+        {
+            get { return base.Path; }
+            set { base.Path = value; }
+        }
+
         /// <summary>
         /// Gets or sets patch packages to apply before validation.
         /// </summary>
@@ -55,7 +69,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         {
                             if (null != pse.ErrorRecord)
                             {
-                                this.WriteError(pse.ErrorRecord);
+                                base.WriteError(pse.ErrorRecord);
                             }
                         }
                     }
@@ -78,11 +92,44 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 applicator.InapplicablePatch += (source, args) =>
                 {
                     var message = string.Format(CultureInfo.CurrentCulture, Resources.Error_InapplicablePatch, args.Patch, args.Product);
-                    this.WriteVerbose(message);
+                    base.WriteVerbose(message);
                 };
 
                 // The applicator will commit the changes.
                 applicator.Apply();
+            }
+        }
+
+        /// <summary>
+        /// Opens a product or patch database.
+        /// </summary>
+        /// <param name="path">The path to the database to open.</param>
+        /// <returns>A <see cref="Database"/> object that must be disposed, or null if not a product or patch database.</returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        protected Database OpenDatabase(string path)
+        {
+            var type = FileInfo.GetFileTypeInternal(path);
+            if (FileType.Package == type)
+            {
+                var db = new InstallPackage(path, DatabaseOpenMode.ReadOnly);
+                this.ApplyTransforms(db);
+
+                return db;
+            }
+            else if (FileType.Patch == type)
+            {
+                return new PatchPackage(path);
+            }
+            else
+            {
+                var message = string.Format(Resources.Error_InvalidStorage, path);
+                var ex = new PSNotSupportedException(message);
+                if (null != ex.ErrorRecord)
+                {
+                    base.WriteError(ex.ErrorRecord);
+                }
+
+                return null;
             }
         }
 

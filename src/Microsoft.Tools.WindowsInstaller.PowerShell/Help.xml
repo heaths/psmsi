@@ -410,6 +410,61 @@
   </command>
   <command>
     <verb>Get</verb>
+    <noun>MSIProperty</noun>
+    <synopsis>
+      Gets properties from a product or patch package.
+    </synopsis>
+    <description>
+      Selects all or matching properties from a product or patch package and either returns them to the pipeline
+      or attaches them to a file object for a product or patch package if -PassThru is specified. When propertie
+      are attached to a file object you can select them all using the "MSIProperties" property set.
+    </description>
+    <parameter name="LiteralPath">
+        The path to a product or patch package to open. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="PassThru">
+      Whether to pass the file object back to the pipeline with selected properties attached.
+    </parameter>
+    <parameter name="Patch" globbing="true">
+      <p>
+        The path to a patch package to apply to the product package. Multiple patches are applied in authored sequence order.
+      </p>
+      <p>
+        Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+      </p>
+    </parameter>
+    <parameter name="Path" globbing="true">
+      The path to a product or patch package to open. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="Property" globbing="true">
+      Optional list of property names to select. Wildcard are permitted.
+    </parameter>
+    <parameter name="Transform" globbing="true">
+      <p>
+        The path to a transform to apply to the product package.
+      </p>
+      <p>
+        Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+      </p>
+    </parameter>
+    <output type="Microsoft.Tools.WindowsInstaller.Record">
+      The selected properties from the product or patch package.
+    </output>
+    <output type="System.IO.FileInfo">
+      The original file object with selected properties attached and referenced by the "MSIProperties" property set.
+    </output>
+    <example>
+      <code>get-msiproperty Product*, UpgradeCode -path example.msi</code>
+      <description>Gets the identifying properties from the example.msi product package.</description>
+    </example>
+    <example>
+      <code>get-childitem -filter *.msi | get-msiproperty -passthru | select Name, MSIProperties</code>
+      <description>Attaches all properties from each product package and shows them all along with the file name.</description>
+    </example>
+    <link>Get-MSITable</link>
+  </command>
+  <command>
+    <verb>Get</verb>
     <noun>MSIRelatedProductInfo</noun>
     <synopsis>
       Gets product information for related products.
@@ -646,6 +701,7 @@
       <description>Selects records from the installed product along with any patches currently installed.</description>
     </example>
     <link>Get-MSIProductInfo</link>
+    <link>Get-MSIProperty</link>
   </command>
   <command>
     <verb>Install</verb>

@@ -112,6 +112,7 @@
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchSequenceCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetPropertyCommand.cs" />
     <Compile Include="PowerShell\Commands\GetSourceCommand.cs" />
     <Compile Include="PowerShell\Commands\GetSummaryInfoCommand.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommand.cs" />
