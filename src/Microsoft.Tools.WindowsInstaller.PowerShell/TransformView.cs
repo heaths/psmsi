@@ -185,18 +185,18 @@ namespace Microsoft.Tools.WindowsInstaller
                         Row row = null;
                         if (!string.IsNullOrEmpty(key))
                         {
-                            if (!tbl.Rows.Contains(key))
-                            {
-                                var primaryKey = key
-                                    .Replace(TransformView.Tab, Record.KeySeparator)
-                                    .Replace(TransformView.Space, string.Empty);
+                            var primaryKey = key
+                                .Replace(TransformView.Tab, Record.KeySeparator)
+                                .Replace(TransformView.Space, string.Empty);
 
+                            if (!tbl.Rows.Contains(primaryKey))
+                            {
                                 row = new Row(primaryKey);
                                 tbl.Rows.Add(row);
                             }
                             else
                             {
-                                row = tbl.Rows[key];
+                                row = tbl.Rows[primaryKey];
                             }
                         }
 
