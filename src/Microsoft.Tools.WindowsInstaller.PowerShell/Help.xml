@@ -842,6 +842,52 @@
     <link>Uninstall-MSIProduct</link>
   </command>
   <command>
+    <verb>Measure</verb>
+    <noun>MSIProduct</noun>
+    <synopsis>
+      Gets drive costs for components that would be installed to any drive.
+    </synopsis>
+    <description>
+      You can use this command to get the costs for components that will be installed to any drive mounted to the system.
+      If multiple product packages are specified the total costs for all components in all specified products are returned.
+    </description>
+    <parameter name="Destination">
+      <p>
+        The target directory where the product should be installed.
+      </p>
+      <p>
+        Note that the product package must be authored to support installing to TARGETDIR.
+      </p>
+    </parameter>
+    <parameter name="LiteralPath">
+      The path to a product package to measure. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
+    </parameter>
+    <parameter name="Patch">
+      The path to a patch package or packages to apply to the product package before measuring. Patches are applied in sequence order.
+    </parameter>
+    <parameter name="Path">
+      The path to a product package to measure. Wildcards are permitted. You can specify * in any part of the path to select all matching files.
+    </parameter>
+    <parameter name="Properties">
+      <p>
+        Additional properties to pass to the session.
+      </p>
+      <p>
+        Note that you can mark all features for installation using ADDLOCAL=ALL or set public directories using this parameter.
+      </p>
+    </parameter>
+    <parameter name="Transform">
+      The path to a transform or transforms to apply to the product package before measuring.
+    </parameter>
+    <output type="System.Management.Automation.PSDriveInfo">
+      A PSDriveInfo object with MSISpaceRequired and MSITemporarySpaceRequired properties attached (measured in bytes).
+    </output>
+    <example>
+      <code>measure-msiproduct .\example.msi -patch .\example.msp -target X:\Example</code>
+      <description>Gets the drive costs for example.msi with example.msp applied if installed to the X:\Example directory.</description>
+    </example>
+  </command>
+  <command>
     <verb>Remove</verb>
     <noun>MSILoggingPolicy</noun>
     <synopsis>

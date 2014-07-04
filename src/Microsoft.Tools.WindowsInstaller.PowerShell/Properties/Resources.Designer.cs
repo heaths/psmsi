@@ -232,6 +232,15 @@ namespace Microsoft.Tools.WindowsInstaller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The package &quot;{0}&quot; is not valid for this operation..
+        /// </summary>
+        internal static string Error_InvalidPackage {
+            get {
+                return ResourceManager.GetString("Error_InvalidPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The ReinstallMode contains an invalid character: {0}..
         /// </summary>
         internal static string Error_InvalidReinstallMode {

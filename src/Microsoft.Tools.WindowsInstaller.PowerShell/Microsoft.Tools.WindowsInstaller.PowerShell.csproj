@@ -128,6 +128,7 @@
     <Compile Include="PowerShell\Commands\InstallProductCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
     <Compile Include="PowerShell\Commands\LoggingPolicyCommandBase.cs" />
+    <Compile Include="PowerShell\Commands\MeasureProductCommand.cs" />
     <Compile Include="PowerShell\Commands\PackageCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
     <Compile Include="PowerShell\Commands\RemoveLoggingPolicyCommand.cs" />

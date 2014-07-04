@@ -881,5 +881,88 @@
         </TableRowEntries>
       </TableControl>
     </View>
+    <View>
+      <Name>MSISpaceRequired</Name>
+      <ViewSelectedBy>
+        <TypeName>System.Management.Automation.PSDriveInfo#MSISpaceRequired</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Width>4</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Installed (MB)</Label>
+            <Width>15</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Temporary (MB)</Label>
+            <Width>15</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Used (GB)</Label>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Free (GB)</Label>
+            <Width>10</Width>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>"{0:###0.00}" -f ($_.MSISpaceRequired / 1MB)</ScriptBlock>
+                <Alignment>Right</Alignment>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>"{0:###0.00}" -f ($_.MSITemporarySpaceRequired / 1MB)</ScriptBlock>
+                <Alignment>Right</Alignment>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>"{0:###0.00}" -f ($_.Used / 1GB)</ScriptBlock>
+                <Alignment>Right</Alignment>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>"{0:###0.00}" -f ($_.Free / 1GB)</ScriptBlock>
+                <Alignment>Right</Alignment>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>MSISpaceRequired</Name>
+      <ViewSelectedBy>
+        <TypeName>System.Management.Automation.PSDriveInfo#MSISpaceRequired</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <PropertyName>Name</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>MSISpaceRequired</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>MSITemporarySpaceRequired</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>Used</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>Free</PropertyName>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
   </ViewDefinitions>
 </Configuration>
