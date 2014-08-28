@@ -892,20 +892,20 @@
             <Width>4</Width>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>Installed (MB)</Label>
-            <Width>15</Width>
+            <Label>Installed</Label>
+            <Width>12</Width>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>Temporary (MB)</Label>
-            <Width>15</Width>
+            <Label>Temporary</Label>
+            <Width>12</Width>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>Used (GB)</Label>
-            <Width>10</Width>
+            <Label>Used</Label>
+            <Width>12</Width>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>Free (GB)</Label>
-            <Width>10</Width>
+            <Label>Free</Label>
+            <Width>12</Width>
           </TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
@@ -915,19 +915,55 @@
                 <PropertyName>Name</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>"{0:###0.00}" -f ($_.MSISpaceRequired / 1MB)</ScriptBlock>
+                <ScriptBlock>
+                  switch ($_.MSISpaceRequired)
+                  {
+                  { $_ -gt 1mb * 1000 } { "{0,6:0.##} GB" -f ( $_ / 1gb ); break }
+                  { $_ -gt 1kb * 1000 } { "{0,6:0.##} MB" -f ( $_ / 1mb ); break }
+                  { $_ -gt 1000 } { "{0,6:0.##} KB" -f ( $_ / 1kb ); break }
+                  default { "{0,6:0} bytes" -f $_; break }
+                  }
+                </ScriptBlock>
                 <Alignment>Right</Alignment>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>"{0:###0.00}" -f ($_.MSITemporarySpaceRequired / 1MB)</ScriptBlock>
+                <ScriptBlock>
+                  switch ($_.MSITemporarySpaceRequired)
+                  {
+                  { $_ -gt 1mb * 1000 } { "{0,6:0.##} GB" -f ( $_ / 1gb ); break }
+                  { $_ -gt 1kb * 1000 } { "{0,6:0.##} MB" -f ( $_ / 1mb ); break }
+                  { $_ -gt 1000 } { "{0,6:0.##} KB" -f ( $_ / 1kb ); break }
+                  default { "{0,6:0} bytes" -f $_; break }
+                  }
+                </ScriptBlock>
                 <Alignment>Right</Alignment>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>"{0:###0.00}" -f ($_.Used / 1GB)</ScriptBlock>
+                <ScriptBlock>
+                  switch ($_.Used)
+                  {
+                  { $_ -gt 1tb * 1000 } { "{0,6:0.##} PB" -f ( $_ / 1pb ); break }
+                  { $_ -gt 1gb * 1000 } { "{0,6:0.##} TB" -f ( $_ / 1tb ); break }
+                  { $_ -gt 1mb * 1000 } { "{0,6:0.##} GB" -f ( $_ / 1gb ); break }
+                  { $_ -gt 1kb * 1000 } { "{0,6:0.##} MB" -f ( $_ / 1mb ); break }
+                  { $_ -gt 1000 } { "{0,6:0.##} KB" -f ( $_ / 1kb ); break }
+                  default { "{0,6:0} bytes" -f $_; break }
+                  }
+                </ScriptBlock>
                 <Alignment>Right</Alignment>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>"{0:###0.00}" -f ($_.Free / 1GB)</ScriptBlock>
+                <ScriptBlock>
+                  switch ($_.Free)
+                  {
+                  { $_ -gt 1tb * 1000 } { "{0,6:0.##} PB" -f ( $_ / 1pb ); break }
+                  { $_ -gt 1gb * 1000 } { "{0,6:0.##} TB" -f ( $_ / 1tb ); break }
+                  { $_ -gt 1mb * 1000 } { "{0,6:0.##} GB" -f ( $_ / 1gb ); break }
+                  { $_ -gt 1kb * 1000 } { "{0,6:0.##} MB" -f ( $_ / 1mb ); break }
+                  { $_ -gt 1000 } { "{0,6:0.##} KB" -f ( $_ / 1kb ); break }
+                  default { "{0,6:0} bytes" -f $_; break }
+                  }
+                </ScriptBlock>
                 <Alignment>Right</Alignment>
               </TableColumnItem>
             </TableColumnItems>
