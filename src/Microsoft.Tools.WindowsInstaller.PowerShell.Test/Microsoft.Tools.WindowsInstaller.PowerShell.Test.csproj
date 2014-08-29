@@ -89,6 +89,7 @@
     <Compile Include="PowerShell\AttributeColumnPropertyAdapterTests.cs" />
     <Compile Include="PowerShell\AttributeColumnTypeConverterTests.cs" />
     <Compile Include="PowerShell\Commands\GetPropertyCommandTests.cs" />
+    <Compile Include="PowerShell\Commands\MeasureProductCommandTests.cs" />
     <Compile Include="PowerShell\Commands\SourceCommandTests.cs" />
     <Compile Include="PowerShell\Commands\EditPackageCommandTests.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommandTests.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReinstallModesConverterTests.cs" />
     <Compile Include="SetTests.cs" />
+    <Compile Include="SubstituteDrive.cs" />
     <Compile Include="SummaryInfoTests.cs" />
     <Compile Include="SystemRestorePointTests.cs" />
     <Compile Include="SystemRestoreTestService.cs" />
