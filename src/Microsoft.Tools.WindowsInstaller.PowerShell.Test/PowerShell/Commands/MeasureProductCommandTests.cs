@@ -28,10 +28,12 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
                     Assert.IsTrue(2 <= output.Count());
 
-                    var systemDrive = Environment.SystemDirectory.Substring(0, 1);
+                    var systemDrive = Environment.SystemDirectory.Substring(0, 2);
                     foreach (var drive in output)
                     {
-                        if (systemDrive.Equals(drive.GetPropertyValue<string>("Name"), StringComparison.OrdinalIgnoreCase))
+                        var name = drive.GetPropertyValue<string>("Name") + ":";
+
+                        if (name.Equals(systemDrive, StringComparison.OrdinalIgnoreCase))
                         {
                             Assert.IsTrue(0 < drive.GetPropertyValue<int>("MSISpaceRequired"));
                             Assert.IsTrue(0 < drive.GetPropertyValue<int>("MSITemporarySpaceRequired"));
@@ -57,18 +59,25 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var output = p.Invoke();
                     Assert.IsTrue(2 <= output.Count());
 
-                    var systemDrive = Environment.SystemDirectory.Substring(0, 1);
+                    var systemDrive = Environment.SystemDirectory.Substring(0, 2);
                     foreach (var drive in output)
                     {
-                        if (systemDrive.Equals(drive.GetPropertyValue<string>("Name"), StringComparison.OrdinalIgnoreCase))
+                        var name = drive.GetPropertyValue<string>("Name") + ":";
+
+                        if (name.Equals(systemDrive, StringComparison.OrdinalIgnoreCase))
                         {
                             Assert.IsTrue(0 <= drive.GetPropertyValue<int>("MSISpaceRequired"));
                             Assert.IsTrue(0 < drive.GetPropertyValue<int>("MSITemporarySpaceRequired"));
                         }
-                        else
+                        else if (name.Equals(d.DriveLetter, StringComparison.OrdinalIgnoreCase))
                         {
                             Assert.IsTrue(0 < drive.GetPropertyValue<int>("MSISpaceRequired"));
                             Assert.IsTrue(0 <= drive.GetPropertyValue<int>("MSITemporarySpaceRequired"));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(0 == drive.GetPropertyValue<int>("MSISpaceRequired"));
+                            Assert.IsTrue(0 == drive.GetPropertyValue<int>("MSITemporarySpaceRequired"));
                         }
                     }
                 }

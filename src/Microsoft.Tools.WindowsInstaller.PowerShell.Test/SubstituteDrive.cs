@@ -55,6 +55,7 @@ namespace Microsoft.Tools.WindowsInstaller
             Contract.Requires('C' <= driveLetter && 'Z' >= driveLetter);
             Contract.Requires(!string.IsNullOrEmpty(targetPath));
 
+            driveLetter = Char.ToUpperInvariant(driveLetter);
             if (SubstituteDrive.IsDefined(driveLetter))
             {
                 throw new ArgumentException("The drive letter is already defined.", "driveLetter");
