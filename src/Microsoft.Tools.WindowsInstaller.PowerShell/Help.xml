@@ -705,6 +705,57 @@
   </command>
   <command>
     <verb>Install</verb>
+    <noun>MSIAdvertisedFeature</noun>
+    <synopsis>
+      Installs advertised features.
+    </synopsis>
+    <description>
+      <p>
+        Some or all features can be advertised for a product. This may be by design or incidental if certain patching problems occur.
+        You can use this cmdlet to to install some or all advertise features for some or all products.
+      </p>
+      <p>
+        You can also scan for all advertised features using the -WhatIf parameter to see what would be done to your system
+        without performing those operations. Use -Confirm if you want to approve the operation to each product.
+      </p>
+    </description>
+    <parameter name="Confirm">
+      Confirm installing advertised features for each product.
+    </parameter>
+    <parameter name="FeatureName">
+      One or more specific features to install. Feature names are case-sensitive.
+    </parameter>
+    <parameter name="Force">
+      Perform each operation without confirmation.
+    </parameter>
+    <parameter name="Product">
+      One or more products passed through the pipeline to limit which products are scanned for advertised features.
+    </parameter>
+    <parameter name="ProductCode">
+      One or more ProductCodes to limit which products are scanned for advertised features.
+    </parameter>
+    <parameter name="Properties">
+      Additional properties to pass to the installation operation.
+    </parameter>
+    <parameter name="WhatIf">
+      Show what operations would be performed without actually performing them.
+    </parameter>
+    <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
+      An existing product for which advertised features should be installed.
+    </input>
+    <example>
+      <code>install-msiadvertisedfeature -whatif</code>
+      <description>Scans all features in all products for advertised features and reports what operation would be performed.</description>
+    </example>
+    <example>
+      <code>get-msiproductinfo '{12341234-1234-1234-1234-123412341234}' | install-msiadvertisedfeature Complete</code>
+      <description>Installs the 'Complete' feature for the specified product.</description>
+    </example>
+    <link>Get-MSIProductInfo</link>
+    <link>Install-MSIProduct</link>
+  </command>
+  <command>
+    <verb>Install</verb>
     <noun>MSIPatch</noun>
     <synopsis>
       Installs a patch package or packages for all or only specified products.

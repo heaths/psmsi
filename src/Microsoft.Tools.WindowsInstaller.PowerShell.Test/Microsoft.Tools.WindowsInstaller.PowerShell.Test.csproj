@@ -169,6 +169,7 @@
     <Content Include="Data\product.wxs" />
     <Content Include="Data\qps-ploc\MSI.psd1" />
     <Content Include="Data\qps-ploc\Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml" />
+    <Content Include="Data\qps-ploc\Resources.psd1" />
     <Content Include="Data\return.exe" />
     <Content Include="Data\test.cub" />
   </ItemGroup>
