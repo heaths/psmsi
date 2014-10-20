@@ -146,7 +146,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
                 if (null != record)
                 {
                     // Attempt to format the message using the current UI culture.
-                    return Installer.GetErrorMessage(record, CultureInfo.InstalledUICulture);
+                    return Installer.GetErrorMessage(record, CultureInfo.CurrentUICulture);
                 }
                 else if (null != this.InnerException)
                 {
