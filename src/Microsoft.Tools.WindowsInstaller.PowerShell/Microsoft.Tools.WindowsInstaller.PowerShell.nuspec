@@ -18,6 +18,8 @@
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
-    <file src="bin\Release\*.*" target="MSI" exclude="**\*.nupkg;**\*.pdb;**\Microsoft.Tools.WindowsInstaller.PowerShell.xml" />
+    <file src="bin\$Configuration$\*.*" target="MSI" exclude="**\*.nupkg;**\*.pdb;**\Microsoft.Tools.WindowsInstaller.PowerShell.xml" />
+    <file src="$SolutionDir$\LICENSE.txt" />
+    <file src="$SolutionDir$\lib\wix\LICENSE.txt" target="Licenses\WIX.txt" />
   </files>
 </package>

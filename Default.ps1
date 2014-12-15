@@ -171,7 +171,7 @@ Task Package -Alias Pack -Depends Compile {
     $Projects | ForEach-Object {
         $Project = Join-Path $SourceDir "$_\$_.csproj" -Resolve
         $OutputDir = Join-Path $SourceDir "$_\bin\$Configuration"
-        exec { & "$NuGet" pack "$Project" -OutputDirectory $OutputDir -Version $Version -Properties "Configuration=$Configuration" -Symbols }
+        exec { & "$NuGet" pack "$Project" -OutputDirectory $OutputDir -Version $Version -Properties "Configuration=$Configuration;SolutionDir=$SolutionDir" -Symbols -NoPackageAnalysis }
     }
 }
 
