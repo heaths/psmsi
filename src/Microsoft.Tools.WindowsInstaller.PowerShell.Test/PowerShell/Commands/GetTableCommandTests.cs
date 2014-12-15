@@ -6,8 +6,11 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -117,15 +120,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline("get-msitable example.msi -table NonexistentTable"))
             {
                 var output = p.Invoke();
-                Assert.IsTrue(null == output || 0 == output.Count, "Output is incorrect.");
-                Assert.AreEqual<int>(1, p.Error.Count, "The error count is incorrect.");
+                Assert.AreEqual<int>(0, output.Count());
+                Assert.AreEqual<int>(1, p.Error.Count);
 
-                var obj = p.Error.Read() as PSObject;
-                Assert.IsNotNull(obj, "The error stream is not correct.");
+                var obj = p.Error.Peek() as PSObject;
+                Assert.IsNotNull(obj);
 
                 var error = obj.BaseObject as ErrorRecord;
-                Assert.IsNotNull(error, "The error record is incorrect.");
-                Assert.IsTrue(error.Exception.Message.Contains("The table \"NonexistentTable\" was not found"), "The error message is incorrect.");
+                Assert.IsNotNull(error);
+                StringAssert.StartsWith(error.Exception.Message, @"The table ""NonexistentTable"" was not found");
             }
         }
 
@@ -154,22 +157,23 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline(@"get-msitable example.msi -table Registry -patch example.msp"))
             {
                 var output = p.Invoke();
-                Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+                Assert.IsTrue(null != output && 1 == output.Count);
 
                 var item = output[0];
-                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#Registry", item.TypeNames[0], "The first type name is incorrect.");
+                Assert.AreEqual<string>("Microsoft.Tools.WindowsInstaller.Record#Registry", item.TypeNames[0]);
 
                 // Work around a possible bug in PowerShell where adapted property values are cached.
                 var record = item.BaseObject as Record;
                 var value = (string)record.Data[record.Columns["Value"].Index];
-                Assert.AreEqual<string>("1.0.1", value, "The Value property is incorrect.");
+                Assert.AreEqual<string>("1.0.1", value);
+                Assert.AreEqual<RowOperation>(RowOperation.Modify, item.GetPropertyValue<RowOperation>("MSIOperation"));
             }
 
             // Make sure the record data does not cache the patched value.
             using (var p = CreatePipeline(@"get-msitable example.msi -table Registry"))
             {
                 var output = p.Invoke();
-                Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
+                Assert.IsTrue(null != output && 1 == output.Count);
 
                 var item = output[0];
 
@@ -177,7 +181,47 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 // This does not reproduce when running in powershell.exe.
                 var record = item.BaseObject as Record;
                 var value = (string)record.Data[record.Columns["Value"].Index];
-                Assert.AreEqual<string>("1.0.0", value, "The Value property is incorrect.");
+                Assert.AreEqual<string>("1.0.0", value);
+                Assert.AreEqual<RowOperation>(RowOperation.None, item.GetPropertyValue<RowOperation>("MSIOperation"));
+            }
+        }
+
+        [TestMethod]
+        public void GetAllPatchedRecords()
+        {
+            Collection<PSObject> tables = null;
+            using (var p = CreatePipeline(@"get-msitable -path example.msi -patch example.msp"))
+            {
+                tables = p.Invoke();
+                Assert.IsNotNull(tables);
+
+                // Only persistent tables are piped which excludes _TransformView.
+                Assert.AreEqual<int>(16, tables.Count);
+            }
+
+            using (var p = CreatePipeline(@"$input | get-msitable | where-object { $_.MSIOperation -ne 'None' }"))
+            {
+                var output = p.Invoke(tables);
+                Assert.IsNotNull(output);
+                Assert.AreEqual<int>(9, output.Count);
+
+                var e = from obj in output
+                        from prop in obj.Properties
+                        where prop.Name == "DiskId" && 100 == (int)prop.Value
+                        select obj;
+
+                Assert.IsNotNull(e);
+                Assert.AreEqual<int>(1, e.Count());
+            }
+        }
+
+        [TestMethod]
+        public void GetTransformViewTable()
+        {
+            using (var p = CreatePipeline(@"get-msitable example.msi -transform example.mst -table _TransformView"))
+            {
+                var output = p.Invoke();
+                Assert.IsTrue(null != output && 0 < output.Count);
             }
         }
 
@@ -219,6 +263,23 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var record = item.BaseObject as Record;
                     var value = (string)record.Data[record.Columns["Value"].Index];
                     Assert.AreEqual<string>("1.0.0", value, "The Value property is incorrect.");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void QueryAllColumns()
+        {
+            using (var p = CreatePipeline(@"get-msitable example.msi -query 'select * from Property'"))
+            {
+                using (OverrideRegistry())
+                {
+                    var output = p.Invoke();
+                    Assert.IsTrue(null != output && 0 < output.Count);
+
+                    var item = output[0];
+                    Assert.IsNotNull(item.Properties.Match("Property"));
+                    Assert.IsNotNull(item.Properties.Match("Value"));
                 }
             }
         }

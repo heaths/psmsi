@@ -57,6 +57,12 @@ namespace Microsoft.Tools.WindowsInstaller
             this.Name = name;
             this.Key = key;
 
+            this.IsPrimaryKey = view.Tables
+                .Where(t => t.Name == table)
+                .Any(t => t.PrimaryKeys.Contains(name));
+
+            // BUG: PatchPackage - typically added by patches - is not identified as having a primary key (PatchId).
+
             // Determine the simple type that defines the field value.
             var type = Column.GetEnumerationType(this.Table, this.Name) ?? column.Type;
             this.Type = type;
@@ -97,6 +103,11 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Gets the index of the column within a <see cref="View"/>.
         /// </summary>
         internal int Index { get; private set; }
+
+        /// <summary>
+        /// Gets whether the column is a primary key in its containing table.
+        /// </summary>
+        internal bool IsPrimaryKey { get; private set; }
 
         /// <summary>
         /// Gets the unique key containing the specified column name from the original query.

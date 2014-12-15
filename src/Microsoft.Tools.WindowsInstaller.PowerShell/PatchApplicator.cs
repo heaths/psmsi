@@ -25,8 +25,10 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <summary>
         /// The transforms errors to ignore.
         /// </summary>
-        internal const TransformErrors IgnoreErrors = TransformErrors.AddExistingRow | TransformErrors.AddExistingTable | TransformErrors.DelMissingRow
-                    | TransformErrors.DelMissingTable | TransformErrors.UpdateMissingRow;
+        internal const TransformErrors IgnoreErrors = TransformErrors.AddExistingRow | TransformErrors.AddExistingTable | TransformErrors.ChangeCodePage |
+            TransformErrors.DelMissingRow | TransformErrors.DelMissingTable | TransformErrors.UpdateMissingRow;
+
+        private static readonly string[] TransformPrefixes = new string[] { string.Empty, "#" };
 
         private InstallPackage db;
         private PatchSequencer sequencer;
@@ -78,28 +80,27 @@ namespace Microsoft.Tools.WindowsInstaller
                 applicable = this.sequencer.GetApplicablePatches(copy.FilePath).Select(patch => patch.Patch).ToList();
             }
 
-            foreach (string path in applicable)
+            foreach (var path in applicable)
             {
                 using (var patch = new PatchPackage(path))
                 {
                     var transforms = patch.GetValidTransforms(this.db);
-                    foreach (string transform in transforms)
+                    foreach (var transform in transforms)
                     {
-                        // Skip patch transforms.
-                        if (transform.StartsWith("#", StringComparison.Ordinal))
+                        // GetValidTransforms does not return the patch transform so assume it too is valid.
+                        foreach (var prefix in PatchApplicator.TransformPrefixes)
                         {
-                            continue;
+                            var temp = Path.ChangeExtension(Path.GetTempFileName(), ".mst");
+                            patch.ExtractTransform(prefix + transform, temp);
+
+                            // Apply and commit the authored transform so further transforms may apply.
+                            this.db.ApplyTransform(temp, PatchApplicator.IgnoreErrors);
+                            this.db.ApplyTransform(temp, PatchApplicator.IgnoreErrors | TransformErrors.ViewTransform);
+                            this.db.Commit();
+
+                            // Attempt to delete the temporary transform.
+                            TryDelete(temp);
                         }
-
-                        string temp = Path.ChangeExtension(Path.GetTempFileName(), ".mst");
-                        patch.ExtractTransform(transform, temp);
-
-                        // Apply and commit the authored transform so further transforms may apply.
-                        this.db.ApplyTransform(temp, IgnoreErrors);
-                        this.db.Commit();
-
-                        // Attempt to delete the temporary transform.
-                        TryDelete(temp);
                     }
                 }
             }
@@ -108,7 +109,7 @@ namespace Microsoft.Tools.WindowsInstaller
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private static InstallPackage Copy(InstallPackage db)
         {
-            string temp = Path.ChangeExtension(Path.GetTempFileName(), ".msi");
+            var temp = Path.ChangeExtension(Path.GetTempFileName(), ".msi");
             File.Copy(db.FilePath, temp, true);
 
             // Open a copy and schedule delete it when closed.

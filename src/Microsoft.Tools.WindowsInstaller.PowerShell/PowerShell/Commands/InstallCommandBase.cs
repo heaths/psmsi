@@ -125,6 +125,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <param name="data">The <see cref="InstallCommandActionData"/> to update.</param>
         protected virtual void UpdateAction(T data)
         {
+            data.UpdateWeight();
         }
 
         /// <summary>
@@ -475,7 +476,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Get the Windows Installer-generated caption.
             if (1 < record.FieldCount && 1 == record.GetInteger(1))
             {
-                this.progress.CurrentProductName = record.GetString(2);
+                this.progress.CurrentName = record.GetString(2);
             }
 
             return MessageResult.OK;
@@ -485,8 +486,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (new UserInterfaceHandler(this.OnMessage, this.Force))
             {
-                // Keep track of how many actions were queued.
-                this.Actions.OriginalCount = this.Actions.Count;
+                // Keep track of the total weight for all queued actions.
+                this.Actions.OriginalWeight = this.Actions.Sum(data => data.Weight);
 
                 // Create a single restore point for chained packages.
                 SystemRestorePoint restorePoint = null;
@@ -509,6 +510,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     try
                     {
                         T data = this.Actions.Dequeue();
+                        this.progress.CurrentWeight = data.Weight;
 
                         string extra = null != data ? data.LogName : null;
                         Installer.EnableLog(this.log.Mode, this.log.Next(extra));
@@ -591,7 +593,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         private void WriteProgress(bool complete = false)
         {
             // Show operation and product name (if available yet).
-            var activity = string.Format(CultureInfo.CurrentCulture, this.Activity, this.progress.CurrentProductName).TrimEnd();
+            var activity = string.Format(CultureInfo.CurrentCulture, this.Activity, this.progress.CurrentName).TrimEnd();
 
             // Make sure there's always a status description.
             if (string.IsNullOrEmpty(this.progress.CurrentAction))
@@ -614,17 +616,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     record.CurrentOperation = this.progress.CurrentActionDetail;
                 }
 
-                // Calculate progress for all completed actions. Current action was already dequeued.
-                int completed = this.Actions.OriginalCount - (this.Actions.Count + 1);
-                int percent = 100 / this.Actions.OriginalCount * completed;
+                // Calculate progress for all completed actions. Current action was already dequeued so subtract its weight.
+                var completed = Math.Max(0, this.Actions.OriginalWeight - this.Actions.RemainingWeight - this.progress.CurrentWeight);
 
                 // Calculate the remaining progress for the current action.
                 if (this.progress.IsValid)
                 {
-                    percent += this.progress.PercentComplete / this.Actions.OriginalCount;
+                    var factor = this.progress.CurrentPercentage / 100f;
+                    completed += (int)(factor * this.progress.CurrentWeight);
                 }
 
-                record.PercentComplete = Math.Min(100, percent);
+                var percentage = 100 * completed / this.Actions.OriginalWeight;
+                record.PercentComplete = Math.Min(100, (int)percentage);
             }
 
             this.WriteProgress(record);
@@ -635,10 +638,30 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         protected internal sealed class ActionQueue : Queue<T>
         {
+            private int previousCount = -1;
+            private long previousWeight = 0;
+
             /// <summary>
-            /// Gets the original queue count before processing.
+            /// Gets the total original weight of all actions before processing.
             /// </summary>
-            public int OriginalCount { get; internal set; }
+            public long OriginalWeight { get; internal set; }
+
+            /// <summary>
+            /// Gets the total weight of all remaining actions in the queue.
+            /// </summary>
+            public long RemainingWeight
+            {
+                get
+                {
+                    if (this.Count != this.previousCount)
+                    {
+                        this.previousCount = this.Count;
+                        this.previousWeight = this.Sum(data => data.Weight);
+                    }
+
+                    return this.previousWeight;
+                }
+            }
         }
 
         private sealed class ProgressData
@@ -676,14 +699,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 get { return this.Count - 1; }
             }
 
-            internal string CurrentProductName { get; set; }
+            internal string CurrentName { get; set; }
 
-            internal bool IsValid
-            {
-                get { return 0 < this.Count; }
-            }
-
-            internal int PercentComplete
+            internal int CurrentPercentage
             {
                 get
                 {
@@ -707,6 +725,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
             }
 
+            internal long CurrentWeight { get; set; }
+
+            internal bool IsValid
+            {
+                get { return 0 < this.Count; }
+            }
+
             internal void Reset()
             {
                 this.Clear();
@@ -714,7 +739,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 this.CurrentActionDetail = null;
 
                 // Default to empty name so "(null)" doesn't show for activity.
-                this.CurrentProductName = string.Empty;
+                this.CurrentName = string.Empty;
             }
         }
 

@@ -184,9 +184,24 @@
     <value>The product "{0}" is advertised and the package cannot be opened.</value>
   </data>
   <data name="Error_Corrupt" xml:space="preserve">
-    <value>Registration for the product "{0}" is corrupt.</value>
+    <value>Registration for the product or patch "{0}" is corrupt.</value>
   </data>
   <data name="Error_NoRestorePoint" xml:space="preserve">
     <value>Could not create a system restore point: {0}</value>
+  </data>
+  <data name="Error_AmbiguousColumn" xml:space="preserve">
+    <value>The column "{0}" is defined by multiple tables and must be prefixed by its table names.</value>
+  </data>
+  <data name="Error_InvalidLoggingMode" xml:space="preserve">
+    <value>The LoggingMode contains an invalid character: {0}.</value>
+  </data>
+  <data name="Error_UnsupportedLoggingMode" xml:space="preserve">
+    <value>The logging option "+" is not supported in the logging policy.</value>
+  </data>
+  <data name="Error_InvalidDirectory" xml:space="preserve">
+    <value>The path "{0}" is not a directory or does not exist.</value>
+  </data>
+  <data name="Error_InvalidPackage" xml:space="preserve">
+    <value>The package "{0}" is not valid for this operation.</value>
   </data>
 </root>

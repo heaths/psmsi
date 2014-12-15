@@ -6,7 +6,6 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
@@ -16,14 +15,16 @@ using System.Security.Principal;
 namespace Microsoft.Tools.WindowsInstaller
 {
     /// <summary>
-    /// A delegate that takes no parameters and returns no value.
-    /// </summary>
-    internal delegate void Action();
-
-    /// <summary>
     /// Base class for all tests within the assembly.
     /// </summary>
     [TestClass]
+    [DeploymentItem(@"about_MSI.help.txt")]
+    [DeploymentItem(@"MSI.psd1")]
+    [DeploymentItem(@"MSI.psm1")]
+    [DeploymentItem(@"MSI.types.ps1xml")]
+    [DeploymentItem(@"MSI.formats.ps1xml")]
+    [DeploymentItem(@"Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml")]
+    [DeploymentItem(@"Data\")]
     public abstract class TestBase
     {
         #region Runspace Configuration
@@ -166,33 +167,6 @@ namespace Microsoft.Tools.WindowsInstaller
             reg.Import(path, properties);
 
             return reg;
-        }
-
-        /// <summary>
-        /// Asserts that the expected exception type was caught.
-        /// </summary>
-        /// <typeparam name="T">The type of the parameter for the <paramref name="action"/>.</typeparam>
-        /// <param name="exceptionType">The type of the exception to expect.</param>
-        /// <param name="innerType">Optionally, the type of the inner exception to expect.</param>
-        /// <param name="action">The action that should throw the exception.</param>
-        internal static void ExpectException(Type exceptionType, Type innerType, Action action)
-        {
-            try
-            {
-                action.Invoke();
-
-                // Should not have made it this far so throw.
-                Assert.Fail(string.Format("No exception thrown; expected exception type {0}.", exceptionType.FullName));
-            }
-            catch (Exception ex)
-            {
-                // Check the exception type and, if given, the inner exception type.
-                Assert.IsInstanceOfType(ex, exceptionType);
-                if (innerType != null)
-                {
-                    Assert.IsInstanceOfType(ex.InnerException, innerType);
-                }
-            }
         }
 
         /// <summary>

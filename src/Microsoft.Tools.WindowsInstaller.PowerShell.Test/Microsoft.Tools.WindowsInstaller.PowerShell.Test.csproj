@@ -13,8 +13,10 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SolutionDir Condition="'$(SolutionDir)'==''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Psmsi.sln))</SolutionDir>
+    <SolutionDir Condition="!HasTrailingSlash('$(SolutionDir)')">$(SolutionDir)\</SolutionDir>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\KeyFile.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)src\KeyFile.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -77,14 +79,19 @@
     <Compile Include="AttributeColumnTests.cs" />
     <Compile Include="CacheTests.cs" />
     <Compile Include="EncodingConverterTests.cs" />
+    <Compile Include="ExceptionAssert.cs" />
     <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="IceMessageTests.cs" />
     <Compile Include="LocTest.cs" />
+    <Compile Include="LoggingPoliciesConverterTests.cs" />
     <Compile Include="LogTests.cs" />
     <Compile Include="MockRegistry.cs" />
     <Compile Include="PatchSequencerTests.cs" />
     <Compile Include="PowerShell\AttributeColumnPropertyAdapterTests.cs" />
     <Compile Include="PowerShell\AttributeColumnTypeConverterTests.cs" />
+    <Compile Include="PowerShell\Commands\GetPropertyCommandTests.cs" />
+    <Compile Include="PowerShell\Commands\MeasureProductCommandTests.cs" />
+    <Compile Include="PowerShell\Commands\SourceCommandTests.cs" />
     <Compile Include="PowerShell\Commands\EditPackageCommandTests.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommandTests.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommandTest.cs" />
@@ -95,16 +102,21 @@
     <Compile Include="PowerShell\Commands\GetProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetSharedComponentFunctionTest.cs" />
+    <Compile Include="PowerShell\Commands\GetSourceCommandTests.cs" />
     <Compile Include="PowerShell\Commands\GetSummaryInfoCommandTests.cs" />
     <Compile Include="PowerShell\Commands\InstallCommandBaseTests.cs" />
     <Compile Include="PowerShell\Commands\InstallCommandActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\InstallProductActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\InstallScenarioTests.cs" />
+    <Compile Include="PowerShell\Commands\RemoveLoggingPolicyCommandTests.cs" />
     <Compile Include="PowerShell\Commands\RepairProductActionDataTests.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommandTests.cs" />
+    <Compile Include="PowerShell\Commands\SetLoggingPolicyCommandTests.cs" />
     <Compile Include="PowerShell\Commands\TestProductCommandTests.cs" />
+    <Compile Include="PowerShell\Commands\GetLoggingPolicyCommandTests.cs" />
     <Compile Include="PowerShell\ExtensionMethodsTests.cs" />
     <Compile Include="PowerShell\FileInfoTests.cs" />
+    <Compile Include="PowerShell\LoggingPoliciesAttributeTests.cs" />
     <Compile Include="PowerShell\ModuleTest.cs" />
     <Compile Include="PowerShell\PSInstallerExceptionTests.cs" />
     <Compile Include="PowerShell\ReinstallModeAttributeTests.cs" />
@@ -118,10 +130,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReinstallModesConverterTests.cs" />
     <Compile Include="SetTests.cs" />
+    <Compile Include="SubstituteDrive.cs" />
     <Compile Include="SummaryInfoTests.cs" />
     <Compile Include="SystemRestorePointTests.cs" />
+    <Compile Include="SystemRestoreTestService.cs" />
     <Compile Include="TestBase.cs" />
+    <Compile Include="TestLoggingPolicyService.cs" />
     <Compile Include="TreeTests.cs" />
+    <Compile Include="PackageInfoTests.cs" />
+    <Compile Include="TransformViewTests.cs" />
+    <Compile Include="CharComparerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj">
@@ -129,33 +147,32 @@
       <Name>Microsoft.Tools.WindowsInstaller.PowerShell</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemDefinitionGroup>
+    <Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemDefinitionGroup>
   <ItemGroup>
+    <Content Include="Data\Applicable.xml" />
     <Content Include="Data\Corrupt.xml" />
-    <Content Include="Data\NoEditVerb.xml" />
-    <Content Include="Data\NoOrca.xml" />
-    <Content Include="Data\Inapplicable.xml" />
-    <Content Include="Data\Example.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Data\Example.jpn.mst" />
     <Content Include="Data\Example.msi" />
     <Content Include="Data\Example.msp" />
     <Content Include="Data\Example.mst" />
-    <Content Include="Data\Applicable.xml" />
-    <Content Include="Data\product.wxs" />
-    <Content Include="Data\qps-ploc\Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\Example.txt" />
+    <Content Include="Data\Inapplicable.xml" />
+    <Content Include="Data\NoEditVerb.xml" />
+    <Content Include="Data\NoOrca.xml" />
+    <Content Include="Data\NoWeight.msi" />
     <Content Include="Data\Registry.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Data\qps-ploc\MSI.psd1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\Test.psm1" />
     <Content Include="Data\darice.cub" />
+    <Content Include="Data\product.wxs" />
+    <Content Include="Data\qps-ploc\MSI.psd1" />
+    <Content Include="Data\qps-ploc\Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml" />
+    <Content Include="Data\qps-ploc\Resources.psd1" />
     <Content Include="Data\return.exe" />
     <Content Include="Data\test.cub" />
-    <Content Include="Data\Test.psm1" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

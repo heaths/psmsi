@@ -15,6 +15,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     /// </summary>
     public class InstallCommandActionData
     {
+        private long weight = 0;
+
         /// <summary>
         /// Gets or sets the package path for which the action is performed.
         /// </summary>
@@ -53,6 +55,25 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
+        /// Gets or sets the weight of the package for progress reporting.
+        /// </summary>
+        /// <value>The calculated weight of the package, or the <see cref="PackageInfo.DefaultWeight"/> if not specified.</value>
+        public long Weight
+        {
+            get
+            {
+                if (0 >= this.weight)
+                {
+                    return PackageInfo.DefaultWeight;
+                }
+
+                return this.weight;
+            }
+
+            set { this.weight = value; }
+        }
+
+        /// <summary>
         /// Creates an instance of an <see cref="InstallCommandActionData"/> class from the given file path.
         /// </summary>
         /// <typeparam name="T">The specific type of <see cref="InstallCommandActionData"/> to create.</typeparam>
@@ -87,6 +108,21 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             if (null != args && 0 < args.Length)
             {
                 this.CommandLine = string.Join(" ", args);
+            }
+        }
+
+        /// <summary>
+        /// Updates the <see cref="Weight"/> for progress reporting.
+        /// </summary>
+        public virtual void UpdateWeight()
+        {
+            if (!string.IsNullOrEmpty(this.Path))
+            {
+                this.Weight = PackageInfo.GetWeightFromPath(this.Path);
+            }
+            else if (!string.IsNullOrEmpty(this.ProductCode))
+            {
+                this.Weight = PackageInfo.GetWeightFromProductCode(this.ProductCode);
             }
         }
     }

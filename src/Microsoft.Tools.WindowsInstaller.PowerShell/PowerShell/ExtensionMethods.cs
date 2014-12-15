@@ -24,6 +24,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         private static readonly string ProviderSeparator = "::";
         private static readonly string RegistryProvider = @"Microsoft.PowerShell.Core\Registry::";
 
+        internal static T As<T>(this PSObject obj) where T : class
+        {
+            if (null != obj)
+            {
+                return obj.BaseObject as T;
+            }
+
+            return null;
+        }
         /// <summary>
         /// Matches a string using any of the wildcard <paramref name="patterns"/>.
         /// </summary>

@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsInstaller
 
         static ReinstallModesConverter()
         {
-            CharToModeMap = new Dictionary<char, ReinstallModes>();
+            CharToModeMap = new Dictionary<char, ReinstallModes>(CharComparer.InvariantCultureIgnoreCase);
             CharToModeMap.Add('p', ReinstallModes.FileMissing);
             CharToModeMap.Add('o', ReinstallModes.FileOlderVersion);
             CharToModeMap.Add('e', ReinstallModes.FileEqualVersion);

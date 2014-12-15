@@ -142,7 +142,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             // Test that None is not supported.
             var cmdlet = new GetProductCommand();
-            ExpectException(typeof(ArgumentException), null, () =>
+            ExceptionAssert.Throws<ArgumentException>(() =>
             {
                 cmdlet.UserContext = UserContexts.None;
             });

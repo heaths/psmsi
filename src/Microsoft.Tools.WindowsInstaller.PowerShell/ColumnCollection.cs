@@ -6,7 +6,9 @@
 // PARTICULAR PURPOSE.
 
 using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Microsoft.Tools.WindowsInstaller
@@ -23,6 +25,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Creates a new instance of the <see cref="Column"/> class from the specified <see cref="View"/>.
         /// </summary>
         /// <param name="view">The <see cref="View"/> from which column information is retrieved.</param>
+        /// <exception cref="InvalidOperationException">A column name was defined by multiple tables.</exception>
         internal ColumnCollection(View view)
         {
             // Internal constructor will assume valid parameter.
@@ -44,8 +47,17 @@ namespace Microsoft.Tools.WindowsInstaller
             for (int i = 0; i < columns.Length; ++i)
             {
                 var column = ColumnCollection.GetColumn(view, i, columns[i]);
+
+                if (this.Contains(column.Name))
+                {
+                    var message = string.Format(Resources.Error_AmbiguousColumn, column.Name);
+                    throw new InvalidOperationException(message);
+                }
+
                 this.Add(column);
             }
+
+            this.PrimaryKeys = this.Where(column => column.IsPrimaryKey).Select(column => column.Name);
         }
 
         /// <summary>
@@ -59,6 +71,11 @@ namespace Microsoft.Tools.WindowsInstaller
         internal string QueryString { get; private set; }
 
         /// <summary>
+        /// Gets the primary key columns.
+        /// </summary>
+        internal IEnumerable<string> PrimaryKeys { get; private set; }
+
+        /// <summary>
         /// Gets the <see cref="Column.Name"/> of the <see cref="Column"/>.
         /// </summary>
         /// <param name="item">The <see cref="Column"/> to index.</param>
@@ -68,6 +85,19 @@ namespace Microsoft.Tools.WindowsInstaller
             return item.Key;
         }
 
+        private static IEnumerable<string> GetAllColumns(View view)
+        {
+            foreach (var table in view.Tables)
+            {
+                foreach (var column in table.Columns)
+                {
+                    // Windows Installer does not support wildcard column names
+                    // with multiple tables so only need to return the column name.
+                    yield return column.Name;
+                }
+            }
+        }
+
         private static string[] GetColumns(View view)
         {
             var query = view.QueryString;
@@ -75,9 +105,20 @@ namespace Microsoft.Tools.WindowsInstaller
             // Parse the column names for table references.
             var start = query.IndexOf("SELECT", StringComparison.OrdinalIgnoreCase) + 7;
             var end = query.IndexOf("FROM", StringComparison.OrdinalIgnoreCase) - 1;
-            return query.Substring(start, end - start)
-                        .Replace("`", "")
-                        .Split(ColumnCollection.ColumnSeparators, StringSplitOptions.RemoveEmptyEntries);
+            var columns = query.Substring(start, end - start);
+
+            if ("*" == columns.Trim())
+            {
+                // Return all columns from all tables.
+                return ColumnCollection.GetAllColumns(view).ToArray();
+            }
+            else
+            {
+                // Return only specified columns.
+                return columns
+                    .Replace("`", "")
+                    .Split(ColumnCollection.ColumnSeparators, StringSplitOptions.RemoveEmptyEntries);
+            }
         }
 
         private static Column GetColumn(View view, int index, string name)

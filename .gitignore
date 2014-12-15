@@ -1,5 +1,6 @@
 *.cache
 *.ncb
+*.nupkg
 *.pdb
 *.suo
 *.user
@@ -8,3 +9,4 @@
 [Oo]bj/
 [Tt]humbs.db
 [Tt]est[Rr]esults/
+[Pp]ackages/

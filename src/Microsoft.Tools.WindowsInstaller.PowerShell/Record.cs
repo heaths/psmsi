@@ -6,6 +6,7 @@
 // PARTICULAR PURPOSE.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Microsoft.Tools.WindowsInstaller
@@ -17,21 +18,31 @@ namespace Microsoft.Tools.WindowsInstaller
     public sealed class Record
     {
         /// <summary>
+        /// Gets the separator string for primary key columns.
+        /// </summary>
+        internal static readonly string KeySeparator = "/";
+
+        /// <summary>
         /// Creates a new instance of the <see cref="Record"/> class copying values
         /// from the <see cref="Deployment.WindowsInstaller.Record"/> object.
         /// </summary>
         /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> from which to copy values.</param>
         /// <param name="columns">The <see cref="ColumnCollection"/> for a <see cref="Deployment.WindowsInstaller.View"/>.</param>
-        internal Record(Deployment.WindowsInstaller.Record record, ColumnCollection columns)
+        /// <param name="transform">The <see cref="TransformView"/> containing information about operations performed on this record.</param>
+        /// <param name="path">The path to the package that contains the record.</param>
+        internal Record(Deployment.WindowsInstaller.Record record, ColumnCollection columns, TransformView transform = null, string path = null)
         {
             // Internal constructor will assume valid parameters.
 
             // Shared reference to the column collection.
             this.Columns = columns;
 
+            this.Path = path;
+
             // Cache the data from the record.
-            this.Data = new List<object>(record.FieldCount);
-            for (int i = 0; i < record.FieldCount; ++i)
+            var primaryKeys = new List<string>();
+            this.Data = new List<object>(columns.Count);
+            for (int i = 0; i < columns.Count; ++i)
             {
                 // Windows Installer uses 1-based indices.
                 var offset = i + 1;
@@ -41,16 +52,45 @@ namespace Microsoft.Tools.WindowsInstaller
                 {
                     var value = record.GetNullableInteger(offset);
                     this.Data.Add(new AttributeColumn(type, value));
+
+                    if (columns[i].IsPrimaryKey)
+                    {
+                        primaryKeys.Add(null != value ? value.Value.ToString(CultureInfo.InvariantCulture) : string.Empty);
+                    }
                 }
                 else if (typeof(Stream) == type)
                 {
                     var buffer = CopyStream(record, offset);
                     this.Data.Add(buffer);
+
+                    // Binary column types cannot be primary keys.
                 }
                 else
                 {
-                    this.Data.Add(record[offset]);
+                    var data = record[offset];
+                    this.Data.Add(data);
+
+                    if (columns[i].IsPrimaryKey)
+                    {
+                        primaryKeys.Add(null != data ? data.ToString() : string.Empty);
+                    }
                 }
+            }
+
+            if (0 < primaryKeys.Count)
+            {
+                this.PrimaryKey = primaryKeys.Join(Record.KeySeparator);
+            }
+
+            // Can only reliably get row operations performed on rows in a single table.
+            if (null != transform && 1 == columns.TableNames.Count())
+            {
+                var tableName = columns.TableNames[0];
+                this.Operation = transform.GetRowOperation(tableName, this.PrimaryKey);
+            }
+            else
+            {
+                this.Operation = RowOperation.None;
             }
         }
 
@@ -63,6 +103,22 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Gets the locally cached record data.
         /// </summary>
         internal List<object> Data { get; private set; }
+
+        /// <summary>
+        /// Gets the operation performed in the record by a patch or transform.
+        /// </summary>
+        internal RowOperation Operation { get; private set; }
+
+        /// <summary>
+        /// Gets the path to the package that contains this <see cref="Record"/>.
+        /// </summary>
+        internal string Path { get; private set; }
+
+        /// <summary>
+        /// Gets the primary key for the row.
+        /// </summary>
+        /// <value>The primary key with multiple fields separated by forward slashes.</value>
+        internal string PrimaryKey { get; private set; }
 
         private static byte[] CopyStream(Deployment.WindowsInstaller.Record record, int index)
         {

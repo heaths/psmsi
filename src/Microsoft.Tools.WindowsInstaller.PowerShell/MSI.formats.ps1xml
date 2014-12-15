@@ -809,5 +809,196 @@
         </ListEntries>
       </ListControl>
     </View>
+    <!-- SourceInfo -->
+    <View>
+      <Name>Default</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Tools.WindowsInstaller.SourceInfo</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <Label>ProductCode</Label>
+        <PropertyName>ProductCode</PropertyName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>Order</Label>
+            <Width>5</Width>
+            <Alignment>Right</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Path</Label>
+            <Alignment>Left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Order</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Path</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <!-- PatchSourceInfo -->
+    <View>
+      <Name>Default</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Tools.WindowsInstaller.PatchSourceInfo</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <Label>PatchCode</Label>
+        <PropertyName>PatchCode</PropertyName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>Order</Label>
+            <Width>5</Width>
+            <Alignment>Right</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Path</Label>
+            <Alignment>Left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Order</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Path</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>MSISpaceRequired</Name>
+      <ViewSelectedBy>
+        <TypeName>System.Management.Automation.PSDriveInfo#MSISpaceRequired</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Width>4</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Installed</Label>
+            <Width>12</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Temporary</Label>
+            <Width>12</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Used</Label>
+            <Width>12</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Free</Label>
+            <Width>12</Width>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  switch ($_.MSISpaceRequired)
+                  {
+                  { $_ -gt 1mb * 1000 } { "{0,6:0.##} GB" -f ( $_ / 1gb ); break }
+                  { $_ -gt 1kb * 1000 } { "{0,6:0.##} MB" -f ( $_ / 1mb ); break }
+                  { $_ -gt 1000 } { "{0,6:0.##} KB" -f ( $_ / 1kb ); break }
+                  default { "{0,6:0} bytes" -f $_; break }
+                  }
+                </ScriptBlock>
+                <Alignment>Right</Alignment>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  switch ($_.MSITemporarySpaceRequired)
+                  {
+                  { $_ -gt 1mb * 1000 } { "{0,6:0.##} GB" -f ( $_ / 1gb ); break }
+                  { $_ -gt 1kb * 1000 } { "{0,6:0.##} MB" -f ( $_ / 1mb ); break }
+                  { $_ -gt 1000 } { "{0,6:0.##} KB" -f ( $_ / 1kb ); break }
+                  default { "{0,6:0} bytes" -f $_; break }
+                  }
+                </ScriptBlock>
+                <Alignment>Right</Alignment>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  switch ($_.Used)
+                  {
+                  { $_ -gt 1tb * 1000 } { "{0,6:0.##} PB" -f ( $_ / 1pb ); break }
+                  { $_ -gt 1gb * 1000 } { "{0,6:0.##} TB" -f ( $_ / 1tb ); break }
+                  { $_ -gt 1mb * 1000 } { "{0,6:0.##} GB" -f ( $_ / 1gb ); break }
+                  { $_ -gt 1kb * 1000 } { "{0,6:0.##} MB" -f ( $_ / 1mb ); break }
+                  { $_ -gt 1000 } { "{0,6:0.##} KB" -f ( $_ / 1kb ); break }
+                  default { "{0,6:0} bytes" -f $_; break }
+                  }
+                </ScriptBlock>
+                <Alignment>Right</Alignment>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  switch ($_.Free)
+                  {
+                  { $_ -gt 1tb * 1000 } { "{0,6:0.##} PB" -f ( $_ / 1pb ); break }
+                  { $_ -gt 1gb * 1000 } { "{0,6:0.##} TB" -f ( $_ / 1tb ); break }
+                  { $_ -gt 1mb * 1000 } { "{0,6:0.##} GB" -f ( $_ / 1gb ); break }
+                  { $_ -gt 1kb * 1000 } { "{0,6:0.##} MB" -f ( $_ / 1mb ); break }
+                  { $_ -gt 1000 } { "{0,6:0.##} KB" -f ( $_ / 1kb ); break }
+                  default { "{0,6:0} bytes" -f $_; break }
+                  }
+                </ScriptBlock>
+                <Alignment>Right</Alignment>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>MSISpaceRequired</Name>
+      <ViewSelectedBy>
+        <TypeName>System.Management.Automation.PSDriveInfo#MSISpaceRequired</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <PropertyName>Name</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>MSISpaceRequired</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>MSITemporarySpaceRequired</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>Used</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>Free</PropertyName>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
   </ViewDefinitions>
 </Configuration>

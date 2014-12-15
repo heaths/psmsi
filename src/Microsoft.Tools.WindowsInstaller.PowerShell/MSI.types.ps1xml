@@ -635,7 +635,59 @@
     </Members>
   </Type>
   <Type>
+    <Name>Microsoft.Tools.WindowsInstaller.PatchSequence</Name>
+    <Members>
+      <MemberSet>
+        <Name>PSStandardMembers</Name>
+        <Members>
+          <NoteProperty>
+            <Name>DefaultDisplayProperty</Name>
+            <Value>Patch</Value>
+          </NoteProperty>
+          <PropertySet>
+            <Name>DefaultDisplayPropertySet</Name>
+            <ReferencedProperties>
+              <Name>Sequence</Name>
+              <Name>Patch</Name>
+              <Name>Product</Name>
+            </ReferencedProperties>
+          </PropertySet>
+          <PropertySet>
+            <Name>DefaultKeyPropertySet</Name>
+            <ReferencedProperties>
+              <Name>Patch</Name>
+              <Name>Product</Name>
+            </ReferencedProperties>
+          </PropertySet>
+        </Members>
+      </MemberSet>
+    </Members>
+  </Type>
+  <Type>
     <Name>Microsoft.Tools.WindowsInstaller.Record</Name>
+    <Members>
+      <CodeProperty>
+        <Name>MSIOperation</Name>
+        <GetCodeReference>
+          <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
+          <MethodName>GetOperation</MethodName>
+        </GetCodeReference>
+      </CodeProperty>
+      <CodeProperty>
+        <Name>MSIPath</Name>
+        <GetCodeReference>
+          <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
+          <MethodName>GetPath</MethodName>
+        </GetCodeReference>
+      </CodeProperty>
+      <CodeProperty>
+        <Name>MSIQuery</Name>
+        <GetCodeReference>
+          <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
+          <MethodName>GetQuery</MethodName>
+        </GetCodeReference>
+      </CodeProperty>
+    </Members>
     <TypeAdapter>
       <TypeName>Microsoft.Tools.WindowsInstaller.PowerShell.RecordPropertyAdapter</TypeName>
     </TypeAdapter>
@@ -928,32 +980,33 @@
     </Members>
   </Type>
   <Type>
-    <Name>Microsoft.Tools.WindowsInstaller.PatchSequence</Name>
+    <Name>Microsoft.Tools.WindowsInstaller.TableInfo</Name>
     <Members>
       <MemberSet>
         <Name>PSStandardMembers</Name>
         <Members>
           <NoteProperty>
             <Name>DefaultDisplayProperty</Name>
-            <Value>Patch</Value>
+            <Value>Table</Value>
           </NoteProperty>
           <PropertySet>
             <Name>DefaultDisplayPropertySet</Name>
             <ReferencedProperties>
-              <Name>Sequence</Name>
-              <Name>Patch</Name>
-              <Name>Product</Name>
+              <Name>Table</Name>
             </ReferencedProperties>
           </PropertySet>
           <PropertySet>
             <Name>DefaultKeyPropertySet</Name>
             <ReferencedProperties>
-              <Name>Patch</Name>
-              <Name>Product</Name>
+              <Name>Name</Name>
             </ReferencedProperties>
           </PropertySet>
         </Members>
       </MemberSet>
+      <AliasProperty>
+        <Name>MSIOperation</Name>
+        <ReferencedMemberName>Operation</ReferencedMemberName>
+      </AliasProperty>
     </Members>
   </Type>
 </Types>

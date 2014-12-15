@@ -19,6 +19,53 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         private Cache<string, PropertySet> cache = new Cache<string, PropertySet>();
 
         /// <summary>
+        /// Gets the operation performed on this <see cref="Record"/> by a patch or transform for use in code methods.
+        /// </summary>
+        /// <param name="obj">The <see cref="PSObject"/> that wraps a <see cref="Record"/>.</param>
+        /// <returns>The operation performed on this <see cref="Record"/> by a patch or transform.</returns>
+        public static RowOperation GetOperation(PSObject obj)
+        {
+            var record = obj.As<Record>();
+            if (null != record)
+            {
+                return record.Operation;
+            }
+
+            return RowOperation.None;
+        }
+
+        /// <summary>
+        /// Gets the path to the package that contains this <see cref="Record"/> for use in code methods.
+        /// </summary>
+        /// <param name="obj">The <see cref="PSObject"/> that wraps a <see cref="Record"/>.</param>
+        /// <returns>The path to the package that contains this <see cref="Record"/>.</returns>
+        public static string GetPath(PSObject obj)
+        {
+            var record = obj.As<Record>();
+            if (null != record)
+            {
+                return record.Path;
+            }
+
+            return null;
+        }
+        /// <summary>
+        /// Gets the query string that returned the <see cref="Record"/> for use in code methods.
+        /// </summary>
+        /// <param name="obj">The <see cref="PSObject"/> that wraps a <see cref="Record"/>.</param>
+        /// <returns>The query string that returned the <see cref="Record"/>.</returns>
+        public static string GetQuery(PSObject obj)
+        {
+            var record = obj.As<Record>();
+            if (null != record && null != record.Columns)
+            {
+                return record.Columns.QueryString;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets a collection of properties for a <see cref="Record"/>.
         /// </summary>
         /// <param name="baseObject">The <see cref="Record"/> to adapt.</param>

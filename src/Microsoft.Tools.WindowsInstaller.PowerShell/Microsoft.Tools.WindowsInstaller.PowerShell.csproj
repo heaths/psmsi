@@ -11,7 +11,8 @@
     <RootNamespace>Microsoft.Tools.WindowsInstaller</RootNamespace>
     <AssemblyName>Microsoft.Tools.WindowsInstaller.PowerShell</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <SolutionDir Condition=" '$(SolutionDir)' == '' ">..\</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)'==''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Psmsi.sln))</SolutionDir>
+    <SolutionDir Condition="!HasTrailingSlash('$(SolutionDir)')">$(SolutionDir)\</SolutionDir>
     <AssemblyOriginatorKeyFile>$(SolutionDir)src\KeyFile.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -78,6 +79,7 @@
   <ItemGroup>
     <Compile Include="AttributeColumn.cs" />
     <Compile Include="Cache.cs" />
+    <Compile Include="CharComparer.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
     <Compile Include="ComponentSearcher.cs" />
@@ -86,22 +88,33 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="FileHash.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ILoggingPolicyService.cs" />
+    <Compile Include="ISystemRestoreService.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="LoggingPolicies.cs" />
+    <Compile Include="LoggingPoliciesConverter.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="PackageInfo.cs" />
     <Compile Include="PatchApplicator.cs" />
     <Compile Include="PatchSequence.cs" />
     <Compile Include="PatchSequencer.cs" />
+    <Compile Include="PatchSourceInfo.cs" />
     <Compile Include="PowerShell\AttributeColumnPropertyAdapter.cs" />
     <Compile Include="PowerShell\AttributeColumnTypeConverter.cs" />
+    <Compile Include="PowerShell\Commands\AddSourceCommand.cs" />
+    <Compile Include="PowerShell\Commands\ClearSourceCommand.cs" />
     <Compile Include="PowerShell\Commands\EditPackageCommand.cs" />
     <Compile Include="PowerShell\Commands\ExportPatchXmlCommand.cs" />
     <Compile Include="PowerShell\Commands\GetComponentCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFeatureCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommand.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetLoggingPolicyCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\GetPatchSequenceCommand.cs" />
     <Compile Include="PowerShell\Commands\GetProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetPropertyCommand.cs" />
+    <Compile Include="PowerShell\Commands\GetSourceCommand.cs" />
     <Compile Include="PowerShell\Commands\GetSummaryInfoCommand.cs" />
     <Compile Include="PowerShell\Commands\GetTableCommand.cs" />
     <Compile Include="PowerShell\Commands\GetRelatedProductCommand.cs" />
@@ -115,10 +128,17 @@
     <Compile Include="PowerShell\Commands\InstallProductCommand.cs" />
     <Compile Include="PowerShell\Commands\InstallProductCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ItemCommandBase.cs" />
+    <Compile Include="PowerShell\Commands\LoggingPolicyCommandBase.cs" />
+    <Compile Include="PowerShell\Commands\MeasureProductCommand.cs" />
     <Compile Include="PowerShell\Commands\PackageCommandBase.cs" />
     <Compile Include="PowerShell\Commands\ParameterSet.cs" />
+    <Compile Include="PowerShell\Commands\RemoveLoggingPolicyCommand.cs" />
+    <Compile Include="PowerShell\Commands\RemoveSourceCommand.cs" />
     <Compile Include="PowerShell\Commands\RepairProductActionData.cs" />
     <Compile Include="PowerShell\Commands\RepairProductCommand.cs" />
+    <Compile Include="PowerShell\Commands\SetLoggingPolicyCommand.cs" />
+    <Compile Include="PowerShell\Commands\SourceCommandBase.cs" />
+    <Compile Include="PowerShell\Commands\SourcePathCommandBase.cs" />
     <Compile Include="PowerShell\Commands\TestProductCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallPatchCommand.cs" />
     <Compile Include="PowerShell\Commands\UninstallProductCommand.cs" />
@@ -126,6 +146,7 @@
     <Compile Include="PowerShell\EncodingAttribute.cs" />
     <Compile Include="PowerShell\ExtensionMethods.cs" />
     <Compile Include="PowerShell\FileInfo.cs" />
+    <Compile Include="PowerShell\LoggingPoliciesAttribute.cs" />
     <Compile Include="PowerShell\PropertySet.cs" />
     <Compile Include="PowerShell\PSInstallerException.cs" />
     <Compile Include="ReadOnly.cs" />
@@ -143,10 +164,15 @@
     <Compile Include="Record.cs" />
     <Compile Include="RegistryView.cs" />
     <Compile Include="ReinstallModesConverter.cs" />
+    <Compile Include="RowOperation.cs" />
     <Compile Include="Set.cs" />
+    <Compile Include="SourceInfo.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="SummaryInfo.cs" />
     <Compile Include="SystemRestorePoint.cs" />
+    <Compile Include="TableInfo.cs" />
+    <Compile Include="TableOperation.cs" />
+    <Compile Include="TransformView.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="PowerShell\ViewManager.cs" />
@@ -177,6 +203,10 @@
       <Sign>True</Sign>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Microsoft.Tools.WindowsInstaller.PowerShell.nuspec" />
+    <None Include="Tools\ChocolateyUninstall.ps1" />
+    <None Include="Tools\ChocolateyInstall.ps1" />
+    <None Include="Tools\Install.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MSI.psd1">
