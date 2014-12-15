@@ -12,7 +12,7 @@
     <AssemblyName>Microsoft.Tools.WindowsInstaller.PowerShell</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <SolutionDir Condition=" '$(SolutionDir)' == '' ">..\</SolutionDir>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)KeyFile.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)src\KeyFile.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -63,11 +63,11 @@
   <ItemGroup>
     <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=9f4be179981a58d1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\wix37\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
+      <HintPath>..\..\lib\wix\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Deployment.WindowsInstaller.Package, Version=3.0.0.0, Culture=neutral, PublicKeyToken=9f4be179981a58d1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\wix37\Microsoft.Deployment.WindowsInstaller.Package.dll</HintPath>
+      <HintPath>..\..\lib\wix\Microsoft.Deployment.WindowsInstaller.Package.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />

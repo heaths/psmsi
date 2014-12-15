@@ -10,6 +10,8 @@
     <ProjectGuid>{d2630778-0547-48d1-a8ca-e93d0d7a8b02}</ProjectGuid>
     <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
     <SuppressIces>ICE03;ICE38;ICE64;ICE91</SuppressIces>
+    <SolutionDir Condition="'$(SolutionDir)'==''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Psmsi.sln))</SolutionDir>
+    <SolutionDir Condition="!HasTrailingSlash('$(SolutionDir)')">$(SolutionDir)\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DefineConstants>Debug</DefineConstants>
@@ -50,6 +52,12 @@
     <None Include="Banner.bmp" />
     <None Include="Dialog.bmp" />
     <None Include="License.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <LinkerBindInputPaths Include="$(SolutionDir)">
+      <BindName>SolutionDir</BindName>
+      <InProject>false</InProject>
+    </LinkerBindInputPaths>
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">

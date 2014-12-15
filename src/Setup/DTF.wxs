@@ -14,6 +14,7 @@
             <ComponentRef Id="DTF.Package" />
             <ComponentRef Id="DTF.Compression" />
             <ComponentRef Id="DTF.Compression.Cab" />
+            <ComponentRef Id="DTF.License" />
         </ComponentGroup>
     </Fragment>
     <Fragment>
@@ -34,6 +35,11 @@
     <Fragment>
         <Component Id="DTF.Compression.Cab" Directory="ModuleFolder">
             <File Id="DTF.Compression.Cab.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.Compression.Cab.dll" />
+        </Component>
+    </Fragment>
+    <Fragment>
+        <Component Id="DTF.License" Directory="LicensesFolder">
+            <File Id="DTF.License.File" Source="!(bindpath.SolutionDir)\lib\wix\LICENSE.TXT" Name="WIX.txt" />
         </Component>
     </Fragment>
 </Wix>

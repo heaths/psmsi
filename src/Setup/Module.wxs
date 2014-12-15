@@ -15,7 +15,9 @@
             <Directory Id="ProgramFilesFolder">
                 <Directory Id="APPLICATIONFOLDER" Name="!(loc.Module.ProductName)">
                     <Directory Id="APPROOT">
-                        <Directory Id="ModuleFolder" Name="MSI" />
+                        <Directory Id="ModuleFolder" Name="MSI">
+                            <Directory Id="LicensesFolder" Name="Licenses" />
+                        </Directory>
                     </Directory>
                 </Directory>
             </Directory>
@@ -36,6 +38,7 @@
             <ComponentGroupRef Id="DTF" />
             <ComponentGroupRef Id="MSI" />
             <ComponentRef Id="Module" />
+            <ComponentRef Id="Module.License" />
             <ComponentRef Id="PSModulePath.User" />
             <ComponentRef Id="PSModulePath.System" />
         </Feature>
@@ -67,6 +70,11 @@
                 <!-- Make sure the application directory is always removed on uninstall. -->
                 <RemoveFolder Id="Module.RemoveFolder" On="uninstall" />
             </Component>
+    </Fragment>
+    <Fragment>
+        <Component Id="Module.License" Directory="ModuleFolder">
+            <File Id="Module.License.File" Source="!(bindpath.SolutionDir)\LICENSE.txt" />
+        </Component>
     </Fragment>
     <Fragment>
         <Component Id="PSModulePath.User" Guid="CB19DF54-C2F6-4C9F-BEF8-11BD9B7496C4" Directory="ModuleFolder">
