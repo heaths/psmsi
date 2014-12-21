@@ -360,6 +360,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     rec.FormatString = "Action: [1]: [2]";
                     rec.SetString(1, "Time");
                     rec.SetString(2, "Testing");
+                    rec.SetString(3, null);
                     this.OnMessage(InstallMessage.ActionStart, rec);
 
                     // Progress: update progress.

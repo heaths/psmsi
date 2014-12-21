@@ -247,16 +247,34 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 var current = this.progress.Current;
 
-                // Any progress information is sent by this new action.
-                current.EnableActionData = false;
+                if (current.EnableActionData)
+                {
+                    current.EnableActionData = false;
+                }
 
-                if (!current.InScript)
+                if (current.GeneratingScript)
                 {
                     this.progress.CurrentAction = Resources.Action_GeneratingScript;
                 }
-                else if (null != record && 1 < record.FieldCount)
+                else if (null != record && 2 < record.FieldCount)
                 {
+                    var action = record.GetString(1);
+                    Debug.Assert(!string.IsNullOrEmpty(action));
+
                     this.progress.CurrentAction = record.GetString(2);
+                    this.progress.CurrentActionTemplate = record.GetString(3);
+
+                    // Use current culture resources if ActionText is missing or doesn't match the current culture.
+                    var culture = this.progress.CurrentCulture ?? CultureInfo.InvariantCulture;
+                    if (string.IsNullOrEmpty(this.progress.CurrentAction) || !culture.Equals(CultureInfo.CurrentCulture))
+                    {
+                        this.progress.CurrentAction = ActionText.GetActionText(action) ?? string.Empty;
+                    }
+
+                    if (string.IsNullOrEmpty(this.progress.CurrentActionTemplate) || !culture.Equals(CultureInfo.CurrentCulture))
+                    {
+                        this.progress.CurrentActionTemplate = ActionText.GetActionData(action);
+                    }
                 }
             }
 
@@ -270,22 +288,31 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
         protected MessageResult OnActionData(Deployment.WindowsInstaller.Record record)
         {
-            if (this.progress.IsValid && this.progress.Current.EnableActionData)
+            if (this.progress.IsValid)
             {
                 // Step the current progress completed.
                 var current = this.progress.Current;
-                if (current.Forward)
+
+                if (current.EnableActionData)
                 {
-                    current.Complete += current.Step;
-                }
-                else
-                {
-                    current.Complete -= current.Step;
+                    if (current.Forward)
+                    {
+                        current.Complete += current.Step;
+                    }
+                    else
+                    {
+                        current.Complete -= current.Step;
+                    }
                 }
 
-                // Set the current action message.
-                if (null != record)
+                // Set the current action message when executing the script.
+                if (null != record && !current.GeneratingScript)
                 {
+                    if (!string.IsNullOrEmpty(this.progress.CurrentActionTemplate))
+                    {
+                        record.FormatString = this.progress.CurrentActionTemplate;
+                    }
+
                     this.progress.CurrentActionDetail = record.ToString();
                 }
 
@@ -329,7 +356,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     this.WriteError(ex.ErrorRecord);
                 }
             }
-            
+
             return MessageResult.OK;
         }
 
@@ -394,7 +421,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     current.Total = record.GetInteger(2);
                     current.Complete = current.Forward ? 0 : current.Total;
                     current.EnableActionData = false;
-                    current.InScript = 0 == record.GetInteger(4);
+                    current.GeneratingScript = 1 == record.GetInteger(4);
 
                     // Windows Installer team advises to add ~50 ticks to script generation.
                     if (0 == this.progress.CurrentIndex)
@@ -416,14 +443,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         break;
                     }
 
-                    if (0 != record.GetInteger(3))
+                    if (0 == record.GetInteger(3))
                     {
-                        this.progress.Current.EnableActionData = true;
-                        this.progress.Current.Step = record.GetInteger(2);
+                        this.progress.Current.EnableActionData = false;
                     }
                     else
                     {
-                        this.progress.Current.EnableActionData = false;
+                        this.progress.Current.EnableActionData = true;
+                        this.progress.Current.Step = record.GetInteger(2);
                     }
                     break;
 
@@ -473,10 +500,22 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <returns>The result code indicating how Windows Installer should proceed.</returns>
         protected MessageResult OnCommonData(Deployment.WindowsInstaller.Record record)
         {
-            // Get the Windows Installer-generated caption.
-            if (1 < record.FieldCount && 1 == record.GetInteger(1))
+            // Get the current session language and Windows Installer-generated caption.
+            if (1 < record.FieldCount)
             {
-                this.progress.CurrentName = record.GetString(2);
+                var subtype = record.GetInteger(1);
+                if (0 == subtype)
+                {
+                    var langId = record.GetInteger(2);
+                    if (0 != langId)
+                    {
+                        this.progress.CurrentCulture = CultureInfo.GetCultureInfo(langId);
+                    }
+                }
+                else if (1 == subtype)
+                {
+                    this.progress.CurrentName = record.GetString(2);
+                }
             }
 
             return MessageResult.OK;
@@ -670,7 +709,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             internal int Step = 0;
             internal int Complete = 0;
             internal bool Forward = true;
-            internal bool InScript = false;
+            internal bool GeneratingScript = false;
             internal bool EnableActionData = true;
         }
 
@@ -692,6 +731,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             internal string CurrentAction { get; set; }
+            internal string CurrentActionTemplate { get; set; }
             internal string CurrentActionDetail { get; set; }
 
             internal int CurrentIndex
@@ -699,6 +739,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 get { return this.Count - 1; }
             }
 
+            internal CultureInfo CurrentCulture { get; set; }
             internal string CurrentName { get; set; }
 
             internal int CurrentPercentage
@@ -736,7 +777,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 this.Clear();
                 this.CurrentAction = Resources.Action_Wait;
+                this.CurrentActionTemplate = null;
                 this.CurrentActionDetail = null;
+                this.CurrentCulture = CultureInfo.CurrentCulture;
 
                 // Default to empty name so "(null)" doesn't show for activity.
                 this.CurrentName = string.Empty;

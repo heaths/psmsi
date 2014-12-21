@@ -77,6 +77,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionText.cs" />
     <Compile Include="AttributeColumn.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="CharComparer.cs" />
@@ -178,6 +179,8 @@
     <Compile Include="PowerShell\ViewManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ActionData.resx" />
+    <EmbeddedResource Include="ActionText.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>

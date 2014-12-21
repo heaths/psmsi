@@ -1,0 +1,330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Advertise" xml:space="preserve">
+    <value>Advertising application</value>
+  </data>
+  <data name="AllocateRegistrySpace" xml:space="preserve">
+    <value>Allocating registry space</value>
+  </data>
+  <data name="AppSearch" xml:space="preserve">
+    <value>Searching for installed applications</value>
+  </data>
+  <data name="BindImage" xml:space="preserve">
+    <value>Binding executables</value>
+  </data>
+  <data name="CCPSearch" xml:space="preserve">
+    <value>Searching for qualifying products</value>
+  </data>
+  <data name="CostFinalize" xml:space="preserve">
+    <value>Computing space requirements</value>
+  </data>
+  <data name="CostInitialize" xml:space="preserve">
+    <value>Computing space requirements</value>
+  </data>
+  <data name="CreateFolders" xml:space="preserve">
+    <value>Creating folders</value>
+  </data>
+  <data name="CreateShortcuts" xml:space="preserve">
+    <value>Creating shortcuts</value>
+  </data>
+  <data name="DeleteServices" xml:space="preserve">
+    <value>Deleting services</value>
+  </data>
+  <data name="DuplicateFiles" xml:space="preserve">
+    <value>Creating duplicate files</value>
+  </data>
+  <data name="FileCost" xml:space="preserve">
+    <value>Computing space requirements</value>
+  </data>
+  <data name="FindRelatedProducts" xml:space="preserve">
+    <value>Searching for related applications</value>
+  </data>
+  <data name="GenerateScript" xml:space="preserve">
+    <value>Generating script operations for action:</value>
+  </data>
+  <data name="InstallAdminPackage" xml:space="preserve">
+    <value>Copying network install files</value>
+  </data>
+  <data name="InstallFiles" xml:space="preserve">
+    <value>Copying new files</value>
+  </data>
+  <data name="InstallODBC" xml:space="preserve">
+    <value>Installing ODBC components</value>
+  </data>
+  <data name="InstallSFPCatalogFile" xml:space="preserve">
+    <value>Installing system catalog</value>
+  </data>
+  <data name="InstallServices" xml:space="preserve">
+    <value>Installing new services</value>
+  </data>
+  <data name="InstallValidate" xml:space="preserve">
+    <value>Validating install</value>
+  </data>
+  <data name="LaunchConditions" xml:space="preserve">
+    <value>Evaluating launch conditions</value>
+  </data>
+  <data name="MigrateFeatureStates" xml:space="preserve">
+    <value>Migrating feature states from related applications</value>
+  </data>
+  <data name="MoveFiles" xml:space="preserve">
+    <value>Moving files</value>
+  </data>
+  <data name="MsiPublishAssemblies" xml:space="preserve">
+    <value>Publishing assembly information</value>
+  </data>
+  <data name="MsiUnpublishAssemblies" xml:space="preserve">
+    <value>Unpublishing assembly information</value>
+  </data>
+  <data name="PatchFiles" xml:space="preserve">
+    <value>Patching files</value>
+  </data>
+  <data name="ProcessComponents" xml:space="preserve">
+    <value>Updating component registration</value>
+  </data>
+  <data name="PublishComponents" xml:space="preserve">
+    <value>Publishing Qualified Components</value>
+  </data>
+  <data name="PublishFeatures" xml:space="preserve">
+    <value>Publishing Product Features</value>
+  </data>
+  <data name="PublishProduct" xml:space="preserve">
+    <value>Publishing product information</value>
+  </data>
+  <data name="RMCCPSearch" xml:space="preserve">
+    <value>Searching for qualifying products</value>
+  </data>
+  <data name="RegisterClassInfo" xml:space="preserve">
+    <value>Registering Class servers</value>
+  </data>
+  <data name="RegisterComPlus" xml:space="preserve">
+    <value>Registering COM+ Applications and Components</value>
+  </data>
+  <data name="RegisterExtensionInfo" xml:space="preserve">
+    <value>Registering extension servers</value>
+  </data>
+  <data name="RegisterFonts" xml:space="preserve">
+    <value>Registering fonts</value>
+  </data>
+  <data name="RegisterMIMEInfo" xml:space="preserve">
+    <value>Registering MIME info</value>
+  </data>
+  <data name="RegisterProduct" xml:space="preserve">
+    <value>Registering product</value>
+  </data>
+  <data name="RegisterProgIdInfo" xml:space="preserve">
+    <value>Registering program identifiers</value>
+  </data>
+  <data name="RegisterTypeLibraries" xml:space="preserve">
+    <value>Registering type libraries</value>
+  </data>
+  <data name="RegisterUser" xml:space="preserve">
+    <value>Registering user</value>
+  </data>
+  <data name="RemoveDuplicateFiles" xml:space="preserve">
+    <value>Removing duplicated files</value>
+  </data>
+  <data name="RemoveEnvironmentStrings" xml:space="preserve">
+    <value>Updating environment strings</value>
+  </data>
+  <data name="RemoveExistingProducts" xml:space="preserve">
+    <value>Removing applications</value>
+  </data>
+  <data name="RemoveFiles" xml:space="preserve">
+    <value>Removing files</value>
+  </data>
+  <data name="RemoveFolders" xml:space="preserve">
+    <value>Removing folders</value>
+  </data>
+  <data name="RemoveIniValues" xml:space="preserve">
+    <value>Removing INI files entries</value>
+  </data>
+  <data name="RemoveODBC" xml:space="preserve">
+    <value>Removing ODBC components</value>
+  </data>
+  <data name="RemoveRegistryValues" xml:space="preserve">
+    <value>Removing system registry values</value>
+  </data>
+  <data name="RemoveShortcuts" xml:space="preserve">
+    <value>Removing shortcuts</value>
+  </data>
+  <data name="Rollback" xml:space="preserve">
+    <value>Rolling back action:</value>
+  </data>
+  <data name="RollbackCleanup" xml:space="preserve">
+    <value>Removing backup files</value>
+  </data>
+  <data name="SelfRegModules" xml:space="preserve">
+    <value>Registering modules</value>
+  </data>
+  <data name="SelfUnregModules" xml:space="preserve">
+    <value>Unregistering modules</value>
+  </data>
+  <data name="SetODBCFolders" xml:space="preserve">
+    <value>Initializing ODBC directories</value>
+  </data>
+  <data name="StartServices" xml:space="preserve">
+    <value>Starting services</value>
+  </data>
+  <data name="StopServices" xml:space="preserve">
+    <value>Stopping services</value>
+  </data>
+  <data name="UnmoveFiles" xml:space="preserve">
+    <value>Removing moved files</value>
+  </data>
+  <data name="UnpublishComponents" xml:space="preserve">
+    <value>Unpublishing Qualified Components</value>
+  </data>
+  <data name="UnpublishFeatures" xml:space="preserve">
+    <value>Unpublishing Product Features</value>
+  </data>
+  <data name="UnpublishProduct" xml:space="preserve">
+    <value>Unpublishing product information</value>
+  </data>
+  <data name="UnregisterClassInfo" xml:space="preserve">
+    <value>Unregister Class servers</value>
+  </data>
+  <data name="UnregisterComPlus" xml:space="preserve">
+    <value>Unregistering COM+ Applications and Components</value>
+  </data>
+  <data name="UnregisterExtensionInfo" xml:space="preserve">
+    <value>Unregistering extension servers</value>
+  </data>
+  <data name="UnregisterFonts" xml:space="preserve">
+    <value>Unregistering fonts</value>
+  </data>
+  <data name="UnregisterMIMEInfo" xml:space="preserve">
+    <value>Unregistering MIME info</value>
+  </data>
+  <data name="UnregisterProgIdInfo" xml:space="preserve">
+    <value>Unregistering program identifiers</value>
+  </data>
+  <data name="UnregisterTypeLibraries" xml:space="preserve">
+    <value>Unregistering type libraries</value>
+  </data>
+  <data name="WriteEnvironmentStrings" xml:space="preserve">
+    <value>Updating environment strings</value>
+  </data>
+  <data name="WriteIniValues" xml:space="preserve">
+    <value>Writing INI files values</value>
+  </data>
+  <data name="WriteRegistryValues" xml:space="preserve">
+    <value>Writing system registry values</value>
+  </data>
+</root>
