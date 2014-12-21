@@ -69,7 +69,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 // Open in Orca, if installed.
                 info.FileName = this.orcaPath;
-                info.Arguments = path;
+                info.Arguments = "\"" + path + "\"";
             }
             else
             {
