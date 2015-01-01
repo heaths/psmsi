@@ -10,9 +10,8 @@
     <ProjectGuid>{d2630778-0547-48d1-a8ca-e93d0d7a8b02}</ProjectGuid>
     <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
     <SuppressIces>ICE03;ICE38;ICE64;ICE91</SuppressIces>
-    <SolutionDir Condition="'$(SolutionDir)'==''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Psmsi.sln))</SolutionDir>
-    <SolutionDir Condition="!HasTrailingSlash('$(SolutionDir)')">$(SolutionDir)\</SolutionDir>
   </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Psmsi.sln))\inc\Common.props"/>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DefineConstants>Debug</DefineConstants>
     <SuppressValidation>False</SuppressValidation>
@@ -38,8 +37,8 @@
     <Compile Include="UI.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.Tools.WindowsInstaller.PowerShell\Microsoft.Tools.WindowsInstaller.PowerShell.csproj">
-      <Name>Microsoft.Tools.WindowsInstaller.PowerShell</Name>
+    <ProjectReference Include="$(SourceDir)PowerShell\PowerShell.csproj">
+      <Name>PowerShell</Name>
       <Project>{eae7d4bf-5061-4220-be94-e268e965dce5}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
@@ -65,4 +64,6 @@
       <Name>WixUIExtension</Name>
     </WixExtension>
   </ItemGroup>
+  <Import Project="$(IncludeDir)Common.targets" />
+  <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
 </Project>

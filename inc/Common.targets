@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Common.props" Condition="'$(CommonPropertiesDefined)' != 'true'" />
+  <Import Project="Common$(MSBuildProjectExtension).targets" Condition="Exists('Common$(MSBuildProjectExtension).targets')" />
+  <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
+</Project>

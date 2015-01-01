@@ -28,24 +28,24 @@
     <Fragment>
         <Component Id="Help.About.en_US" Directory="ModuleFolder">
             <Category Id="D5D9929D-C2C1-46ED-9E3B-7349DD57C5F5" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
-            <File Id="Help.About.en_US.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)about_MSI.help.txt" />
+            <File Id="Help.About.en_US.File" Source="$(var.PowerShell.TargetDir)about_MSI.help.txt" />
         </Component>
     </Fragment>
     <Fragment>
         <Component Id="Help.Cmdlets.en_US" Directory="ModuleFolder">
             <Category Id="D5D9929D-C2C1-46ED-9E3B-7349DD57C5F5" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
-            <File Id="Help.Cmdlets.en_US.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml" />
+            <File Id="Help.Cmdlets.en_US.File" Source="$(var.PowerShell.TargetDir)Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml" />
         </Component>
     </Fragment>
     <Fragment>
         <Component Id="MSI.Manifest" Directory="ModuleFolder">
             <Category Id="82188E4E-067A-4B9A-A6D3-0F115A35DD3D" Qualifier="1033" AppData="!(loc.Help.en_US.Description)" />
-            <File Id="MSI.Manifest.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.psd1" />
+            <File Id="MSI.Manifest.File" Source="$(var.PowerShell.TargetDir)MSI.psd1" />
         </Component>
     </Fragment>
     <Fragment>
         <Component Id="MSI.Module" Directory="ModuleFolder">
-            <File Id="MSI.Module.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.psm1" />
+            <File Id="MSI.Module.File" Source="$(var.PowerShell.TargetDir)MSI.psm1" />
         </Component>
     </Fragment>
 </Wix>

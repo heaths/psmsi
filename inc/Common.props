@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+    <AssemblyName>Microsoft.Tools.WindowsInstaller.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Microsoft.Tools.WindowsInstaller</RootNamespace>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <FileAlignment>512</FileAlignment>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)' == '' Or '$(SolutionDir)' == '*Undefined*'">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Psmsi.sln))</SolutionDir>
+    <SolutionDir Condition="!HasTrailingSlash('$(SolutionDir)')">$(SolutionDir)\</SolutionDir>
+    <SourceDir>$(SolutionDir)src\</SourceDir>
+    <LibraryDir>$(SolutionDir)lib\</LibraryDir>
+    <IncludeDir>$(SolutionDir)inc\</IncludeDir>
+    <ToolsDir>$(SolutionDir)tools\</ToolsDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CommonPropertiesDefined>true</CommonPropertiesDefined>
+  </PropertyGroup>
+  <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
+</Project>

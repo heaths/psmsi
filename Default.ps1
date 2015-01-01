@@ -15,6 +15,7 @@ Properties {
     $SolutionDir = Resolve-Path .
     $SolutionFile = Join-Path $SolutionDir 'Psmsi.sln' -Resolve
     $SourceDir = Join-Path $SolutionDir 'src' -Resolve
+    $TestDir = Join-Path $SolutionDir 'test' -Resolve
     $Script:Version = '2.3.0.0'
 }
 
@@ -82,7 +83,7 @@ Task AddCommands -Alias Update -Depends Compile {
     $HelpToolsDir = Join-Path $SolutionDir 'tools\help'
     assert (Test-Path $HelpToolsDir) 'Help tools not found. Did you run "git submodule update --init"?'
 
-    $Project = 'Microsoft.Tools.WindowsInstaller.PowerShell'
+    $Project = 'PowerShell'
     $ProjectDir = Join-Path $SourceDir $Project
     $OutputDir = Join-Path $SourceDir "$Project\bin\$Configuration"
     $ModulePath = Join-Path $OutputDir 'MSI.psd1'
@@ -98,7 +99,8 @@ Task Document -Alias Doc -Depends Compile {
     $HelpToolsDir = Join-Path $SolutionDir 'tools\help'
     assert (Test-Path $HelpToolsDir) 'Help tools not found. Did you run "git submodule update --init"?'
 
-    $Project = 'Microsoft.Tools.WindowsInstaller.PowerShell'
+    $Project = 'PowerShell'
+    $AssemblyName = 'Microsoft.Tools.WindowsInstaller.PowerShell'
     $ProjectDir = Join-Path $SourceDir $Project
     $OutputDir = Join-Path $SourceDir "$Project\bin\$Configuration"
     $ModulePath = Join-Path $OutputDir 'MSI.psd1'
@@ -111,7 +113,7 @@ Task Document -Alias Doc -Depends Compile {
     Write-Host "Converting $ProjectHelp into $IntermediateHelp"
     ConvertTo-Help -Module $ModulePath -Path $IntermediateHelp -TemplatePath $ProjectHelp
 
-    $OutputHelp = Join-Path $ProjectDir "$Project.dll-Help.xml"
+    $OutputHelp = Join-Path $ProjectDir "$AssemblyName.dll-Help.xml"
     Write-Host "Formatting $IntermediateHelp into MAML help file $OutputHelp"
     Format-Help -Path $OutputHelp -ContentPath $IntermediateHelp -Transform (Join-Path $HelpToolsDir 'maml.xslt')
 
@@ -131,8 +133,10 @@ Task Test -Depends Compile {
     assert ($Configuration.Length) "Must specify `$Configuration"
     assert (Get-Command $MSTest -ea SilentlyContinue).Length "Must specify location of `$MSTest"
 
-    $Projects = 'Microsoft.Tools.WindowsInstaller.PowerShell.Test'
-    $CommandLine = $Projects | ForEach-Object { "/testcontainer:$SourceDir\$_\bin\$Configuration\$_.dll " }
+    $Projects = @{"PowerShell.Test" = 'Microsoft.Tools.WindowsInstaller.PowerShell.Test'}
+    $CommandLine = $Projects.GetEnumerator() | ForEach-Object {
+        "/testcontainer:$TestDir\$($_.Name)\bin\$Configuration\$($_.Value).dll "
+    }
 
     $Global:LASTEXITCODE = 0
     $Results = & "$MSTest" /nologo $CommandLine /category:"!Impactful"
@@ -166,12 +170,12 @@ Task Test -Depends Compile {
 Task Package -Alias Pack -Depends Compile {
     assert (Get-Command 'NuGet' -ea SilentlyContinue).Length "Must specify location of `$NuGet"
 
-    $Projects = 'Microsoft.Tools.WindowsInstaller.PowerShell'
+    $Projects = @{"PowerShell" = 'Microsoft.Tools.WindowsInstaller.PowerShell'}
 
-    $Projects | ForEach-Object {
-        $Project = Join-Path $SourceDir "$_\$_.csproj" -Resolve
-        $OutputDir = Join-Path $SourceDir "$_\bin\$Configuration"
-        exec { & "$NuGet" pack "$Project" -OutputDirectory $OutputDir -Version $Version -Properties "Configuration=$Configuration;SolutionDir=$SolutionDir" -Symbols -NoPackageAnalysis }
+    $Projects.GetEnumerator() | ForEach-Object {
+        $Project = Join-Path $SourceDir "$($_.Name)\$($_.Name).csproj" -Resolve
+        $OutputDir = Join-Path $SourceDir "$($_.Name)\bin\$Configuration"
+        exec { & "$NuGet" pack "$Project" -OutputDirectory $OutputDir -Version $Version -Properties "Configuration=$Configuration" -Symbols -NoPackageAnalysis }
     }
 }
 

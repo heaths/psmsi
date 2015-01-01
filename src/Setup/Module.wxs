@@ -64,9 +64,9 @@
     </Product>
     <Fragment>
             <Component Id="Module" Directory="ModuleFolder">
-                <File Id="Module.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetPath)" KeyPath="yes" />
-                <File Id="Module.Formats.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.formats.ps1xml" />
-                <File Id="Module.Types.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)MSI.types.ps1xml" />
+                <File Id="Module.File" Source="$(var.PowerShell.TargetPath)" KeyPath="yes" />
+                <File Id="Module.Formats.File" Source="$(var.PowerShell.TargetDir)MSI.formats.ps1xml" />
+                <File Id="Module.Types.File" Source="$(var.PowerShell.TargetDir)MSI.types.ps1xml" />
                 <!-- Make sure the application directory is always removed on uninstall. -->
                 <RemoveFolder Id="Module.RemoveFolder" On="uninstall" />
             </Component>

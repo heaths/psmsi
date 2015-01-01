@@ -19,22 +19,22 @@
     </Fragment>
     <Fragment>
         <Component Id="DTF" Directory="ModuleFolder">
-            <File Id="DTF.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.WindowsInstaller.dll" />
+            <File Id="DTF.File" Source="$(var.PowerShell.TargetDir)Microsoft.Deployment.WindowsInstaller.dll" />
         </Component>
     </Fragment>
     <Fragment>
         <Component Id="DTF.Package" Directory="ModuleFolder">
-            <File Id="DTF.Package.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.WindowsInstaller.Package.dll" />
+            <File Id="DTF.Package.File" Source="$(var.PowerShell.TargetDir)Microsoft.Deployment.WindowsInstaller.Package.dll" />
         </Component>
     </Fragment>
     <Fragment>
         <Component Id="DTF.Compression" Directory="ModuleFolder">
-            <File Id="DTF.Compression.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.Compression.dll" />
+            <File Id="DTF.Compression.File" Source="$(var.PowerShell.TargetDir)Microsoft.Deployment.Compression.dll" />
         </Component>
     </Fragment>
     <Fragment>
         <Component Id="DTF.Compression.Cab" Directory="ModuleFolder">
-            <File Id="DTF.Compression.Cab.File" Source="$(var.Microsoft.Tools.WindowsInstaller.PowerShell.TargetDir)Microsoft.Deployment.Compression.Cab.dll" />
+            <File Id="DTF.Compression.Cab.File" Source="$(var.PowerShell.TargetDir)Microsoft.Deployment.Compression.Cab.dll" />
         </Component>
     </Fragment>
     <Fragment>
