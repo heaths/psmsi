@@ -179,7 +179,73 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<ProgressRecordType>(ProgressRecordType.Completed, ps.Streams.Progress[7].RecordType, "Progress not completed.");
             }
         }
-        
+
+        [TestMethod]
+        public void SetInstallResultVariable()
+        {
+            using (var ps = PS.Create())
+            {
+                var variable = ps.Runspace.SessionStateProxy.PSVariable.Get("a");
+                Assert.IsNull(variable);
+
+                TestInstallCommand.Register(ps.Runspace.RunspaceConfiguration);
+                ps.AddCommand("test-install").AddArgument("verbose").AddParameter("ResultVariable", "a").Invoke();
+
+                variable = ps.Runspace.SessionStateProxy.PSVariable.Get("a");
+                Assert.IsNotNull(variable);
+
+                var value = variable.Value as Result;
+                Assert.IsNotNull(value);
+                Assert.IsFalse(value.RebootInitiated);
+                Assert.IsFalse(value.RebootRequired);
+            }
+        }
+
+        [TestMethod]
+        public void AppendInstallResultVariable()
+        {
+            using (var ps = PS.Create())
+            {
+                var value = new Result()
+                {
+                    RebootInitiated = true,
+                    RebootRequired = true,
+                };
+
+                var variable = new PSVariable("a", value, ScopedItemOptions.AllScope);
+                ps.Runspace.SessionStateProxy.PSVariable.Set(variable);
+
+                TestInstallCommand.Register(ps.Runspace.RunspaceConfiguration);
+                ps.AddCommand("test-install").AddArgument("verbose").AddParameter("ResultVariable", "+a").Invoke();
+
+                variable = ps.Runspace.SessionStateProxy.PSVariable.Get("a");
+                Assert.IsNotNull(variable);
+
+                value = variable.Value as Result;
+                Assert.IsNotNull(value);
+                Assert.IsTrue(value.RebootInitiated);
+                Assert.IsTrue(value.RebootRequired);
+            }
+        }
+
+        [TestMethod]
+        public void AppendNonexistentInstallResultVariable()
+        {
+            using (var ps = PS.Create())
+            {
+                TestInstallCommand.Register(ps.Runspace.RunspaceConfiguration);
+                ps.AddCommand("test-install").AddArgument("verbose").AddParameter("ResultVariable", "+a").Invoke();
+
+                var variable = ps.Runspace.SessionStateProxy.PSVariable.Get("a");
+                Assert.IsNotNull(variable);
+
+                var value = variable.Value as Result;
+                Assert.IsNotNull(value);
+                Assert.IsFalse(value.RebootInitiated);
+                Assert.IsFalse(value.RebootRequired);
+            }
+        }
+
         [Cmdlet(VerbsDiagnostic.Test, "Install", DefaultParameterSetName = "Action")]
         internal sealed class TestInstallCommand : InstallCommandBase<TestInstallCommand.ActionData>
         {

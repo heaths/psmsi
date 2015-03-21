@@ -28,6 +28,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected const int INSTALLLEVEL_DEFAULT = 0;
 
         private Log log;
+        private Result result;
         private ProgressDataCollection progress;
 
         /// <summary>
@@ -36,6 +37,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected InstallCommandBase()
         {
             this.log = null;
+            this.result = null;
 
             this.Actions = new ActionQueue();
             this.progress = new ProgressDataCollection();
@@ -75,8 +77,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// Gets or sets whether to queue and chain all install operations together.
         /// </summary>
         /// <remarks>
-        /// By default, cmdlets will process each product install request as it comes in through the pipeline.
-        /// Set this switch parameter to queue them all up and chain them as seemingly one install.
+        /// <para>By default, cmdlets will process each product install request as it comes in through the pipeline.
+        /// Set this switch parameter to queue them all up and chain them as seemingly one install.</para>
+        /// <para>This will create a single system restore point (if supported) for all packages
+        /// and suppress reboots (unless forced within a package).</para>
         /// </remarks>
         [Parameter]
         public SwitchParameter Chain { get; set; }
@@ -86,6 +90,16 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [Parameter]
         public SwitchParameter Force { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the variable to store the <see cref="Result"/>.
+        /// </summary>
+        /// <remarks>
+        /// You may optionally prefix the name with a "+" to combine the new results with an existing variable of the same name.
+        /// </remarks>
+        [Parameter]
+        [ValidateVariableName]
+        public string ResultVariable { get; set; }
 
         /// <summary>
         /// The queued actions to perform for installation.
@@ -144,6 +158,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Initialize logging.
             this.log = new Log(path);
 
+            // Initialize the result to write to the pipeline at the end.
+            this.result = new Result();
+
             base.BeginProcessing();
         }
 
@@ -173,6 +190,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             if (this.Chain)
             {
                 this.ExecuteActions();
+            }
+
+            // Write the final result to the pipeline for administrators.
+            if (null != this.result)
+            {
+                this.SetResultVariable();
+                this.result = null;
             }
 
             base.EndProcessing();
@@ -558,7 +582,13 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         // disable creating restore points for each package.
                         if (null != restorePoint)
                         {
-                            data.CommandLine = "MSIFASTINSTALL=1 " + data.CommandLine;
+                            data.CommandLine += " MSIFASTINSTALL=1";
+                        }
+
+                        // Suppress reboots when possible if chaining.
+                        if (this.Chain)
+                        {
+                            data.CommandLine += " REBOOT=ReallySuppress";
                         }
 
                         this.ExecuteAction(data);
@@ -576,6 +606,14 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                                 // Unexpected not to have an ErrorRecord.
                                 throw;
                             }
+                        }
+                    }
+                    finally
+                    {
+                        if (null != this.result)
+                        {
+                            this.result.RebootInitiated = Installer.RebootInitiated;
+                            this.result.RebootRequired = Installer.RebootRequired;
                         }
                     }
                 }
@@ -602,6 +640,55 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             // Reset progress.
             this.progress.Reset();
+        }
+
+        private void SetResultVariable()
+        {
+            var append = false;
+            var name = this.ResultVariable;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                if (name.StartsWith(ValidateVariableNameAttribute.AppendPrefix))
+                {
+                    append = true;
+                    name = name.Substring(1);
+                }
+            }
+
+            PSVariable variable = null;
+            Result value = null;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                if (append)
+                {
+                    variable = this.SessionState.PSVariable.Get(name);
+                }
+
+                if (null == variable)
+                {
+                    variable = new PSVariable(name, null, ScopedItemOptions.AllScope);
+                }
+                else
+                {
+                    value = variable.Value as Result;
+                }
+
+                if (null == value)
+                {
+                    value = this.result;
+                }
+                else if (null != this.result)
+                {
+                    value |= this.result;
+                }
+
+                variable.Value = value ?? new Result();
+
+                // Let exceptions throw: user error.
+                this.SessionState.PSVariable.Set(variable);
+            }
         }
 
         [Conditional("DEBUG")]
