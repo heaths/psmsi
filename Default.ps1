@@ -15,7 +15,7 @@ Properties {
     $SolutionDir = Resolve-Path .
     $SolutionFile = Join-Path $SolutionDir 'Psmsi.sln' -Resolve
     $SourceDir = Join-Path $SolutionDir 'src' -Resolve
-    $Script:Version = '2.3.0.0'
+    $Script:Version = '2.3.0.1'
 }
 
 Task Default -Depends Compile
@@ -169,7 +169,7 @@ Task Package -Alias Pack -Depends Compile {
     $Projects = 'Microsoft.Tools.WindowsInstaller.PowerShell'
 
     $Projects | ForEach-Object {
-        $Project = Join-Path $SourceDir "$_\$_.csproj" -Resolve
+        $Project = Join-Path $SourceDir "$_\$_.nuspec" -Resolve
         $OutputDir = Join-Path $SourceDir "$_\bin\$Configuration"
         exec { & "$NuGet" pack "$Project" -OutputDirectory $OutputDir -Version $Version -Properties "Configuration=$Configuration;SolutionDir=$SolutionDir" -Symbols -NoPackageAnalysis }
     }

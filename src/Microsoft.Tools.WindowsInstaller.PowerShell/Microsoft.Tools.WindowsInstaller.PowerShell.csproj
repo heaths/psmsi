@@ -209,7 +209,6 @@
     <None Include="Microsoft.Tools.WindowsInstaller.PowerShell.nuspec" />
     <None Include="Tools\ChocolateyUninstall.ps1" />
     <None Include="Tools\ChocolateyInstall.ps1" />
-    <None Include="Tools\Install.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MSI.psd1">
@@ -221,6 +220,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Sign>True</Sign>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Clean Include="$(OutputPath)\*.nupkg" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
