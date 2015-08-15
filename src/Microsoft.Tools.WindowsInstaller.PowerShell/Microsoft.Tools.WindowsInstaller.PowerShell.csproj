@@ -150,6 +150,7 @@
     <Compile Include="PowerShell\LoggingPoliciesAttribute.cs" />
     <Compile Include="PowerShell\PropertySet.cs" />
     <Compile Include="PowerShell\PSInstallerException.cs" />
+    <Compile Include="PowerShell\ValidateVariableNameAttribute.cs" />
     <Compile Include="ReadOnly.cs" />
     <Compile Include="PowerShell\ReinstallModeAttribute.cs" />
     <Compile Include="PowerShell\RecordPropertyAdapter.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Record.cs" />
     <Compile Include="RegistryView.cs" />
     <Compile Include="ReinstallModesConverter.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="RowOperation.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="SourceInfo.cs" />

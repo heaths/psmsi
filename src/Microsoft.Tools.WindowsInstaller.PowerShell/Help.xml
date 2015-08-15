@@ -769,7 +769,7 @@
       </p>
     </description>
     <parameter name="Chain">
-      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain.
+      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain and reboots are suppressed when possible.
     </parameter>
     <parameter name="Force">
       Whether to suppress all prompts.
@@ -800,6 +800,9 @@
     </parameter>
     <parameter name="UserSid">
       The user security identifier for product listed in the ProductCode parameter.
+    </parameter>
+    <parameter name="ResultVariable">
+      The name of a variable to store operation results. Optionally prefix with "+" to combine results with existing results variable.
     </parameter>
     <output type="Microsoft.Deployment.WindowsInstaller.PatchInstallation">
       Information for the newly installed patch or patches.
@@ -839,7 +842,7 @@
       </p>
     </description>
     <parameter name="Chain">
-      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain.
+      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain and reboots are suppressed when possible.
     </parameter>
     <parameter name="Destination">
       <p>
@@ -872,6 +875,9 @@
     </parameter>
     <parameter name="Properties">
       Additional property=value pairs to pass during install.
+    </parameter>
+    <parameter name="ResultVariable">
+      The name of a variable to store operation results. Optionally prefix with "+" to combine results with existing results variable.
     </parameter>
     <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
       An existing product to modify.
@@ -1013,7 +1019,7 @@
       </p>
     </description>
     <parameter name="Chain">
-      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain.
+      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain and reboots are suppressed when possible.
     </parameter>
     <parameter name="Force">
       Whether to suppress all prompts.
@@ -1041,6 +1047,9 @@
     </parameter>
     <parameter name="ReinstallMode" default="FileOlderVersion,MachineData,UserData,Shortcut">
       The REINSTALLMODE to use. You can specify the value as a string in the format used by Windows Installer. The default is equivalent to "omus".
+    </parameter>
+    <parameter name="ResultVariable">
+      The name of a variable to store operation results. Optionally prefix with "+" to combine results with existing results variable.
     </parameter>
     <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
       The product to repair or modify.
@@ -1163,7 +1172,7 @@
       </p>
     </description>
     <parameter name="Chain">
-      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain.
+      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain and reboots are suppressed when possible.
     </parameter>
     <parameter name="Force">
       Whether to suppress all prompts.
@@ -1192,6 +1201,9 @@
     <parameter name="UserSid">
       The user security identifier for product listed in the ProductCode parameter.
     </parameter>
+    <parameter name="ResultVariable">
+      The name of a variable to store operation results. Optionally prefix with "+" to combine results with existing results variable.
+    </parameter>
     <example>
       <code>get-msiproductifo -name TEST | get-msipatchinfo | uninstall-msipatch -log $env:TEMP\unpatch.log</code>
       <description>Uninstalls all patches applied to the product with ProductName TEST and logs to the TEMP directory.</description>
@@ -1214,7 +1226,7 @@
       </p>
     </description>
     <parameter name="Chain">
-      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain.
+      Whether to install all packages together. If elevated, a single restore point is created for all packages in the chain and reboots are suppressed when possible.
     </parameter>
     <parameter name="Force">
       Whether to suppress all prompts.
@@ -1236,6 +1248,9 @@
     </parameter>
     <parameter name="Properties">
       Additional property=value pairs to pass during uninstall.
+    </parameter>
+    <parameter name="ResultVariable">
+      The name of a variable to store operation results. Optionally prefix with "+" to combine results with existing results variable.
     </parameter>
     <input type="Microsoft.Deployment.WindowsInstaller.ProductInstallation">
       The product to uninstall.
