@@ -4,6 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <NoWarn>1685</NoWarn>
   </PropertyGroup>
@@ -73,12 +74,14 @@
     <Compile Include="PowerShell\RecordPropertyAdapterTests.cs" />
     <Compile Include="PowerShell\SidAttributeTest.cs" />
     <Compile Include="PowerShell\ValidateGuidAttributeTest.cs" />
+    <Compile Include="PowerShell\ValidateVariableNameAttributeTests.cs" />
     <Compile Include="RegistryViewTests.cs" />
     <Compile Include="RegistryXml.cs" />
     <Compile Include="PowerShell\Commands\GetFileHashCommandTest.cs" />
     <Compile Include="PowerShell\Commands\GetFileTypeCommandTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReinstallModesConverterTests.cs" />
+    <Compile Include="ResultTests.cs" />
     <Compile Include="SetTests.cs" />
     <Compile Include="SubstituteDrive.cs" />
     <Compile Include="SummaryInfoTests.cs" />

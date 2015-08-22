@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright (C) Microsoft Corporation. All rights reserved.
+
+    THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+    PARTICULAR PURPOSE.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define Manufacturer = Microsoft Corporation?>
+  <Product Id="*" Language="1033" Manufacturer="$(var.Manufacturer)" Name="Reboot" Version="1.0.0" UpgradeCode="340D0D7E-514D-4265-ADCF-C6CEB71B4AFC">
+    <Package Compressed="yes" InstallScope="perUser" Manufacturer="$(var.Manufacturer)"/>
+    <MediaTemplate EmbedCab="yes"/>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+        <Directory Id="ManufacturerFolder" Name="$(var.Manufacturer)">
+          <Directory Id="InstallFolder" Name="Reboot"/>
+        </Directory>
+      </Directory>
+    </Directory>
+    <Feature Id="Complete" Level="1">
+      <ComponentRef Id="Source"/>
+    </Feature>
+    <InstallExecuteSequence>
+      <ScheduleReboot Before="InstallFinalize"/>
+      <RegisterProduct Suppress="yes"/>
+    </InstallExecuteSequence>
+  </Product>
+  <Fragment>
+    <Component Id="Source" Directory="InstallFolder">
+      <File Source="$(sys.SOURCEFILEPATH)"/>
+    </Component>
+  </Fragment>
+</Wix>

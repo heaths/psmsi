@@ -17,7 +17,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Management.Automation" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +93,7 @@
     <Compile Include="PowerShell\LoggingPoliciesAttribute.cs" />
     <Compile Include="PowerShell\PropertySet.cs" />
     <Compile Include="PowerShell\PSInstallerException.cs" />
+    <Compile Include="PowerShell\ValidateVariableNameAttribute.cs" />
     <Compile Include="ReadOnly.cs" />
     <Compile Include="PowerShell\ReinstallModeAttribute.cs" />
     <Compile Include="PowerShell\RecordPropertyAdapter.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Record.cs" />
     <Compile Include="RegistryView.cs" />
     <Compile Include="ReinstallModesConverter.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="RowOperation.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="SourceInfo.cs" />
@@ -152,7 +154,6 @@
     <None Include="PowerShell.nuspec" />
     <None Include="Tools\ChocolateyUninstall.ps1" />
     <None Include="Tools\ChocolateyInstall.ps1" />
-    <None Include="Tools\Install.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MSI.psd1">
