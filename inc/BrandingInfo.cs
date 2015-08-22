@@ -26,5 +26,5 @@ using System.Resources;
 [assembly: AssemblyCompany("Microsoft Corporation")]
 [assembly: AssemblyProduct("Windows Installer PowerShell Module")]
 [assembly: AssemblyCopyright("Copyright (C) Microsoft Corporation. All rights reserved.")]
-[assembly: AssemblyVersion("2.3.0.0")]
+[assembly: AssemblyVersion("3.0.0.0")]
 [assembly: NeutralResourcesLanguageAttribute("en")]

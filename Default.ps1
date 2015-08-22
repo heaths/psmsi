@@ -31,7 +31,7 @@ Properties {
     $SolutionFile = Join-Path $SolutionDir 'Psmsi.sln' -Resolve
     $SourceDir = Join-Path $SolutionDir 'src' -Resolve
     $TestDir = Join-Path $SolutionDir 'test' -Resolve
-    $Script:Version = '2.3.0.0'
+    $Script:Version = '3.0.0.0'
 }
 
 Task Default -Depends Compile
