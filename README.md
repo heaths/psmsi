@@ -32,4 +32,4 @@ The Windows Installer PowerShell module is licensed under the [MIT License](LICE
 
 ## Status
 
-[![Build status](https://ci.appveyor.com/api/projects/status/251twb4wvywq0vei?svg=true)](https://ci.appveyor.com/project/heaths/psmsi)
+[![Build status](https://ci.appveyor.com/api/projects/status/251twb4wvywq0vei/branch/master?svg=true)](https://ci.appveyor.com/project/heaths/psmsi/branch/master)

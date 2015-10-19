@@ -1,0 +1,14 @@
+-
+  branches:
+    only:
+      - master
+  configuration: Release
+  test:
+    assemblies:
+      - '**\bin\$(configuration)\*.test.dll'
+
+-
+  configuration: Debug
+  test:
+    assemblies:
+      - '**\bin\$(configuration)\*.test.dll'
