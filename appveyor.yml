@@ -12,3 +12,8 @@
   test:
     assemblies:
       - '**\bin\$(configuration)\*.test.dll'
+  after_build:
+    - 7z a msi.zip %APPVEYOR_BUILD_FOLDER%\src\PowerShell\bin\%CONFIGURATION%\*
+  artifacts:
+    - path: msi.zip
+      name: Module
