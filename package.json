@@ -1,0 +1,17 @@
+{
+  "name": "psmsi",
+  "description": "Windows Installer PowerShell Module",
+  "homepage": "https://github.com/heaths/psmsi",
+  "bugs": "https://github.com/heaths/psmsi/issues",
+  "license": "MIT",
+  "author": {
+    "name": "Heath Stewart",
+    "url": "https://github.com/heaths"
+  },
+  "devDependencies": {
+    "gulp": ">=3.9.0",
+    "gulp-msbuild": ">=0.2.13",
+    "yargs": ">=3.29"
+  },
+  "private": true
+}
