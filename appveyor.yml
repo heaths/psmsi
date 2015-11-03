@@ -1,19 +1,29 @@
--
-  branches:
-    only:
-      - master
-  configuration: Release
-  test:
-    assemblies:
-      - '**\bin\$(configuration)\*.test.dll'
+configuration: Release
 
--
-  configuration: Debug
-  test:
-    assemblies:
-      - '**\bin\$(configuration)\*.test.dll'
-  after_build:
-    - 7z a msi.zip %APPVEYOR_BUILD_FOLDER%\src\PowerShell\bin\%CONFIGURATION%\*
-  artifacts:
-    - path: msi.zip
-      name: Module
+test:
+  assemblies:
+    - '**\bin\$(configuration)\*.test.dll'
+
+artifacts:
+  - path: src\PowerShell\$(configuration)
+    name: msi.zip
+    type: zip
+
+deploy:
+  - provider: GitHub
+    description: 'Direct module download'
+    auth_token:
+      secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
+    artifact: /.*\.nupkg/
+    on:
+      branch: master
+      appveyor_repo_tag: true
+
+  - provider: NuGet
+    server: https://powershellgallery.com/api/v2
+    api_key:
+      secure: 4STrzCp6wDsDBj/wCtmImMVL7wUI8DCGjdMBXGqQf9JZJ8LjmW5YSY8wtcHAv0XW
+    artifact: /.*\.nupkg/
+    on:
+      branch: master
+      appveyor_repo_tag: true
