@@ -6,8 +6,10 @@ test:
 
 artifacts:
   - path: src\PowerShell\bin\$(configuration)
-    name: msi.zip
+    name: msi
     type: zip
+
+  - path: src\Setup\bin\$(configuration)\**\*.msi
 
 deploy:
   - provider: GitHub
