@@ -5,7 +5,7 @@ test:
     - '**\bin\$(configuration)\*.test.dll'
 
 artifacts:
-  - path: src\PowerShell\$(configuration)
+  - path: src\PowerShell\bin\$(configuration)
     name: msi.zip
     type: zip
 
