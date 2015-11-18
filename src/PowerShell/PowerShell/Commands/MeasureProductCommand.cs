@@ -87,7 +87,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         return;
                     }
 
-                    // Ignore machine state since we've already sequenced patches and transforms.
+                    // Must not ignore machine state since resulting session cannot be used for costing.
                     using (var session = Installer.OpenPackage(db, false))
                     {
                         // Set directories and other properties.
@@ -196,7 +196,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var drives = this.SessionState.Drive.GetAllForProvider("FileSystem");
             if (null != drives)
             {
-                foreach (var drive in drives)
+                // Only show psdrives that map to their logical drive letters.
+                foreach (var drive in drives.Where(d => null != d.Root && d.Root.StartsWith(d.Name, StringComparison.OrdinalIgnoreCase)))
                 {
                     var spaceRequirements = this.spaceRequirements.Get(drive.Name);
 
