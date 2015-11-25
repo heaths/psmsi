@@ -1,24 +1,59 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata>
-    <id>psmsi</id>
-    <title>psmsi</title>
+    <id>MSI</id>
     <version>$version$</version>
+    <title>Windows Installer PowerShell Module</title>
+    <description>Exposes Windows Installer functionality to Windows PowerShell</description>
     <authors>Heath Stewart</authors>
     <owners>Heath Stewart</owners>
-    <summary>Windows Installer PowerShell Module</summary>
-    <description>Exposes Windows Installer functionality to PowerShell, providing means to query installed product and patch information, and to query views on packages.</description>
+    <copyright>Microsoft Corporation. All rights reserved.</copyright>
     <projectUrl>http://bit.ly/psmsi-home</projectUrl>
-    <tags>windows installer powershell cmdlets msi product msp patch mst transform</tags>
     <iconUrl>http://bit.ly/psmsi-icon</iconUrl>
     <licenseUrl>http://bit.ly/psmsi-license</licenseUrl>
-    <dependencies>
-      <dependency id="chocolatey" version="0.9.8.20" />
-    </dependencies>
+    <tags>
+      WindowsInstaller
+      MSI
+      MSP
+      MST
+      PSModule
+      PSIncludes_Cmdlet
+      PSIncludes_Function
+      PSFunction_Get-MSIComponentState
+      PSFunction_Get-MSISharedComponentInfo
+      PSFunction_Install-MSIAdvertisedFeature
+      PSCmdlet_Add-MSISource
+      PSCmdlet_Clear-MSISource
+      PSCmdlet_Edit-MSIPackage
+      PSCmdlet_Export-MSIPatchXml
+      PSCmdlet_Get-MSIComponentInfo
+      PSCmdlet_Get-MSIFeatureInfo
+      PSCmdlet_Get-MSIFileHash
+      PSCmdlet_Get-MSIFileType
+      PSCmdlet_Get-MSILoggingPolicy
+      PSCmdlet_Get-MSIPatchInfo
+      PSCmdlet_Get-MSIPatchSequence
+      PSCmdlet_Get-MSIProductInfo
+      PSCmdlet_Get-MSIProperty
+      PSCmdlet_Get-MSIRelatedProductInfo
+      PSCmdlet_Get-MSISource
+      PSCmdlet_Get-MSISummaryInfo
+      PSCmdlet_Get-MSITable
+      PSCmdlet_Install-MSIPatch
+      PSCmdlet_Install-MSIProduct
+      PSCmdlet_Measure-MSIProduct
+      PSCmdlet_Remove-MSILoggingPolicy
+      PSCmdlet_Remove-MSISource
+      PSCmdlet_Repair-MSIProduct
+      PSCmdlet_Set-MSILoggingPolicy
+      PSCmdlet_Test-MSIProduct
+      PSCmdlet_Uninstall-MSIPatch
+      PSCmdlet_Uninstall-MSIProduct
+    </tags>
+    <dependencies />
   </metadata>
   <files>
-    <file src="tools\**" target="tools" />
-    <file src="bin\$Configuration$\*.*" target="MSI" exclude="**\*.nupkg;**\*.pdb;**\Microsoft.Tools.WindowsInstaller.PowerShell.xml" />
+    <file src="bin\$Configuration$\*.*" exclude="**\*.nupkg;**\*.pdb;**\Microsoft.Tools.WindowsInstaller.PowerShell.xml" />
     <file src="$SolutionDir$LICENSE.txt" />
     <file src="$SolutionDir$lib\wix\LICENSE.txt" target="Licenses\WIX.txt" />
   </files>

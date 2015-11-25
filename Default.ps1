@@ -183,22 +183,6 @@ Task Test -Depends Compile {
     }
 }
 
-Task Package -Alias Pack -Depends Compile {
-    assert (Get-Command 'NuGet' -ea SilentlyContinue).Length "Must specify location of `$NuGet"
-
-    $Projects = @{"PowerShell" = 'Microsoft.Tools.WindowsInstaller.PowerShell'}
-
-    $Projects.GetEnumerator() | ForEach-Object {
-        $Project = Join-Path $SourceDir "$($_.Name)\$($_.Name).csproj" -Resolve
-        $OutputDir = Join-Path $SourceDir "$($_.Name)\bin\$Configuration"
-        exec { & "$NuGet" pack "$Project" -OutputDirectory $OutputDir -Version $Version -Properties "Configuration=$Configuration" -Symbols -NoPackageAnalysis }
-    }
-}
-
-Task Publish -Depends Package {
-    assert (Get-Command 'NuGet' -ea SilentlyContinue).Length "Must specify location of `$NuGet"
-}
-
 function Join-Path
 {
     [CmdletBinding()]

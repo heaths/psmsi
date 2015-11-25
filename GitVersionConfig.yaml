@@ -1,2 +1,2 @@
-assembly-informational-format: '{SemVer}'
+assembly-informational-format: '{NuGetVersion}'
 mode: ContinuousDeployment
