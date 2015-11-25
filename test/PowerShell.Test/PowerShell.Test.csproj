@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Psmsi.sln))\inc\Common.props"/>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Psmsi.sln))\inc\Common.props" />
   <PropertyGroup>
     <ProjectGuid>{75DE4D1C-1F7B-4EFA-9D8E-7F3D3AE88129}</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <NoWarn>1685</NoWarn>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=9f4be179981a58d1, processorArchitecture=MSIL">
@@ -127,6 +129,16 @@
     <Content Include="Data\return.exe" />
     <Content Include="Data\test.cub" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(IncludeDir)Common.targets" />
+  <Import Project="..\..\packages\GitVersionTask.3.3.0\build\dotnet\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.3.3.0\build\dotnet\GitVersionTask.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\GitVersionTask.3.3.0\build\dotnet\GitVersionTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.3.3.0\build\dotnet\GitVersionTask.targets'))" />
+  </Target>
   <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
 </Project>
