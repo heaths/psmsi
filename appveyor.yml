@@ -1,5 +1,8 @@
 configuration: Release
 
+before_build:
+  - nuget restore
+
 test:
   assemblies:
     - '**\bin\$(configuration)\*.test.dll'
