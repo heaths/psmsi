@@ -1,3 +1,2 @@
 assembly-informational-format: '{SemVer}'
 mode: ContinuousDeployment
-next-version: 3.0.0
