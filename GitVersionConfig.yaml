@@ -1,2 +1,1 @@
 assembly-informational-format: '{NuGetVersion}'
-mode: ContinuousDeployment
