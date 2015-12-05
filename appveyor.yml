@@ -20,10 +20,11 @@ artifacts:
 
 deploy:
   - provider: GitHub
-    description: 'Continuous Deployment'
+    description: 'Release of version $(appveyor_build_vesion)'
     auth_token:
       secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
     artifact: installer, package
+    prerelease: true
     on:
       branch: master
 
@@ -32,5 +33,6 @@ deploy:
     api_key:
       secure: 4STrzCp6wDsDBj/wCtmImMVL7wUI8DCGjdMBXGqQf9JZJ8LjmW5YSY8wtcHAv0XW
     artifact: package
+    prerelease: true
     on:
       branch: master
