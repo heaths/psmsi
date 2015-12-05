@@ -3,7 +3,6 @@
   <metadata>
     <id>MSI</id>
     <version>$version$</version>
-    <title>Windows Installer PowerShell Module</title>
     <description>Exposes Windows Installer functionality to Windows PowerShell</description>
     <authors>Heath Stewart</authors>
     <owners>Heath Stewart</owners>

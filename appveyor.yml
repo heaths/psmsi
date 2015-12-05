@@ -28,7 +28,7 @@ deploy:
       branch: master
 
   - provider: NuGet
-    server: https://powershellgallery.com/api/v2
+    server: https://powershellgallery.com
     api_key:
       secure: 4STrzCp6wDsDBj/wCtmImMVL7wUI8DCGjdMBXGqQf9JZJ8LjmW5YSY8wtcHAv0XW
     artifact: package
