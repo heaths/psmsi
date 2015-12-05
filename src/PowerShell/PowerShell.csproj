@@ -189,7 +189,9 @@
   <Import Project="$(SolutionDir).nuget\NuGet.targets" />
   <Target Name="CalculateVersion" AfterTargets="UpdateAssemblyInfo">
     <PropertyGroup>
-      <PackageVersion>$(GitVersion_MajorMinorPatch).$(GitVersion_BuildMetaData)</PackageVersion>
+      <BuildNumber>$(GitVersion_BuildMetaData)</BuildNumber>
+      <BuildNumber Condition="'$(BuildNumber)'==''">0</BuildNumber>
+      <PackageVersion>$(GitVersion_MajorMinorPatch).$(BuildNumber)</PackageVersion>
     </PropertyGroup>
     <ItemGroup>
       <T4ParameterValues Include="PackageVersion">
