@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <CommonProgramFiles>$([System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'))</CommonProgramFiles>
+    <CommonProgramFiles Condition="'$(CommonProgramFiles)'==''">$(CommonProgramFiles)</CommonProgramFiles>
+    <CommonProgramFiles Condition="!HasTrailingSlash('$(CommonProgramFiles)')">$(CommonProgramFiles)\</CommonProgramFiles>
+    <MicrosoftSharedFiles>$(CommonProgramFiles)Microsoft Shared\</MicrosoftSharedFiles>
+
+    <!-- Try to find the installed executable for the current Visual Studio version -->
+    <ExecutablePath Condition="'$(ExecutablePath)'==''">$(CommonProgramFiles)Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</ExecutablePath>
+
+    <!-- Look for other versions form newest to oldest if not found -->
+    <ExecutablePath Condition="!Exists('$(ExecutablePath)')">$(MicrosoftSharedFiles)TextTemplating\14.0\TextTransform.exe</ExecutablePath>
+    <ExecutablePath Condition="!Exists('$(ExecutablePath)')">$(MicrosoftSharedFiles)TextTemplating\12.0\TextTransform.exe</ExecutablePath>
+    <ExecutablePath Condition="!Exists('$(ExecutablePath)')">$(MicrosoftSharedFiles)TextTemplating\11.0\TextTransform.exe</ExecutablePath>
+    <ExecutablePath Condition="!Exists('$(ExecutablePath)')">$(MicrosoftSharedFiles)TextTemplating\10.0\TextTransform.exe</ExecutablePath>
+
+    <BeforeTransform Condition="'$(BeforeTransform)'==''"></BeforeTransform>
+  </PropertyGroup>
+
+  <Target Name="Transform" Condition="'$(TransformOnBuild)'=='true'" DependsOnTargets="$(BeforeTransform)" AfterTargets="BeforeBuild">
+    <Error Text="The TextTemplating.exe executable was not found." Condition="!Exists('$(ExecutablePath)')" />
+
+    <PropertyGroup>
+      <TransformParameters>@(T4ParameterValues->'-a "!!%(Identity)!%(Value)"', ' ')</TransformParameters>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Transforms Include="@(None)" Condition="'%(None.Generator)'=='TextTemplatingFileGenerator'" />
+    </ItemGroup>
+
+    <Exec Command="&quot;$(ExecutablePath)&quot; $(TransformParameters) &quot;%(Transforms.FullPath)&quot;" Condition="'%(Transforms.Identity)'!=''" />
+  </Target>
+
+  <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
+</Project>

@@ -4,8 +4,16 @@
   <PropertyGroup>
     <ProjectGuid>{EAE7D4BF-5061-4220-BE94-E268E965DCE5}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <TransformOnBuild>true</TransformOnBuild>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <BeforeTransform>
+      $(BeforeTransform);
+      UpdateAssemblyInfo;
+      CalculateVersion;
+    </BeforeTransform>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=9f4be179981a58d1, processorArchitecture=MSIL">
@@ -159,7 +167,14 @@
     <None Include="Tools\ChocolateyInstall.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="MSI.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MSI.psd1</LastGenOutput>
+    </None>
     <Content Include="MSI.psd1">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MSI.tt</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -170,22 +185,35 @@
     </Content>
   </ItemGroup>
   <Import Project="$(IncludeDir)Common.targets" />
+  <Import Project="$(IncludeDir)TextTemplating.targets" />
   <Import Project="$(SolutionDir).nuget\NuGet.targets" />
-  <Import Project="..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" />
+  <Target Name="CalculateVersion" AfterTargets="UpdateAssemblyInfo">
+    <PropertyGroup>
+      <PackageVersion>$(GitVersion_MajorMinorPatch).$(GitVersion_BuildMetaData)</PackageVersion>
+    </PropertyGroup>
+    <ItemGroup>
+      <T4ParameterValues Include="PackageVersion">
+        <Value>$(PackageVersion)</Value>
+        <Visible>false</Visible>
+      </T4ParameterValues>
+    </ItemGroup>
+  </Target>
+  <Target Name="BuildPackage" DependsOnTargets="CalculateVersion" Inputs="$(TargetPath);$(MSBuildProjectName).nuspec" Outputs="$(OutputPath)MSI.$(PackageVersion).nupkg">
+    <PropertyGroup>
+      <ProjectPath>$(MSBuildProjectDirectory)\$(MSBuildProjectName).nuspec</ProjectPath>
+      <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -Properties "SolutionDir=$(SolutionDir);Configuration=$(Configuration);Platform=$(Platform);Version=$(PackageVersion)" -OutputDirectory "$(OutputPath.TrimEnd('\'))" -Symbols -NonInteractive -NoPackageAnalysis</BuildCommand>
+    </PropertyGroup>
+    <Exec Command="$(BuildCommand)" Outputs="$(OutputPath)MSI.$(PackageVersion).nupkg">
+      <Output TaskParameter="Outputs" ItemName="FileWrites" />
+    </Exec>
+  </Target>
+  <Target Name="AfterBuild" DependsOnTargets="BuildPackage" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets'))" />
   </Target>
-  <Target Name="AfterBuild" Inputs="$(TargetPath);$(MSBuildProjectName).nuspec" Outputs="$(OutputPath)MSI.$(GitVersion_InformationalVersion).nupkg">
-    <PropertyGroup>
-      <ProjectPath>$(MSBuildProjectDirectory)\$(MSBuildProjectName).nuspec</ProjectPath>
-      <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -Properties "SolutionDir=$(SolutionDir);Configuration=$(Configuration);Platform=$(Platform);Version=$(GitVersion_InformationalVersion)" -OutputDirectory "$(OutputPath.TrimEnd('\'))" -Symbols -NonInteractive -NoPackageAnalysis</BuildCommand>
-    </PropertyGroup>
-    <Exec Command="$(BuildCommand)" Outputs="$(OutputPath)MSI.$(GitVersion_InformationalVersion).nupkg">
-      <Output TaskParameter="Outputs" ItemName="FileWrites" />
-    </Exec>
-  </Target>
+  <Import Project="..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" />
   <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
 </Project>
