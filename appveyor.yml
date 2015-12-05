@@ -1,4 +1,7 @@
 configuration: Release
+pull_requests:
+  do_not_increment_build_number: true
+skip_tags: true
 
 before_build:
   - nuget restore
@@ -20,7 +23,7 @@ artifacts:
 
 deploy:
   - provider: GitHub
-    description: 'Release of version $(appveyor_build_vesion)'
+    description: 'Release of version $(appveyor_build_version)'
     auth_token:
       secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
     artifact: installer, package
