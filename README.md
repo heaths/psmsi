@@ -26,6 +26,17 @@ You can also install, repair, and uninstall products and patches complete with p
 install-msiproduct .\example.msi -destination (join-path $env:ProgramFiles Example)
 ```
 
+## Installation
+
+Starting with 3.0, the easiest way to install the module with Windows 10 or the [Windows Management Framework 5.0](http://www.microsoft.com/downloads/details.aspx?FamilyID=dcf26e59-1180-47ca-be90-748c855d4d89) or newer is by using the [PackageManagement](https://github.com/OneGet/oneget) module.
+
+``` powershell
+# Specifying the provider is recommended, though may be "psgallery" on Windows 10 RTM.
+install-package msi -provider PowerShellGet
+```
+
+You can also download the NuGet and Windows Installer packages directly from [Releases](https://github.com/heaths/psmsi/releases).
+
 ## License
 
 The Windows Installer PowerShell module is licensed under the [MIT License](LICENSE.txt).
