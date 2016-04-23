@@ -187,7 +187,7 @@
   <Import Project="$(IncludeDir)Common.targets" />
   <Import Project="$(IncludeDir)TextTemplating.targets" />
   <Import Project="$(SolutionDir).nuget\NuGet.targets" />
-  <Target Name="CalculateVersion" AfterTargets="UpdateAssemblyInfo">
+  <Target Name="CalculateVersion" DependsOnTargets="GetVersion" AfterTargets="UpdateAssemblyInfo">
     <PropertyGroup>
       <BuildNumber>$(GitVersion_BuildMetaData)</BuildNumber>
       <BuildNumber Condition="'$(BuildNumber)'==''">0</BuildNumber>
@@ -215,7 +215,8 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets'))" />
+    <Error Condition="!Exists('..\..\packages\GitVersionTask.3.4.1\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.3.4.1\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets'))" />
   </Target>
-  <Import Project="..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" />
+  <Import Project="..\..\packages\GitVersionTask.3.4.1\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.3.4.1\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" />
   <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
 </Project>

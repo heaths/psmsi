@@ -1,4 +1,6 @@
 *.cache
+*.db
+*.log
 *.ncb
 *.nupkg
 *.pdb
@@ -7,7 +9,6 @@
 *.vssscc
 [Bb]in/
 [Oo]bj/
-[Tt]humbs.db
 [Tt]est[Rr]esults/
 node_modules/
 packages/
