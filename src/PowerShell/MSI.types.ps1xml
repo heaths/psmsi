@@ -12,12 +12,19 @@
       <PropertySet>
         <Name>MSIFileHash</Name>
         <ReferencedProperties>
+          <Name>MSIHash</Name>
           <Name>MSIHashPart1</Name>
           <Name>MSIHashPart2</Name>
           <Name>MSIHashPart3</Name>
           <Name>MSIHashPart4</Name>
         </ReferencedProperties>
       </PropertySet>
+      <ScriptProperty>
+        <Name>MSIHash</Name>
+        <GetScriptBlock>
+          $null
+        </GetScriptBlock>
+      </ScriptProperty>
       <ScriptProperty>
         <Name>MSIHashPart1</Name>
         <GetScriptBlock>
@@ -61,6 +68,12 @@
           <MethodName>GetFileHash</MethodName>
         </GetCodeReference>
       </CodeProperty>
+      <ScriptProperty>
+        <Name>MSIHash</Name>
+        <GetScriptBlock>
+          $this.MSIFileHash.MSIHash
+        </GetScriptBlock>
+      </ScriptProperty>
       <ScriptProperty>
         <Name>MSIHashPart1</Name>
         <GetScriptBlock>
