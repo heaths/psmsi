@@ -43,6 +43,16 @@ deploy:
     api_key:
       secure: 4STrzCp6wDsDBj/wCtmImMVL7wUI8DCGjdMBXGqQf9JZJ8LjmW5YSY8wtcHAv0XW
     artifact: package
+    skip_symbols: true
+    prerelease: true
+    on:
+      branch: master
+
+  - provider: NuGet
+    server: http://nuget.gw.symbolsource.org/Public/NuGet
+    api_key:
+      secure: 4STrzCp6wDsDBj/wCtmImMVL7wUI8DCGjdMBXGqQf9JZJ8LjmW5YSY8wtcHAv0XW
+    artifact: /.*\.symbols\.nupkg/
     prerelease: true
     on:
       branch: master
