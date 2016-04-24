@@ -20,8 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -48,6 +51,26 @@ namespace Microsoft.Tools.WindowsInstaller
         internal FileHash()
         {
             this.dwFileHashInfoSie = Marshal.SizeOf(this);
+        }
+
+        /// <summary>
+        /// Gets the MD5 hash value combining all parts.
+        /// </summary>
+        public string MSIHash
+        {
+            get
+            {
+                var parts = new[]
+                {
+                    this.dwData0,
+                    this.dwData1,
+                    this.dwData2,
+                    this.dwData3,
+                };
+
+                var buffer = parts.SelectMany(part => BitConverter.GetBytes(part));
+                return buffer.Aggregate(new StringBuilder(32), (sb, b) => sb.Append(b.ToString("X2"))).ToString();
+            }
         }
 
         /// <summary>
@@ -88,8 +111,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <returns>An enumerator over the four nullable integer hash parts.</returns>
         public IEnumerator<int> GetEnumerator()
         {
-            var list = new List<int>() { this.MSIHashPart1, this.MSIHashPart2, this.MSIHashPart3, this.MSIHashPart4 };
-            return list.GetEnumerator();
+            return new[] { this.dwData0, this.dwData1, this.dwData2, this.dwData3 }.AsEnumerable().GetEnumerator();
         }
 
         /// <summary>

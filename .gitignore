@@ -1,13 +1,15 @@
 *.cache
+*.db
+*.log
 *.ncb
 *.nupkg
 *.pdb
 *.suo
 *.user
 *.vssscc
+.vs/
 [Bb]in/
 [Oo]bj/
-[Tt]humbs.db
 [Tt]est[Rr]esults/
 node_modules/
 packages/
