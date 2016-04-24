@@ -34,10 +34,6 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </remarks>
     internal sealed class RegistryView
     {
-        // Singleton fields.
-        private static volatile object syncRoot = new object();
-        private static RegistryView instance = null;
-
         // Improve performance by loading fields instead of allocating new strings each time.
         private static readonly string SOFTWARE = @"\SOFTWARE";
         private static readonly string WOW64 = @"\Wow6432Node";
@@ -53,6 +49,10 @@ namespace Microsoft.Tools.WindowsInstaller
         private static readonly string HKU = "HKEY_USERS";
 
         private static readonly Tree<bool> tree;
+
+        // Singleton fields.
+        private static volatile object syncRoot = new object();
+        private static RegistryView instance = null;
 
         static RegistryView()
         {
@@ -141,7 +141,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <summary>
         /// Gets the single instance for the current process bitness.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The single instance for the current process bitness.</returns>
         internal static RegistryView GetInstance()
         {
             if (null == instance)
@@ -159,7 +159,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="RegistryView"/> class for the given bitness.
+        /// Initializes a new instance of the <see cref="RegistryView"/> class.
         /// </summary>
         /// <param name="is64Bit">True if running under a 64-bit process; otherwise, false for a 32-bit process.</param>
         internal RegistryView(bool is64Bit)
@@ -168,7 +168,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Gets whether the code is executing in a 64-bit process.
+        /// Gets a value indicating whether the code is executing in a 64-bit process.
         /// </summary>
         internal bool Is64Bit { get; private set; }
 

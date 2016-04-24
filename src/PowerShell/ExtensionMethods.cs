@@ -44,7 +44,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Determines whether any element of a sequence satisfies a condition.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">The type of the elements of source.</param>
+        /// <param name="source">The source elements.</param>
         /// <param name="predicate">The condition to apply to each element.</param>
         /// <returns>True if any of the elements satisfy the <paramref name="predicate"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> or <paramref name="predicate"/> argument is null.</exception>
@@ -135,10 +135,10 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Joins an enumerable of <see cref="String"/> elements with the given <paramref name="separator"/>.
+        /// Joins an enumerable of <see cref="string"/> elements with the given <paramref name="separator"/>.
         /// </summary>
-        /// <param name="source">An enumerable of type <see cref="String"/>.</param>
-        /// <param name="separator">The string separator to separate <see cref="String"/> elements. The default is an empty string.</param>
+        /// <param name="source">An enumerable of type <see cref="string"/>.</param>
+        /// <param name="separator">The string separator to separate <see cref="string"/> elements. The default is an empty string.</param>
         /// <returns>A string of all elements separated by the given <paramref name="separator"/>, or null if <paramref name="source"/> is null.</returns>
         internal static string Join(this IEnumerable<string> source, string separator)
         {
@@ -260,7 +260,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">The type of the elements of source.</param>
+        /// <param name="source">The source elements.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>An enumerable that contains elements from the input sequence that satisfy the condition.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> or <paramref name="predicate"/> argument is null.</exception>

@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -35,33 +34,33 @@ namespace Microsoft.Tools.WindowsInstaller
     internal sealed class EncodingConverter : TypeConverter
     {
         /// <summary>
-        /// Returns True when <paramref name="sourceType"/> is a <see cref="String"/> or <see cref="Int32"/>.
+        /// Returns True when <paramref name="sourceType"/> is a <see cref="string"/> or <see cref="int"/>.
         /// </summary>
         /// <param name="context">Additional context for conversion.</param>
         /// <param name="sourceType">The type of the source object.</param>
-        /// <returns>True if the <paramref name="sourceType"/> is a <see cref="String"/> or <see cref="Int32"/>.</returns>
+        /// <returns>True if the <paramref name="sourceType"/> is a <see cref="string"/> or <see cref="int"/>.</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return typeof(string) == sourceType || IsNumeric(sourceType) || base.CanConvertFrom(context, sourceType);
         }
 
         /// <summary>
-        /// Returns True when <paramref name="destinationType"/> is a <see cref="String"/> or <see cref="Int32"/>.
+        /// Returns True when <paramref name="destinationType"/> is a <see cref="string"/> or <see cref="int"/>.
         /// </summary>
         /// <param name="context">Additional context for conversion.</param>
         /// <param name="destinationType">The type of the destination object.</param>
-        /// <returns>True if the <paramref name="destinationType"/> is a <see cref="String"/> or <see cref="Int32"/>.</returns>
+        /// <returns>True if the <paramref name="destinationType"/> is a <see cref="string"/> or <see cref="int"/>.</returns>
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
             return typeof(string) == destinationType || IsNumeric(destinationType) || base.CanConvertTo(context, destinationType);
         }
 
         /// <summary>
-        /// Converts a <see cref="String"/> or <see cref="Int32"/> to an <see cref="Encoding"/>.
+        /// Converts a <see cref="string"/> or <see cref="int"/> to an <see cref="Encoding"/>.
         /// </summary>
         /// <param name="context">Additional context for conversion.</param>
         /// <param name="culture">The culture to use for conversion.</param>
-        /// <param name="value">The <see cref="String"/> or <see cref="Int32"/> value to convert.</param>
+        /// <param name="value">The <see cref="string"/> or <see cref="int"/> value to convert.</param>
         /// <returns>The <see cref="Encoding"/> for the string.</returns>
         /// <exception cref="ArgumentException">No <see cref="Encoding"/> could be matched to the string or code page integer.</exception>
         /// <remarks>

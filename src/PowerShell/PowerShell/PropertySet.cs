@@ -32,9 +32,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
     internal sealed class PropertySet : KeyedCollection<string, PSAdaptedProperty>
     {
         /// <summary>
-        /// Creates a case-insensitive instance of the <see cref="PropertySet"/> class.
+        /// Initializes a new instance of the <see cref="PropertySet"/> class.
         /// </summary>
-        internal PropertySet() : base(StringComparer.OrdinalIgnoreCase)
+        internal PropertySet()
+            : base(StringComparer.OrdinalIgnoreCase)
         {
         }
 
@@ -61,7 +62,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// <summary>
         /// Converts the collection of items to a collection of type <see cref="PSAdaptedProperty"/>.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of adapter properties.</returns>
         internal Collection<PSAdaptedProperty> ToCollection()
         {
             return new Collection<PSAdaptedProperty>(this.Items);

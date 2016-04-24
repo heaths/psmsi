@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Deployment.WindowsInstaller.Package;
-using Microsoft.Tools.WindowsInstaller.PowerShell;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Xml.XPath;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Deployment.WindowsInstaller.Package;
+using Microsoft.Tools.WindowsInstaller.PowerShell;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -42,7 +42,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private GetApplicablePatchesAction action;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="PatchSequencer"/> class.
+        /// Initializes a new instance of the <see cref="PatchSequencer"/> class.
         /// </summary>
         internal PatchSequencer()
         {
@@ -145,6 +145,18 @@ namespace Microsoft.Tools.WindowsInstaller
             return this.action.EndInvoke(result);
         }
 
+        private static bool IsPatch(string path)
+        {
+            try
+            {
+                return FileType.Patch == PowerShell.FileInfo.GetFileTypeInternal(path);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private IEnumerable<PatchSequence> DetermineApplicablePatches(string product, string userSid, UserContexts context)
         {
             var patches = this.Patches.ToArray();
@@ -204,51 +216,5 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
             }
         }
-
-        private static bool IsPatch(string path)
-        {
-            try
-            {
-                return FileType.Patch == PowerShell.FileInfo.GetFileTypeInternal(path);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Contains information about inapplicable patches.
-    /// </summary>
-    internal sealed class InapplicablePatchEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Creates a new instance of the <see cref="InapplicablePatchEventArgs"/> class.
-        /// </summary>
-        /// <param name="patch">The path to the patch or patch XML file that is not applicable.</param>
-        /// <param name="product">The ProductCode for or path to the target product.</param>
-        /// <param name="exception">Exception information about why the patch is not applicable.</param>
-        internal InapplicablePatchEventArgs(string patch, string product, Exception exception)
-        {
-            this.Patch = patch;
-            this.Product = product;
-            this.Exception = exception;
-        }
-
-        /// <summary>
-        /// Gets the path to the patch or patch XML file.
-        /// </summary>
-        internal string Patch { get; private set; }
-
-        /// <summary>
-        /// Gets the ProductCode for or path to the target product.
-        /// </summary>
-        internal string Product { get; private set; }
-
-        /// <summary>
-        /// Gets exception information about why the patch is not applicable.
-        /// </summary>
-        internal Exception Exception { get; private set; }
     }
 }

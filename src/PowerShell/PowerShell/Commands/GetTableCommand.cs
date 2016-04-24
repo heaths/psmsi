@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Tools.WindowsInstaller.Properties;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -230,7 +230,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             {
                 return Installer.OpenPackage(path, this.IgnoreMachineState);
             }
-            else if (product.IsAdvertised && !String.IsNullOrEmpty(product.AdvertisedPackageName))
+            else if (product.IsAdvertised && !string.IsNullOrEmpty(product.AdvertisedPackageName))
             {
                 // Product is advertised and has no locally installed package.
                 var message = string.Format(Properties.Resources.Error_Advertised, product.ProductCode);

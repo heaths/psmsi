@@ -32,10 +32,11 @@ namespace Microsoft.Tools.WindowsInstaller
     internal sealed class Set<T> : KeyedCollection<T, T>
     {
         /// <summary>
-        /// Creates a new instance of the class with the given equality comparer.
+        /// Initializes a new instance of the <see cref="Set{T}"/> class.
         /// </summary>
         /// <param name="comparer">The equality comparer to use.</param>
-        internal Set(IEqualityComparer<T> comparer = null) : base(comparer ?? EqualityComparer<T>.Default)
+        internal Set(IEqualityComparer<T> comparer = null)
+            : base(comparer ?? EqualityComparer<T>.Default)
         {
         }
 

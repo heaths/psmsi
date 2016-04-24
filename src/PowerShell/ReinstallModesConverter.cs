@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Tools.WindowsInstaller.Properties;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -60,33 +60,33 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Returns True when <paramref name="sourceType"/> is a <see cref="String"/>.
+        /// Returns True when <paramref name="sourceType"/> is a <see cref="string"/>.
         /// </summary>
         /// <param name="context">Additional context for conversion.</param>
         /// <param name="sourceType">The type of the source object.</param>
-        /// <returns>True if the <paramref name="sourceType"/> is a <see cref="String"/>.</returns>
+        /// <returns>True if the <paramref name="sourceType"/> is a <see cref="string"/>.</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return typeof(string) == sourceType;
         }
 
         /// <summary>
-        /// Returns True when <paramref name="destinationType"/> is a <see cref="String"/>.
+        /// Returns True when <paramref name="destinationType"/> is a <see cref="string"/>.
         /// </summary>
         /// <param name="context">Additional context for conversion.</param>
         /// <param name="destinationType">The type of the destination object.</param>
-        /// <returns>True if the <paramref name="destinationType"/> is a <see cref="String"/>.</returns>
+        /// <returns>True if the <paramref name="destinationType"/> is a <see cref="string"/>.</returns>
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
             return typeof(string) == destinationType;
         }
 
         /// <summary>
-        /// Converts a <see cref="String"/> in the short form like "omus" to a <see cref="ReinstallModes"/> enumeration.
+        /// Converts a <see cref="string"/> in the short form like "omus" to a <see cref="ReinstallModes"/> enumeration.
         /// </summary>
         /// <param name="context">Additional context for conversion.</param>
         /// <param name="culture">The culture to use for conversion.</param>
-        /// <param name="value">The <see cref="String"/> value to convert.</param>
+        /// <param name="value">The <see cref="string"/> value to convert.</param>
         /// <returns>The converted <see cref="ReinstallModes"/> enumeration.</returns>
         /// <exception cref="ArgumentException">The short form string contains invalid characters.</exception>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
@@ -124,13 +124,13 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Converts a <see cref="ReinstallModes"/> to a short form <see cref="String"/> like "omus".
+        /// Converts a <see cref="ReinstallModes"/> to a short form <see cref="string"/> like "omus".
         /// </summary>
         /// <param name="context">Additional context for conversion.</param>
         /// <param name="culture">The culture to use for conversion.</param>
         /// <param name="value">The <see cref="ReinstallModes"/> to convert.</param>
         /// <param name="destinationType">The type of the destination object.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="ReinstallModes"/> short form.</returns>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (null != value && this.CanConvertTo(context, destinationType))

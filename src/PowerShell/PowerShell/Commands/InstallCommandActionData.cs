@@ -85,7 +85,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 return this.weight;
             }
 
-            set { this.weight = value; }
+            set
+            {
+                this.weight = value;
+            }
         }
 
         /// <summary>
@@ -95,7 +98,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <param name="resolver">A <see cref="PathIntrinsics"/> object to resolve the file path.</param>
         /// <param name="file">A <see cref="PSObject"/> wrapping a file path.</param>
         /// <returns>An instance of an <see cref="InstallCommandActionData"/> class.</returns>
-        public static T CreateActionData<T>(PathIntrinsics resolver, PSObject file) where T : InstallCommandActionData, new()
+        public static T CreateActionData<T>(PathIntrinsics resolver, PSObject file)
+            where T : InstallCommandActionData, new()
         {
             if (null == resolver)
             {

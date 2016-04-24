@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 
 namespace Microsoft.Tools.WindowsInstaller
@@ -39,67 +38,67 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <summary>
         /// No logging.
         /// </summary>
-        None            = 0x0,
+        None = 0x0,
 
         /// <summary>
         /// Out-of-memory or fatal exit information.
         /// </summary>
-        FatalExit       = 0x1,
+        FatalExit = 0x1,
 
         /// <summary>
         /// All error messages.
         /// </summary>
-        Error           = 0x2,
+        Error = 0x2,
 
         /// <summary>
         /// Non-fatal warnings.
         /// </summary>
-        Warning         = 0x4,
+        Warning = 0x4,
 
         /// <summary>
         /// User requests.
         /// </summary>
-        User            = 0x8,
+        User = 0x8,
 
         /// <summary>
         /// Status messages.
         /// </summary>
-        Information     = 0x10,
+        Information = 0x10,
 
         /// <summary>
         /// Out-of-disk-space messages.
         /// </summary>
-        OutOfDiskSpace  = 0x80,
+        OutOfDiskSpace = 0x80,
 
         /// <summary>
         /// Start up of actions.
         /// </summary>
-        ActionStart     = 0x100,
+        ActionStart = 0x100,
 
         /// <summary>
         /// Action-specific records.
         /// </summary>
-        ActionData      = 0x200,
+        ActionData = 0x200,
 
         /// <summary>
         /// Dump properties on exit.
         /// </summary>
-        PropertyDump    = 0x400,
+        PropertyDump = 0x400,
 
         /// <summary>
         /// Initial user interface parameters.
         /// </summary>
-        CommonData      = 0x800,
+        CommonData = 0x800,
 
         /// <summary>
         /// Verbose output.
         /// </summary>
-        Verbose         = 0x1000,
+        Verbose = 0x1000,
 
         /// <summary>
         /// Extra debugging information.
         /// </summary>
-        ExtraDebug      = 0x2000,
+        ExtraDebug = 0x2000,
 
         /// <summary>
         /// Log everything.
@@ -107,7 +106,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <remarks>
         /// This is equivalent to "*vx" or "voicewarmupx" on the command line.
         /// </remarks>
-        All             = Verbose | OutOfDiskSpace | Information | CommonData | Error |
+        All = Verbose | OutOfDiskSpace | Information | CommonData | Error |
                           Warning | ActionStart | ActionData | FatalExit | User | PropertyDump | ExtraDebug,
 
         /// <summary>
@@ -116,6 +115,6 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <remarks>
         /// This can cause performance degradation and is not recommended.
         /// </remarks>
-        FlushEachLine   = 0x10000000,
+        FlushEachLine = 0x10000000,
     }
 }

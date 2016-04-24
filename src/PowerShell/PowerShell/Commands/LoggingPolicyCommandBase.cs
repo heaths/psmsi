@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Win32;
 using System;
 using System.Management.Automation;
+using Microsoft.Win32;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         private readonly ILoggingPolicyService loggingService;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="LoggingPolicyCommandBase"/> class using the given <see cref="ILoggingPolicyService"/>.
+        /// Initializes a new instance of the <see cref="LoggingPolicyCommandBase"/> class.
         /// </summary>
         /// <param name="loggingService">The <see cref="ILoggingPolicyService"/> to use. The default is the current instance.</param>
         internal LoggingPolicyCommandBase(ILoggingPolicyService loggingService = null)

@@ -32,7 +32,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     public sealed class SetLoggingPolicyCommand : LoggingPolicyCommandBase
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="SetLoggingPolicyCommand"/> class.
+        /// Initializes a new instance of the <see cref="SetLoggingPolicyCommand"/> class.
         /// </summary>
         public SetLoggingPolicyCommand()
             : base(null)
@@ -40,7 +40,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="SetLoggingPolicyCommand"/> class with the given <see cref="ILoggingPolicyService"/>.
+        /// Initializes a new instance of the <see cref="SetLoggingPolicyCommand"/> class.
         /// </summary>
         /// <param name="loggingService">The <see cref="ILoggingPolicyService"/> to use. The default is the current instance.</param>
         internal SetLoggingPolicyCommand(ILoggingPolicyService loggingService = null)

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Solution Rules" Description=" " ToolsVersion="14.0">
+  <Include Path="minimumrecommendedrules.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+    <Rule Id="IDE0002" Action="None" />
+    <Rule Id="IDE0003" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1009" Action="None" />
+    <Rule Id="SA1100" Action="None" />
+    <Rule Id="SA1111" Action="None" />
+    <Rule Id="SA1124" Action="None" />
+    <Rule Id="SA1131" Action="None" />
+    <Rule Id="SA1201" Action="None" />
+    <Rule Id="SA1202" Action="None" />
+    <Rule Id="SA1310" Action="None" />
+    <Rule Id="SA1311" Action="None" />
+    <Rule Id="SA1401" Action="None" />
+    <Rule Id="SA1515" Action="None" />
+    <Rule Id="SA1516" Action="None" />
+    <Rule Id="SA1652" Action="None" />
+  </Rules>
+</RuleSet>

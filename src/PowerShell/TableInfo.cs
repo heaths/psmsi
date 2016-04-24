@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 
@@ -34,7 +33,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private static readonly IList<string> Empty = new List<string>(0).AsReadOnly();
 
         /// <summary>
-        /// Creates a new instance of the <see cref="TableInfo"/> class.
+        /// Initializes a new instance of the <see cref="TableInfo"/> class.
         /// </summary>
         /// <param name="name">The name of the table.</param>
         /// <param name="path">The full path to the <see cref="Database"/> containing the table.</param>

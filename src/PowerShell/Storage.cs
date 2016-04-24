@@ -61,13 +61,15 @@ namespace Microsoft.Tools.WindowsInstaller
             NativeMethods.IStorage stg = null;
             Guid iid = NativeMethods.IID_IStorage;
 
-            int ret = NativeMethods.StgOpenStorageEx(path,
+            int ret = NativeMethods.StgOpenStorageEx(
+                path,
                 NativeMethods.STGM.STGM_READ | NativeMethods.STGM.STGM_SHARE_DENY_WRITE,
                 NativeMethods.STGFMT.STGFMT_STORAGE,
                 0,
                 IntPtr.Zero,
                 IntPtr.Zero,
-                ref iid, out stg);
+                ref iid,
+                out stg);
 
             if (NativeMethods.STG_E_FILEALREADYEXISTS == ret)
             {
@@ -92,7 +94,7 @@ namespace Microsoft.Tools.WindowsInstaller
         {
             get
             {
-                if (Guid.Empty == classId)
+                if (Guid.Empty == this.classId)
                 {
                     using (NativeMethods.STATSTG stat = new NativeMethods.STATSTG())
                     {

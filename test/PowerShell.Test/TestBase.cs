@@ -120,7 +120,6 @@ namespace Microsoft.Tools.WindowsInstaller
             }
         }
 
-
         /// <summary>
         /// Gets the username for the current user.
         /// </summary>

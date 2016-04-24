@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -83,7 +83,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         [Parameter(ParameterSetName = "Path,ProductCode")]
         [Parameter(ParameterSetName = "LiteralPath,ProductCode")]
-        [Alias("User"), Sid]
+        [Alias("User")]
+        [Sid]
         public string UserSid { get; set; }
 
         private bool IsProductCode

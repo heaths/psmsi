@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -42,15 +42,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the ProductCodes to enumerate.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required by older PowerShell")]
         [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, ValueFromPipelineByPropertyName = true)]
         [ValidateGuid]
         public string[] ProductCode { get; set; }
 
         /// <summary>
-        /// Sets the wildcard names to enumerate.
+        /// Gets or sets the wildcard names to enumerate.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required by older PowerShell")]
         [Parameter(ParameterSetName = ParameterSet.Name, Mandatory = true)]
         public string[] Name { get; set; }
 
@@ -61,7 +61,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [Alias("Context", "InstallContext")] // Backward compatibility.
         public UserContexts UserContext
         {
-            get { return this.context; }
+            get
+            {
+                return this.context;
+            }
+
             set
             {
                 if (value == UserContexts.None)
@@ -132,6 +136,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                             this.WriteProducts(null, param.UserSid, param.UserContext);
                         }
                     }
+
                     // Enumerate all products in context and match the names using regex.
                     else if (param.ParameterSetName == ParameterSet.Name)
                     {

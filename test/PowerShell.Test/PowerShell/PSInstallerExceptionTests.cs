@@ -82,7 +82,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
 
             using (var psiex = new PSInstallerException(iex))
             {
-                var error= psiex.ErrorRecord;
+                var error = psiex.ErrorRecord;
 
                 Assert.IsNotNull(error);
                 Assert.AreEqual("Installed TEST", psiex.Message, true);

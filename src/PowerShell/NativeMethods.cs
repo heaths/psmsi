@@ -79,7 +79,8 @@ namespace Microsoft.Tools.WindowsInstaller
         #endregion
 
         #region Storage interfaces
-        [ComImport, Guid("0000000b-0000-0000-c000-000000000046")]
+        [ComImport]
+        [Guid("0000000b-0000-0000-c000-000000000046")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         internal interface IStorage
         {
@@ -160,7 +161,8 @@ namespace Microsoft.Tools.WindowsInstaller
                 [MarshalAs(UnmanagedType.U4)] NativeMethods.STATFLAG grfStatFlag);
         }
 
-        [ComImport, Guid("0000000d-0000-0000-C000-000000000046")]
+        [ComImport]
+        [Guid("0000000d-0000-0000-C000-000000000046")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         internal interface IEnumSTATSTG
         {
@@ -184,33 +186,25 @@ namespace Microsoft.Tools.WindowsInstaller
         internal class STATSTG : IDisposable
         {
             internal IntPtr pwcsName;
-            [MarshalAs(UnmanagedType.U4)] internal NativeMethods.STGTY type;
-            [MarshalAs(UnmanagedType.U8)] internal long cbSize;
+            [MarshalAs(UnmanagedType.U4)]
+            internal NativeMethods.STGTY type;
+            [MarshalAs(UnmanagedType.U8)]
+            internal long cbSize;
             internal ComTypes.FILETIME mtime;
             internal ComTypes.FILETIME ctime;
             internal ComTypes.FILETIME atime;
-            [MarshalAs(UnmanagedType.U4)] internal NativeMethods.STGM grfMode;
-            [MarshalAs(UnmanagedType.U4)] internal int grfLockSupported;
+            [MarshalAs(UnmanagedType.U4)]
+            internal NativeMethods.STGM grfMode;
+            [MarshalAs(UnmanagedType.U4)]
+            internal int grfLockSupported;
             internal Guid clsid;
-            [MarshalAs(UnmanagedType.U4)] internal int grfStateBits;
-            [MarshalAs(UnmanagedType.U4)] internal int reserved;
-
-            //internal string Name
-            //{
-            //    get
-            //    {
-            //        string name = Marshal.PtrToStringUni(pwcsName);
-            //        return name;
-            //    }
-            //}
+            [MarshalAs(UnmanagedType.U4)]
+            internal int grfStateBits;
+            [MarshalAs(UnmanagedType.U4)]
+            internal int reserved;
 
             void IDisposable.Dispose()
             {
-                //if (IntPtr.Zero != pwcsName)
-                //{
-                //    Marshal.FreeCoTaskMem(pwcsName);
-                //}
-
                 GC.SuppressFinalize(this);
             }
         }
@@ -284,15 +278,19 @@ namespace Microsoft.Tools.WindowsInstaller
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     internal struct RestorePointInfo
     {
-        [MarshalAs(UnmanagedType.U4)] internal RestorePointEventType EventType;
-        [MarshalAs(UnmanagedType.U4)] internal RestorePointType Type;
+        [MarshalAs(UnmanagedType.U4)]
+        internal RestorePointEventType EventType;
+        [MarshalAs(UnmanagedType.U4)]
+        internal RestorePointType Type;
         internal long SequenceNumber;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] internal string Description;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        internal string Description;
     }
 
     internal struct StateManagerStatus
     {
-        [MarshalAs(UnmanagedType.U4)] internal int ErrorCode;
+        [MarshalAs(UnmanagedType.U4)]
+        internal int ErrorCode;
         internal long SequenceNumber;
     }
 

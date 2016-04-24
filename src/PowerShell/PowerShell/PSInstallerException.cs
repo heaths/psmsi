@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Globalization;
 using System.Management.Automation;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {
@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         private Deployment.WindowsInstaller.Record record;
 
         /// <summary>
-        /// Creates a <see cref="PSInstallerException"/> from the given <paramref name="record"/>.
+        /// Initializes a new instance of the <see cref="PSInstallerException"/> class.
         /// </summary>
         /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> containing error details.</param>
         public PSInstallerException(Deployment.WindowsInstaller.Record record)
@@ -53,16 +53,18 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         }
 
         /// <summary>
-        /// Creates a <see cref="PSInstallerException"/> from the given inner exception.
+        /// Initializes a new instance of the <see cref="PSInstallerException"/> class.
         /// </summary>
         /// <param name="innerException">The <see cref="InstallerException"/> containing error details.</param>
-        public PSInstallerException(InstallerException innerException) : base(null, innerException)
+        public PSInstallerException(InstallerException innerException)
+            : base(null, innerException)
         {
             this.errorRecord = null;
             this.record = null;
         }
 
-        private PSInstallerException(SerializationInfo info, StreamingContext context) : base(info, context)
+        private PSInstallerException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
             // ErrorRecord is cache only.
             this.errorRecord = null;
@@ -174,21 +176,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             }
         }
 
-        private Deployment.WindowsInstaller.Record GetRecord()
-        {
-            if (null != this.record)
-            {
-                return this.record;
-            }
-            else if (this.InnerException is InstallerException)
-            {
-                var ex = (InstallerException)this.InnerException;
-                return ex.GetErrorRecord();
-            }
-
-            return null;
-        }
-
         private static ErrorCategory GetErrorCategory(Deployment.WindowsInstaller.Record record, out string resource)
         {
             resource = null;
@@ -240,6 +227,21 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             }
 
             return ErrorCategory.NotSpecified;
+        }
+
+        private Deployment.WindowsInstaller.Record GetRecord()
+        {
+            if (null != this.record)
+            {
+                return this.record;
+            }
+            else if (this.InnerException is InstallerException)
+            {
+                var ex = (InstallerException)this.InnerException;
+                return ex.GetErrorRecord();
+            }
+
+            return null;
         }
     }
 }

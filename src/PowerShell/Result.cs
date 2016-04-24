@@ -29,38 +29,42 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </summary>
     public sealed class Result
     {
-        private bool _rebootInitiated;
-        private bool _rebootRequired;
+        private bool rebootInitiated;
+        private bool rebootRequired;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Result"/> class.
+        /// Initializes a new instance of the <see cref="Result"/> class.
         /// </summary>
         internal Result()
         {
-            this._rebootInitiated = false;
-            this._rebootRequired = false;
+            this.rebootInitiated = false;
+            this.rebootRequired = false;
         }
 
         /// <summary>
-        /// Gets whether a reboot has been initiated already.
+        /// Gets a value indicating whether a reboot has been initiated already.
         /// </summary>
         public bool RebootInitiated
         {
-            get { return this._rebootInitiated; }
+            get
+            {
+                return this.rebootInitiated;
+            }
+
             internal set
             {
-                this._rebootInitiated |= value;
-                this._rebootRequired |= value;
+                this.rebootInitiated |= value;
+                this.rebootRequired |= value;
             }
         }
 
         /// <summary>
-        /// Gets whether a reboot is required or has been initiated already.
+        /// Gets a value indicating whether a reboot is required or has been initiated already.
         /// </summary>
         public bool RebootRequired
         {
-            get { return this._rebootRequired; }
-            internal set { this._rebootRequired |= value; }
+            get { return this.rebootRequired; }
+            internal set { this.rebootRequired |= value; }
         }
 
         /// <summary>
@@ -83,8 +87,8 @@ namespace Microsoft.Tools.WindowsInstaller
 
             var result = new Result();
 
-            result._rebootInitiated = x._rebootInitiated | y._rebootInitiated;
-            result._rebootRequired = result._rebootInitiated | x._rebootRequired | y._rebootRequired;
+            result.rebootInitiated = x.rebootInitiated | y.rebootInitiated;
+            result.rebootRequired = result.rebootInitiated | x.rebootRequired | y.rebootRequired;
 
             return result;
         }

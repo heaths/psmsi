@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -53,7 +53,7 @@ namespace Microsoft.Tools.WindowsInstaller
         };
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Column"/> class from a <see cref="View"/> and column index.
+        /// Initializes a new instance of the <see cref="Column"/> class.
         /// </summary>
         /// <param name="view">The <see cref="View"/> from which column information is retrieved.</param>
         /// <param name="index">The index of the column within the <see cref="View"/>.</param>
@@ -63,7 +63,6 @@ namespace Microsoft.Tools.WindowsInstaller
         internal Column(View view, int index, string table, string name, string key)
         {
             // Internal constructor will assume valid parameters.
-
             this.Index = index;
             var column = view.Columns[index];
 
@@ -101,11 +100,11 @@ namespace Microsoft.Tools.WindowsInstaller
             }
             else if (typeof(short) == type)
             {
-                this.ColumnType = typeof(Nullable<short>);
+                this.ColumnType = typeof(short?);
             }
             else
             {
-                this.ColumnType = typeof(Nullable<int>);
+                this.ColumnType = typeof(int?);
             }
         }
 
@@ -120,7 +119,7 @@ namespace Microsoft.Tools.WindowsInstaller
         internal int Index { get; private set; }
 
         /// <summary>
-        /// Gets whether the column is a primary key in its containing table.
+        /// Gets a value indicating whether the column is a primary key in its containing table.
         /// </summary>
         internal bool IsPrimaryKey { get; private set; }
 

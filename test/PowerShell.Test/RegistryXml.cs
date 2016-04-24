@@ -83,7 +83,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <exception cref="XmlException">A general XML exception occured.</exception>
         internal void Import(XmlReader reader)
         {
-            Debug.Assert(null != reader);
+            Debug.Assert(null != reader, $@"The argument ""{nameof(reader)}"" is null.");
 
             while (reader.Read())
             {
@@ -231,7 +231,7 @@ namespace Microsoft.Tools.WindowsInstaller
                 return string.Empty;
             }
 
-            string replacement = Variables.Replace(value, delegate(Match m)
+            string replacement = Variables.Replace(value, m =>
             {
                 string var = m.Groups["var"].Value;
                 if (this.Properties.ContainsKey(var))

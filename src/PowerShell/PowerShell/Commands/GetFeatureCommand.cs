@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the <see cref="ProductInstallation"/> for which features are enumerated.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required by older PowerShell")]
         [Parameter(ParameterSetName = ParameterSet.Product, Position = 0, Mandatory = true, ValueFromPipeline = true)]
         public ProductInstallation[] Product { get; set; }
 
@@ -50,7 +50,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the feature names to enumerate.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required by older PowerShell")]
         [Parameter(ParameterSetName = ParameterSet.Feature, Position = 1, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [Alias("Name")]
         public string[] FeatureName { get; set; }

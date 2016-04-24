@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Deployment.WindowsInstaller.Package;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Deployment.WindowsInstaller.Package;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -49,7 +49,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private PatchSequencer sequencer;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="PatchApplicator"/> class.
+        /// Initializes a new instance of the <see cref="PatchApplicator"/> class.
         /// </summary>
         /// <param name="db">The <see cref="InstallPackage"/> to transform.</param>
         internal PatchApplicator(InstallPackage db)
@@ -85,6 +85,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <summary>
         /// Applies applicable transforms in order of sequenced patches.
         /// </summary>
+        /// <param name="throwOnError">Whether to throw an exception if an error occurs.</param>
         internal void Apply(bool throwOnError = false)
         {
             // Need to make a copy of the database since exclusivity is required.
@@ -121,7 +122,7 @@ namespace Microsoft.Tools.WindowsInstaller
             }
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Will dispose later")]
         private static InstallPackage Copy(InstallPackage db)
         {
             var temp = Path.ChangeExtension(Path.GetTempFileName(), ".msi");

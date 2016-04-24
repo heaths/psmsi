@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Deployment.WindowsInstaller.Package;
-using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Deployment.WindowsInstaller.Package;
+using Microsoft.Tools.WindowsInstaller.Properties;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -42,13 +42,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         private ExternalUIRecordHandler previousExternalUI = null;
 
         // Used by nested classes.
-        private Queue<Data> Output = new Queue<Data>();
-        private string CurrentPath = null;
+        private Queue<Data> output = new Queue<Data>();
+        private string currentPath = null;
 
         /// <summary>
         /// Gets or sets additional ICE .cub files to use for validation.
         /// </summary>
-        [Parameter, Alias("Cube"), ValidateNotNullOrEmpty]
+        [Parameter]
+        [Alias("Cube")]
+        [ValidateNotNullOrEmpty]
         public string[] AdditionalCube { get; set; }
 
         /// <summary>
@@ -60,17 +62,19 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the wilcard patterns of ICEs to include. By default, all ICEs are included.
         /// </summary>
-        [Parameter, ValidateNotNullOrEmpty]
+        [Parameter]
+        [ValidateNotNullOrEmpty]
         public string[] Include { get; set; }
 
         /// <summary>
         /// Gets or sets the wilcard patterns of ICEs to exclude. By default, all ICEs are included.
         /// </summary>
-        [Parameter, ValidateNotNullOrEmpty]
+        [Parameter]
+        [ValidateNotNullOrEmpty]
         public string[] Exclude { get; set; }
 
         /// <summary>
-        /// Gets whether the standard Verbose parameter was set.
+        /// Gets a value indicating whether the standard Verbose parameter was set.
         /// </summary>
         private bool IsVerbose
         {
@@ -102,7 +106,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Get the item path and set the current context.
             string path = item.GetPropertyValue<string>("PSPath");
             path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
-            this.CurrentPath = path;
+            this.currentPath = path;
 
             // Copy the database to a writable location and open.
             string copy = this.Copy(path);
@@ -291,7 +295,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     if (null != ex.ErrorRecord)
                     {
                         var data = new Data(DataType.Error, ex.ErrorRecord);
-                        this.Output.Enqueue(data);
+                        this.output.Enqueue(data);
                     }
                 }
             }
@@ -306,7 +310,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 string message = record.ToString();
 
                 var data = new Data(DataType.Warning, message);
-                this.Output.Enqueue(data);
+                this.output.Enqueue(data);
             }
 
             return MessageResult.OK;
@@ -322,17 +326,17 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     var ice = new IceMessage(message);
                     var obj = PSObject.AsPSObject(ice);
 
-                    if (!string.IsNullOrEmpty(this.CurrentPath))
+                    if (!string.IsNullOrEmpty(this.currentPath))
                     {
-                        ice.Path = this.CurrentPath;
+                        ice.Path = this.currentPath;
 
                         // Set the PSPath for cmdlets that would use it.
-                        string path = this.SessionState.Path.GetUnresolvedPSPathFromProviderPath(this.CurrentPath);
+                        string path = this.SessionState.Path.GetUnresolvedPSPathFromProviderPath(this.currentPath);
                         obj.SetPropertyValue<string>("PSPath", path);
                     }
 
                     var data = new Data(DataType.Information, obj);
-                    this.Output.Enqueue(data);
+                    this.output.Enqueue(data);
                 }
             }
 
@@ -343,9 +347,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             // Since the session runs in a separate thread, data enqueued in an output queue
             // and must be dequeued in the pipeline execution thread.
-            while (0 < this.Output.Count)
+            while (0 < this.output.Count)
             {
-                var data = this.Output.Dequeue();
+                var data = this.output.Dequeue();
                 switch (data.Type)
                 {
                     case DataType.Error:
@@ -366,6 +370,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         {
                             this.WriteVerbose(data.Output.ToString());
                         }
+
                         break;
                 }
             }

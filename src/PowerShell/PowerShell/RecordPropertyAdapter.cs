@@ -64,6 +64,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
 
             return null;
         }
+
         /// <summary>
         /// Gets the query string that returned the <see cref="Record"/> for use in code methods.
         /// </summary>

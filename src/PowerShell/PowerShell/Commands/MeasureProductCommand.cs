@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Tools.WindowsInstaller.Properties;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -258,7 +257,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         private class SpaceRequirements
         {
             /// <summary>
-            /// Creates an instance of space requirements for the given <paramref name="driveLetter"/>.
+            /// Initializes a new instance of the <see cref="SpaceRequirements"/> class.
             /// </summary>
             /// <param name="driveLetter">The drive letter for space requirements.</param>
             internal SpaceRequirements(string driveLetter)
@@ -269,7 +268,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             /// <summary>
-            /// Gets or sets the drive letter for space requirements.
+            /// Gets the drive letter for space requirements.
             /// </summary>
             internal string DriveLetter { get; private set; }
 
@@ -307,6 +306,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     return spaceRequirements;
                 }
             }
+
             /// <summary>
             /// Gets the key for the <see cref="SpaceRequirements"/>.
             /// </summary>

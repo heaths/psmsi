@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller.Package;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller.Package;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -35,7 +35,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets whether transforms within a patch should be enumerated.
         /// </summary>
-        [Parameter, Alias("Transforms")]
+        [Parameter]
+        [Alias("Transforms")]
         public SwitchParameter IncludeTransforms { get; set; }
 
         /// <summary>

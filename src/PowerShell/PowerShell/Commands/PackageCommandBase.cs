@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Deployment.WindowsInstaller.Package;
-using Microsoft.Tools.WindowsInstaller.Properties;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Deployment.WindowsInstaller.Package;
+using Microsoft.Tools.WindowsInstaller.Properties;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -51,13 +51,15 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets patch packages to apply before validation.
         /// </summary>
-        [Parameter, ValidateNotNullOrEmpty]
+        [Parameter]
+        [ValidateNotNullOrEmpty]
         public virtual string[] Patch { get; set; }
 
         /// <summary>
         /// Gets or sets transforms to apply before validation.
         /// </summary>
-        [Parameter, ValidateNotNullOrEmpty]
+        [Parameter]
+        [ValidateNotNullOrEmpty]
         public virtual string[] Transform { get; set; }
 
         /// <summary>
@@ -120,7 +122,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// </summary>
         /// <param name="path">The path to the database to open.</param>
         /// <returns>A <see cref="Database"/> object that must be disposed, or null if not a product or patch database.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Will dispose later")]
         protected Database OpenDatabase(string path)
         {
             var type = FileInfo.GetFileTypeInternal(path);
@@ -164,6 +166,5 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 }
             }
         }
-
     }
 }

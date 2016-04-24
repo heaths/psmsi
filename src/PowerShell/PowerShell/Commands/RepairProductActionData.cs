@@ -35,7 +35,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public const ReinstallModes Default = ReinstallModes.FileOlderVersion | ReinstallModes.MachineData | ReinstallModes.UserData | ReinstallModes.Shortcut;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="RepairProductActionData"/> with the <see cref="Default"/> <see cref="ReinstallMode"/>.
+        /// Initializes a new instance of the <see cref="RepairProductActionData"/> class.
         /// </summary>
         public RepairProductActionData()
         {

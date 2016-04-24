@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsInstaller
     public class SourceInfo
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="SourceInfo"/> class.
+        /// Initializes a new instance of the <see cref="SourceInfo"/> class.
         /// </summary>
         /// <param name="productCode">The ProductCode to which the source is registered.</param>
         /// <param name="userSid">The user SID of the product.</param>

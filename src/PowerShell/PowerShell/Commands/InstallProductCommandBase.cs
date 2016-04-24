@@ -20,16 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
     /// Base class for product-related commands.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class InstallProductCommandBase<T> : InstallCommandBase<T> where T : InstallProductActionData, new()
+    /// <typeparam name="T">A derivative of <see cref="InstallCommandActionData"/>.</typeparam>
+    public abstract class InstallProductCommandBase<T> : InstallCommandBase<T>
+        where T : InstallProductActionData, new()
     {
         /// <summary>
         /// Gets or sets the ProductCode to install.
