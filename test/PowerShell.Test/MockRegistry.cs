@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml;
+using Microsoft.Win32;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -87,7 +87,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Creates a new instance of this class and redirects supported registry hives.
+        /// Initializes a new instance of the <see cref="MockRegistry"/> class.
         /// </summary>
         /// <exception cref="InvalidOperationException">Another instance of this class is already active.</exception>
         internal MockRegistry()
@@ -104,29 +104,41 @@ namespace Microsoft.Tools.WindowsInstaller
 
                         this.baseKeyPath = string.Format(@"Software\{0}\{1:B}", name.Name, Guid.NewGuid());
 
-                        this.classesRoot = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKCR");
-                        this.currentUser = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKCU");
-                        this.localMachine = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKLM");
-                        this.users = Registry.CurrentUser.CreateSubKey(baseKeyPath + @"\HKU");
+                        this.classesRoot = Registry.CurrentUser.CreateSubKey(this.baseKeyPath + @"\HKCR");
+                        this.currentUser = Registry.CurrentUser.CreateSubKey(this.baseKeyPath + @"\HKCU");
+                        this.localMachine = Registry.CurrentUser.CreateSubKey(this.baseKeyPath + @"\HKLM");
+                        this.users = Registry.CurrentUser.CreateSubKey(this.baseKeyPath + @"\HKU");
 
                         int ret;
                         SafeHandle handle;
 
-                        handle = GetRegistryHandle(classesRoot);
+                        handle = this.GetRegistryHandle(this.classesRoot);
                         ret = RegOverridePredefKey(HKEY_CLASSES_ROOT, handle.DangerousGetHandle());
-                        if (0 != ret) { throw new Win32Exception(ret); }
+                        if (0 != ret)
+                        {
+                            throw new Win32Exception(ret);
+                        }
 
-                        handle = GetRegistryHandle(currentUser);
+                        handle = this.GetRegistryHandle(this.currentUser);
                         ret = RegOverridePredefKey(HKEY_CURRENT_USER, handle.DangerousGetHandle());
-                        if (0 != ret) { throw new Win32Exception(ret); }
+                        if (0 != ret)
+                        {
+                            throw new Win32Exception(ret);
+                        }
 
-                        handle = GetRegistryHandle(localMachine);
+                        handle = this.GetRegistryHandle(this.localMachine);
                         ret = RegOverridePredefKey(HKEY_LOCAL_MACHINE, handle.DangerousGetHandle());
-                        if (0 != ret) { throw new Win32Exception(ret); }
+                        if (0 != ret)
+                        {
+                            throw new Win32Exception(ret);
+                        }
 
-                        handle = GetRegistryHandle(users);
+                        handle = this.GetRegistryHandle(this.users);
                         ret = RegOverridePredefKey(HKEY_USERS, handle.DangerousGetHandle());
-                        if (0 != ret) { throw new Win32Exception(ret); }
+                        if (0 != ret)
+                        {
+                            throw new Win32Exception(ret);
+                        }
 
                         // Finally increment the count if we got this far.
                         count++;
@@ -137,7 +149,7 @@ namespace Microsoft.Tools.WindowsInstaller
 
         ~MockRegistry()
         {
-            Dispose(false);
+            this.Dispose(false);
         }
 
         /// <summary>
@@ -177,10 +189,10 @@ namespace Microsoft.Tools.WindowsInstaller
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-            Dispose(true);
+            this.Dispose(true);
         }
 
-        void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             // Decrement the ref count and dispose if needed.
             lock (syncRoot)

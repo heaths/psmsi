@@ -20,16 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
     /// Unit and functional tests for <see cref="GetProductCommand"/>.
-    ///</summary>
+    /// </summary>
     [TestClass]
     public class GetProductCommandTest : TestBase
     {
@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             using (var p = CreatePipeline(@"get-msiproductinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -67,7 +67,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             using (var p = CreatePipeline(@"get-msiproductinfo -context Machine"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -92,7 +92,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             using (var p = CreatePipeline(string.Format(@"get-msiproductinfo -installcontext userunmanaged -usersid '{0}'", CurrentSID)))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -114,7 +114,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Use two strings that will match the same product; make sure only one product is returned.
             using (var p = CreatePipeline(@"get-msiproductinfo -name Silver*, *Light"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
                     Assert.AreEqual<int>(1, objs.Count);
@@ -129,7 +129,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Finally invoke the cmdlet for a single product.
             using (var p = CreatePipeline(@"get-msiproductinfo -productcode '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -169,7 +169,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Test that "Context" is a supported alias.
             using (var p = CreatePipeline(string.Format(@"get-msiproductinfo -context userunmanaged -usersid '{0}'", CurrentSID)))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -211,7 +211,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msiproductinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msiproductinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 

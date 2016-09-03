@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -57,7 +57,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Tests piping to the cmdlet.
             using (var p = CreatePipeline(@"get-msipatchinfo -product '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msipatchsequence -product '{877EF582-78AF-4D84-888B-167FDC3BCC11}'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var items = p.Invoke();
 

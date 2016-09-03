@@ -59,7 +59,7 @@ namespace Microsoft.Tools.WindowsInstaller
             );
 
         /// <summary>
-        /// Creates a new drive substitution.
+        /// Initializes a new instance of the <see cref="SubstituteDrive"/> class.
         /// </summary>
         /// <param name="driveLetter">The drive letter to use for the substitution.</param>
         /// <param name="targetPath">The path to the folder to map to a drive letter.</param>
@@ -70,7 +70,7 @@ namespace Microsoft.Tools.WindowsInstaller
             Contract.Requires('C' <= driveLetter && 'Z' >= driveLetter);
             Contract.Requires(!string.IsNullOrEmpty(targetPath));
 
-            driveLetter = Char.ToUpperInvariant(driveLetter);
+            driveLetter = char.ToUpperInvariant(driveLetter);
             if (SubstituteDrive.IsDefined(driveLetter))
             {
                 throw new ArgumentException("The drive letter is already defined.", "driveLetter");

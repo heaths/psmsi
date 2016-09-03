@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -37,7 +37,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var expected = @"c:\2014be2e43e417a3b9\";
             using (var p = CreatePipeline("get-msisource '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var output = p.Invoke();
 
@@ -58,7 +58,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var expected = @"c:\2014be2e43e417a3b9\";
             using (var p = CreatePipeline("get-msiproductinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msisource"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var output = p.Invoke();
 
@@ -79,7 +79,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline("get-msisource '{9AC08E99-230B-47e8-9721-4577B7F124EA}'"))
             {
                 var path = Path.Combine(base.TestContext.DeploymentDirectory, "Corrupt.xml");
-                using (OverrideRegistry(path))
+                using (this.OverrideRegistry(path))
                 {
                     var output = p.Invoke();
 
@@ -97,7 +97,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var expected = @"c:\updates\";
             using (var p = CreatePipeline("get-msisource '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' -patchcode '{6E52C409-0D0D-4B84-AB63-463438D4D33B}'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var output = p.Invoke();
 
@@ -119,7 +119,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var expected = @"c:\updates\";
             using (var p = CreatePipeline("get-msipatchinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' -patchcode '{6E52C409-0D0D-4B84-AB63-463438D4D33B}' | get-msisource"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var output = p.Invoke();
 

@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var package = Path.Combine(this.TestContext.DeploymentDirectory, "Example.msi");
             using (var p = CreatePipeline(@"get-item Example.msi | test-msiproduct -include ICE0* -exclude ICE03 -patch Example.msp -transform Example.mst -v"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var items = p.Invoke();
                     foreach (var item in items)
@@ -62,7 +62,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             using (var p = CreatePipeline(@"test-msiproduct Example.msi -nodefault -add test.cub"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var items = p.Invoke();
                     foreach (var item in items)

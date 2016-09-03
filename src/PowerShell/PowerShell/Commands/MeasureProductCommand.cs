@@ -35,10 +35,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     [OutputType(typeof(PSDriveInfo))]
     public sealed class MeasureProductCommand : PackageCommandBase
     {
-        private static readonly char[] propertyQuotes = new char[] { '\'', '\"' };
-        private static readonly char[] propertySeparator = new char[] { '=' };
-        private static readonly string viewCustomActions = "SELECT `Action` FROM `CustomAction` WHERE `Type` = 51";
-        private static readonly string viewExecuteActions = "SELECT `Action` FROM `InstallExecuteSequence` ORDER BY `Sequence`";
+        private static readonly char[] PropertyQuotes = new char[] { '\'', '\"' };
+        private static readonly char[] PropertySeparator = new char[] { '=' };
+        private static readonly string ViewCustomActions = "SELECT `Action` FROM `CustomAction` WHERE `Type` = 51";
+        private static readonly string ViewExecuteActions = "SELECT `Action` FROM `InstallExecuteSequence` ORDER BY `Sequence`";
 
         private InstallUIOptions previousInternalUI = InstallUIOptions.Default;
         private SpaceRequirementsCollection spaceRequirements = new SpaceRequirementsCollection();
@@ -94,11 +94,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         {
                             foreach (var property in this.Properties)
                             {
-                                var pair = property.Split(MeasureProductCommand.propertySeparator, 2);
+                                var pair = property.Split(MeasureProductCommand.PropertySeparator, 2);
                                 if (2 == pair.Count())
                                 {
                                     // Trim surrounding quotes from the property value.
-                                    session[pair[0]] = pair[1].Trim(MeasureProductCommand.propertyQuotes);
+                                    session[pair[0]] = pair[1].Trim(MeasureProductCommand.PropertyQuotes);
                                 }
                             }
                         }
@@ -111,7 +111,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                         // Invoke any of AppSearch and type 51 custom actions that might affect costing.
                         var actions = MeasureProductCommand.GetCustomActions(db);
-                        using (var view = db.OpenView(MeasureProductCommand.viewExecuteActions))
+                        using (var view = db.OpenView(MeasureProductCommand.ViewExecuteActions))
                         {
                             string action = null;
 
@@ -225,7 +225,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             if (db.Tables.Contains("CustomAction"))
             {
                 actions = new Set<string>(StringComparer.Ordinal);
-                using (var view = db.OpenView(MeasureProductCommand.viewCustomActions))
+                using (var view = db.OpenView(MeasureProductCommand.ViewCustomActions))
                 {
                     view.Execute();
 

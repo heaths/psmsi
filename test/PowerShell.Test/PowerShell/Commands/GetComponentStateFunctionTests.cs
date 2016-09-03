@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             using (var p = CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msicomponentstate"))
             {
-                using (OverrideRegistry(properties: properties))
+                using (this.OverrideRegistry(properties: properties))
                 {
                     var output = p.Invoke();
                     Assert.AreEqual<int>(2, output.Count);
@@ -69,7 +69,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             using (var p = CreatePipeline(@"get-msicomponentstate '{877EF582-78AF-4D84-888B-167FDC3BCC11}'"))
             {
-                using (OverrideRegistry(properties: properties))
+                using (this.OverrideRegistry(properties: properties))
                 {
                     var output = p.Invoke();
                     Assert.AreEqual<int>(2, output.Count);

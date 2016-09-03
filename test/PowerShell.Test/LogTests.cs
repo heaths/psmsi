@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Win32;
 using System;
 using System.Globalization;
 using System.IO;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Win32;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsInstaller
         public void LoggingDefaultPath()
         {
             DateTime start = DateTime.Now;
-            using (OverrideRegistry())
+            using (this.OverrideRegistry())
             {
                 var log = new Log(null, start);
                 string name = Path.Combine(Path.GetTempPath(), string.Format(CultureInfo.InvariantCulture, "MSI_{0:yyyyMMddhhmmss}", start));
@@ -47,9 +47,11 @@ namespace Microsoft.Tools.WindowsInstaller
                 string extra = null;
                 string path = log.Next(extra);
 
-                Assert.AreEqual<InstallLogModes>(InstallLogModes.Verbose | InstallLogModes.OutOfDiskSpace | InstallLogModes.Info | InstallLogModes.CommonData
+                Assert.AreEqual(
+                    InstallLogModes.Verbose | InstallLogModes.OutOfDiskSpace | InstallLogModes.Info | InstallLogModes.CommonData
                     | InstallLogModes.Error | InstallLogModes.Warning | InstallLogModes.ActionStart | InstallLogModes.ActionData
-                    | InstallLogModes.FatalExit | InstallLogModes.User | InstallLogModes.PropertyDump, log.Mode, "The default logging mode is incorrect.");
+                    | InstallLogModes.FatalExit | InstallLogModes.User | InstallLogModes.PropertyDump, log.Mode,
+                    "The default logging mode is incorrect.");
                 Assert.AreEqual(name + "_000.log", path, true, "The first default log path is incorrect.");
 
                 extra = "test";
@@ -63,7 +65,7 @@ namespace Microsoft.Tools.WindowsInstaller
         public void LoggingCustomPath()
         {
             DateTime start = DateTime.Now;
-            using (OverrideRegistry())
+            using (this.OverrideRegistry())
             {
                 var log = new Log(@"C:\test.txt", start);
                 string name = string.Format(CultureInfo.InvariantCulture, @"C:\test_{0:yyyyMMddhhmmss}", start);
@@ -71,9 +73,11 @@ namespace Microsoft.Tools.WindowsInstaller
                 string extra = null;
                 string path = log.Next(extra);
 
-                Assert.AreEqual<InstallLogModes>(InstallLogModes.Verbose | InstallLogModes.OutOfDiskSpace | InstallLogModes.Info | InstallLogModes.CommonData
+                Assert.AreEqual(
+                    InstallLogModes.Verbose | InstallLogModes.OutOfDiskSpace | InstallLogModes.Info | InstallLogModes.CommonData
                     | InstallLogModes.Error | InstallLogModes.Warning | InstallLogModes.ActionStart | InstallLogModes.ActionData
-                    | InstallLogModes.FatalExit | InstallLogModes.User | InstallLogModes.PropertyDump | InstallLogModes.ExtraDebug, log.Mode, "The default logging mode is incorrect.");
+                    | InstallLogModes.FatalExit | InstallLogModes.User | InstallLogModes.PropertyDump | InstallLogModes.ExtraDebug, log.Mode,
+                    "The default logging mode is incorrect.");
                 Assert.AreEqual(name + "_000.txt", path, true, "The first custom log path is incorrect.");
 
                 extra = "test";
@@ -87,7 +91,7 @@ namespace Microsoft.Tools.WindowsInstaller
         public void LoggingPolicyMode()
         {
             DateTime start = DateTime.Now;
-            using (OverrideRegistry())
+            using (this.OverrideRegistry())
             {
                 // Set the policy to log extra debug information.
                 using (var key = Registry.LocalMachine.CreateSubKey(@"Software\Policies\Microsoft\Windows\Installer"))
@@ -98,9 +102,11 @@ namespace Microsoft.Tools.WindowsInstaller
                 var log = new Log(null, start);
                 log.Next(null);
 
-                Assert.AreEqual<InstallLogModes>(InstallLogModes.Verbose | InstallLogModes.OutOfDiskSpace | InstallLogModes.Info | InstallLogModes.CommonData
+                Assert.AreEqual(
+                    InstallLogModes.Verbose | InstallLogModes.OutOfDiskSpace | InstallLogModes.Info | InstallLogModes.CommonData
                     | InstallLogModes.Error | InstallLogModes.Warning | InstallLogModes.ActionStart | InstallLogModes.ActionData
-                    | InstallLogModes.FatalExit | InstallLogModes.User | InstallLogModes.PropertyDump | InstallLogModes.ExtraDebug, log.Mode, "The default logging mode is incorrect.");
+                    | InstallLogModes.FatalExit | InstallLogModes.User | InstallLogModes.PropertyDump | InstallLogModes.ExtraDebug, log.Mode,
+                    "The default logging mode is incorrect.");
             }
         }
     }
