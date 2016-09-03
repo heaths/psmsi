@@ -133,12 +133,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(IncludeDir)Common.targets" />
+  <Import Project="..\..\packages\Nerdbank.GitVersioning.1.5.46\build\dotnet\Nerdbank.GitVersioning.targets" Condition="Exists('..\..\packages\Nerdbank.GitVersioning.1.5.46\build\dotnet\Nerdbank.GitVersioning.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\GitVersionTask.3.4.1\build\dotnet\GitVersionTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.3.4.1\build\dotnet\GitVersionTask.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Nerdbank.GitVersioning.1.5.46\build\dotnet\Nerdbank.GitVersioning.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Nerdbank.GitVersioning.1.5.46\build\dotnet\Nerdbank.GitVersioning.targets'))" />
   </Target>
-  <Import Project="..\..\packages\GitVersionTask.3.4.1\build\dotnet\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.3.4.1\build\dotnet\GitVersionTask.targets')" />
   <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
 </Project>
