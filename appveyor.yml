@@ -11,6 +11,7 @@ notifications:
 branches:
   only:
     - master
+    - develop
 
 cache:
   - packages -> **\packages.config
