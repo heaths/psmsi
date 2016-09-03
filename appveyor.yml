@@ -40,7 +40,6 @@ deploy:
     auth_token:
       secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
     artifact: installer, package
-    prerelease: true
     on:
       branch: master
 
@@ -50,6 +49,13 @@ deploy:
       secure: 4STrzCp6wDsDBj/wCtmImMVL7wUI8DCGjdMBXGqQf9JZJ8LjmW5YSY8wtcHAv0XW
     artifact: package
     skip_symbols: true
-    prerelease: true
+    on:
+      branch: master
+
+  - provider: NuGet
+    server: https://nuget.smbsrc.net/
+    api_key:
+      secure: WPxjuSouwbCdM6I771BfIbOk8gA883+l9RKUCfFknaUT1vYPmTpT2ABF9r+J0JgR
+    artifact: /.*\.symbols\.nupkg/
     on:
       branch: master
