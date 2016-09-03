@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PS = System.Management.Automation.PowerShell;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -167,6 +167,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         Assert.AreEqual("Generating script...", progress.StatusDescription, "The phase 2 step {0:d} status description is incorrect.", i);
                     }
                 }
+
                 Assert.AreEqual<int>(0, ps.Streams.Progress[1].PercentComplete, "The phase 2 step 1 % complete is incorrect.");
                 Assert.AreEqual<int>(7, ps.Streams.Progress[2].PercentComplete, "The phase 2 step 2 % complete is incorrect.");
                 Assert.AreEqual<int>(5, ps.Streams.Progress[3].PercentComplete, "the phase 2 step 3 % complete is incorrect.");

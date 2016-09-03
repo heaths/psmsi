@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsInstaller
         [TestMethod]
         public void PackageWeightFromProductCodeTest()
         {
-            using (OverrideRegistry())
+            using (this.OverrideRegistry())
             {
                 var weight = PackageInfo.GetWeightFromProductCode("{877EF582-78AF-4D84-888B-167FDC3BCC11}");
                 Assert.AreEqual<long>(1419, weight);

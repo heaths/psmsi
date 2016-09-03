@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.Win32;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -34,24 +34,26 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </summary>
     internal sealed class RegistryXml
     {
-        private static readonly Regex Variables = new Regex(@"\$\((?<var>\w+)\)",
+        private static readonly Regex Variables = new Regex(
+            @"\$\((?<var>\w+)\)",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
         private RegistryKey key;
         private Stack<RegistryKey> keys;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="RegistryKey"/> class.
+        /// Initializes a new instance of the <see cref="RegistryXml"/> class.
         /// </summary>
         /// <remarks>
         /// Without specifying a root key, imported files must all begin with hives.
         /// </remarks>
-        internal RegistryXml() : this(null)
+        internal RegistryXml()
+            : this(null)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="RegistryKey"/> class.
+        /// Initializes a new instance of the <see cref="RegistryXml"/> class.
         /// </summary>
         /// <param name="key">The <see cref="RegistryKey"/> to import or export.</param>
         /// <remarks>
@@ -99,44 +101,48 @@ namespace Microsoft.Tools.WindowsInstaller
                             {
                                 case "hive":
                                     // If empty, do nothing (no keys to create).
-                                    if (reader.IsEmptyElement) { break; }
+                                    if (reader.IsEmptyElement)
+                                    {
+                                        break;
+                                    }
 
                                     // Add the specified hive to the stack.
                                     switch (name)
                                     {
                                         case "HKEY_CLASSES_ROOT":
-                                            keys.Push(Registry.ClassesRoot);
+                                            this.keys.Push(Registry.ClassesRoot);
                                             break;
 
                                         case "HKEY_CURRENT_USER":
-                                            keys.Push(Registry.CurrentUser);
+                                            this.keys.Push(Registry.CurrentUser);
                                             break;
 
                                         case "HKEY_LOCAL_MACHINE":
-                                            keys.Push(Registry.LocalMachine);
+                                            this.keys.Push(Registry.LocalMachine);
                                             break;
 
                                         case "HKEY_USERS":
-                                            keys.Push(Registry.Users);
+                                            this.keys.Push(Registry.Users);
                                             break;
 
                                         default:
                                             throw new NotSupportedException(string.Format(@"Hive ""{0}"" is not supported.", name));
                                     }
+
                                     break;
 
                                 case "key":
                                     // Create a new key as a subkey of the key currently at the top of the stack.
                                     try
                                     {
-                                        key = keys.Peek();
+                                        key = this.keys.Peek();
                                     }
                                     catch (InvalidOperationException ex)
                                     {
                                         throw new NotSupportedException(string.Format(@"The key ""{0}"" requires that a root key was specified in the constructor.", name), ex);
                                     }
 
-                                    name = ReplaceVariables(name);
+                                    name = this.ReplaceVariables(name);
                                     RegistryKey subkey = key.CreateSubKey(name);
                                     if (reader.IsEmptyElement)
                                     {
@@ -146,8 +152,9 @@ namespace Microsoft.Tools.WindowsInstaller
                                     else
                                     {
                                         // If children exist, push this key into the key stack.
-                                        keys.Push(subkey);
+                                        this.keys.Push(subkey);
                                     }
+
                                     break;
 
                                 case "value":
@@ -157,7 +164,7 @@ namespace Microsoft.Tools.WindowsInstaller
                                     RegistryValueKind kind = (RegistryValueKind)Enum.Parse(typeof(RegistryValueKind), type);
 
                                     // Replace variables first.
-                                    value = ReplaceVariables(reader.ReadString());
+                                    value = this.ReplaceVariables(reader.ReadString());
 
                                     switch (kind)
                                     {
@@ -174,6 +181,7 @@ namespace Microsoft.Tools.WindowsInstaller
                                             {
                                                 value = Convert.ToInt32((string)value);
                                             }
+
                                             break;
 
                                         case RegistryValueKind.ExpandString:
@@ -193,17 +201,19 @@ namespace Microsoft.Tools.WindowsInstaller
                                             {
                                                 value = Convert.ToInt64((string)value);
                                             }
+
                                             break;
 
                                         default:
                                             throw new NotSupportedException(string.Format(@"The registry type ""{0}"" is not supported.", type));
                                     }
 
-                                    key = keys.Peek();
+                                    key = this.keys.Peek();
                                     key.SetValue(name, value, kind);
                                     break;
                             }
                         }
+
                         break;
 
                     case XmlNodeType.EndElement:
@@ -213,11 +223,12 @@ namespace Microsoft.Tools.WindowsInstaller
                                 case "hive":
                                 case "key":
                                     // Pop the last key from the stack and close it.
-                                    RegistryKey key = keys.Pop();
+                                    RegistryKey key = this.keys.Pop();
                                     key.Close();
                                     break;
                             }
                         }
+
                         break;
                 }
             }

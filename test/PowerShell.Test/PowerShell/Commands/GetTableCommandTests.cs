@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -245,7 +245,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msitable -table Registry"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var output = p.Invoke();
                     Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
@@ -266,7 +266,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msitable -table Registry -ignoremachinestate"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var output = p.Invoke();
                     Assert.IsTrue(null != output && 1 == output.Count, "Output is incorrect.");
@@ -287,7 +287,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msitable example.msi -query 'select * from Property'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var output = p.Invoke();
                     Assert.IsTrue(null != output && 0 < output.Count);
@@ -359,7 +359,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline("get-msiproductinfo '{877EF582-78AF-4D84-888B-167FDC3BCC11}' | get-msitable -table Property -wv Warnings"))
             {
                 var path = Path.Combine(this.TestContext.DeploymentDirectory, "Corrupt.xml");
-                using (OverrideRegistry("Corrupt.xml"))
+                using (this.OverrideRegistry("Corrupt.xml"))
                 {
                     p.Invoke();
 
@@ -379,7 +379,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline("get-msiproductinfo '{9AC08E99-230B-47e8-9721-4577B7F124EA}' | get-msitable -table Property -wv Warnings"))
             {
                 var path = Path.Combine(this.TestContext.DeploymentDirectory, "Corrupt.xml");
-                using (OverrideRegistry("Corrupt.xml"))
+                using (this.OverrideRegistry("Corrupt.xml"))
                 {
                     p.Invoke();
 

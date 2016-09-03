@@ -20,16 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Management.Automation;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
     /// Unit and functional tests for <see cref="GetComponentCommand"/>.
-    ///</summary>
+    /// </summary>
     [TestClass]
     public class GetComponentCommandTest : TestBase
     {
@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msicomponentinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
                     Assert.AreEqual<int>(36, objs.Count);
@@ -51,7 +51,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -66,7 +66,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msicomponentinfo '{E7F56051-B133-4702-A5C6-D8C192C04D5F}', '{CB473DC3-F7BA-4E5B-9721-72CF66BC5262}' '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
                     Assert.AreEqual<int>(2, objs.Count);
@@ -92,7 +92,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msicomponentinfo '{9D8E88E9-8E05-4FC7-AFC7-87759D1D417E}' | get-msicomponentinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -109,7 +109,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             using (var p = CreatePipeline(@"get-msicomponentinfo '{958A3933-8CE7-6189-F0EF-CAE467FABFF4}'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var obj = p.Invoke().FirstOrDefault();
 
@@ -129,7 +129,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             using (var p = CreatePipeline(@"get-msicomponentinfo '{E2E70518-347A-4231-9D5D-3857059CCFA7}'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var obj = p.Invoke().FirstOrDefault();
 

@@ -20,16 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Management.Automation.Runspaces;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
     /// Unit and functional tests for <see cref="GetPatchCommand"/>.
-    ///</summary>
+    /// </summary>
     [TestClass]
     public class GetPatchCommandTest : TestBase
     {
@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msipatchinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -53,7 +53,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msiproductinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" | get-msipatchinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -68,7 +68,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msipatchinfo -productcode ""{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}"" -patchcode ""{6E52C409-0D0D-4B84-AB63-463438D4D33B}"""))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -83,7 +83,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msipatchinfo -filter superseded"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -114,7 +114,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             var cmd = string.Format(@"get-msipatchinfo -context ""machine""");
             using (var p = CreatePipeline(cmd))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -165,7 +165,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (Pipeline p = CreatePipeline(@"get-msipatchinfo -productCode '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msipatchinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 

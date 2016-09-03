@@ -20,17 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Management.Automation;
 using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
     /// Unit and functional tests for <see cref="GetFileTypeCommand"/>.
-    ///</summary>
+    /// </summary>
     [TestClass]
     public class GetFileTypeCommandTest : TestBase
     {
@@ -113,7 +113,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     // Wrapped in a try-catch since the behavior changedin PSv3.
                     objs = p.Invoke();
                 }
-                catch { }
+                catch
+                {
+                }
 
                 Assert.AreEqual<int>(0, objs.Count);
             }

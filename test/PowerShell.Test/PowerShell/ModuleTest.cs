@@ -34,7 +34,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         [TestMethod]
         public void UseTest()
         {
-            using (OverrideRegistry())
+            using (this.OverrideRegistry())
             {
                 // Set initial usage data.
                 Module.Use();

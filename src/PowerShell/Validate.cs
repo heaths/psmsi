@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsInstaller
     internal static class Validate
     {
         // Define and compile the regular expression to validate GUIDs in a format Windows Installer understands.
-        private static readonly Regex re = new Regex(
+        private static readonly Regex Re = new Regex(
             @"\{[A-F0-9]{8}-([A-F0-9]{4}-){3}[A-F0-9]{12}\}",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
@@ -42,7 +42,7 @@ namespace Microsoft.Tools.WindowsInstaller
         internal static bool IsGuid(string value)
         {
             // Validate simple checks before performing a more exhaustive regex match.
-            return null != value && 38 == value.Length && re.IsMatch(value);
+            return null != value && 38 == value.Length && Re.IsMatch(value);
         }
     }
 }
