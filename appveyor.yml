@@ -31,6 +31,9 @@ artifacts:
   - path: src\PowerShell\bin\$(configuration)\*.nupkg
     name: package
 
+  - path: src\PowerShell\bin\$(configuration)\*.symbols.nupkg
+    name: symbols
+
   - path: src\Setup\bin\$(configuration)\**\*.msi
     name: installer
 
@@ -51,3 +54,9 @@ deploy:
     skip_symbols: true
     on:
       branch: master
+
+  - provider: NuGet
+    server: https://nuget.smbsrc.net/
+    auth_token:
+      secure: WPxjuSouwbCdM6I771BfIbOk8gA883+l9RKUCfFknaUT1vYPmTpT2ABF9r+J0JgR
+    artifact: symbols
