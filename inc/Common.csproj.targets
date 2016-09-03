@@ -22,6 +22,9 @@
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>$(IncludeDir)KeyFile.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\inc\Common.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(IncludeDir)BrandingInfo.cs">
       <Link>Properties\BrandingInfo.cs</Link>
