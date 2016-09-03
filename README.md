@@ -43,4 +43,9 @@ The Windows Installer PowerShell module is licensed under the [MIT License](LICE
 
 ## Status
 
-[![Build status](https://ci.appveyor.com/api/projects/status/251twb4wvywq0vei/branch/master?svg=true)](https://ci.appveyor.com/project/heaths/psmsi/branch/master)
+[Project build status](https://ci.appveyor.com/project/heaths/psmsi) for release and development branches.
+
+Branch | Status
+--- | ---
+**master** | [![Build status](https://ci.appveyor.com/api/projects/status/251twb4wvywq0vei/branch/master?svg=true)](https://ci.appveyor.com/project/heaths/psmsi/branch/master)
+**develop** | [![Build status](https://ci.appveyor.com/api/projects/status/251twb4wvywq0vei/branch/develop?svg=true)](https://ci.appveyor.com/project/heaths/psmsi/branch/develop)
