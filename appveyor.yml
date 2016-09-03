@@ -8,6 +8,11 @@ notifications:
   on_build_success: true
   on_build_failure: true
 
+branches:
+  only:
+    - master
+    - develop
+
 cache:
   - packages -> **\packages.config
 
@@ -25,9 +30,6 @@ artifacts:
 
   - path: src\PowerShell\bin\$(configuration)\*.nupkg
     name: package
-
-  - path: src\PowerShell\bin\$(configuration)\*.symbols.nupkg
-    name: symbols
 
   - path: src\Setup\bin\$(configuration)\**\*.msi
     name: installer
@@ -54,4 +56,4 @@ deploy:
     server: https://nuget.smbsrc.net/
     api_key:
       secure: WPxjuSouwbCdM6I771BfIbOk8gA883+l9RKUCfFknaUT1vYPmTpT2ABF9r+J0JgR
-    artifact: symbols
+    artifact: /.*.symbols.nupkg/
