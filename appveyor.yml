@@ -56,4 +56,6 @@ deploy:
     server: https://nuget.smbsrc.net/
     api_key:
       secure: WPxjuSouwbCdM6I771BfIbOk8gA883+l9RKUCfFknaUT1vYPmTpT2ABF9r+J0JgR
-    artifact: /.*.symbols.nupkg/
+    artifact: /.*\.symbols\.nupkg/
+    on:
+      branch: master
