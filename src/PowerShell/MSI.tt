@@ -53,9 +53,9 @@ FileList = 'about_MSI.help.txt', 'Microsoft.Tools.WindowsInstaller.PowerShell.dl
 PrivateData = @{
   PSData = @{
     Tags = @('WindowsInstaller', 'MSI', 'MSP')
-    LicenseUri = 'http://bit.ly/psmsi-license'
-    ProjectUri = 'http://bit.ly/psmsi-home'
-    IronUri = 'http://bit.ly/psmsi-icon'
+    ProjectUri = 'https://github.com/heaths/psmsi'
+    LicenseUri = 'https://raw.githubusercontent.com/heaths/psmsi/master/LICENSE.txt'
+    IconUri = 'https://raw.githubusercontent.com/heaths/psmsi/master/res/psmsi.png'
   }
 }
 }
