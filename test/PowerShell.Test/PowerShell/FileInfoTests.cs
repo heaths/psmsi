@@ -134,6 +134,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
             var hash = FileInfo.GetFileHash(obj);
 
             CollectionAssert.AreEqual(expected, hash.ToArray(), "The file hash is incorrect.");
+            Assert.AreEqual("823F806C8E20FC8A41A8FAAEA5999F00", hash.MSIHash);
         }
 
         [TestMethod]

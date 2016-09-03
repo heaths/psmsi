@@ -38,8 +38,8 @@
             </Directory>
         </Directory>
         <Property Id="ALLUSERS" Value="2" />
-        <Property Id="ARPHELPLINK" Value="http://psmsi.codeplex.com/thread/list.aspx" />
-        <Property Id="ARPURLINFOABOUT" Value="http://psmsi.codeplex.com" />
+        <Property Id="ARPHELPLINK" Value="https://github.com/heaths/psmsi/issues" />
+        <Property Id="ARPURLINFOABOUT" Value="https://github.com/heaths/psmsi" />
         <Property Id="REINSTALLMODE" Value="amu" />
         <Property Id="MSIINSTALLPERUSER" Value="1" />
         <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />

@@ -47,6 +47,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 var obj = objs.Where(o => o.GetPropertyValue<int>("MSIHashPart1") == hash[0]).FirstOrDefault();
                 Assert.IsNotNull(obj);
+                Assert.AreEqual("823F806C8E20FC8A41A8FAAEA5999F00", obj.GetPropertyValue<string>("MSIHash"));
                 Assert.AreEqual<int>(hash[0], obj.GetPropertyValue<int>("MSIHashPart1"));
                 Assert.AreEqual<int>(hash[1], obj.GetPropertyValue<int>("MSIHashPart2"));
                 Assert.AreEqual<int>(hash[2], obj.GetPropertyValue<int>("MSIHashPart3"));
@@ -78,6 +79,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 Assert.AreEqual<int>(1, objs.Count);
                 Assert.IsInstanceOfType(objs[0].BaseObject, typeof(System.IO.FileInfo));
+                Assert.AreEqual<PSObject>("823F806C8E20FC8A41A8FAAEA5999F00", objs[0].GetPropertyValue<PSObject>("MSIHash"));
                 Assert.AreEqual<PSObject>(hash[0], objs[0].GetPropertyValue<PSObject>("MSIHashPart1"));
                 Assert.AreEqual<PSObject>(hash[1], objs[0].GetPropertyValue<PSObject>("MSIHashPart2"));
                 Assert.AreEqual<PSObject>(hash[2], objs[0].GetPropertyValue<PSObject>("MSIHashPart3"));
@@ -90,6 +92,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 var objs = p.Invoke();
 
                 Assert.AreEqual<int>(1, objs.Count);
+                Assert.IsNull(objs[0].Properties["MSIHash"].Value);
                 Assert.IsNull(objs[0].Properties["MSIHashPart1"].Value);
                 Assert.IsNull(objs[0].Properties["MSIHashPart2"].Value);
                 Assert.IsNull(objs[0].Properties["MSIHashPart3"].Value);
