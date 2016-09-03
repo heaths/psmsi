@@ -5,11 +5,11 @@
     <version>$version$</version>
     <description>Exposes Windows Installer functionality to Windows PowerShell</description>
     <authors>Heath Stewart</authors>
-    <owners>Heath Stewart</owners>
+    <owners>Heath Stewart, Microsoft</owners>
     <copyright>Microsoft Corporation. All rights reserved.</copyright>
-    <projectUrl>http://bit.ly/psmsi-home</projectUrl>
-    <iconUrl>http://bit.ly/psmsi-icon</iconUrl>
-    <licenseUrl>http://bit.ly/psmsi-license</licenseUrl>
+    <projectUrl>https://github.com/heaths/psmsi</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/heaths/psmsi/master/LICENSE.txt</licenseUrl>
+    <iconUrl>https://raw.githubusercontent.com/heaths/psmsi/master/res/psmsi.png</iconUrl>
     <tags>
       WindowsInstaller
       MSI
