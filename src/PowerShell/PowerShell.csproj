@@ -11,7 +11,7 @@
   <PropertyGroup>
     <BeforeTransform>
       $(BeforeTransform);
-      UpdateAssemblyInfo;
+      GenerateAssemblyVersionInfo;
       CalculateVersion;
     </BeforeTransform>
   </PropertyGroup>
@@ -201,36 +201,30 @@
   <Import Project="$(IncludeDir)Common.targets" />
   <Import Project="$(IncludeDir)TextTemplating.targets" />
   <Import Project="$(SolutionDir).nuget\NuGet.targets" />
-  <Target Name="CalculateVersion" DependsOnTargets="GetVersion" AfterTargets="UpdateAssemblyInfo">
-    <PropertyGroup>
-      <BuildNumber>$(GitVersion_BuildMetaData)</BuildNumber>
-      <BuildNumber Condition="'$(BuildNumber)'==''">0</BuildNumber>
-      <PackageVersion>$(GitVersion_MajorMinorPatch).$(BuildNumber)</PackageVersion>
-    </PropertyGroup>
+  <Target Name="CalculateVersion" DependsOnTargets="GetBuildVersion" AfterTargets="GenerateAssemblyVersionInfo">
     <ItemGroup>
       <T4ParameterValues Include="PackageVersion">
-        <Value>$(PackageVersion)</Value>
+        <Value>$(BuildVersion)</Value>
         <Visible>false</Visible>
       </T4ParameterValues>
     </ItemGroup>
   </Target>
-  <Target Name="BuildPackage" DependsOnTargets="CalculateVersion" Inputs="$(TargetPath);$(MSBuildProjectName).nuspec" Outputs="$(OutputPath)MSI.$(PackageVersion).nupkg">
+  <Target Name="BuildPackage" DependsOnTargets="CalculateVersion" Inputs="$(TargetPath);$(MSBuildProjectName).nuspec" Outputs="$(OutputPath)MSI.$(BuildVersion).nupkg">
     <PropertyGroup>
       <ProjectPath>$(MSBuildProjectDirectory)\$(MSBuildProjectName).nuspec</ProjectPath>
-      <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -Properties "SolutionDir=$(SolutionDir);Configuration=$(Configuration);Platform=$(Platform);Version=$(PackageVersion)" -OutputDirectory "$(OutputPath.TrimEnd('\'))" -Symbols -NonInteractive -NoPackageAnalysis</BuildCommand>
+      <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -Properties "SolutionDir=$(SolutionDir);Configuration=$(Configuration);Platform=$(Platform);Version=$(BuildVersion)" -OutputDirectory "$(OutputPath.TrimEnd('\'))" -Symbols -NonInteractive -NoPackageAnalysis</BuildCommand>
     </PropertyGroup>
-    <Exec Command="$(BuildCommand)" Outputs="$(OutputPath)MSI.$(PackageVersion).nupkg">
+    <Exec Command="$(BuildCommand)" Outputs="$(OutputPath)MSI.$(BuildVersion).nupkg">
       <Output TaskParameter="Outputs" ItemName="FileWrites" />
     </Exec>
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="BuildPackage" />
+  <Import Project="..\..\packages\Nerdbank.GitVersioning.1.5.46\build\portable-net+win+wpa+wp+sl+netmf+MonoAndroid+MonoTouch+Xamarin.iOS\Nerdbank.GitVersioning.targets" Condition="Exists('..\..\packages\Nerdbank.GitVersioning.1.5.46\build\portable-net+win+wpa+wp+sl+netmf+MonoAndroid+MonoTouch+Xamarin.iOS\Nerdbank.GitVersioning.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.3.3.0\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets'))" />
-    <Error Condition="!Exists('..\..\packages\GitVersionTask.3.4.1\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitVersionTask.3.4.1\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Nerdbank.GitVersioning.1.5.46\build\portable-net+win+wpa+wp+sl+netmf+MonoAndroid+MonoTouch+Xamarin.iOS\Nerdbank.GitVersioning.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Nerdbank.GitVersioning.1.5.46\build\portable-net+win+wpa+wp+sl+netmf+MonoAndroid+MonoTouch+Xamarin.iOS\Nerdbank.GitVersioning.targets'))" />
   </Target>
-  <Import Project="..\..\packages\GitVersionTask.3.4.1\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets" Condition="Exists('..\..\packages\GitVersionTask.3.4.1\build\portable-net+sl+win+wpa+wp\GitVersionTask.targets')" />
   <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
 </Project>
