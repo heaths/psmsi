@@ -8,11 +8,6 @@ notifications:
   on_build_success: true
   on_build_failure: true
 
-branches:
-  only:
-    - master
-    - develop
-
 cache:
   - packages -> **\packages.config
 
@@ -57,8 +52,6 @@ deploy:
 
   - provider: NuGet
     server: https://nuget.smbsrc.net/
-    auth_token:
+    api_key:
       secure: WPxjuSouwbCdM6I771BfIbOk8gA883+l9RKUCfFknaUT1vYPmTpT2ABF9r+J0JgR
     artifact: symbols
-    on:
-      branch: develop
