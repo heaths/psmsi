@@ -73,7 +73,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Gets the propety dictionary.
+        /// Gets the property dictionary.
         /// </summary>
         internal Dictionary<string, string> Properties { get; private set; }
 
@@ -82,10 +82,10 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         /// <param name="reader">The <see cref="XmlReader"/> that contains the keys and values to import.</param>
         /// <exception cref="NotSupportedException">A hive name was specified that is not supported, or a value type was not supported.</exception>
-        /// <exception cref="XmlException">A general XML exception occured.</exception>
+        /// <exception cref="XmlException">A general XML exception occurred.</exception>
         internal void Import(XmlReader reader)
         {
-            Debug.Assert(null != reader, $@"The argument ""{nameof(reader)}"" is null.");
+            Debug.Assert(null != reader, @"The argument ""reader"" is null.");
 
             while (reader.Read())
             {

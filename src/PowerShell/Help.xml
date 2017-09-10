@@ -1281,6 +1281,9 @@
     <parameter name="LiteralPath">
       The directory or URL to register. The value of -LiteralPath is used exactly as typed. No characters are interpreted as wildcards.
     </parameter>
+    <parameter name="Force">
+      Whether to validate that directories exist before they are added to the source list.
+    </parameter>
     <parameter name="PassThru">
       Whether to return the remaining registered source through the pipeline.
     </parameter>
