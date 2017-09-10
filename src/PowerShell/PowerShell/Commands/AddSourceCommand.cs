@@ -33,6 +33,23 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     public sealed class AddSourceCommand : SourcePathCommandBase
     {
         private static readonly string ErrorId = "DirectoryNotFound";
+        private bool shouldExist = true;
+
+        /// <summary>
+        /// Gets or sets whether to validate that directories exist before they are added to the source list.
+        /// </summary>
+        [Parameter]
+        public SwitchParameter Force
+        {
+            get { return !this.shouldExist; }
+            set { this.shouldExist = !value; }
+        }
+
+        protected override bool ShouldExist
+        {
+            get { return this.shouldExist; }
+            set { this.shouldExist = value; }
+        }
 
         /// <summary>
         /// Registers a source path to a product or patch.
@@ -46,7 +63,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 {
                     foreach (var path in param.Paths)
                     {
-                        if (this.Validate(path))
+                        if (this.Force || this.Validate(path))
                         {
                             installation.SourceList.Add(path);
                         }

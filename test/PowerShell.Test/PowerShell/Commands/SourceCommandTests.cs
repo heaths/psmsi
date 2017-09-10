@@ -24,6 +24,8 @@ using System.IO;
 using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -40,6 +42,146 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     {
         [TestMethod]
         public void ModifyProductSource()
+        {
+            this.TestProductSources((obj, product, original) =>
+            {
+                using (var p = CreatePipeline(string.Format(@"$Input | add-msisource -path '{0}' -passthru", this.TestContext.DeploymentDirectory)))
+                {
+                    p.Input.Write(obj);
+                    var output = p.Invoke();
+
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual(original.Count + 1, output.Count());
+                }
+
+                using (var p = CreatePipeline(@"$Input | add-msisource -path 'ShouldNotExist.txt' -passthru"))
+                {
+                    ExceptionAssert.Throws<CmdletInvocationException, ItemNotFoundException>(() =>
+                    {
+                        p.Input.Write(obj);
+                        var output = p.Invoke();
+                    });
+                }
+
+                var path = Path.Combine(this.TestContext.DeploymentDirectory, "Example.txt");
+                using (var p = CreatePipeline(string.Format(@"$Input | add-msisource -path '{0}' -passthru", path)))
+                {
+                    p.Input.Write(obj);
+                    var output = p.Invoke();
+
+                    // Should return the previous number of source locations we already registered.
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual(original.Count + 1, output.Count());
+                    Assert.AreEqual(1, p.Error.Count);
+                }
+
+                using (var p = CreatePipeline(@"$Input | clear-msisource; $Input | get-msisource"))
+                {
+                    p.Input.Write(obj);
+                    var output = p.Invoke();
+
+                    Assert.IsTrue(null == output || 0 == output.Count());
+                }
+
+                var paths = new string[original.Count + 1];
+                paths[0] = this.TestContext.DeploymentDirectory;
+                original.CopyTo(paths, 1);
+
+                using (var p = CreatePipeline(string.Format(@"$Input | add-msisource '{0}' -force -passthru", product.ProductCode)))
+                {
+                    p.Input.Write(paths, true);
+                    var output = p.Invoke();
+
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual(paths.Length, output.Count());
+                }
+
+                using (var p = CreatePipeline(string.Format(@"$Input | remove-msisource -path '{0}' -passthru", this.TestContext.DeploymentDirectory)))
+                {
+                    p.Input.Write(obj);
+                    var output = p.Invoke();
+
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual(original.Count, output.Count());
+                }
+            });
+        }
+
+        [TestMethod]
+        public void AddSourceTestsPath()
+        {
+            this.TestProductSources((obj, product, original) =>
+            {
+                using (var p = CreatePipeline(@"$Input | add-msisource -path 'C:\ShouldNotExist\AddSourceTestsPath' -passthru"))
+                {
+                    p.Input.Write(obj);
+
+                    try
+                    {
+                        p.Invoke();
+                        Assert.Fail("Expected CmdletInvocationException exception");
+                    }
+                    catch (CmdletInvocationException)
+                    {
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.Fail("Expected CmdletInvocationException exception; caught {0} exception", ex.GetType().Name);
+                    }
+                }
+            });
+        }
+
+        [TestMethod]
+        public void AddSourceForceNoTestsPath()
+        {
+            this.TestProductSources((obj, product, original) =>
+            {
+                using (var p = CreatePipeline(@"$Input | add-msisource -path 'C:\ShouldNotExist\AddSourceForceNoTestsPath' -force -passthru"))
+                {
+                    p.Input.Write(obj);
+                    var output = p.Invoke();
+
+                    Assert.IsFalse(p.HadErrors);
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual(original.Count + 1, output.Count());
+                }
+            });
+        }
+
+        [TestMethod]
+        public void RemoveSourceNoTestsPath()
+        {
+            this.TestProductSources((obj, product, original) =>
+            {
+                using (var p = CreatePipeline(@"$Input | remove-msisource -path 'C:\ShouldNotExist\RemoveSourceNoTestsPath' -passthru"))
+                {
+                    p.Input.Write(obj);
+                    var output = p.Invoke();
+
+                    Assert.IsFalse(p.HadErrors);
+                    Assert.IsNotNull(output);
+                    Assert.AreEqual(original.Count, output.Count());
+                }
+            });
+        }
+
+        private PSObject FindTestProduct()
+        {
+            using (var p = CreatePipeline("get-msiproductinfo -context userunmanaged"))
+            {
+                var output = p.Invoke();
+                if (null != output && 0 < output.Count())
+                {
+                    return output[0];
+                }
+            }
+
+            return null;
+        }
+
+        private void TestProductSources(Action<PSObject, ProductInstallation, ICollection<string>> action)
         {
             PSObject obj = null;
 
@@ -63,65 +205,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             try
             {
-                using (var p = CreatePipeline(string.Format(@"$Input | add-msisource -path '{0}' -passthru", this.TestContext.DeploymentDirectory)))
-                {
-                    p.Input.Write(obj);
-                    var output = p.Invoke();
-
-                    Assert.IsNotNull(output);
-                    Assert.AreEqual<int>(original.Length + 1, output.Count());
-                }
-
-                using (var p = CreatePipeline(@"$Input | add-msisource -path 'ShouldNotExist.txt' -passthru"))
-                {
-                    ExceptionAssert.Throws<CmdletInvocationException, ItemNotFoundException>(() =>
-                    {
-                        p.Input.Write(obj);
-                        var output = p.Invoke();
-                    });
-                }
-
-                var path = Path.Combine(this.TestContext.DeploymentDirectory, "Example.txt");
-                using (var p = CreatePipeline(string.Format(@"$Input | add-msisource -path '{0}' -passthru", path)))
-                {
-                    p.Input.Write(obj);
-                    var output = p.Invoke();
-
-                    // Should return the previous number of source locations we already registered.
-                    Assert.IsNotNull(output);
-                    Assert.AreEqual<int>(original.Length + 1, output.Count());
-                    Assert.AreEqual<int>(1, p.Error.Count);
-                }
-
-                using (var p = CreatePipeline(@"$Input | clear-msisource; $Input | get-msisource"))
-                {
-                    p.Input.Write(obj);
-                    var output = p.Invoke();
-
-                    Assert.IsTrue(null == output || 0 == output.Count());
-                }
-
-                var paths = new string[original.Length + 1];
-                paths[0] = this.TestContext.DeploymentDirectory;
-                original.CopyTo(paths, 1);
-
-                using (var p = CreatePipeline(string.Format(@"$Input | add-msisource '{0}' -passthru", product.ProductCode)))
-                {
-                    p.Input.Write(paths, true);
-                    var output = p.Invoke();
-
-                    Assert.IsNotNull(output);
-                    Assert.AreEqual<int>(paths.Length, output.Count());
-                }
-
-                using (var p = CreatePipeline(string.Format(@"$Input | remove-msisource -path '{0}' -passthru", this.TestContext.DeploymentDirectory)))
-                {
-                    p.Input.Write(obj);
-                    var output = p.Invoke();
-
-                    Assert.IsNotNull(output);
-                    Assert.AreEqual<int>(original.Length, output.Count());
-                }
+                action(obj, product, original);
             }
             finally
             {
