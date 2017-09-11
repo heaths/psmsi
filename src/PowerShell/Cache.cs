@@ -38,14 +38,15 @@ namespace Microsoft.Tools.WindowsInstaller
         private CacheItemSorter sorter;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Cache&lt;TKey, TValue&gt;"/> class.
+        /// Initializes a new instance of the <see cref="Cache{TKey, TValue}"/> class.
         /// </summary>
-        internal Cache() : this(DefaultCapacity)
+        internal Cache()
+            : this(DefaultCapacity)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Cache&lt;TKey, TValue&gt;"/> class using the given <paramref name="capacity"/>.
+        /// Initializes a new instance of the <see cref="Cache{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="capacity">The initial capacity that should not be exceeded.</param>
         internal Cache(int capacity)

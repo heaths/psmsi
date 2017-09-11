@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Win32;
 using System;
 using System.Globalization;
 using System.IO;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Win32;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private bool initialized;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Log"/> class.
+        /// Initializes a new instance of the <see cref="Log"/> class.
         /// </summary>
         /// <param name="path">Optional path to use for directory and file base names.</param>
         internal Log(string path)
@@ -55,7 +55,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Log"/> class.
+        /// Initializes a new instance of the <see cref="Log"/> class.
         /// </summary>
         /// <param name="path">Optional path to use for directory and file base names.</param>
         /// <param name="start">The <see cref="DateTime"/> for the log identifier.</param>
@@ -107,6 +107,20 @@ namespace Microsoft.Tools.WindowsInstaller
             }
         }
 
+        private static string GetLoggingPolicy()
+        {
+            var key = Registry.LocalMachine.OpenSubKey(@"Software\Policies\Microsoft\Windows\Installer");
+            if (null != key)
+            {
+                using (key)
+                {
+                    return key.GetValue("Logging") as string;
+                }
+            }
+
+            return null;
+        }
+
         private void Initialize()
         {
             if (this.initialized)
@@ -146,20 +160,6 @@ namespace Microsoft.Tools.WindowsInstaller
             }
 
             this.initialized = true;
-        }
-
-        private static string GetLoggingPolicy()
-        {
-            var key = Registry.LocalMachine.OpenSubKey(@"Software\Policies\Microsoft\Windows\Installer");
-            if (null != key)
-            {
-                using (key)
-                {
-                    return key.GetValue("Logging") as string;
-                }
-            }
-
-            return null;
         }
     }
 }

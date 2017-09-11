@@ -20,15 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
     /// Unit and functional tests for <see cref="GetFeatureCommand"/>.
-    ///</summary>
+    /// </summary>
     [TestClass]
     public class GetFeatureCommandTest : TestBase
     {
@@ -52,7 +52,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Check the number of features for a product object.
             using (var p = CreatePipeline(@"get-msiproductinfo -context 'all' | get-msifeatureinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -101,7 +101,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             // Enumerate a single named feature.
             using (var p = CreatePipeline(@"get-msifeatureinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' 'Complete'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
 
@@ -142,7 +142,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
             using (var p = CreatePipeline(@"get-msiproductinfo '{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}' | get-msifeatureinfo | get-msifeatureinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
                     Assert.AreEqual(2, objs.Count);

@@ -46,7 +46,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private int dwData3;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="FileHash"/> class.
+        /// Initializes a new instance of the <see cref="FileHash"/> class.
         /// </summary>
         internal FileHash()
         {

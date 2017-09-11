@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private readonly Node root;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Tree&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="Tree{T}"/> class.
         /// </summary>
         /// <param name="separators">Optional separators for any key added to the tree. The default is '\'.</param>
         /// <param name="comparer">Optional string comparer for any key segment added to the tree. The default is <see cref="StringComparer.InvariantCultureIgnoreCase"/>.</param>
@@ -133,7 +133,11 @@ namespace Microsoft.Tools.WindowsInstaller
 
             internal T Value
             {
-                get { return this.value; }
+                get
+                {
+                    return this.value;
+                }
+
                 set
                 {
                     this.value = value;

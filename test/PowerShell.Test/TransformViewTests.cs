@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Deployment.WindowsInstaller;
 using System.IO;
+using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Deployment.WindowsInstaller.Package;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller
 {

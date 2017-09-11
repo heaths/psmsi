@@ -35,7 +35,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msisharedcomponentinfo"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
                     Assert.AreEqual<int>(5, objs.Count);
@@ -48,11 +48,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msisharedcomponentinfo -component '{9D8E88E9-8E05-4FC7-AFC7-87759D1D417E}'"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
                     Assert.AreEqual<int>(2, objs.Count);
-
                 }
             }
         }
@@ -62,7 +61,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"get-msisharedcomponentinfo -count 3"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var objs = p.Invoke();
                     Assert.AreEqual<int>(3, objs.Count);

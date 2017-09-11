@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller.Package;
 using System.Collections.Generic;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller.Package;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {

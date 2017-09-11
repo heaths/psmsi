@@ -20,32 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Management.Automation;
-using Microsoft.Deployment.WindowsInstaller;
+using System;
 
-namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
+namespace Microsoft.Tools.WindowsInstaller
 {
     /// <summary>
-    /// The Uninstall-MSIPatch cmdlet.
+    /// Contains information about inapplicable patches.
     /// </summary>
-    [Cmdlet(VerbsLifecycle.Uninstall, "MSIPatch", DefaultParameterSetName = ParameterSet.Path)]
-    public sealed class UninstallPatchCommand : InstallPatchCommandBase<InstallPatchActionData>
+    internal sealed class InapplicablePatchEventArgs : EventArgs
     {
         /// <summary>
-        /// Gets the <see cref="RestorePointType"/> of the current operation.
+        /// Initializes a new instance of the <see cref="InapplicablePatchEventArgs"/> class.
         /// </summary>
-        internal override RestorePointType Operation
+        /// <param name="patch">The path to the patch or patch XML file that is not applicable.</param>
+        /// <param name="product">The ProductCode for or path to the target product.</param>
+        /// <param name="exception">Exception information about why the patch is not applicable.</param>
+        internal InapplicablePatchEventArgs(string patch, string product, Exception exception)
         {
-            get { return RestorePointType.ApplicationUninstall; }
+            this.Patch = patch;
+            this.Product = product;
+            this.Exception = exception;
         }
 
         /// <summary>
-        /// Installs a patch given the provided <paramref name="data"/>.
+        /// Gets the path to the patch or patch XML file.
         /// </summary>
-        /// <param name="data">An <see cref="InstallProductActionData"/> with information about the package to install.</param>
-        protected override void ExecuteAction(InstallPatchActionData data)
-        {
-            Installer.RemovePatches(data.Patches, data.ProductCode, data.CommandLine);
-        }
+        internal string Patch { get; private set; }
+
+        /// <summary>
+        /// Gets the ProductCode for or path to the target product.
+        /// </summary>
+        internal string Product { get; private set; }
+
+        /// <summary>
+        /// Gets exception information about why the patch is not applicable.
+        /// </summary>
+        internal Exception Exception { get; private set; }
     }
 }

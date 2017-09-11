@@ -38,8 +38,7 @@ namespace Microsoft.Tools.WindowsInstaller
         internal static readonly string KeySeparator = "/";
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Record"/> class copying values
-        /// from the <see cref="Deployment.WindowsInstaller.Record"/> object.
+        /// Initializes a new instance of the <see cref="Record"/> class.
         /// </summary>
         /// <param name="record">The <see cref="Deployment.WindowsInstaller.Record"/> from which to copy values.</param>
         /// <param name="columns">The <see cref="ColumnCollection"/> for a <see cref="Deployment.WindowsInstaller.View"/>.</param>

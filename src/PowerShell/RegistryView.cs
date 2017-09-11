@@ -34,10 +34,6 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </remarks>
     internal sealed class RegistryView
     {
-        // Singleton fields.
-        private static volatile object syncRoot = new object();
-        private static RegistryView instance = null;
-
         // Improve performance by loading fields instead of allocating new strings each time.
         private static readonly string SOFTWARE = @"\SOFTWARE";
         private static readonly string WOW64 = @"\Wow6432Node";
@@ -52,96 +48,100 @@ namespace Microsoft.Tools.WindowsInstaller
         private static readonly string HKLM_WOW64 = @"HKEY_LOCAL_MACHINE" + SOFTWARE_WOW64;
         private static readonly string HKU = "HKEY_USERS";
 
-        private static readonly Tree<bool> tree;
+        private static readonly Tree<bool> Tree;
+
+        // Singleton fields.
+        private static volatile object syncRoot = new object();
+        private static RegistryView instance = null;
 
         static RegistryView()
         {
             // The value is false if Shared or true if Redirected.
-            tree = new Tree<bool>();
+            Tree = new Tree<bool>();
 
             // HKEY_CLASSES_ROOT
-            tree.Add(@"00:\CLSID", true);
-            tree.Add(@"00:\DirectShow", true);
-            tree.Add(@"00:\Interface", true);
-            tree.Add(@"00:\Media Type", true);
-            tree.Add(@"00:\MediaFoundation", true);
+            Tree.Add(@"00:\CLSID", true);
+            Tree.Add(@"00:\DirectShow", true);
+            Tree.Add(@"00:\Interface", true);
+            Tree.Add(@"00:\Media Type", true);
+            Tree.Add(@"00:\MediaFoundation", true);
 
             // HKEY_CURRENT_USER
-            tree.Add(@"01:\SOFTWARE\Classes\CLSID", true);
-            tree.Add(@"01:\SOFTWARE\Classes\DirectShow", true);
-            tree.Add(@"01:\SOFTWARE\Classes\Interface", true);
-            tree.Add(@"01:\SOFTWARE\Classes\Media Type", true);
-            tree.Add(@"01:\SOFTWARE\Classes\MediaFoundation", true);
+            Tree.Add(@"01:\SOFTWARE\Classes\CLSID", true);
+            Tree.Add(@"01:\SOFTWARE\Classes\DirectShow", true);
+            Tree.Add(@"01:\SOFTWARE\Classes\Interface", true);
+            Tree.Add(@"01:\SOFTWARE\Classes\Media Type", true);
+            Tree.Add(@"01:\SOFTWARE\Classes\MediaFoundation", true);
 
             // HKEY_LOCAL_MACHINE
-            tree.Add(@"02:\SOFTWARE", true);
-            tree.Add(@"02:\SOFTWARE\Classes", false);
-            tree.Add(@"02:\SOFTWARE\Classes\CLSID", true);
-            tree.Add(@"02:\SOFTWARE\Classes\DirectShow", true);
-            tree.Add(@"02:\SOFTWARE\Classes\Interface", true);
-            tree.Add(@"02:\SOFTWARE\Classes\Media Type", true);
-            tree.Add(@"02:\SOFTWARE\Classes\MediaFoundation", true);
-            tree.Add(@"02:\SOFTWARE\Clients", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\COM3", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Cryptography\Calais\Current", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Cryptography\Calais\Readers", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Cryptography\Services", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\CTF\SystemShared", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\CTF\TIP", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\DFS", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Driver Signing", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\EnterpriseCertificates", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\EventSystem", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\MSMQ", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Non-Driver Signing", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Notepad\DefaultFonts", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\OLE", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\RAS", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\RPC", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\SOFTWARE\Microsoft\Shared Tools\MSInfo", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\SystemCertificates", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\TermServLicensing", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\TransactionServer", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cursors\Schemes", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\DriveIcons", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\KindMap", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\PreviewHandlers", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Telephony\Locations", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontDpi", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontLink", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontMapper", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Gre_Initialize", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Language Pack", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Ports", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Print", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList", false);
-            tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Time Zones", false);
-            tree.Add(@"02:\SOFTWARE\Policies", false);
-            tree.Add(@"02:\SOFTWARE\RegisteredApplications", false);
+            Tree.Add(@"02:\SOFTWARE", true);
+            Tree.Add(@"02:\SOFTWARE\Classes", false);
+            Tree.Add(@"02:\SOFTWARE\Classes\CLSID", true);
+            Tree.Add(@"02:\SOFTWARE\Classes\DirectShow", true);
+            Tree.Add(@"02:\SOFTWARE\Classes\Interface", true);
+            Tree.Add(@"02:\SOFTWARE\Classes\Media Type", true);
+            Tree.Add(@"02:\SOFTWARE\Classes\MediaFoundation", true);
+            Tree.Add(@"02:\SOFTWARE\Clients", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\COM3", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Cryptography\Calais\Current", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Cryptography\Calais\Readers", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Cryptography\Services", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\CTF\SystemShared", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\CTF\TIP", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\DFS", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Driver Signing", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\EnterpriseCertificates", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\EventSystem", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\MSMQ", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Non-Driver Signing", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Notepad\DefaultFonts", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\OLE", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\RAS", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\RPC", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\SOFTWARE\Microsoft\Shared Tools\MSInfo", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\SystemCertificates", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\TermServLicensing", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\TransactionServer", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cursors\Schemes", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\DriveIcons", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\KindMap", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\PreviewHandlers", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows\CurrentVersion\Telephony\Locations", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontDpi", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontLink", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontMapper", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Gre_Initialize", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Language Pack", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Ports", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Print", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList", false);
+            Tree.Add(@"02:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Time Zones", false);
+            Tree.Add(@"02:\SOFTWARE\Policies", false);
+            Tree.Add(@"02:\SOFTWARE\RegisteredApplications", false);
 
             // HKEY_USERS
-            tree.Add(@"03:\*\SOFTWARE\Classes\CLSID", true);
-            tree.Add(@"03:\*\SOFTWARE\Classes\DirectShow", true);
-            tree.Add(@"03:\*\SOFTWARE\Classes\Interface", true);
-            tree.Add(@"03:\*\SOFTWARE\Classes\Media Type", true);
-            tree.Add(@"03:\*\SOFTWARE\Classes\MediaFoundation", true);
+            Tree.Add(@"03:\*\SOFTWARE\Classes\CLSID", true);
+            Tree.Add(@"03:\*\SOFTWARE\Classes\DirectShow", true);
+            Tree.Add(@"03:\*\SOFTWARE\Classes\Interface", true);
+            Tree.Add(@"03:\*\SOFTWARE\Classes\Media Type", true);
+            Tree.Add(@"03:\*\SOFTWARE\Classes\MediaFoundation", true);
         }
 
         /// <summary>
         /// Gets the single instance for the current process bitness.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The single instance for the current process bitness.</returns>
         internal static RegistryView GetInstance()
         {
             if (null == instance)
@@ -159,7 +159,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="RegistryView"/> class for the given bitness.
+        /// Initializes a new instance of the <see cref="RegistryView"/> class.
         /// </summary>
         /// <param name="is64Bit">True if running under a 64-bit process; otherwise, false for a 32-bit process.</param>
         internal RegistryView(bool is64Bit)
@@ -168,7 +168,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Gets whether the code is executing in a 64-bit process.
+        /// Gets a value indicating whether the code is executing in a 64-bit process.
         /// </summary>
         internal bool Is64Bit { get; private set; }
 
@@ -205,7 +205,7 @@ namespace Microsoft.Tools.WindowsInstaller
             else
             {
                 // Return 64-bit paths as-is but map 32-bit paths to WOW64 node only if redirected.
-                if (is64Bit || !tree.Under(keyPath))
+                if (is64Bit || !Tree.Under(keyPath))
                 {
                     root = this.MapRoot(path, true, hive);
                 }

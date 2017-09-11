@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsInstaller
     public class PatchSourceInfo : SourceInfo
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="SourceInfo"/> class.
+        /// Initializes a new instance of the <see cref="PatchSourceInfo"/> class.
         /// </summary>
         /// <param name="productCode">The ProductCode to which the source is registered.</param>
         /// <param name="patchCode">The patch code to which the source is regisered.</param>

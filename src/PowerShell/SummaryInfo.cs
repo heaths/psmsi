@@ -31,8 +31,7 @@ namespace Microsoft.Tools.WindowsInstaller
     public sealed class SummaryInfo
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="SummaryInfo"/> class copying values
-        /// from the <see cref="Deployment.WindowsInstaller.SummaryInfo"/> object.
+        /// Initializes a new instance of the <see cref="SummaryInfo"/> class.
         /// </summary>
         /// <param name="info">The <see cref="Deployment.WindowsInstaller.SummaryInfo"/> from which to copy values.</param>
         /// <exception cref="ArgumentNullException">The parameter <paramref name="info"/> is null.</exception>

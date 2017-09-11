@@ -30,9 +30,9 @@ namespace Microsoft.Tools.WindowsInstaller
     /// </summary>
     internal sealed class SystemRestorePoint
     {
-        private static ISystemRestoreService _defaultService;
-        private ISystemRestoreService _service;
-        private RestorePointInfo _info;
+        private static ISystemRestoreService defaultService;
+        private ISystemRestoreService service;
+        private RestorePointInfo info;
 
         /// <summary>
         /// Begins a system restore point.
@@ -72,8 +72,8 @@ namespace Microsoft.Tools.WindowsInstaller
 
             var instance = new SystemRestorePoint()
             {
-                _service = service ?? SystemRestorePoint.DefaultServiceProvider,
-                _info = info,
+                service = service ?? SystemRestorePoint.DefaultServiceProvider,
+                info = info,
             };
 
             // Create the system restore point.
@@ -81,7 +81,7 @@ namespace Microsoft.Tools.WindowsInstaller
 
             // Update the sequence number.
             info.SequenceNumber = status.SequenceNumber;
-            instance._info = info;
+            instance.info = info;
 
             return instance;
         }
@@ -94,8 +94,8 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </remarks>
         internal static ISystemRestoreService DefaultServiceProvider
         {
-            get { return _defaultService ?? DefaultSystemRestoreService.GetInstance(); }
-            set { _defaultService = value; }
+            get { return defaultService ?? DefaultSystemRestoreService.GetInstance(); }
+            set { defaultService = value; }
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         internal string Description
         {
-            get { return this._info.Description; }
+            get { return this.info.Description; }
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         internal long SequenceNumber
         {
-            get { return this._info.SequenceNumber; }
+            get { return this.info.SequenceNumber; }
         }
 
         /// <summary>
@@ -119,10 +119,10 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         internal void Commit()
         {
-            if (RestorePointEventType.EndSystemChange != _info.EventType)
+            if (RestorePointEventType.EndSystemChange != this.info.EventType)
             {
                 // Copy information for next call.
-                var info = this._info;
+                var info = this.info;
                 info.EventType = RestorePointEventType.EndSystemChange;
 
                 this.SetRestorePoint(info);
@@ -134,10 +134,10 @@ namespace Microsoft.Tools.WindowsInstaller
         /// </summary>
         internal void Rollback()
         {
-            if (RestorePointEventType.EndSystemChange != this._info.EventType)
+            if (RestorePointEventType.EndSystemChange != this.info.EventType)
             {
                 // Copy information for next call.
-                var info = this._info;
+                var info = this.info;
                 info.Type = RestorePointType.CancelledOperation;
                 info.EventType = RestorePointEventType.EndSystemChange;
 
@@ -152,7 +152,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private StateManagerStatus SetRestorePoint(RestorePointInfo info)
         {
             StateManagerStatus status;
-            if (!this._service.SetRestorePoint(info, out status))
+            if (!this.service.SetRestorePoint(info, out status))
             {
                 throw new Win32Exception(status.ErrorCode);
             }
@@ -162,23 +162,23 @@ namespace Microsoft.Tools.WindowsInstaller
 
         private class DefaultSystemRestoreService : ISystemRestoreService
         {
-            private static volatile object _monitor = new object();
-            private static ISystemRestoreService _instance = null;
+            private static volatile object monitor = new object();
+            private static ISystemRestoreService instance = null;
 
             internal static ISystemRestoreService GetInstance()
             {
-                if (null == _instance)
+                if (null == instance)
                 {
-                    lock (_monitor)
+                    lock (monitor)
                     {
-                        if (null == _instance)
+                        if (null == instance)
                         {
-                            _instance = new DefaultSystemRestoreService();
+                            instance = new DefaultSystemRestoreService();
                         }
                     }
                 }
 
-                return _instance;
+                return instance;
             }
 
             public bool SetRestorePoint(RestorePointInfo info, out StateManagerStatus status)
@@ -186,7 +186,6 @@ namespace Microsoft.Tools.WindowsInstaller
                 return NativeMethods.SRSetRestorePoint(ref info, out status);
             }
         }
-
     }
 
     /// <summary>

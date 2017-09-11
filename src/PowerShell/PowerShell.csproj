@@ -43,6 +43,7 @@
     <Compile Include="FileHash.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ILoggingPolicyService.cs" />
+    <Compile Include="InapplicablePatchEventArgs.cs" />
     <Compile Include="ISystemRestoreService.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="LoggingPolicies.cs" />
@@ -161,10 +162,15 @@
       <Sign>True</Sign>
       <SubType>Designer</SubType>
     </Content>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="PowerShell.nuspec" />
-    <None Include="Tools\ChocolateyUninstall.ps1" />
-    <None Include="Tools\ChocolateyInstall.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="$(SolutionDir)stylecop.json">
+      <Visible>false</Visible>
+    </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
     <None Include="MSI.tt">
@@ -183,6 +189,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Sign>True</Sign>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(IncludeDir)Common.targets" />
   <Import Project="$(IncludeDir)TextTemplating.targets" />

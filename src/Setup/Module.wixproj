@@ -9,7 +9,7 @@
     <OutputType>package</OutputType>
     <ProjectGuid>{d2630778-0547-48d1-a8ca-e93d0d7a8b02}</ProjectGuid>
     <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
-    <SuppressIces>ICE03;ICE38;ICE64;ICE91</SuppressIces>
+    <SuppressIces>ICE03;ICE38;ICE40;ICE61;ICE64;ICE91</SuppressIces>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Psmsi.sln))\inc\Common.props"/>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

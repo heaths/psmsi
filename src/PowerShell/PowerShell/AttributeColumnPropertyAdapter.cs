@@ -82,7 +82,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         /// Gets the native <see cref="Type"/> name for the property value.
         /// </summary>
         /// <param name="adaptedProperty">The property to check.</param>
-        /// <returns>Always returns the full type name for a <see cref="Boolean"/>.</returns>
+        /// <returns>Always returns the full type name for a <see cref="bool"/>.</returns>
         public override string GetPropertyTypeName(PSAdaptedProperty adaptedProperty)
         {
             var column = adaptedProperty.BaseObject as AttributeColumn;

@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -53,7 +53,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         }
 
         /// <summary>
-        /// Gets whether the parameter set name contains "LiteralPath".
+        /// Gets a value indicating whether the parameter set name contains "LiteralPath".
         /// </summary>
         protected bool IsLiteralPath
         {

@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -97,7 +97,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private readonly IDictionary<string, Table> tables;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="TransformView"/> class with information from the specified <see cref="Database"/>.
+        /// Initializes a new instance of the <see cref="TransformView"/> class.
         /// </summary>
         /// <param name="db">The <see cref="Database"/> containing the _TransformView table to process.</param>
         internal TransformView(Database db)
@@ -242,6 +242,7 @@ namespace Microsoft.Tools.WindowsInstaller
                                 {
                                     row.SetPrincipalOperation(RowOperation.Modify);
                                 }
+
                                 break;
                         }
                     }

@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,13 +27,17 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Management.Automation;
 using System.Text;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Tools.WindowsInstaller.Properties;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
     /// Base class for product and patch install commands.
     /// </summary>
-    public abstract class InstallCommandBase<T> : PSCmdlet where T : InstallCommandActionData, new()
+    /// <typeparam name="T">A derivative of <see cref="InstallCommandActionData"/>.</typeparam>
+    public abstract class InstallCommandBase<T> : PSCmdlet
+        where T : InstallCommandActionData, new()
     {
         /// <summary>
         /// The default install level.
@@ -47,7 +49,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         private ProgressDataCollection progress;
 
         /// <summary>
-        /// Initializes the cmdlet.
+        /// Initializes a new instance of the <see cref="InstallCommandBase{T}"/> class.
         /// </summary>
         protected InstallCommandBase()
         {
@@ -117,7 +119,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public string ResultVariable { get; set; }
 
         /// <summary>
-        /// The queued actions to perform for installation.
+        /// Gets the queued actions to perform for installation.
         /// </summary>
         protected ActionQueue Actions { get; private set; }
 
@@ -298,7 +300,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 else if (null != record && 2 < record.FieldCount)
                 {
                     var action = record.GetString(1);
-                    Debug.Assert(!string.IsNullOrEmpty(action));
+                    Debug.Assert(!string.IsNullOrEmpty(action), "Action should not be null at this point");
 
                     this.progress.CurrentAction = record.GetString(2);
                     this.progress.CurrentActionTemplate = record.GetString(3);
@@ -467,6 +469,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     {
                         current.Total += 50;
                     }
+
                     break;
 
                 // Update progress information.
@@ -491,6 +494,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         this.progress.Current.EnableActionData = true;
                         this.progress.Current.Step = record.GetInteger(2);
                     }
+
                     break;
 
                 // Report progress information.
@@ -510,6 +514,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                     {
                         this.progress.Current.Complete -= record.GetInteger(2);
                     }
+
                     break;
 
                 // Expand the total.

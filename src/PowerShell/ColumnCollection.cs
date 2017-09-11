@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Tools.WindowsInstaller.Properties;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -37,7 +37,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private static readonly char[] NameSeparators = new char[] { '.' };
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Column"/> class from the specified <see cref="View"/>.
+        /// Initializes a new instance of the <see cref="ColumnCollection"/> class.
         /// </summary>
         /// <param name="view">The <see cref="View"/> from which column information is retrieved.</param>
         /// <exception cref="InvalidOperationException">A column name was defined by multiple tables.</exception>
@@ -131,7 +131,7 @@ namespace Microsoft.Tools.WindowsInstaller
             {
                 // Return only specified columns.
                 return columns
-                    .Replace("`", "")
+                    .Replace("`", string.Empty)
                     .Split(ColumnCollection.ColumnSeparators, StringSplitOptions.RemoveEmptyEntries);
             }
         }

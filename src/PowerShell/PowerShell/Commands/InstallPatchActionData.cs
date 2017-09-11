@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System.Collections.Generic;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -31,7 +31,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     public class InstallPatchActionData : InstallCommandActionData
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="InstallPatchActionData"/> class.
+        /// Initializes a new instance of the <see cref="InstallPatchActionData"/> class.
         /// </summary>
         public InstallPatchActionData()
         {

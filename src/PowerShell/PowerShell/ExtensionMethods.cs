@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell
 {
@@ -39,7 +39,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
         private static readonly string ProviderSeparator = "::";
         private static readonly string RegistryProvider = @"Microsoft.PowerShell.Core\Registry::";
 
-        internal static T As<T>(this PSObject obj) where T : class
+        internal static T As<T>(this PSObject obj)
+            where T : class
         {
             if (null != obj)
             {
@@ -48,10 +49,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell
 
             return null;
         }
+
         /// <summary>
         /// Matches a string using any of the wildcard <paramref name="patterns"/>.
         /// </summary>
-        /// <param name="source">The <see cref="String"/> to be matched.</param>
+        /// <param name="source">The <see cref="string"/> to be matched.</param>
         /// <param name="patterns">A list of <see cref="WildcardPattern"/> objects to match.</param>
         /// <returns>True if the string matches any of the <paramref name="patterns"/>; otherwise, false if the string or patterns are null, empty, or not match is found.</returns>
         internal static bool Match(this string source, IList<WildcardPattern> patterns)

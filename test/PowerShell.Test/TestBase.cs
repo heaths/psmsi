@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Security.Principal;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller
 {
@@ -43,6 +43,7 @@ namespace Microsoft.Tools.WindowsInstaller
     public abstract class TestBase
     {
         #region Runspace Configuration
+
         /// <summary>
         /// Gets the <see cref="Runspace"/> to use for all derived tests.
         /// </summary>
@@ -51,6 +52,7 @@ namespace Microsoft.Tools.WindowsInstaller
         /// <summary>
         /// Initializes the test assembly and loads the PowerShell module.
         /// </summary>
+        /// <param name="context">Context for tests within this assembly.</param>
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
         {
@@ -79,16 +81,6 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Initializes state before each test is run.
-        /// </summary>
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            // Always make sure the DefaultRunspace is set before each test.
-            Runspace.DefaultRunspace = TestRunspace;
-        }
-
-        /// <summary>
         /// Cleans up the test configuration.
         /// </summary>
         [AssemblyCleanup]
@@ -102,9 +94,20 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
             }
         }
+
+        /// <summary>
+        /// Initializes state before each test is run.
+        /// </summary>
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            // Always make sure the DefaultRunspace is set before each test.
+            Runspace.DefaultRunspace = TestRunspace;
+        }
         #endregion
 
         #region System Information
+
         /// <summary>
         /// Gets the SID in SDDL form for the current user.
         /// </summary>
@@ -119,7 +122,6 @@ namespace Microsoft.Tools.WindowsInstaller
                 }
             }
         }
-
 
         /// <summary>
         /// Gets the username for the current user.
@@ -155,6 +157,7 @@ namespace Microsoft.Tools.WindowsInstaller
         #endregion
 
         #region Test Execution
+
         /// <summary>
         /// Gets or sets the <see cref="TestContext"/> for all derived tests.
         /// </summary>

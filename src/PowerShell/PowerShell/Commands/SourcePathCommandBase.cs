@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
@@ -54,19 +55,32 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         public SwitchParameter PassThru { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the <see cref="Path"/> or <see cref="LiteralPath"/> must exist.
+        /// </summary>
+        protected virtual bool ShouldExist { get; set; }
+
+        /// <summary>
         /// Adds the resolved path to the <see cref="SourceCommandBase.Parameters"/>.
         /// </summary>
         /// <param name="param">The <see cref="SourceCommandBase.Parameters"/> to update.</param>
         protected override void UpdateParameters(Parameters param)
         {
-            var items = this.InvokeProvider.Item.Get(this.Path, true, ParameterSet.LiteralPath == this.ParameterSetName);
-
-            foreach (var item in items)
+            IEnumerable<string> paths;
+            if (this.ShouldExist)
             {
-                var path = item.GetPropertyValue<string>("PSPath");
-                path = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
+                paths = this.InvokeProvider.Item
+                    .Get(this.Path, true, ParameterSet.LiteralPath == this.ParameterSetName)
+                    .Select(item => item.GetPropertyValue<string>("PSPath"));
+            }
+            else
+            {
+                paths = this.Path;
+            }
 
-                param.Paths.Add(path);
+            foreach (var path in paths)
+            {
+                var providerPath = this.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
+                param.Paths.Add(providerPath);
             }
         }
     }

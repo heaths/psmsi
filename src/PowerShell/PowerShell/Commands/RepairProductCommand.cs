@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Tools.WindowsInstaller.Properties;
-using System.Management.Automation;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         private ReinstallModesConverter converter;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="RepairProductCommand"/> with the default <see cref="ReinstallMode"/>.
+        /// Initializes a new instance of the <see cref="RepairProductCommand"/> class.
         /// </summary>
         public RepairProductCommand()
         {

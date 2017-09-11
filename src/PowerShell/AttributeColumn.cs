@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="AttributeColumn"/> class.
+        /// Initializes a new instance of the <see cref="AttributeColumn"/> class.
         /// </summary>
         /// <param name="type">The type of the enumeration.</param>
         /// <param name="value">The value of the enumeration.</param>
@@ -173,10 +173,10 @@ namespace Microsoft.Tools.WindowsInstaller
         // A 32-bit integer is the largest integer supported by Windows Installer.
 
         /// <summary>
-        /// Converts an <see cref="AttributeColumn"/> to an <see cref="Int32"/>.
+        /// Converts an <see cref="AttributeColumn"/> to an <see cref="int"/>.
         /// </summary>
         /// <param name="column">The <see cref="AttributeColumn"/> to convert.</param>
-        /// <returns>The <see cref="Int32"/> value of the <see cref="AttributeColumn"/>.</returns>
+        /// <returns>The <see cref="int"/> value of the <see cref="AttributeColumn"/>.</returns>
         public static implicit operator int(AttributeColumn column)
         {
             if (null != column)
@@ -188,20 +188,20 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Converts an <see cref="Int32"/> to an <see cref="AttributeColumn"/>.
+        /// Converts an <see cref="int"/> to an <see cref="AttributeColumn"/>.
         /// </summary>
-        /// <param name="value">The <see cref="Int32"/> value to convert.</param>
-        /// <returns>The <see cref="AttributeColumn"/> with the value of the <see cref="Int32"/>.</returns>
+        /// <param name="value">The <see cref="int"/> value to convert.</param>
+        /// <returns>The <see cref="AttributeColumn"/> with the value of the <see cref="int"/>.</returns>
         public static implicit operator AttributeColumn(int value)
         {
             return new AttributeColumn(null, value);
         }
 
         /// <summary>
-        /// Converts an <see cref="AttributeColumn"/> to a nullable <see cref="Int32"/>.
+        /// Converts an <see cref="AttributeColumn"/> to a nullable <see cref="int"/>.
         /// </summary>
         /// <param name="column">The <see cref="AttributeColumn"/> to convert.</param>
-        /// <returns>The nullable <see cref="Int32"/> value of the <see cref="AttributeColumn"/>.</returns>
+        /// <returns>The nullable <see cref="int"/> value of the <see cref="AttributeColumn"/>.</returns>
         public static implicit operator int?(AttributeColumn column)
         {
             if (null != column)
@@ -213,10 +213,10 @@ namespace Microsoft.Tools.WindowsInstaller
         }
 
         /// <summary>
-        /// Converts a nullable <see cref="Int32"/> to an <see cref="AttributeColumn"/>.
+        /// Converts a nullable <see cref="int"/> to an <see cref="AttributeColumn"/>.
         /// </summary>
-        /// <param name="value">The nullable <see cref="Int32"/> value to convert.</param>
-        /// <returns>The <see cref="AttributeColumn"/> with the value of the nullable <see cref="Int32"/>.</returns>
+        /// <param name="value">The nullable <see cref="int"/> value to convert.</param>
+        /// <returns>The <see cref="AttributeColumn"/> with the value of the nullable <see cref="int"/>.</returns>
         public static implicit operator AttributeColumn(int? value)
         {
             return new AttributeColumn(null, value);

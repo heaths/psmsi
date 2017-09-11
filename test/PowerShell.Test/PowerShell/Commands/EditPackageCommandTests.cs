@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 using System.IO;
 using System.Management.Automation;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             using (var p = CreatePipeline(@"edit-msipackage example.msi -wv Warnings"))
             {
-                using (OverrideRegistry())
+                using (this.OverrideRegistry())
                 {
                     var items = p.Invoke();
 
@@ -58,7 +58,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline(@"edit-msipackage example.msp -wv Warnings"))
             {
                 var path = Path.Combine(this.TestContext.DeploymentDirectory, "NoOrca.xml");
-                using (OverrideRegistry(path))
+                using (this.OverrideRegistry(path))
                 {
                     p.Invoke();
 
@@ -79,7 +79,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline(@"edit-msipackage example.msi -wv Warnings"))
             {
                 var path = Path.Combine(this.TestContext.DeploymentDirectory, "NoEditVerb.xml");
-                using (OverrideRegistry(path))
+                using (this.OverrideRegistry(path))
                 {
                     // Should throw terminating exception.
                     p.Invoke();
@@ -93,7 +93,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             using (var p = CreatePipeline(@"edit-msipackage example.txt -wv Warnings"))
             {
                 var path = Path.Combine(this.TestContext.DeploymentDirectory, "NoEditVerb.xml");
-                using (OverrideRegistry(path))
+                using (this.OverrideRegistry(path))
                 {
                     var items = p.Invoke();
 

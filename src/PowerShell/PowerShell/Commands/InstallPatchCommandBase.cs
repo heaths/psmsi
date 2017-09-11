@@ -20,22 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
-using Microsoft.Tools.WindowsInstaller.Properties;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Tools.WindowsInstaller.Properties;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
     /// <summary>
     /// Base class for patch-related commands.
     /// </summary>
-    public abstract class InstallPatchCommandBase<T> : InstallCommandBase<T> where T : InstallPatchActionData, new()
+    /// <typeparam name="T">A derivative of <see cref="InstallCommandActionData"/>.</typeparam>
+    public abstract class InstallPatchCommandBase<T> : InstallCommandBase<T>
+        where T : InstallPatchActionData, new()
     {
         /// <summary>
-        /// Creates a new instance of the class and sets default property values.
+        /// Initializes a new instance of the <see cref="InstallPatchCommandBase{T}"/> class.
         /// </summary>
         protected InstallPatchCommandBase()
         {
@@ -67,7 +69,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// Gets or sets the user security identifier for products to which patches apply.
         /// </summary>
         [Parameter(ValueFromPipelineByPropertyName = true)]
-        [Alias("User"), Sid]
+        [Alias("User")]
+        [Sid]
         public string UserSid { get; set; }
 
         /// <summary>

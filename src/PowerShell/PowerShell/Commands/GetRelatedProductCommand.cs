@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the UpgradeCode to enumerate related products.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required by older PowerShell")]
         [Parameter(Position = 0, Mandatory = true, ValueFromPipelineByPropertyName = true)]
         [ValidateGuid]
         public string[] UpgradeCode { get; set; }
@@ -70,7 +70,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Enumerates related products and writes them to the pipeline.
         /// </summary>
-        /// <param name="upgradeCode"></param>
+        /// <param name="upgradeCode">The UpgradeCode of products to write to the pipeline.</param>
         private void WriteProducts(string upgradeCode)
         {
             foreach (ProductInstallation product in ProductInstallation.GetRelatedProducts(upgradeCode))

@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -34,7 +34,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     public abstract class SourceCommandBase : PSCmdlet
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="SourceCommandBase"/> class.
+        /// Initializes a new instance of the <see cref="SourceCommandBase"/> class.
         /// </summary>
         protected SourceCommandBase()
         {
@@ -57,7 +57,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the user SID of the product or patch.
         /// </summary>
-        [Alias("User"), Sid]
+        [Alias("User")]
+        [Sid]
         [Parameter(ValueFromPipelineByPropertyName = true)]
         public string UserSid { get; set; }
 
@@ -198,7 +199,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected class Parameters
         {
             /// <summary>
-            /// Creates a new instance of the <see cref="Parameters"/> class.
+            /// Initializes a new instance of the <see cref="Parameters"/> class.
             /// </summary>
             internal Parameters()
             {
@@ -206,22 +207,22 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             }
 
             /// <summary>
-            /// Gets or sets the ProductCode parameter.
+            /// Gets the ProductCode parameter.
             /// </summary>
             public string ProductCode { get; internal set; }
 
             /// <summary>
-            /// Gets or sets the PatchCode parameter.
+            /// Gets the PatchCode parameter.
             /// </summary>
             public string PatchCode { get; internal set; }
 
             /// <summary>
-            /// Gets or sets the UserSid parameter.
+            /// Gets the UserSid parameter.
             /// </summary>
             public string UserSid { get; internal set; }
 
             /// <summary>
-            /// Gets or sets the UserContext parameter.
+            /// Gets the UserContext parameter.
             /// </summary>
             public UserContexts UserContext { get; internal set; }
 
@@ -237,7 +238,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         protected class ParametersCollection : KeyedCollection<string, Parameters>
         {
             /// <summary>
-            /// Creates a new instance of the <see cref="ParametersCollection"/> class.
+            /// Initializes a new instance of the <see cref="ParametersCollection"/> class.
             /// </summary>
             public ParametersCollection()
                 : base(StringComparer.OrdinalIgnoreCase)
@@ -248,7 +249,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
             /// Adds a new <see cref="Parameters"/> instance or updates the <see cref="Parameters.Paths"/> of an existing one.
             /// </summary>
             /// <param name="param">The <see cref="Parameters"/> instance to add or merge into an existing one.</param>
-            /// <returns>The updated <see cref="Parameters"/> instance.</returns>
             public new void Add(Parameters param)
             {
                 var key = this.GetKeyForItem(param);

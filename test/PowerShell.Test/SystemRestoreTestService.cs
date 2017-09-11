@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private int nextErrorCode = 0;
 
         /// <summary>
-        /// Creates a new instance of the test <see cref="ISystemRestoreService"/> provider.
+        /// Initializes a new instance of the <see cref="SystemRestoreTestService"/> class.
         /// </summary>
         /// <param name="sequenceNumber">The sequence number to return to the caller. The default is 1.</param>
         internal SystemRestoreTestService(long sequenceNumber = 1)

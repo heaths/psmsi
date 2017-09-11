@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management.Automation;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets the ProductCodes for which patches are enumerated.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required by older PowerShell")]
         [Parameter(ParameterSetName = ParameterSet.Patch, Position = 0, ValueFromPipelineByPropertyName = true)]
         [ValidateGuid]
         public string[] ProductCode { get; set; }
@@ -53,7 +53,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <summary>
         /// Gets or sets patch codes for which information is retrieved.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required by older PowerShell")]
         [Parameter(ParameterSetName = ParameterSet.Patch, Position = 1, ValueFromPipelineByPropertyName = true)]
         [ValidateGuid]
         public string[] PatchCode { get; set; }
@@ -64,7 +64,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [Parameter(ValueFromPipelineByPropertyName = true)]
         public PatchStates Filter
         {
-            get { return this.filter; }
+            get
+            {
+                return this.filter;
+            }
+
             set
             {
                 if (value == PatchStates.None)
@@ -83,7 +87,11 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         [Alias("Context", "InstallContext")] // Backward compatibility.
         public UserContexts UserContext
         {
-            get { return this.context; }
+            get
+            {
+                return this.context;
+            }
+
             set
             {
                 if (value == UserContexts.None)
@@ -121,8 +129,8 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         {
             this.allParameters.Add(new Parameters
                 {
-                    ProductCode = this.ProductCode != null && this.ProductCode.Length > 0 ? this.ProductCode : new string[] { null},
-                    PatchCode = this.PatchCode != null && this.PatchCode.Length > 0 ? this.PatchCode : new string[] { null},
+                    ProductCode = this.ProductCode != null && this.ProductCode.Length > 0 ? this.ProductCode : new string[] { null },
+                    PatchCode = this.PatchCode != null && this.PatchCode.Length > 0 ? this.PatchCode : new string[] { null },
                     Filter = this.Filter,
                     UserContext = this.UserContext,
                     UserSid = this.UserSid,

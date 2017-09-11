@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Deployment.WindowsInstaller;
 using System.Management.Automation;
 using System.Text;
 using System.Xml;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 {
@@ -51,8 +51,9 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
         /// <remarks>
         /// You may also pass a string or code page integer form of an <see cref="Encoding"/>.
         /// </remarks>
+        [Encoding]
         [Parameter]
-        [Encoding, ValidateNotNullOrEmpty]
+        [ValidateNotNullOrEmpty]
         public Encoding Encoding { get; set; }
 
         /// <summary>
