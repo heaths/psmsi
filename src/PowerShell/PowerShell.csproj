@@ -168,7 +168,7 @@
     <None Include="PowerShell.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="$(SolutionDir)stylecop.json">
+    <AdditionalFiles Include="$(SolutionDir)inc\stylecop.json">
       <Visible>false</Visible>
     </AdditionalFiles>
   </ItemGroup>

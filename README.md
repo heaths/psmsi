@@ -1,5 +1,10 @@
 # Windows Installer PowerShell Module
 
+[![build status: master](https://ci.appveyor.com/api/projects/status/github/heaths/psmsi?branch=master&svg=true)](https://ci.appveyor.com/project/heaths/psmsi/branch/master)
+[![github release: latest](https://img.shields.io/github/release/heaths/psmsi.svg?logo=github)](https://github.com/heaths/psmsi/releases/latest)
+[![github releases: all](https://img.shields.io/github/downloads/heaths/psmsi/total.svg?logo=github&label=github)](https://github.com/heaths/psmsi/releases)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/MSI.svg)](https://powershellgallery.com/packages/MSI)
+
 Exposes Windows Installer functionality to PowerShell, providing means to query installed product and patch information and to query views on packages.
 
 ## Description
@@ -40,12 +45,3 @@ You can also download the NuGet and Windows Installer packages directly from [Re
 ## License
 
 The Windows Installer PowerShell module is licensed under the [MIT License](LICENSE.txt).
-
-## Status
-
-[Project build status](https://ci.appveyor.com/project/heaths/psmsi) for release and development branches.
-
-Branch | Status
---- | ---
-**master** | [![Build status](https://ci.appveyor.com/api/projects/status/251twb4wvywq0vei/branch/master?svg=true)](https://ci.appveyor.com/project/heaths/psmsi/branch/master)
-**develop** | [![Build status](https://ci.appveyor.com/api/projects/status/251twb4wvywq0vei/branch/develop?svg=true)](https://ci.appveyor.com/project/heaths/psmsi/branch/develop)
