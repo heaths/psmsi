@@ -44,12 +44,51 @@ PowerShellVersion = '2.0'
 CLRVersion = '2.0'
 ModuleToProcess = 'MSI.psm1'
 NestedModules = 'Microsoft.Tools.WindowsInstaller.PowerShell.dll'
-CmdletsToExport = '*'
-FunctionsToExport = '*'
+CmdletsToExport = @(
+  'Add-MSISource'
+  'Clear-MSISource'
+  'Edit-MSIPackage'
+  'Export-MSIPatchXml'
+  'Get-MSIComponentInfo'
+  'Get-MSIFeatureInfo'
+  'Get-MSIFileHash'
+  'Get-MSIFileType'
+  'Get-MSILoggingPolicy'
+  'Get-MSIPatchInfo'
+  'Get-MSIPatchSequence'
+  'Get-MSIProductInfo'
+  'Get-MSIProperty'
+  'Get-MSIRelatedProductInfo'
+  'Get-MSISource'
+  'Get-MSISummaryInfo'
+  'Get-MSITable'
+  'Install-MSIPatch'
+  'Install-MSIProduct'
+  'Measure-MSIProduct'
+  'Remove-MSILoggingPolicy'
+  'Remove-MSISource'
+  'Repair-MSIProduct'
+  'Set-MSILoggingPolicy'
+  'Test-MSIProduct'
+  'Uninstall-MSIPatch'
+  'Uninstall-MSIProduct'
+)
+FunctionsToExport = @(
+  'Get-MSIComponentState'
+  'Get-MSISharedComponentInfo'
+  'Install-MSIAdvertisedFeature'
+)
 FormatsToProcess = 'MSI.formats.ps1xml'
 TypesToProcess = 'MSI.types.ps1xml'
-RequiredAssemblies = 'Microsoft.Tools.WindowsInstaller.PowerShell.dll', 'Microsoft.Deployment.WindowsInstaller.dll', 'Microsoft.Deployment.WindowsInstaller.Package.dll'
-FileList = 'about_MSI.help.txt', 'Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml'
+RequiredAssemblies = @(
+  'Microsoft.Tools.WindowsInstaller.PowerShell.dll'
+  'Microsoft.Deployment.WindowsInstaller.dll'
+  'Microsoft.Deployment.WindowsInstaller.Package.dll'
+)
+FileList = @(
+  'about_MSI.help.txt'
+  'Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml'
+)
 PrivateData = @{
   PSData = @{
     Tags = @('WindowsInstaller', 'MSI', 'MSP')
