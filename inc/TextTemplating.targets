@@ -7,7 +7,8 @@
     <MicrosoftSharedFiles>$(CommonProgramFiles)Microsoft Shared\</MicrosoftSharedFiles>
 
     <!-- Try to find the installed executable for the current Visual Studio version -->
-    <ExecutablePath Condition="'$(ExecutablePath)'==''">$(CommonProgramFiles)Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</ExecutablePath>
+    <ExecutablePath Condition="'$(ExecutablePath)'==''">$(VsInstallRoot)\Common7\IDE\TextTransform.exe</ExecutablePath>
+    <ExecutablePath Condition="!Exists('$(ExecutablePath)')">$(CommonProgramFiles)Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</ExecutablePath>
 
     <!-- Look for other versions form newest to oldest if not found -->
     <ExecutablePath Condition="!Exists('$(ExecutablePath)')">$(MicrosoftSharedFiles)TextTemplating\14.0\TextTransform.exe</ExecutablePath>
@@ -19,7 +20,7 @@
   </PropertyGroup>
 
   <Target Name="Transform" Condition="'$(TransformOnBuild)'=='true'" DependsOnTargets="$(BeforeTransform)" AfterTargets="BeforeBuild">
-    <Error Text="The TextTemplating.exe executable was not found." Condition="!Exists('$(ExecutablePath)')" />
+    <Error Text="The TextTransform.exe executable was not found." Condition="!Exists('$(ExecutablePath)')" />
 
     <PropertyGroup>
       <TransformParameters>@(T4ParameterValues->'-a "!!%(Identity)!%(Value)"', ' ')</TransformParameters>
