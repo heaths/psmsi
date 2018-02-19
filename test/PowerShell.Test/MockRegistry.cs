@@ -68,6 +68,7 @@ namespace Microsoft.Tools.WindowsInstaller
         private RegistryKey localMachine;
         private RegistryKey users;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass", Justification = "Avoid naming collision for test code")]
         [DllImport("advapi32.dll")]
         private static extern int RegOverridePredefKey(
             IntPtr hKey,
