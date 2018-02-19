@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
 
                 var objs = p.Invoke();
 
-                Assert.AreEqual<int>(2, objs.Count);
+                Assert.AreEqual<int>(1, objs.Count);
 
                 var obj = objs.Where(o => o.GetPropertyValue<int>("MSIHashPart1") == hash[0]).FirstOrDefault();
                 Assert.IsNotNull(obj);
