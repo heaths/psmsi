@@ -19,16 +19,26 @@
     <BeforeTransform Condition="'$(BeforeTransform)'==''"></BeforeTransform>
   </PropertyGroup>
 
-  <Target Name="Transform" Condition="'$(TransformOnBuild)'=='true'" DependsOnTargets="$(BeforeTransform)" AfterTargets="BeforeBuild">
+  <ItemDefinitionGroup>
+    <Transforms>
+      <OutputFilePath>%(OutputPath)%(Filename).txt</OutputFilePath>
+    </Transforms>
+  </ItemDefinitionGroup>
+
+  <Target Name="GetTransforms">
+    <ItemGroup>
+      <Transforms Include="@(None)" Condition="'%(None.Generator)'=='TextTemplatingFileGenerator'">
+        <OutputFilePath Condition="'%(None.LastGenOutput)'!=''">%(RootDir)%(Directory)%(None.LastGenOutput)</OutputFilePath>
+      </Transforms>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="Transform" Condition="'$(TransformOnBuild)'=='true'" DependsOnTargets="$(BeforeTransform);GetTransforms" AfterTargets="BeforeBuild" Inputs="@(Transforms)" Outputs="%(Transforms.OutputFilePath)">
     <Error Text="The TextTransform.exe executable was not found." Condition="!Exists('$(ExecutablePath)')" />
 
     <PropertyGroup>
       <TransformParameters>@(T4ParameterValues->'-a "!!%(Identity)!%(Value)"', ' ')</TransformParameters>
     </PropertyGroup>
-
-    <ItemGroup>
-      <Transforms Include="@(None)" Condition="'%(None.Generator)'=='TextTemplatingFileGenerator'" />
-    </ItemGroup>
 
     <Exec Command="&quot;$(ExecutablePath)&quot; $(TransformParameters) &quot;%(Transforms.FullPath)&quot;" Condition="'%(Transforms.Identity)'!=''" />
   </Target>

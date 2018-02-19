@@ -147,12 +147,6 @@
     <None Include="Help.xml">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="about_MSI.help.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="MSI.formats.ps1xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Sign>True</Sign>
