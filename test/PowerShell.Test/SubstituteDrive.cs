@@ -44,6 +44,7 @@ namespace Microsoft.Tools.WindowsInstaller
             RemoveExactMatch = RemoveDefinition | ExactMatchOnRemove,
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass", Justification = "Avoid naming collision for test code")]
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, EntryPoint = "DefineDosDeviceW", SetLastError = true)]
         private static extern bool DefineDosDevice(
             [In, MarshalAs(UnmanagedType.U4)] DefineDosDeviceFlags dwFlags,
@@ -51,6 +52,7 @@ namespace Microsoft.Tools.WindowsInstaller
             [In] string lpTargetPath
             );
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass", Justification = "Avoid naming collision for test code")]
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, EntryPoint = "QueryDosDeviceW", SetLastError = true)]
         private static extern int QueryDosDevice(
             [In] string lpDeviceName,
