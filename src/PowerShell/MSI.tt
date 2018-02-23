@@ -10,6 +10,16 @@
      {
          moduleVersion = new Version(1, 0);
      }
+
+     string prerelease = Host.ResolveParameterValue("", "", "Prerelease");
+     string commitIdShort = Host.ResolveParameterValue("", "", "CommitIdShort");
+     string publicRelease = Host.ResolveParameterValue("", "", "PublicRelease");
+
+     bool isPublicRelease = false;
+     if (string.IsNullOrEmpty(prerelease) && bool.TryParse(publicRelease, out isPublicRelease) && !isPublicRelease)
+     {
+         prerelease = "-g" + commitIdShort;
+     }
 #>
 # The MIT License (MIT)
 #
@@ -95,6 +105,7 @@ PrivateData = @{
     ProjectUri = 'https://github.com/heaths/psmsi'
     LicenseUri = 'https://raw.githubusercontent.com/heaths/psmsi/master/LICENSE.txt'
     IconUri = 'https://raw.githubusercontent.com/heaths/psmsi/master/res/psmsi.png'
-  }
+<# if (!string.IsNullOrEmpty(prerelease)) { #>    Prerelease = '<#= prerelease #>'
+<# } #>  }
 }
 }
