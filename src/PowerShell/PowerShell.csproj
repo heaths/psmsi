@@ -195,17 +195,29 @@
   <Target Name="CalculateVersion" DependsOnTargets="GetBuildVersion" AfterTargets="GenerateAssemblyVersionInfo">
     <ItemGroup>
       <T4ParameterValues Include="PackageVersion">
-        <Value>$(BuildVersion)</Value>
+        <Value>$(BuildVersionSimple)</Value>
+        <Visible>false</Visible>
+      </T4ParameterValues>
+      <T4ParameterValues Include="Prerelease">
+        <Value>$(PrereleaseVersion)</Value>
+        <Visible>false</Visible>
+      </T4ParameterValues>
+      <T4ParameterValues Include="CommitIdShort">
+        <Value>$(GitCommitIdShort)</Value>
+        <Visible>false</Visible>
+      </T4ParameterValues>
+      <T4ParameterValues Include="PublicRelease">
+        <Value>$(PublicRelease)</Value>
         <Visible>false</Visible>
       </T4ParameterValues>
     </ItemGroup>
   </Target>
-  <Target Name="BuildPackage" DependsOnTargets="CalculateVersion" Inputs="$(TargetPath);$(MSBuildProjectName).nuspec" Outputs="$(OutputPath)MSI.$(BuildVersion).nupkg">
+  <Target Name="BuildPackage" DependsOnTargets="CalculateVersion" Inputs="$(TargetPath);$(MSBuildProjectName).nuspec" Outputs="$(OutputPath)MSI.$(BuildVersionSimple).nupkg">
     <PropertyGroup>
       <ProjectPath>$(MSBuildProjectDirectory)\$(MSBuildProjectName).nuspec</ProjectPath>
-      <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -Properties "SolutionDir=$(SolutionDir);Configuration=$(Configuration);Platform=$(Platform);Version=$(BuildVersion)" -OutputDirectory "$(OutputPath.TrimEnd('\'))" -Symbols -NonInteractive -NoPackageAnalysis</BuildCommand>
+      <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -Properties "SolutionDir=$(SolutionDir);Configuration=$(Configuration);Platform=$(Platform);Version=$(BuildVersionSimple)" -OutputDirectory "$(OutputPath.TrimEnd('\'))" -Symbols -NonInteractive -NoPackageAnalysis</BuildCommand>
     </PropertyGroup>
-    <Exec Command="$(BuildCommand)" Outputs="$(OutputPath)MSI.$(BuildVersion).nupkg">
+    <Exec Command="$(BuildCommand)" Outputs="$(OutputPath)MSI.$(BuildVersionSimple).nupkg">
       <Output TaskParameter="Outputs" ItemName="FileWrites" />
     </Exec>
   </Target>

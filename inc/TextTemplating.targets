@@ -33,7 +33,7 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="Transform" Condition="'$(TransformOnBuild)'=='true'" DependsOnTargets="$(BeforeTransform);GetTransforms" AfterTargets="BeforeBuild" Inputs="@(Transforms)" Outputs="%(Transforms.OutputFilePath)">
+  <Target Name="Transform" Condition="'$(TransformOnBuild)'=='true'" DependsOnTargets="$(BeforeTransform);GetTransforms" AfterTargets="BeforeBuild" Inputs="@(Transforms)" Outputs="@(Transforms->'%(OutputFilePath)')">
     <Error Text="The TextTransform.exe executable was not found." Condition="!Exists('$(ExecutablePath)')" />
 
     <PropertyGroup>

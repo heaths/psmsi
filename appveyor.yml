@@ -50,12 +50,22 @@ artifacts:
 
 deploy:
   - provider: GitHub
-    description: 'Release of version $(appveyor_build_version)'
+    description: 'Release version $(appveyor_build_version)'
     auth_token:
       secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
     artifact: installer, package
     on:
       branch: master
+      configuration: Release
+
+  - provider: GitHub
+    description: 'Prerelease version $(appveyor_build_version)'
+    prerelease: true
+    auth_token:
+      secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
+    artifact: installer, package
+    on:
+      branch: develop
       configuration: Release
 
   - provider: NuGet
@@ -65,7 +75,6 @@ deploy:
     artifact: package
     skip_symbols: true
     on:
-      branch: master
       configuration: Release
 
   - provider: NuGet
@@ -74,5 +83,4 @@ deploy:
       secure: WPxjuSouwbCdM6I771BfIbOk8gA883+l9RKUCfFknaUT1vYPmTpT2ABF9r+J0JgR
     artifact: /.*\.symbols\.nupkg/
     on:
-      branch: master
       configuration: Release
