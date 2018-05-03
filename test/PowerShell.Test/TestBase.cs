@@ -33,12 +33,10 @@ namespace Microsoft.Tools.WindowsInstaller
     /// Base class for all tests within the assembly.
     /// </summary>
     [TestClass]
-    [DeploymentItem(@"about_MSI.help.txt")]
     [DeploymentItem(@"MSI.psd1")]
     [DeploymentItem(@"MSI.psm1")]
     [DeploymentItem(@"MSI.types.ps1xml")]
     [DeploymentItem(@"MSI.formats.ps1xml")]
-    [DeploymentItem(@"Microsoft.Tools.WindowsInstaller.PowerShell.dll-Help.xml")]
     [DeploymentItem(@"Data\")]
     public abstract class TestBase
     {

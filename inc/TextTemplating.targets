@@ -7,7 +7,8 @@
     <MicrosoftSharedFiles>$(CommonProgramFiles)Microsoft Shared\</MicrosoftSharedFiles>
 
     <!-- Try to find the installed executable for the current Visual Studio version -->
-    <ExecutablePath Condition="'$(ExecutablePath)'==''">$(CommonProgramFiles)Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</ExecutablePath>
+    <ExecutablePath Condition="'$(ExecutablePath)'==''">$(VsInstallRoot)\Common7\IDE\TextTransform.exe</ExecutablePath>
+    <ExecutablePath Condition="!Exists('$(ExecutablePath)')">$(CommonProgramFiles)Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</ExecutablePath>
 
     <!-- Look for other versions form newest to oldest if not found -->
     <ExecutablePath Condition="!Exists('$(ExecutablePath)')">$(MicrosoftSharedFiles)TextTemplating\14.0\TextTransform.exe</ExecutablePath>
@@ -18,16 +19,26 @@
     <BeforeTransform Condition="'$(BeforeTransform)'==''"></BeforeTransform>
   </PropertyGroup>
 
-  <Target Name="Transform" Condition="'$(TransformOnBuild)'=='true'" DependsOnTargets="$(BeforeTransform)" AfterTargets="BeforeBuild">
-    <Error Text="The TextTemplating.exe executable was not found." Condition="!Exists('$(ExecutablePath)')" />
+  <ItemDefinitionGroup>
+    <Transforms>
+      <OutputFilePath>%(OutputPath)%(Filename).txt</OutputFilePath>
+    </Transforms>
+  </ItemDefinitionGroup>
+
+  <Target Name="GetTransforms">
+    <ItemGroup>
+      <Transforms Include="@(None)" Condition="'%(None.Generator)'=='TextTemplatingFileGenerator'">
+        <OutputFilePath Condition="'%(None.LastGenOutput)'!=''">%(RootDir)%(Directory)%(None.LastGenOutput)</OutputFilePath>
+      </Transforms>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="Transform" Condition="'$(TransformOnBuild)'=='true'" DependsOnTargets="$(BeforeTransform);GetTransforms" AfterTargets="BeforeBuild" Inputs="@(Transforms)" Outputs="@(Transforms->'%(OutputFilePath)')">
+    <Error Text="The TextTransform.exe executable was not found." Condition="!Exists('$(ExecutablePath)')" />
 
     <PropertyGroup>
       <TransformParameters>@(T4ParameterValues->'-a "!!%(Identity)!%(Value)"', ' ')</TransformParameters>
     </PropertyGroup>
-
-    <ItemGroup>
-      <Transforms Include="@(None)" Condition="'%(None.Generator)'=='TextTemplatingFileGenerator'" />
-    </ItemGroup>
 
     <Exec Command="&quot;$(ExecutablePath)&quot; $(TransformParameters) &quot;%(Transforms.FullPath)&quot;" Condition="'%(Transforms.Identity)'!=''" />
   </Target>

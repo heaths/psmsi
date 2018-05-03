@@ -1,4 +1,16 @@
-configuration: Release
+configuration:
+  - Debug
+  - Release
+
+branches:
+  only:
+    - master
+    - develop
+
+environment:
+  RunCodeAnalysis: true
+  TreatWarningsAsErrors: true
+
 pull_requests:
   do_not_increment_build_number: true
 skip_tags: true
@@ -8,16 +20,18 @@ notifications:
   on_build_success: true
   on_build_failure: true
 
-branches:
-  only:
-    - master
-    - develop
-
 cache:
   - packages -> **\packages.config
 
+install:
+  - ps: |
+      $ErrorActionPreference = 'Stop'
+      Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+      Install-Module -Name platyPS -Repository PSGallery -SkipPublisherCheck -Force
+
 before_build:
   - nuget restore
+  - ps: New-ExternalHelp -Path $env:APPVEYOR_BUILD_FOLDER\docs -OutputPath $env:APPVEYOR_BUILD_FOLDER\src\PowerShell\bin\$env:CONFIGURATION -Force
 
 test:
   assemblies:
@@ -36,12 +50,23 @@ artifacts:
 
 deploy:
   - provider: GitHub
-    description: 'Release of version $(appveyor_build_version)'
+    description: 'Release version $(appveyor_build_version)'
     auth_token:
       secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
     artifact: installer, package
     on:
       branch: master
+      configuration: Release
+
+  - provider: GitHub
+    description: 'Prerelease version $(appveyor_build_version)'
+    prerelease: true
+    auth_token:
+      secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
+    artifact: installer, package
+    on:
+      branch: develop
+      configuration: Release
 
   - provider: NuGet
     server: https://powershellgallery.com
@@ -50,7 +75,7 @@ deploy:
     artifact: package
     skip_symbols: true
     on:
-      branch: master
+      configuration: Release
 
   - provider: NuGet
     server: https://nuget.smbsrc.net/
@@ -58,4 +83,4 @@ deploy:
       secure: WPxjuSouwbCdM6I771BfIbOk8gA883+l9RKUCfFknaUT1vYPmTpT2ABF9r+J0JgR
     artifact: /.*\.symbols\.nupkg/
     on:
-      branch: master
+      configuration: Release
