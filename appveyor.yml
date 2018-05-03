@@ -52,7 +52,7 @@ deploy:
   - provider: GitHub
     description: 'Release version $(appveyor_build_version)'
     auth_token:
-      secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
+      secure: 7rtJ3qvAO3HF8g/FYpHHrVEZb+CzMNgEYquXzdsi7iNmZQwY7UreMh5mds3+9J4T
     artifact: installer, package
     on:
       branch: master
@@ -62,7 +62,7 @@ deploy:
     description: 'Prerelease version $(appveyor_build_version)'
     prerelease: true
     auth_token:
-      secure: 5K94QY8dHKlbjvlBpQaXwAkmDf+LQE3g5WlU9snnNMjDjf0UT4xDoOBCLWcmwZOm
+      secure: 7rtJ3qvAO3HF8g/FYpHHrVEZb+CzMNgEYquXzdsi7iNmZQwY7UreMh5mds3+9J4T
     artifact: installer, package
     on:
       branch: develop
