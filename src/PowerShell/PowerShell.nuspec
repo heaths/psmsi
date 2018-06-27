@@ -52,7 +52,9 @@
     <dependencies />
   </metadata>
   <files>
-    <file src="bin\$Configuration$\*.*" exclude="**\*.nupkg;**\Microsoft.Tools.WindowsInstaller.PowerShell.xml" />
+    <file src="bin\$Configuration$\*.dll" />
+    <file src="bin\$Configuration$\*.xml" exclude="**\Microsoft.Tools.WindowsInstaller.PowerShell.xml" />
+    <file src="bin\$Configuration$\MSI.*" />
     <file src="$SolutionDir$LICENSE.txt" />
     <file src="$SolutionDir$lib\wix\LICENSE.txt" target="Licenses\WIX.txt" />
   </files>
