@@ -53,11 +53,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                             Assert.IsTrue(0 < drive.GetPropertyValue<int>("MSISpaceRequired"));
                             Assert.IsTrue(0 < drive.GetPropertyValue<int>("MSITemporarySpaceRequired"));
                         }
-                        else
-                        {
-                            Assert.AreEqual(0, drive.GetPropertyValue<int>("MSISpaceRequired"));
-                            Assert.AreEqual(0, drive.GetPropertyValue<int>("MSITemporarySpaceRequired"));
-                        }
                     }
                 }
             }
@@ -88,11 +83,6 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                         {
                             Assert.IsTrue(0 < drive.GetPropertyValue<int>("MSISpaceRequired"));
                             Assert.IsTrue(0 <= drive.GetPropertyValue<int>("MSITemporarySpaceRequired"));
-                        }
-                        else
-                        {
-                            Assert.AreEqual(0, drive.GetPropertyValue<int>("MSISpaceRequired"));
-                            Assert.AreEqual(0, drive.GetPropertyValue<int>("MSITemporarySpaceRequired"));
                         }
                     }
                 }

@@ -28,6 +28,7 @@ jobs:
 
   - powershell: |
       $ErrorActionPreference = 'Stop'
+      $VerbosePreference = 'Continue'
       Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
       Install-Module -Name platyPS -Repository PSGallery -SkipPublisherCheck -Force
       New-ExternalHelp -Path "${env:BUILD_SOURCESDIRECTORY}\docs" -OutputPath "${env:BUILD_SOURCESDIRECTORY}\src\PowerShell\bin\${env:BuildConfiguration}" -Force
