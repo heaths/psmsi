@@ -130,25 +130,24 @@
     <Content Include="Data\test.cub" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <AdditionalFiles Include="$(SolutionDir)inc\stylecop.json">
       <Visible>false</Visible>
     </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
-    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(IncludeDir)Common.targets" />
-  <Import Project="..\..\packages\Nerdbank.GitVersioning.1.5.46\build\dotnet\Nerdbank.GitVersioning.targets" Condition="Exists('..\..\packages\Nerdbank.GitVersioning.1.5.46\build\dotnet\Nerdbank.GitVersioning.targets')" />
+  <Import Project="..\..\packages\Nerdbank.GitVersioning.2.2.33\build\Nerdbank.GitVersioning.targets" Condition="Exists('..\..\packages\Nerdbank.GitVersioning.2.2.33\build\Nerdbank.GitVersioning.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Nerdbank.GitVersioning.1.5.46\build\dotnet\Nerdbank.GitVersioning.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Nerdbank.GitVersioning.1.5.46\build\dotnet\Nerdbank.GitVersioning.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Nerdbank.GitVersioning.2.2.33\build\Nerdbank.GitVersioning.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Nerdbank.GitVersioning.2.2.33\build\Nerdbank.GitVersioning.targets'))" />
   </Target>
   <!-- vim: set sw=2 ts=2 sts=2 ft=xml: -->
 </Project>

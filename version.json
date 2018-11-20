@@ -1,16 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
-  "version": "3.2.0",
+  "version": "3.3",
   "publicReleaseRefSpec": [
     "^refs/heads/master$"
   ],
   "cloudBuild": {
     "buildNumber": {
-      "enabled": true,
-      "includeCommitId": {
-        "when": "nonPublicReleaseOnly",
-        "where": "buildMetadata"
-      }
+      "enabled": true
     },
     "setVersionVariables": true
   }
