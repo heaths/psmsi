@@ -1,0 +1,27 @@
+parameters:
+  Version: latest
+
+steps:
+- powershell: |
+    $params = @(
+      '-NoLogo',
+      '-NoProfile',
+      '-NonInteractive',
+      '-ExecutionPolicy', 'Bypass',
+      '-OutputFormat', 'Text'
+    )
+
+    if ($env:VERSION -ne 'latest') {
+      $params += '-Version', "${env:VERSION}"
+    }
+
+    powershell.exe $params -Command {
+      Import-Module -Name "${env:PWD}\src\PowerShell\bin\${env:CONFIGURATION}\MSI.psd1" -ErrorAction Stop
+      Invoke-Pester -Script "${env:PWD}\test\Scripts" -EnableExit -OutputFile "${env:OUTDIR}\Pester.${env:VERSION}.results.xml" -OutputFormat NUnitXml
+    }
+  displayName: Test PowerShell version ${{ parameters.Version }}
+  env:
+    CONFIGURATION: $(BuildConfiguration)
+    OUTDIR: $(Build.ArtifactStagingDirectory)\bin\$(BuildConfiguration)
+    PWD: $(System.DefaultWorkingDirectory)
+    VERSION: ${{ parameters.Version }}

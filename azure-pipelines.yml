@@ -27,10 +27,12 @@ jobs:
     displayName: Restore packages
 
   - powershell: |
-      $ErrorActionPreference = 'Stop'
-      $VerbosePreference = 'Continue'
       Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-      Install-Module -Name platyPS -Repository PSGallery -SkipPublisherCheck -Force
+      Install-Module -Name Pester, platyPS -Repository PSGallery -SkipPublisherCheck -Force
+    displayName: Install modules
+
+  - powershell: |
+      $VerbosePreference = 'Continue'
       New-ExternalHelp -Path "${env:BUILD_SOURCESDIRECTORY}\docs" -OutputPath "${env:BUILD_SOURCESDIRECTORY}\src\PowerShell\bin\${env:BuildConfiguration}" -Force
     displayName: Compile documentation
 
@@ -51,6 +53,21 @@ jobs:
       configuration: $(BuildConfiguration)
       platform: $(BuildPlatform)
       runInParallel: true
+
+  - template: inc\test-integration.yml
+
+  - template: inc\test-integration.yml
+    parameters:
+      Version: 2.0
+
+  - task: PublishTestResults@2
+    displayName: Publish Pester test results
+    inputs:
+      testResultsFormat: NUnit
+      testResultsFiles: |
+        Pester.*.results.xml
+      searchFolder: $(Build.ArtifactStagingDirectory)\bin\$(BuildConfiguration)
+      mergeTestResults: true
 
   - task: CopyFiles@2
     displayName: Copy files
