@@ -5,7 +5,7 @@
 [![GitHub Releases: All](https://img.shields.io/github/downloads/heaths/psmsi/total.svg?logo=github&label=github)](https://github.com/heaths/psmsi/releases)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/MSI.svg)](https://powershellgallery.com/packages/MSI)
 
-Exposes Windows Installer functionality to PowerShell, providing means to query installed product and patch information and to query views on packages.
+Exposes Windows Installer functionality to PowerShell, providing means to query installed product and patch information, and to query views on packages.
 
 ## Description
 
