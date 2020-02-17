@@ -32,6 +32,10 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
     [OutputType(typeof(SummaryInfo), typeof(TransformInfo))]
     public sealed class GetSummaryInfoCommand : ItemCommandBase
     {
+        /// <inheritdoc/>
+        [Parameter(ParameterSetName = ParameterSet.Path, Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
+        public override string[] Path { get; set; }
+
         /// <summary>
         /// Gets or sets whether transforms within a patch should be enumerated.
         /// </summary>
