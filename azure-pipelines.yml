@@ -1,0 +1,66 @@
+trigger:
+- master
+- develop
+
+pr:
+- master
+- develop
+
+variables:
+  BuildConfiguration: Release
+  BuildPlatform: Any CPU
+
+jobs:
+- job: Build
+  pool:
+    vmImage: vs2017-win2016
+
+  steps:
+  - checkout: self
+    clean: true
+    lfs: true
+
+  - task: VisualStudioTestPlatformInstaller@1
+    displayName: Install VSTest
+
+  - task: NuGetCommand@2
+    displayName: Restore packages
+
+  - powershell: |
+      $ErrorActionPreference = 'Stop'
+      $VerbosePreference = 'Continue'
+      Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+      Install-Module -Name platyPS -Repository PSGallery -SkipPublisherCheck -Force
+      New-ExternalHelp -Path "${env:BUILD_SOURCESDIRECTORY}\docs" -OutputPath "${env:BUILD_SOURCESDIRECTORY}\src\PowerShell\bin\${env:BuildConfiguration}" -Force
+    displayName: Compile documentation
+
+  - task: VSBuild@1
+    displayName: Build solution
+    inputs:
+      configuration: $(BuildConfiguration)
+      maximumCpuCount: true
+      platform: $(BuildPlatform)
+    env:
+      RunCodeAnalysis: true
+      TreatWarningsAsErrors: true
+
+  - task: VSTest@2
+    displayName: Test solution
+    inputs:
+      codeCoverageEnabled: true
+      configuration: $(BuildConfiguration)
+      platform: $(BuildPlatform)
+      runInParallel: true
+
+  - task: CopyFiles@2
+    displayName: Copy files
+    inputs:
+      SourceFolder: $(System.DefaultWorkingDirectory)
+      Contents: |
+        src\**\bin\$(BuildConfiguration)\**
+      TargetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish artifact
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)

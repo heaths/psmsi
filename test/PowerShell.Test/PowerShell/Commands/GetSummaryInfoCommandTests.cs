@@ -22,6 +22,7 @@
 
 using System;
 using System.IO;
+using System.Management.Automation;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -126,6 +127,28 @@ namespace Microsoft.Tools.WindowsInstaller.PowerShell.Commands
                 Assert.AreEqual<string>("{000C1109-0000-0000-C000-000000000046}", info.GetPropertyValue<string>("UpgradeProductCode"));
                 Assert.AreEqual<Version>(new Version(0, 0, 0, 0), info.GetPropertyValue<Version>("UpgradeProductVersion"));
                 Assert.AreEqual<Version>(new Version(2, 0), info.GetPropertyValue<Version>("MinimumVersion"));
+            }
+        }
+
+        [TestMethod]
+        public void RequiresPath()
+        {
+            // Test fix for https://github.com/heaths/psmsi/issues/39
+            using (var p = CreatePipeline("get-msisummaryinfo"))
+            {
+                try
+                {
+                    p.Invoke();
+
+                    Assert.Fail("Expected ParameterBindingException");
+                }
+                catch (ParameterBindingException ex)
+                {
+                    Assert.IsTrue(p.HadErrors);
+
+                    // Trimming parameter name since in 5.1 it was " Path".
+                    Assert.AreEqual("Path", ex.ParameterName?.Trim());
+                }
             }
         }
     }

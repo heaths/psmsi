@@ -1,11 +1,11 @@
 # Windows Installer PowerShell Module
 
-[![build status: master](https://ci.appveyor.com/api/projects/status/github/heaths/psmsi?branch=master&svg=true)](https://ci.appveyor.com/project/heaths/psmsi/branch/master)
-[![github release: latest](https://img.shields.io/github/release/heaths/psmsi.svg?logo=github)](https://github.com/heaths/psmsi/releases/latest)
-[![github releases: all](https://img.shields.io/github/downloads/heaths/psmsi/total.svg?logo=github&label=github)](https://github.com/heaths/psmsi/releases)
+[![Build Status: develop](https://dev.azure.com/heaths/public/_apis/build/status/psmsi-CI?branchName=develop)](https://dev.azure.com/heaths/public/_build/latest?definitionId=14)
+[![GitHub Release: Latest](https://img.shields.io/github/release/heaths/psmsi.svg?logo=github)](https://github.com/heaths/psmsi/releases/latest)
+[![GitHub Releases: All](https://img.shields.io/github/downloads/heaths/psmsi/total.svg?logo=github&label=github)](https://github.com/heaths/psmsi/releases)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/MSI.svg)](https://powershellgallery.com/packages/MSI)
 
-Exposes Windows Installer functionality to PowerShell, providing means to query installed product and patch information and to query views on packages.
+Exposes Windows Installer functionality to PowerShell, providing means to query installed product and patch information, and to query views on packages.
 
 ## Description
 

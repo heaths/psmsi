@@ -5,10 +5,10 @@
     <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
     <AssemblyName>Microsoft.Tools.WindowsInstaller.$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>Microsoft.Tools.WindowsInstaller</RootNamespace>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <FileAlignment>512</FileAlignment>
-    <RestorePackages>true</RestorePackages>
+    <RestorePackages>false</RestorePackages>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
